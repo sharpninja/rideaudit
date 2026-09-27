@@ -13,3 +13,8 @@ License: GPL-2.0
 Each package contains an `ARTIFACT.yaml` with related FR-RIDE ids and GPL-2.0 notices.
 
 Stack decision: Avalonia UI 12 for Android + desktop apps; backend gRPC on .NET 10 containers. See [docs/architecture/stack.md](../architecture/stack.md).
+
+## Process rules
+
+- [Code generation and opposing-model hostile validation](../process/hostile-validation.md)
+- [Code-generation procedure](../process/code-generation.md)
