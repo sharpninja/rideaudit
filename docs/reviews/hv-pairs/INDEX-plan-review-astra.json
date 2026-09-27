@@ -1,6 +1,6 @@
 {
   "title": "RideAudit PLAN-RIDEAUDIT-001 Astra plan-review index",
-  "reconstructed_at": "2026-09-27T17:33:45-05:00",
+  "reconstructed_at": "2026-09-27T17:43:10-05:00",
   "reviews": [
     {
       "round": "plan-review-astra-r1",
@@ -9,7 +9,12 @@
       "request_jsonl": "docs\\receipts\\hv\\20260927T220707Z-plan-review-astra.request.jsonl",
       "response_jsonl": "docs\\receipts\\hv\\20260927T220707Z-plan-review-astra.response.jsonl",
       "status": "failed",
-      "note": "OS206 sandbox blocked reads"
+      "note": "OS206 sandbox blocked reads",
+      "custody": {
+        "pair_commit": "9645105cde5c4061a28961d10c2643b3379e1822",
+        "request_jsonl_commit": "5324ce069e3329201eac712317f8ad7605060ba4",
+        "response_jsonl_commit": "11d87149016b6fd7b8d2d6aacf0bc96669bfc0ce"
+      }
     },
     {
       "round": "plan-review-astra-r2",
@@ -18,7 +23,12 @@
       "request_jsonl": "docs\\receipts\\hv\\20260927T220834Z-plan-review-astra-r2.request.jsonl",
       "response_jsonl": "docs\\receipts\\hv\\20260927T220834Z-plan-review-astra-r2.response.jsonl",
       "status": "failed",
-      "note": "OS206 sandbox blocked reads"
+      "note": "OS206 sandbox blocked reads",
+      "custody": {
+        "pair_commit": "9645105cde5c4061a28961d10c2643b3379e1822",
+        "request_jsonl_commit": "85731bb33ef4a9f1da1c0bbdeff578e28173966b",
+        "response_jsonl_commit": "f996e5f9b6bff688dec46549435dd7da74c9e9a9"
+      }
     },
     {
       "round": "plan-review-astra-r3",
@@ -27,7 +37,12 @@
       "request_jsonl": "docs\\receipts\\hv\\20260927T220955Z-plan-review-astra-r3.request.jsonl",
       "response_jsonl": "docs\\receipts\\hv\\20260927T220955Z-plan-review-astra-r3.response.jsonl",
       "status": "completed",
-      "note": "DISAGREE confidence 78"
+      "note": "DISAGREE confidence 78",
+      "custody": {
+        "pair_commit": "9645105cde5c4061a28961d10c2643b3379e1822",
+        "request_jsonl_commit": "7a4b496b6ac2eac355acc6fee9c7e0108288474c",
+        "response_jsonl_commit": "c28ce4680cbc77811a9d160a909da1af31ee5fbf"
+      }
     },
     {
       "round": "plan-review-astra-r4",
@@ -36,7 +51,12 @@
       "request_jsonl": "docs\\receipts\\hv\\20260927T222413Z-plan-review-astra-r4.request.jsonl",
       "response_jsonl": "docs\\receipts\\hv\\20260927T222413Z-plan-review-astra-r4.response.jsonl",
       "status": "completed",
-      "note": "DISAGREE confidence 94"
+      "note": "DISAGREE confidence 94",
+      "custody": {
+        "pair_commit": "9645105cde5c4061a28961d10c2643b3379e1822",
+        "request_jsonl_commit": "5c24834a4859cbf4aac157e54e2ee1d2768a1bcc",
+        "response_jsonl_commit": "87209c725de27aa6e66a223d0ec0e0dae0933409"
+      }
     }
   ]
 }
