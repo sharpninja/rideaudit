@@ -44,16 +44,115 @@ documents:
   platforms:
   - github
   - azure
+- id: sb-01-pairing
+  title: SB-01 Pairing
+  source: docs/ux/storyboards/SB-01-pairing.md
+  target: Storyboards/SB-01-Pairing.md
+  platforms:
+  - github
+  - azure
+- id: sb-02-driver-coordinate
+  title: SB-02 Driver Coordinate
+  source: docs/ux/storyboards/SB-02-driver-coordinate.md
+  target: Storyboards/SB-02-Driver-Coordinate.md
+  platforms:
+  - github
+  - azure
+- id: sb-03-passenger-composite
+  title: SB-03 Passenger Composite
+  source: docs/ux/storyboards/SB-03-passenger-composite.md
+  target: Storyboards/SB-03-Passenger-Composite.md
+  platforms:
+  - github
+  - azure
+- id: sb-04-seal-receipt
+  title: SB-04 Seal Receipt
+  source: docs/ux/storyboards/SB-04-seal-receipt.md
+  target: Storyboards/SB-04-Seal-Receipt.md
+  platforms:
+  - github
+  - azure
+- id: sb-05-submit-admission
+  title: SB-05 Submit Admission
+  source: docs/ux/storyboards/SB-05-submit-admission.md
+  target: Storyboards/SB-05-Submit-Admission.md
+  platforms:
+  - github
+  - azure
+- id: sb-06-counsel-viewer
+  title: SB-06 Counsel Viewer
+  source: docs/ux/storyboards/SB-06-counsel-viewer.md
+  target: Storyboards/SB-06-Counsel-Viewer.md
+  platforms:
+  - github
+  - azure
+- id: sb-r-01-open-bundle
+  title: SB-R-01 Open Bundle
+  source: docs/ux/review-app/storyboards/SB-R-01-open-bundle.md
+  target: Storyboards/Review-App/SB-R-01-Open-Bundle.md
+  platforms:
+  - github
+  - azure
+- id: sb-r-02-verification-gate
+  title: SB-R-02 Verification Gate
+  source: docs/ux/review-app/storyboards/SB-R-02-verification-gate.md
+  target: Storyboards/Review-App/SB-R-02-Verification-Gate.md
+  platforms:
+  - github
+  - azure
+- id: sb-r-03-escrow-release
+  title: SB-R-03 Escrow Release
+  source: docs/ux/review-app/storyboards/SB-R-03-escrow-release.md
+  target: Storyboards/Review-App/SB-R-03-Escrow-Release.md
+  platforms:
+  - github
+  - azure
+- id: sb-r-04-timeline-playback
+  title: SB-R-04 Timeline Playback
+  source: docs/ux/review-app/storyboards/SB-R-04-timeline-playback.md
+  target: Storyboards/Review-App/SB-R-04-Timeline-Playback.md
+  platforms:
+  - github
+  - azure
+- id: sb-r-05-multi-driver-counsel-bundle
+  title: SB-R-05 Multi-Driver Counsel Bundle
+  source: docs/ux/review-app/storyboards/SB-R-05-multi-driver-counsel-bundle.md
+  target: Storyboards/Review-App/SB-R-05-Multi-Driver-Counsel-Bundle.md
+  platforms:
+  - github
+  - azure
+- id: sb-r-06-export-disclosure
+  title: SB-R-06 Export Disclosure
+  source: docs/ux/review-app/storyboards/SB-R-06-export-disclosure.md
+  target: Storyboards/Review-App/SB-R-06-Export-Disclosure.md
+  platforms:
+  - github
+  - azure
 navigation:
 - document: home
-  children: &o0 []
 - document: functional
-  children: *o0
 - document: technical
-  children: *o0
 - document: testing
-  children: *o0
 - document: mapping
-  children: *o0
 - document: matrix
-  children: *o0
+- title: Storyboards
+  path: Storyboards
+  children:
+  - title: Mobile Dual-Phone
+    path: Storyboards/Mobile
+    children:
+    - document: sb-01-pairing
+    - document: sb-02-driver-coordinate
+    - document: sb-03-passenger-composite
+    - document: sb-04-seal-receipt
+    - document: sb-05-submit-admission
+    - document: sb-06-counsel-viewer
+  - title: Review App
+    path: Storyboards/Review-App
+    children:
+    - document: sb-r-01-open-bundle
+    - document: sb-r-02-verification-gate
+    - document: sb-r-03-escrow-release
+    - document: sb-r-04-timeline-playback
+    - document: sb-r-05-multi-driver-counsel-bundle
+    - document: sb-r-06-export-disclosure
