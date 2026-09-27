@@ -47,9 +47,10 @@
     "model": "gpt-6-astra",
     "reasoning_effort": "xhigh"
   },
-  "committed_at": null,
+  "committed_at": "2026-09-27T17:43:30-05:00",
   "reconstruction": {
     "reconstructed_at": "2026-09-27T17:43:30-05:00",
     "reason": "Canonical pair from retained JSONL per process"
-  }
+  },
+  "custody_commit": "03db10a9e7c5a7084fea39d29fe010db7e5566db"
 }
