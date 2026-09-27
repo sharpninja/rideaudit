@@ -1,0 +1,42 @@
+{
+  "title": "RideAudit PLAN-RIDEAUDIT-001 Astra plan-review index",
+  "reconstructed_at": "2026-09-27T17:33:45-05:00",
+  "reviews": [
+    {
+      "round": "plan-review-astra-r1",
+      "utc": "20260927T220707Z",
+      "pair": "docs/reviews/hv-pairs/20260927T220707Z-plan-review-astra-r1.json",
+      "request_jsonl": "docs\\receipts\\hv\\20260927T220707Z-plan-review-astra.request.jsonl",
+      "response_jsonl": "docs\\receipts\\hv\\20260927T220707Z-plan-review-astra.response.jsonl",
+      "status": "failed",
+      "note": "OS206 sandbox blocked reads"
+    },
+    {
+      "round": "plan-review-astra-r2",
+      "utc": "20260927T220834Z",
+      "pair": "docs/reviews/hv-pairs/20260927T220834Z-plan-review-astra-r2.json",
+      "request_jsonl": "docs\\receipts\\hv\\20260927T220834Z-plan-review-astra-r2.request.jsonl",
+      "response_jsonl": "docs\\receipts\\hv\\20260927T220834Z-plan-review-astra-r2.response.jsonl",
+      "status": "failed",
+      "note": "OS206 sandbox blocked reads"
+    },
+    {
+      "round": "plan-review-astra-r3",
+      "utc": "20260927T220955Z",
+      "pair": "docs/reviews/hv-pairs/20260927T220955Z-plan-review-astra-r3.json",
+      "request_jsonl": "docs\\receipts\\hv\\20260927T220955Z-plan-review-astra-r3.request.jsonl",
+      "response_jsonl": "docs\\receipts\\hv\\20260927T220955Z-plan-review-astra-r3.response.jsonl",
+      "status": "completed",
+      "note": "DISAGREE confidence 78"
+    },
+    {
+      "round": "plan-review-astra-r4",
+      "utc": "20260927T222413Z",
+      "pair": "docs/reviews/hv-pairs/20260927T222413Z-plan-review-astra-r4.json",
+      "request_jsonl": "docs\\receipts\\hv\\20260927T222413Z-plan-review-astra-r4.request.jsonl",
+      "response_jsonl": "docs\\receipts\\hv\\20260927T222413Z-plan-review-astra-r4.response.jsonl",
+      "status": "completed",
+      "note": "DISAGREE confidence 94"
+    }
+  ]
+}

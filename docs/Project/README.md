@@ -36,7 +36,7 @@ BDPv4 batch files for Functional, Technical, Testing, Use-Case, and Mapping enti
 
 ## Use case diagrams
 
-UML use case diagrams for every `UC-RIDE-*` record in `Use-Cases-Batch.yaml` (base, Bluetooth, and Avalonia/gRPC `records:` sections): [docs/ux/use-cases/README.md](../ux/use-cases/README.md).
+UML use case diagrams for all 31 UC-RIDE-* records under the single records key in Use-Cases-Batch.yaml, including the base, Bluetooth, and Avalonia/gRPC use cases: [docs/ux/use-cases/README.md](../ux/use-cases/README.md).
 
 Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-app/flows/` are workflows. They are not per-use-case UML diagrams.
 
@@ -53,3 +53,4 @@ Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-
 - Do not invent Lyft APIs; Unverified caveats from the source doc are preserved in FR notes where relevant.
 - Seal-at-collect, blockchain receipts, escrow, Play Integrity, GPL-2.0, public multi-driver server, dual-phone video composite, and desktop court viewer are covered.
 - Stack: Avalonia UI 12 for Android capture and desktop court viewer; backend gRPC on .NET 10 containers; protos GPL-2.0; OpenAPI companion non-authoritative. See `docs/architecture/stack.md`.
+
