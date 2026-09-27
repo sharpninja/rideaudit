@@ -43,9 +43,10 @@
     "model": "gpt-6-astra",
     "reasoning_effort": "xhigh"
   },
-  "committed_at": null,
+  "committed_at": "2026-09-27T17:33:45-05:00",
   "reconstruction": {
     "reconstructed_at": "2026-09-27T17:33:45-05:00",
     "reason": "BR4-03 reconcile completed reviews into canonical pairs from retained JSONL; do not invent historical timestamps"
-  }
+  },
+  "custody_commit": "56d8d875df85348f02c21807e2c289e0d8d58756"
 }
