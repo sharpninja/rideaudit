@@ -296,3 +296,16 @@ mappings:
     trIds: [TR-RIDE-VIEW-001]
     testIds: [TEST-RIDE-028]
     useCaseLocalIds: [UC-RIDE-019]
+
+  - frId: FR-RIDE-053
+    trIds: [TR-RIDE-VIDEO-010]
+    testIds: [TEST-RIDE-034]
+    useCaseLocalIds: [UC-RIDE-022]
+  - frId: FR-RIDE-054
+    trIds: [TR-RIDE-VIDEO-011]
+    testIds: [TEST-RIDE-034]
+    useCaseLocalIds: [UC-RIDE-023]
+  - frId: FR-RIDE-055
+    trIds: [TR-RIDE-VIDEO-011]
+    testIds: [TEST-RIDE-034]
+    useCaseLocalIds: [UC-RIDE-024]

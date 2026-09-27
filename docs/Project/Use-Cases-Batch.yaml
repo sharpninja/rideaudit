@@ -559,3 +559,44 @@ records:
       - id: AC-UC-021-002
         text: "Unverified caveats from source requirements remain visible where applicable."
         isSatisfied: false
+
+# Additive use cases for Bluetooth driver-rider pairing
+records:
+  - kind: usecase
+    localId: UC-RIDE-022
+    title: Pair driver and passenger phones over Bluetooth
+    briefDescription: Driver and passenger phones discover each other via Bluetooth and confirm roles for one session.
+    actors: [DriverPhone, PassengerPhone]
+    frLinks:
+      - frId: FR-RIDE-053
+        linkType: Realizes
+    basicFlow: |
+      1. Driver enables pairing and advertises driver role.
+      2. Passenger discovers the driver phone over Bluetooth.
+      3. Both confirm driver vs passenger role and session intent.
+      4. Pairing completes or fails closed.
+  - kind: usecase
+    localId: UC-RIDE-023
+    title: Driver coordinates dual-phone session
+    briefDescription: Driver phone starts session clock and coordinates capture lifecycle.
+    actors: [DriverPhone, PassengerPhone]
+    frLinks:
+      - frId: FR-RIDE-054
+        linkType: Realizes
+    basicFlow: |
+      1. After pairing, driver starts the session.
+      2. Driver publishes session clock and coordination commands.
+      3. Driver stops or aborts session and triggers seal/submit orchestration.
+  - kind: usecase
+    localId: UC-RIDE-024
+    title: Passenger syncs joins and overlays telematics
+    briefDescription: Passenger phone syncs video, joins streams, and overlays realtime telematics.
+    actors: [PassengerPhone]
+    frLinks:
+      - frId: FR-RIDE-055
+        linkType: Realizes
+    basicFlow: |
+      1. Passenger follows driver session clock.
+      2. Passenger syncs and joins dual video streams.
+      3. Passenger overlays realtime telematics spider graph.
+      4. Composite is sealed at collect on the composite path.

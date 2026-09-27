@@ -1,0 +1,70 @@
+﻿
+# Additive batch: Bluetooth driver-rider dual-phone roles (2026-09-27)
+records:
+  - kind: fr
+    id: FR-RIDE-053
+    title: Bluetooth driver-rider phone pairing
+    description: Approved phones discover each other over Bluetooth and establish an authenticated driver-rider pairing for one authorized vehicle/session before dual capture begins.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Driver phone and passenger (rider-side) phone. Not Lyft Bluetooth.
+    acceptanceCriteria:
+      - id: AC-RIDE-053-001
+        text: Phones discover peers via Bluetooth and only complete pairing when both sides confirm driver vs passenger role and shared session intent.
+        isSatisfied: false
+      - id: AC-RIDE-053-002
+        text: Pairing fails closed if Bluetooth discovery, role confirmation, or session binding fails.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-054
+    title: Driver phone session coordination
+    description: The driver phone is the session coordinator. It owns session start/stop, shared clock mastership, admission readiness checks, and submission orchestration for the paired session.
+    priority: high
+    area: RIDE
+    status: pending
+    acceptanceCriteria:
+      - id: AC-RIDE-054-001
+        text: Only the driver-role phone may start or stop an admitted dual-phone session after pairing.
+        isSatisfied: false
+      - id: AC-RIDE-054-002
+        text: Driver phone publishes the session clock and coordination commands to the passenger phone over the paired link.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-055
+    title: Passenger phone video sync join and telematics overlay
+    description: The passenger phone performs video synchronization, joins/composites the dual streams, and adds realtime telematics (including accelerometer spider graph) aligned to the shared session clock.
+    priority: high
+    area: RIDE
+    status: pending
+    acceptanceCriteria:
+      - id: AC-RIDE-055-001
+        text: Passenger phone syncs video to the driver-published session clock and records SyncClockOffset.
+        isSatisfied: false
+      - id: AC-RIDE-055-002
+        text: Passenger phone joins streams into the composite and overlays realtime telematics before seal-at-collect on the composite path.
+        isSatisfied: false
+  - kind: tr
+    id: TR-RIDE-VIDEO-010
+    title: Bluetooth pairing and role protocol
+    description: Implement Bluetooth discovery, driver-rider role negotiation, and secure session binding for DualPhoneSession.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+  - kind: tr
+    id: TR-RIDE-VIDEO-011
+    title: Driver coordinator and passenger compositor split
+    description: Driver phone hosts SessionCoordinator; passenger phone hosts VideoSyncJoiner and RealtimeTelematicsOverlay.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+  - kind: test
+    id: TEST-RIDE-034
+    title: Bluetooth pairing and role split
+    description: Verify Bluetooth pairing assigns driver coordinator vs passenger compositor roles and fail-closed paths.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Covers FR-RIDE-053 FR-RIDE-054 FR-RIDE-055
