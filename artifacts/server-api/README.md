@@ -1,20 +1,26 @@
 # RideAudit Server API Artifact
 
-**Artifact ID:** ART-RIDE-API-001  
-**Kind:** openapi  
-**Version:** 0.1.0  
+**Author:** Sharp Ninja
+**Artifact ID:** ART-RIDE-API-001
+**Kind:** grpc-api
+**Version:** 0.1.0
 **License:** GPL-2.0
+
+> **Target stack:** gRPC on .NET 10 containers. The checked-in `openapi.yaml` is an interim human-readable companion and is not the target wire contract.
 
 ## Purpose
 
-Public sealed-submission API for RideAudit. Drivers (via the coordinating driver phone) register accounts and vehicles, open sessions, and upload **sealed** evidence with CustodyReceipt metadata. The ingest path never accepts plaintext video or sensor payloads and does not decrypt at rest on ingest.
+Target API for the RideAudit public sealed-submission service. It runs as gRPC services in .NET 10 containers. Drivers, through the coordinating driver phone, register accounts and vehicles, open sessions, and upload **sealed** evidence with CustodyReceipt metadata. The ingest path never accepts plaintext video or sensor payloads and does not decrypt at rest on ingest.
 
-## Spec
+## Contract documentation
 
-- [openapi.yaml](openapi.yaml)  -  OpenAPI 3.0+ for the public surface
+- **Target contract:** gRPC services on .NET 10 containers
+- [openapi.yaml](openapi.yaml) - interim OpenAPI 3.0+ human-readable companion for the public surface
 - [error-codes.md](error-codes.md)
 - [security.md](security.md)
 - [ARTIFACT.yaml](ARTIFACT.yaml)
+
+The OpenAPI document may help reviewers understand the interim public surface. It does not change the target gRPC and .NET 10 container decision.
 
 ## Fail-closed admission
 
@@ -27,7 +33,9 @@ Submissions are rejected when any of the following hold:
 
 See FR-RIDE-035, FR-RIDE-036, FR-RIDE-026, FR-RIDE-033.
 
-## Endpoints (summary)
+## Interim OpenAPI endpoints (human-readable summary)
+
+The following REST paths describe the interim OpenAPI companion only. They are not the target API wire contract.
 
 | Method | Path | Notes |
 |--------|------|-------|
@@ -40,7 +48,7 @@ See FR-RIDE-035, FR-RIDE-036, FR-RIDE-026, FR-RIDE-033.
 | POST | `/v1/submissions/{id}/chunks` | Resumable sealed upload |
 | GET | `/v1/health` | Liveness |
 
-Auth: bearer token for the driver account (placeholder scheme in the OpenAPI doc).
+Auth: bearer token for the driver account (placeholder scheme in the interim OpenAPI document).
 
 ## License (GPL-2.0)
 
@@ -50,6 +58,6 @@ Copyright (C) 2026 RideAudit contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+as published by the Free Software Foundation; either version
+2 of the License, or (at your option) any later version.
 ```

@@ -1,13 +1,16 @@
 # RideAudit Android Client Artifact
 
-**Artifact ID:** ART-RIDE-ANDROID-001  
-**Kind:** android-client  
-**Version:** 0.1.0  
+**Author:** Sharp Ninja
+**Artifact ID:** ART-RIDE-ANDROID-001
+**Kind:** android-client
+**Version:** 0.1.0
 **License:** GPL-2.0
+
+> **SUPERSEDED IMPLEMENTATION NOTE:** The Kotlin and Gradle scaffold in this directory is historical and superseded. The target mobile UI stack is Avalonia UI 12, shared with the desktop app. Kotlin files remain only as non-authoritative placeholders. This documentation update does not rewrite the Kotlin stubs.
 
 ## Purpose
 
-This package scaffolds the RideAudit Android client used by rideshare drivers to collect dual-phone video and telematics, seal ciphertext at the point of capture, and upload sealed submissions to the public server API. It is a design and source skeleton, not a Play Store release build.
+This package documents the target RideAudit Android client used by rideshare drivers to collect dual-phone video and telematics, seal ciphertext at the point of capture, and upload sealed submissions to the public server API. The target client UI stack is **Avalonia UI 12**. The package is a design and source skeleton, not a Play Store release build.
 
 ## Dual-phone collection (Bluetooth driver-rider pairing)
 
@@ -34,8 +37,8 @@ Copyright (C) 2026 RideAudit contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+as published by the Free Software Foundation; either version
+2 of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,7 +52,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 ## Status
 
-Skeleton only. Gradle files and Kotlin stubs illustrate module boundaries. Play Store publishing is **not** done. See FR-RIDE-031 for the publishing requirement track.
+Documentation target: **Avalonia UI 12** for Android, shared with the desktop app. Skeleton only. The Gradle files and Kotlin stubs illustrate historical module boundaries and are superseded placeholders. Play Store publishing is **not** done. See FR-RIDE-031 for the publishing requirement track.
 
 ## Related docs
 
