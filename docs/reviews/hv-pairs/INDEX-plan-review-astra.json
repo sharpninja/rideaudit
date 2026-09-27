@@ -95,7 +95,7 @@
       "status": "completed",
       "note": "AGREE confidence 98 READY",
       "custody": {
-        "pair_commit": null,
+        "pair_commit": "7654e184c7d2b12d760b0c7bf03f9c9dbc2c0be6",
         "request_jsonl_commit": "0c1e21275bf03e5f79b7c585eb1616f13601e872",
         "response_jsonl_commit": "4688b49a9937fa5204b96f2a640edffbf3b8dc0a"
       }
