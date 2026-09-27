@@ -34,6 +34,12 @@ BDPv4 batch files for Functional, Technical, Testing, Use-Case, and Mapping enti
 - TEST: `TEST-RIDE-NNN`
 - Use cases: local `UC-RIDE-NNN` (MCP assigns numeric IDs at ingest)
 
+## Use case diagrams
+
+UML use case diagrams for every `UC-RIDE-*` record in `Use-Cases-Batch.yaml` (base, Bluetooth, and Avalonia/gRPC `records:` sections): [docs/ux/use-cases/README.md](../ux/use-cases/README.md).
+
+Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-app/flows/` are workflows. They are not per-use-case UML diagrams.
+
 ## Additive batches
 
 | Batch | FR | TR | TEST | UC |
