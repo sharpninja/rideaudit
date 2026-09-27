@@ -1,0 +1,56 @@
+id: ART-RIDE-UX-REVIEW-001
+kind: ux-wireframes-storyboards
+version: "0.1.0"
+title: RideAudit desktop court/counsel review app workflow and wireframes
+license: GPL-2.0
+path: docs/ux/review-app/
+status: draft
+uiStack: Avalonia UI 12
+backendStack: gRPC on .NET 10 (containers)
+relatedFrIds:
+  - FR-RIDE-017  # Custody receipt content
+  - FR-RIDE-018  # Public immutable chain receipt
+  - FR-RIDE-020  # Court-review decryption path docs
+  - FR-RIDE-022  # M-of-N key escrow
+  - FR-RIDE-025  # Play Integrity key binding
+  - FR-RIDE-028  # Counsel verification steps
+  - FR-RIDE-029  # GPL-2.0 licensing
+  - FR-RIDE-038  # Counsel multi-driver bundle
+  - FR-RIDE-047  # Counsel composite playback
+  - FR-RIDE-049  # GPL-2.0 desktop court viewer
+  - FR-RIDE-050  # Viewer fail-closed verification
+  - FR-RIDE-051  # Synchronized timeline display
+  - FR-RIDE-052  # ViewerSession and VerificationReport
+relatedNfrIds:
+  - NFR-21  # Composite integrity and playback
+  - NFR-22  # Desktop portability and fail-closed behavior
+storyboards:
+  - SB-R-01-open-bundle
+  - SB-R-02-verification-gate
+  - SB-R-03-escrow-release
+  - SB-R-04-timeline-playback
+  - SB-R-05-multi-driver-counsel-bundle
+  - SB-R-06-export-disclosure
+wireframes:
+  - WF-R-01-splash-case-open
+  - WF-R-02-bundle-contents
+  - WF-R-03-verification-report
+  - WF-R-04-fail-closed-blocking
+  - WF-R-05-escrow-release-quorum
+  - WF-R-06-synchronized-playback
+  - WF-R-07-provenance-custody-ots
+  - WF-R-08-export-opposing-counsel
+flows:
+  - mermaid-review-workflow
+  - review-workflow
+chainDefault: btc-ots
+relatedArtifacts:
+  - ART-RIDE-UX-001
+notes: >
+  Avalonia UI 12 desktop court/counsel review app UX (Windows, Linux, macOS).
+  Fail-closed independent verification (Bitcoin OTS primary, hashes, Play Integrity,
+  escrow auth) before any decrypt or display. Decrypt only via court-authorized
+  M-of-N escrow into an expiring working copy. Produces ViewerSession and
+  VerificationReport per review. Multi-driver bundles verify per-record, not merged
+  custody. Backend services are gRPC on .NET 10 containers. No Lyft private APIs;
+  Unverified gaps labeled. Does not replace ART-RIDE-UX-001 (mobile capture UX).

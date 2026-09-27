@@ -1,6 +1,6 @@
 # RideAudit UX (dual-phone)
 
-ASCII wireframes, storyboards, and session flow for the Android dual-phone capture path.
+ASCII wireframes, storyboards, and session flow for the Avalonia UI 12 dual-phone capture path (Android).
 
 ## Architecture reflected
 
@@ -11,10 +11,12 @@ ASCII wireframes, storyboards, and session flow for the Android dual-phone captu
 5. Play Integrity attestation binds the collector; failed attestation is fail-closed.
 6. License: GPL-2.0. Public sealed submit only (no plaintext at ingest).
 7. Custody receipts anchor primarily via Bitcoin OpenTimestamps (OTS). See `docs/architecture/blockchain-custody-receipts.md`.
+8. UI stack: **Avalonia UI 12** for Android dual-phone apps and for the desktop court/counsel review app. Backend: **gRPC on .NET 10** containers. See `docs/architecture/stack.md`.
 
 ## Artifact
 
-- `ARTIFACT.yaml` id: `ART-RIDE-UX-001`
+- `ARTIFACT.yaml` id: `ART-RIDE-UX-001` (mobile capture UX)
+- Desktop court/counsel review UX: [`review-app/`](review-app/) id **`ART-RIDE-UX-REVIEW-001`**
 
 ## Index
 
@@ -27,9 +29,9 @@ ASCII wireframes, storyboards, and session flow for the Android dual-phone captu
 | SB-03 | [storyboards/SB-03-passenger-composite.md](storyboards/SB-03-passenger-composite.md) | Passenger composite and telematics |
 | SB-04 | [storyboards/SB-04-seal-receipt.md](storyboards/SB-04-seal-receipt.md) | Seal-at-collect and OTS receipt |
 | SB-05 | [storyboards/SB-05-submit-admission.md](storyboards/SB-05-submit-admission.md) | Public sealed submit admission |
-| SB-06 | [storyboards/SB-06-counsel-viewer.md](storyboards/SB-06-counsel-viewer.md) | Counsel desktop viewer overview |
+| SB-06 | [storyboards/SB-06-counsel-viewer.md](storyboards/SB-06-counsel-viewer.md) | Counsel desktop viewer overview (details in ART-RIDE-UX-REVIEW-001) |
 
-### Wireframes (Android)
+### Wireframes (Avalonia UI 12 mobile)
 
 | ID | File | Screen |
 | --- | --- | --- |
@@ -46,8 +48,15 @@ ASCII wireframes, storyboards, and session flow for the Android dual-phone captu
 
 - [flows/mermaid-session-flow.md](flows/mermaid-session-flow.md) sequence diagram for a full dual-phone session
 
+### Desktop review app (separate ART)
+
+- [review-app/README.md](review-app/README.md) (`ART-RIDE-UX-REVIEW-001`)
+- Workflow: [review-app/flows/review-workflow.md](review-app/flows/review-workflow.md), [review-app/flows/mermaid-review-workflow.md](review-app/flows/mermaid-review-workflow.md)
+- Storyboards SB-R-01 .. SB-R-06 and wireframes WF-R-01 .. WF-R-08 under `review-app/`
+
 ## Related docs
 
+- `docs/architecture/stack.md`
 - `docs/architecture/dual-phone-bluetooth-roles.md`
 - `docs/architecture/blockchain-custody-receipts.md`
 - `artifacts/android/ARTIFACT.yaml` (`ART-RIDE-ANDROID-001`)

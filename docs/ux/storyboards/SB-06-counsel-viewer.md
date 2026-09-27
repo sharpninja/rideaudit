@@ -1,8 +1,9 @@
 # SB-06 Counsel viewer overview
 
-**Artifact:** ART-RIDE-UX-001  
-**FR links:** FR-RIDE-046, FR-RIDE-017, FR-RIDE-018, FR-RIDE-045  
-**Surfaces:** Desktop court/counsel viewer (not Android primary); referenced from mobile submit success
+**Artifact:** ART-RIDE-UX-001 (overview only)  
+**Detailed desktop ART:** **ART-RIDE-UX-REVIEW-001** (`docs/ux/review-app/`)  
+**FR links:** FR-RIDE-049, FR-RIDE-050, FR-RIDE-047, FR-RIDE-052, FR-RIDE-017, FR-RIDE-018, FR-RIDE-045  
+**Surfaces:** Desktop court/counsel viewer (Avalonia UI 12; not Android primary); referenced from mobile submit success
 
 ## Goal
 
@@ -11,8 +12,9 @@ Counsel and auditors review sealed dual-phone evidence with provenance: seal met
 ## Actors
 
 - Counsel / Auditor
-- Desktop viewer application
+- Desktop viewer application (Avalonia UI 12)
 - Escrow / dual-control release process (legal process; not in-app casual decrypt)
+- gRPC .NET 10 backend services (containers)
 
 ## Beats
 
@@ -39,4 +41,4 @@ Counsel and auditors review sealed dual-phone evidence with provenance: seal met
 
 ## Notes
 
-UI here is an overview storyboard for desktop counsel tooling. Detailed wireframes in this ART focus on Android capture; counsel screens are narrative until a dedicated desktop ART exists.
+This storyboard is an overview handoff from the mobile capture ART. **Detailed counsel workflow, storyboards (SB-R-01 .. SB-R-06), and wireframes (WF-R-01 .. WF-R-08) live in `ART-RIDE-UX-REVIEW-001`** at `docs/ux/review-app/`. That ART requires fail-closed independent verification (Bitcoin OTS primary, hashes, Play Integrity binding, escrow auth) before decrypt or display.
