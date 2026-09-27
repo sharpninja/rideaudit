@@ -1,0 +1,23 @@
+id: ART-RIDE-API-001
+kind: openapi
+version: "0.1.0"
+title: RideAudit public sealed-submission API
+license: GPL-2.0
+path: artifacts/server-api/
+status: draft-spec
+relatedFrIds:
+  - FR-RIDE-032  # Public-server driver account
+  - FR-RIDE-033  # Vehicle registration
+  - FR-RIDE-035  # Sealed-only submission API
+  - FR-RIDE-036  # Admission verification chain
+  - FR-RIDE-026  # Reject failed Play Integrity
+  - FR-RIDE-039  # Public-server abuse controls
+  - FR-RIDE-040  # Multi-tenant isolation
+  - FR-RIDE-201  # TLS and secrets vault
+  - FR-RIDE-218  # Public-server admission capacity
+  - FR-RIDE-029  # GPL-2.0 licensing
+  - FR-RIDE-030  # GPL2 notices on artifacts
+spec: openapi.yaml
+notes: >
+  Public sealed-submission API only. Fail-closed admission. No decrypt at ingest.
+  Bearer driver-account token is a placeholder scheme.

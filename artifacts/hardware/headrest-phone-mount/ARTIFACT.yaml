@@ -1,0 +1,25 @@
+id: ART-RIDE-MOUNT-001
+kind: mechanical-3d
+format: openscad
+version: "0.1.0"
+title: Dual-phone headrest mounting bracket
+license: GPL-2.0
+path: artifacts/hardware/headrest-phone-mount/
+status: parametric-model
+relatedFrIds:
+  - FR-RIDE-041  # Dual-phone video capture
+  - FR-RIDE-029  # GPL-2.0 licensing
+  - FR-RIDE-030  # GPL2 notices on artifacts
+parameters:
+  - post_spacing_min
+  - post_spacing_max
+  - post_diameter
+  - phone_width_min
+  - phone_width_max
+  - phone_thickness_max
+  - clamp_depth
+  - camera_clearance
+  - dual_cradle
+notes: >
+  Clamps to two vertical headrest posts; landscape cradles for one or two phones.
+  Not crash-rated. Supports RideAudit Bluetooth driver-rider dual-phone capture.

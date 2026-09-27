@@ -1,0 +1,40 @@
+id: ART-RIDE-ANDROID-001
+kind: android-client
+version: "0.1.0"
+title: RideAudit Android client (dual-phone, seal-at-collect)
+license: GPL-2.0
+path: artifacts/android/
+status: skeleton
+relatedFrIds:
+  - FR-RIDE-015  # Seal and encrypt at collection
+  - FR-RIDE-016  # Per-session or per-sample keys
+  - FR-RIDE-017  # Custody receipt content
+  - FR-RIDE-025  # Play Integrity key binding
+  - FR-RIDE-026  # Reject failed Play Integrity
+  - FR-RIDE-027  # Attestation on custody receipt
+  - FR-RIDE-029  # GPL-2.0 licensing
+  - FR-RIDE-030  # GPL2 notices on artifacts
+  - FR-RIDE-031  # Publish client via Play and source repo
+  - FR-RIDE-032  # Public-server driver account
+  - FR-RIDE-033  # Vehicle registration
+  - FR-RIDE-035  # Sealed-only submission API
+  - FR-RIDE-041  # Dual-phone video capture
+  - FR-RIDE-042  # Shared session clock sync
+  - FR-RIDE-043  # On-device/edge compositing
+  - FR-RIDE-044  # Spider-graph overlay
+  - FR-RIDE-045  # Seal composite as first-class evidence
+  - FR-RIDE-215  # Play authenticity allowlist
+modules:
+  - collect
+  - seal
+  - attest
+  - composite
+  - upload
+  - identity
+notes: >
+  Minimal Android project skeleton. Not a full buildable release.
+  Play Store publishing is not claimed as complete.
+  Dual-phone model: Bluetooth discovery creates a driver-rider pairing.
+  Driver phone coordinates session clock, admit/start/stop, seal admission,
+  and submission. Passenger phone handles video sync, stream compositing,
+  and realtime telematics (spider-graph overlay). No Lyft private APIs.

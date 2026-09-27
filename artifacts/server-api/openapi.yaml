@@ -1,0 +1,531 @@
+openapi: 3.0.3
+info:
+  title: RideAudit Public Sealed-Submission API
+  version: 0.1.0
+  description: |
+    Public API for RideAudit driver registration, vehicle binding, sessions,
+    and sealed evidence submission. Ingest is fail-closed and never accepts
+    plaintext video or sensor payloads. The server does not decrypt at ingest.
+
+    License: GPL-2.0
+  license:
+    name: GPL-2.0
+    url: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+servers:
+  - url: https://api.rideaudit.example/v1
+    description: Placeholder production base (version prefix also on paths)
+  - url: http://localhost:8080/v1
+    description: Local development placeholder
+tags:
+  - name: drivers
+  - name: vehicles
+  - name: sessions
+  - name: submissions
+  - name: health
+paths:
+  /v1/drivers/register:
+    post:
+      tags: [drivers]
+      summary: Register a driver account
+      operationId: registerDriver
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRegistrationRequest'
+      responses:
+        '201':
+          description: Driver account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverAccount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/vehicles:
+    post:
+      tags: [vehicles]
+      summary: Register a vehicle for the authenticated driver
+      operationId: registerVehicle
+      security:
+        - DriverBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleRegistrationRequest'
+      responses:
+        '201':
+          description: Vehicle registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleRegistration'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [vehicles]
+      summary: List vehicles for the authenticated driver
+      operationId: listVehicles
+      security:
+        - DriverBearer: []
+      responses:
+        '200':
+          description: Vehicle list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [vehicles]
+                properties:
+                  vehicles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VehicleRegistration'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/sessions:
+    post:
+      tags: [sessions]
+      summary: Open an audit session (driver phone coordinates)
+      operationId: createSession
+      security:
+        - DriverBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionCreateRequest'
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditSession'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/FailClosed'
+  /v1/submissions:
+    post:
+      tags: [submissions]
+      summary: Create a sealed submission (ciphertext reference + CustodyReceipt)
+      description: |
+        Accepts sealed ciphertext by multipart file part and/or a JSON envelope
+        with an opaque blob reference. NEVER plaintext video or sensors.
+        Fail-closed if receipt, attestation, or vehicle checks fail.
+      operationId: createSubmission
+      security:
+        - DriverBearer: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [receipt, attestation, vehicleId, sessionId]
+              properties:
+                receipt:
+                  $ref: '#/components/schemas/CustodyReceipt'
+                attestation:
+                  $ref: '#/components/schemas/AppAttestation'
+                vehicleId:
+                  type: string
+                sessionId:
+                  type: string
+                sealedBlob:
+                  type: string
+                  format: binary
+                  description: Optional sealed ciphertext bytes (never plaintext)
+                sealedBlobRef:
+                  type: string
+                  description: Opaque reference if blob uploaded via chunks
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionCreateRequest'
+      responses:
+        '202':
+          description: Submission accepted for admission processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/FailClosed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/submissions/{id}/admission-status:
+    get:
+      tags: [submissions]
+      summary: Get fail-closed admission status for a submission
+      operationId: getAdmissionStatus
+      security:
+        - DriverBearer: []
+      parameters:
+        - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200':
+          description: Admission status and log summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerAdmissionLog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/submissions/{id}/chunks:
+    post:
+      tags: [submissions]
+      summary: Upload a sealed chunk (resumable)
+      description: Chunk body is sealed ciphertext only. Plaintext is rejected.
+      operationId: uploadSubmissionChunk
+      security:
+        - DriverBearer: []
+      parameters:
+        - $ref: '#/components/parameters/SubmissionId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [chunkIndex, totalChunks, sealedChunk]
+              properties:
+                chunkIndex:
+                  type: integer
+                  minimum: 0
+                totalChunks:
+                  type: integer
+                  minimum: 1
+                sealedChunk:
+                  type: string
+                  format: binary
+                chunkContentHash:
+                  type: string
+                  description: Hash of this sealed chunk
+      responses:
+        '204':
+          description: Chunk stored
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Chunk index conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          $ref: '#/components/responses/FailClosed'
+  /v1/health:
+    get:
+      tags: [health]
+      summary: Liveness probe
+      operationId: health
+      security: []
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ok
+components:
+  securitySchemes:
+    DriverBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+      description: |
+        Placeholder driver account token scheme. Production may use OAuth2
+        access tokens or equivalent; this draft uses Bearer only.
+  parameters:
+    SubmissionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    FailClosed:
+      description: |
+        Admission or policy rejection (missing receipt, failed Play Integrity,
+        unregistered vehicle, plaintext payload, or related fail-closed rule).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          description: Machine-readable code (see error-codes.md)
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+    DriverRegistrationRequest:
+      type: object
+      required: [email, displayName]
+      properties:
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        locale:
+          type: string
+    DriverAccount:
+      type: object
+      required: [id, email, createdAt]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        accessToken:
+          type: string
+          description: Placeholder bearer token issued at registration (dev only pattern)
+    VehicleRegistrationRequest:
+      type: object
+      required: [vinOrPlateKey, label]
+      properties:
+        vinOrPlateKey:
+          type: string
+          description: Stable vehicle key (VIN hash or plate key per policy)
+        label:
+          type: string
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+    VehicleRegistration:
+      type: object
+      required: [id, driverId, vinOrPlateKey, label, registeredAt]
+      properties:
+        id:
+          type: string
+        driverId:
+          type: string
+        vinOrPlateKey:
+          type: string
+        label:
+          type: string
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        registeredAt:
+          type: string
+          format: date-time
+    SessionCreateRequest:
+      type: object
+      required: [vehicleId]
+      properties:
+        vehicleId:
+          type: string
+        dualPhone:
+          type: boolean
+          default: true
+          description: Driver-rider Bluetooth dual-phone session
+        notes:
+          type: string
+    AuditSession:
+      type: object
+      required: [id, driverId, vehicleId, status, createdAt]
+      properties:
+        id:
+          type: string
+        driverId:
+          type: string
+        vehicleId:
+          type: string
+        status:
+          type: string
+          enum: [open, closed, aborted]
+        dualPhone:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    CustodyReceipt:
+      type: object
+      required:
+        - sessionId
+        - contentHash
+        - sealedAt
+        - attestationTokenHash
+        - keyScheme
+      properties:
+        sessionId:
+          type: string
+        contentHash:
+          type: string
+          description: Hash of sealed ciphertext (or Merkle root of chunks)
+        sealedAt:
+          type: string
+          format: date-time
+        attestationTokenHash:
+          type: string
+        keyScheme:
+          type: string
+          description: e.g. session-aead-v1
+        composite:
+          type: boolean
+          description: True if sealed payload is dual-phone composite evidence
+        deviceIds:
+          type: array
+          items:
+            type: string
+        blockchainTxHint:
+          type: string
+          description: Optional later-filled chain write reference
+    AppAttestation:
+      type: object
+      required: [provider, token, nonce, obtainedAt]
+      properties:
+        provider:
+          type: string
+          enum: [play_integrity]
+        token:
+          type: string
+          description: Integrity token (server verifies; do not log raw in full)
+        nonce:
+          type: string
+        obtainedAt:
+          type: string
+          format: date-time
+        clientClaimedVerdictOk:
+          type: boolean
+          description: Client hint only; server must verify independently
+    SubmissionCreateRequest:
+      type: object
+      required: [sessionId, vehicleId, receipt, attestation]
+      properties:
+        sessionId:
+          type: string
+        vehicleId:
+          type: string
+        receipt:
+          $ref: '#/components/schemas/CustodyReceipt'
+        attestation:
+          $ref: '#/components/schemas/AppAttestation'
+        sealedBlobRef:
+          type: string
+          description: Opaque reference when using chunked upload
+        contentType:
+          type: string
+          description: Must indicate sealed envelope, never raw video/*
+          example: application/vnd.rideaudit.sealed+octet-stream
+    Submission:
+      type: object
+      required: [id, sessionId, vehicleId, status, createdAt]
+      properties:
+        id:
+          type: string
+        sessionId:
+          type: string
+        vehicleId:
+          type: string
+        status:
+          type: string
+          enum: [pending_admission, admitted, rejected, receiving_chunks]
+        createdAt:
+          type: string
+          format: date-time
+    ServerAdmissionLog:
+      type: object
+      required: [submissionId, decision, checkedAt, checks]
+      properties:
+        submissionId:
+          type: string
+        decision:
+          type: string
+          enum: [pending, admitted, rejected]
+        checkedAt:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          required:
+            - receiptPresent
+            - playIntegrityOk
+            - vehicleRegistered
+            - plaintextRejected
+          properties:
+            receiptPresent:
+              type: boolean
+            playIntegrityOk:
+              type: boolean
+            vehicleRegistered:
+              type: boolean
+            plaintextRejected:
+              type: boolean
+              description: |
+                True when plaintext was detected and refused (good).
+                Admission requires plaintextRejected=true in the sense that
+                plaintext was not accepted; implementers should treat any
+                plaintext attempt as decision=rejected.
+            notes:
+              type: string
+        rejectCode:
+          type: string
+          description: Error code when decision=rejected
+security:
+  - DriverBearer: []
