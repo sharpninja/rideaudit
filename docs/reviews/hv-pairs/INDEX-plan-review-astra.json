@@ -67,7 +67,7 @@
       "status": "completed",
       "note": "DISAGREE confidence 97",
       "custody": {
-        "pair_commit": "03db10a9e7c5a7084fea39d29fe010db7e5566db",
+        "pair_commit": "913e4a5954209b2dc026aace5962946a429730d5",
         "request_jsonl_commit": "a0dab6c4dc182a0706b2181c68b1d050b5aa7870",
         "response_jsonl_commit": "2f427d3a58ecc1aa0b91e15466ab01752f32e885"
       }
@@ -81,7 +81,7 @@
       "status": "completed",
       "note": "DISAGREE confidence 97",
       "custody": {
-        "pair_commit": null,
+        "pair_commit": "913e4a5954209b2dc026aace5962946a429730d5",
         "request_jsonl_commit": "a0dab6c4dc182a0706b2181c68b1d050b5aa7870",
         "response_jsonl_commit": "2f427d3a58ecc1aa0b91e15466ab01752f32e885"
       }
