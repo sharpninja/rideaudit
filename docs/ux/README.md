@@ -48,6 +48,12 @@ ASCII wireframes, storyboards, and session flow for the Avalonia UI 12 dual-phon
 
 - [flows/mermaid-session-flow.md](flows/mermaid-session-flow.md) sequence diagram for a full dual-phone session
 
+### Use case diagrams
+
+UML use case diagrams, one file per `UC-RIDE-*` id: [use-cases/README.md](use-cases/README.md).
+
+These are not the session or review sequence flows in `flows/` and `review-app/flows/`.
+
 ### Desktop review app (separate ART)
 
 - [review-app/README.md](review-app/README.md) (`ART-RIDE-UX-REVIEW-001`)
