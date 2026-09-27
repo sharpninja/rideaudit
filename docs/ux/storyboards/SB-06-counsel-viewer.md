@@ -5,6 +5,39 @@
 **FR links:** FR-RIDE-049, FR-RIDE-050, FR-RIDE-047, FR-RIDE-052, FR-RIDE-017, FR-RIDE-018, FR-RIDE-045  
 **Surfaces:** Desktop court/counsel viewer (Avalonia UI 12; not Android primary); referenced from mobile submit success
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-R-01 Splash / case open](../assets/wireframes/WF-R-01-splash-case-open.svg)
+
+[Open WF-R-01-splash-case-open.svg](../assets/wireframes/WF-R-01-splash-case-open.svg)
+
+![WF-R-02 Bundle contents (sealed)](../assets/wireframes/WF-R-02-bundle-contents.svg)
+
+[Open WF-R-02-bundle-contents.svg](../assets/wireframes/WF-R-02-bundle-contents.svg)
+
+![WF-R-03 Verification report](../assets/wireframes/WF-R-03-verification-report.svg)
+
+[Open WF-R-03-verification-report.svg](../assets/wireframes/WF-R-03-verification-report.svg)
+
+![WF-R-06 Synchronized playback and spider](../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+[Open WF-R-06-synchronized-playback.svg](../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+![WF-R-07 Provenance / OTS custody](../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+[Open WF-R-07-provenance-custody-ots.svg](../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+![WF-R-08 Export for opposing counsel](../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+[Open WF-R-08-export-opposing-counsel.svg](../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ## Goal
 
 Counsel and auditors review sealed dual-phone evidence with provenance: seal metadata, Play Integrity attestation summary, Bitcoin OTS custody receipt, SyncClockOffset, composite with spider-graph overlay, and escrow/decryption path status (no casual plaintext).

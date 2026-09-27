@@ -5,6 +5,19 @@
 **Artifact:** ART-RIDE-UX-001  
 **API:** ART-RIDE-API-001 sealed-only
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-07 Submit status](../assets/wireframes/WF-07-submit-status.svg)
+
+[Open WF-07-submit-status.svg](../assets/wireframes/WF-07-submit-status.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 |  Sealed submit                Role:D |

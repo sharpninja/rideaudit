@@ -2,7 +2,24 @@
 
 **Artifact:** ART-RIDE-UX-001  
 **FR links:** FR-RIDE-055, FR-RIDE-041, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045  
-**Screens:** WF-05, WF-08
+**Screens:** [WF-05](../assets/wireframes/WF-05-passenger-capture-spider.svg), [WF-08](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-05 Passenger capture and spider](../assets/wireframes/WF-05-passenger-capture-spider.svg)
+
+[Open WF-05-passenger-capture-spider.svg](../assets/wireframes/WF-05-passenger-capture-spider.svg)
+
+![WF-08 Fail-closed errors](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+[Open WF-08-fail-closed-errors.svg](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

@@ -3,8 +3,21 @@
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **FR links:** FR-RIDE-047, FR-RIDE-051  
 **NFR:** NFR-21  
-**Screens:** WF-R-06  
+**Screens:** [WF-R-06](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
 **UI:** Avalonia UI 12 desktop
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-R-06 Synchronized playback and spider](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+[Open WF-R-06-synchronized-playback.svg](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

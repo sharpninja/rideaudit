@@ -2,8 +2,21 @@
 
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **FR links:** FR-RIDE-020, FR-RIDE-022, FR-RIDE-028, FR-RIDE-049  
-**Screens:** WF-R-05  
+**Screens:** [WF-R-05](../../assets/wireframes/WF-R-05-escrow-release-quorum.svg)
 **UI:** Avalonia UI 12 desktop
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-R-05 Escrow release / quorum](../../assets/wireframes/WF-R-05-escrow-release-quorum.svg)
+
+[Open WF-R-05-escrow-release-quorum.svg](../../assets/wireframes/WF-R-05-escrow-release-quorum.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

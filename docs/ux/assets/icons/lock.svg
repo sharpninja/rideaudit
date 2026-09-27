@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RideAudit icon lock. License: GPL-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img">
+  <title>lock</title>
+  <path d="M8 11V8.1a4 4 0 0 1 8 0V11" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><rect x="5.4" y="11" width="13.2" height="8.6" rx="1.8" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linejoin="round"/>
+</svg>

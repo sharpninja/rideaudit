@@ -5,6 +5,19 @@
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **Chain default:** Bitcoin OpenTimestamps (btc-ots)
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-07 Provenance / OTS custody](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+[Open WF-R-07-provenance-custody-ots.svg](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | Provenance / CustodyReceipt                                          |

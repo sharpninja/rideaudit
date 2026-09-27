@@ -2,8 +2,25 @@
 
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **FR links:** FR-RIDE-049, FR-RIDE-052, FR-RIDE-038  
-**Screens:** WF-R-01, WF-R-02  
+**Screens:** [WF-R-01](../../assets/wireframes/WF-R-01-splash-case-open.svg), [WF-R-02](../../assets/wireframes/WF-R-02-bundle-contents.svg)
 **UI:** Avalonia UI 12 desktop
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-R-01 Splash / case open](../../assets/wireframes/WF-R-01-splash-case-open.svg)
+
+[Open WF-R-01-splash-case-open.svg](../../assets/wireframes/WF-R-01-splash-case-open.svg)
+
+![WF-R-02 Bundle contents (sealed)](../../assets/wireframes/WF-R-02-bundle-contents.svg)
+
+[Open WF-R-02-bundle-contents.svg](../../assets/wireframes/WF-R-02-bundle-contents.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

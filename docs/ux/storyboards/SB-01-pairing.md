@@ -2,7 +2,32 @@
 
 **Artifact:** ART-RIDE-UX-001  
 **FR links:** FR-RIDE-053, FR-RIDE-054  
-**Screens:** WF-01, WF-02, WF-03, WF-08
+**Screens:** [WF-01](../assets/wireframes/WF-01-splash-role-select.svg), [WF-02](../assets/wireframes/WF-02-bt-discover.svg), [WF-03](../assets/wireframes/WF-03-pairing-confirm.svg), [WF-08](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-01 Splash / role select](../assets/wireframes/WF-01-splash-role-select.svg)
+
+[Open WF-01-splash-role-select.svg](../assets/wireframes/WF-01-splash-role-select.svg)
+
+![WF-02 Bluetooth discover](../assets/wireframes/WF-02-bt-discover.svg)
+
+[Open WF-02-bt-discover.svg](../assets/wireframes/WF-02-bt-discover.svg)
+
+![WF-03 Pairing confirm](../assets/wireframes/WF-03-pairing-confirm.svg)
+
+[Open WF-03-pairing-confirm.svg](../assets/wireframes/WF-03-pairing-confirm.svg)
+
+![WF-08 Fail-closed errors](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+[Open WF-08-fail-closed-errors.svg](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

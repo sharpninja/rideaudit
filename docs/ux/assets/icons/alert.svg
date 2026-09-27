@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RideAudit icon alert. License: GPL-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img">
+  <title>alert</title>
+  <path d="M12 3.4 21.6 20.4H2.4Z" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9.2v4.6" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16.8" r="0.9" fill="#1A2433"/>
+</svg>

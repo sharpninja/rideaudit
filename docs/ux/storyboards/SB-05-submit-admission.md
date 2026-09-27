@@ -2,8 +2,25 @@
 
 **Artifact:** ART-RIDE-UX-001  
 **FR links:** FR-RIDE-035, FR-RIDE-036, FR-RIDE-026, FR-RIDE-032, FR-RIDE-039  
-**Screens:** WF-07, WF-08  
+**Screens:** [WF-07](../assets/wireframes/WF-07-submit-status.svg), [WF-08](../assets/wireframes/WF-08-fail-closed-errors.svg)
 **API:** ART-RIDE-API-001 (sealed-only)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-07 Submit status](../assets/wireframes/WF-07-submit-status.svg)
+
+[Open WF-07-submit-status.svg](../assets/wireframes/WF-07-submit-status.svg)
+
+![WF-08 Fail-closed errors](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+[Open WF-08-fail-closed-errors.svg](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

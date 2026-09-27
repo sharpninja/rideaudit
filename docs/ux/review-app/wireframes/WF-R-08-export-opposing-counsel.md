@@ -5,6 +5,19 @@
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **Chain default:** Bitcoin OpenTimestamps (btc-ots)
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-08 Export for opposing counsel](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+[Open WF-R-08-export-opposing-counsel.svg](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | Export disclosure pack                                               |

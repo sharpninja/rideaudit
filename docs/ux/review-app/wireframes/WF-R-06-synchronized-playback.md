@@ -4,6 +4,19 @@
 **Storyboards:** SB-R-04  
 **Artifact:** ART-RIDE-UX-REVIEW-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-06 Synchronized playback and spider](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+[Open WF-R-06-synchronized-playback.svg](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | Playback  working copy expires_at: 2026-09-30 10:02 CT   [Valid]     |

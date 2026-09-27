@@ -3,9 +3,30 @@
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **FR links:** FR-RIDE-017, FR-RIDE-018, FR-RIDE-025, FR-RIDE-028, FR-RIDE-050  
 **NFR:** NFR-22  
-**Screens:** WF-R-03, WF-R-04, WF-R-07  
+**Screens:** [WF-R-03](../../assets/wireframes/WF-R-03-verification-report.svg), [WF-R-04](../../assets/wireframes/WF-R-04-fail-closed-blocking.svg), [WF-R-07](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
 **UI:** Avalonia UI 12 desktop  
 **Chain default:** Bitcoin OpenTimestamps (`btc-ots`)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-R-03 Verification report](../../assets/wireframes/WF-R-03-verification-report.svg)
+
+[Open WF-R-03-verification-report.svg](../../assets/wireframes/WF-R-03-verification-report.svg)
+
+![WF-R-04 Fail-closed blocking](../../assets/wireframes/WF-R-04-fail-closed-blocking.svg)
+
+[Open WF-R-04-fail-closed-blocking.svg](../../assets/wireframes/WF-R-04-fail-closed-blocking.svg)
+
+![WF-R-07 Provenance / OTS custody](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+[Open WF-R-07-provenance-custody-ots.svg](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

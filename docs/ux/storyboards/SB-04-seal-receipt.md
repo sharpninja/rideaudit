@@ -2,8 +2,25 @@
 
 **Artifact:** ART-RIDE-UX-001  
 **FR links:** FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-027, FR-RIDE-045  
-**Screens:** WF-06, WF-08  
+**Screens:** [WF-06](../assets/wireframes/WF-06-seal-progress.svg), [WF-08](../assets/wireframes/WF-08-fail-closed-errors.svg)
 **Chain default:** Bitcoin OpenTimestamps (btc-ots)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-06 Seal progress](../assets/wireframes/WF-06-seal-progress.svg)
+
+[Open WF-06-seal-progress.svg](../assets/wireframes/WF-06-seal-progress.svg)
+
+![WF-08 Fail-closed errors](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+[Open WF-08-fail-closed-errors.svg](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

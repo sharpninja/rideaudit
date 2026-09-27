@@ -4,6 +4,19 @@
 **Storyboards:** SB-01  
 **Artifact:** ART-RIDE-UX-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-02 Bluetooth discover](../assets/wireframes/WF-02-bt-discover.svg)
+
+[Open WF-02-bt-discover.svg](../assets/wireframes/WF-02-bt-discover.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 | <-  Bluetooth discover        Role:D |

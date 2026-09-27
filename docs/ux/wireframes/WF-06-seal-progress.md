@@ -5,6 +5,19 @@
 **Artifact:** ART-RIDE-UX-001  
 **Chain default:** btc-ots (Bitcoin OpenTimestamps)
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-06 Seal progress](../assets/wireframes/WF-06-seal-progress.svg)
+
+[Open WF-06-seal-progress.svg](../assets/wireframes/WF-06-seal-progress.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 |  Seal at collect              Role:* |

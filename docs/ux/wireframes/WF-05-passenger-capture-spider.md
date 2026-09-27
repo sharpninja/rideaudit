@@ -4,6 +4,19 @@
 **Storyboards:** SB-03  
 **Artifact:** ART-RIDE-UX-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-05 Passenger capture and spider](../assets/wireframes/WF-05-passenger-capture-spider.svg)
+
+[Open WF-05-passenger-capture-spider.svg](../assets/wireframes/WF-05-passenger-capture-spider.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 |  Passenger capture            Role:P |

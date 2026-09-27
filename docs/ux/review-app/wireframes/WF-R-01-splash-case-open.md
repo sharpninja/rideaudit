@@ -4,6 +4,19 @@
 **Storyboards:** SB-R-01  
 **Artifact:** ART-RIDE-UX-REVIEW-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-01 Splash / case open](../../assets/wireframes/WF-R-01-splash-case-open.svg)
+
+[Open WF-R-01-splash-case-open.svg](../../assets/wireframes/WF-R-01-splash-case-open.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | RideAudit Court Review                          [GPL-2.0]  v0.1.0    |

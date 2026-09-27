@@ -2,7 +2,32 @@
 
 **Artifact:** ART-RIDE-UX-001  
 **FR links:** FR-RIDE-054, FR-RIDE-042, FR-RIDE-025  
-**Screens:** WF-04, WF-06, WF-07, WF-08
+**Screens:** [WF-04](../assets/wireframes/WF-04-driver-dashboard.svg), [WF-06](../assets/wireframes/WF-06-seal-progress.svg), [WF-07](../assets/wireframes/WF-07-submit-status.svg), [WF-08](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-04 Driver dashboard](../assets/wireframes/WF-04-driver-dashboard.svg)
+
+[Open WF-04-driver-dashboard.svg](../assets/wireframes/WF-04-driver-dashboard.svg)
+
+![WF-06 Seal progress](../assets/wireframes/WF-06-seal-progress.svg)
+
+[Open WF-06-seal-progress.svg](../assets/wireframes/WF-06-seal-progress.svg)
+
+![WF-07 Submit status](../assets/wireframes/WF-07-submit-status.svg)
+
+[Open WF-07-submit-status.svg](../assets/wireframes/WF-07-submit-status.svg)
+
+![WF-08 Fail-closed errors](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+[Open WF-08-fail-closed-errors.svg](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 

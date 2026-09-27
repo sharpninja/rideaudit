@@ -2,9 +2,26 @@
 
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **FR links:** FR-RIDE-017, FR-RIDE-018, FR-RIDE-028, FR-RIDE-052  
-**Screens:** WF-R-07, WF-R-08  
+**Screens:** [WF-R-07](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg), [WF-R-08](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
 **UI:** Avalonia UI 12 desktop  
 **Chain default:** Bitcoin OpenTimestamps (`btc-ots`)
+
+<!-- wireframe-svg:start -->
+
+## Visual wireframes
+
+SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
+
+![WF-R-07 Provenance / OTS custody](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+[Open WF-R-07-provenance-custody-ots.svg](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+![WF-R-08 Export for opposing counsel](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+[Open WF-R-08-export-opposing-counsel.svg](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+<!-- wireframe-svg:end -->
+
 
 ## Goal
 
