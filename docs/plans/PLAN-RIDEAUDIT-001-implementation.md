@@ -1,7 +1,7 @@
 # PLAN-RIDEAUDIT-001 — RideAudit implementation plan (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.1 (post Astra r5 BR5-01/BR5-02 residual)  
+**Revision:** r3.2 (post Astra r6 BR6 residual)  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
@@ -160,9 +160,9 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-209 | medium | In-product API gap notice | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-209-001 | P9 |
 | FR-RIDE-210 | critical | Legal hold suspends deletion | TR-RIDE-STORE-003, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | AC-RIDE-210-001 | P10 |
 | FR-RIDE-211 | high | Cryptographic agility | TR-RIDE-SEAL-003 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-211-001, AC-RIDE-211-002 | P3 |
-| FR-RIDE-212 | high | Configurable public chain | TR-RIDE-CHAIN-002 | TEST-RIDE-014 | UC-RIDE-009 | AC-RIDE-212-001, AC-RIDE-212-002, AC-RIDE-212-003 | P3 (OTS default) + P11a (alternate profiles) |
+| FR-RIDE-212 | P3 (OTS default) + P11a (alternate profiles) |
 | FR-RIDE-213 | high | Seal/receipt latency budget | TR-RIDE-PERF-001 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-213-001, AC-RIDE-213-002 | P3 |
-| FR-RIDE-214 | critical | HSM/KMS key custody | TR-RIDE-ESCROW-003 | TEST-RIDE-029 | UC-RIDE-010, UC-RIDE-011 | AC-RIDE-214-001, AC-RIDE-214-002 | P5 |
+| FR-RIDE-214 | P5 |
 | FR-RIDE-215 | critical | Play authenticity allowlist | TR-RIDE-PLAY-001, TR-RIDE-PLAY-003 | TEST-RIDE-019 | UC-RIDE-012 | AC-RIDE-215-001, AC-RIDE-215-002, AC-RIDE-215-003 | P4 |
 | FR-RIDE-216 | critical | Escrow resilience | TR-RIDE-ESCROW-001 | TEST-RIDE-017 | UC-RIDE-011 | AC-RIDE-216-001, AC-RIDE-216-002 | P5 |
 | FR-RIDE-217 | critical | GPL-2.0 governance NFR | TR-RIDE-GPL-001 | TEST-RIDE-020 | UC-RIDE-013 | AC-RIDE-217-001, AC-RIDE-217-002 | P11b |
@@ -1522,7 +1522,7 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-211 | P3 |
 | FR-RIDE-212 | P3 (OTS default) + P11a (alternate profiles) |
 | FR-RIDE-213 | P3 |
-| FR-RIDE-214 | P3 (OTS default) + P11a (alternate profiles) |
+| FR-RIDE-214 | P5 |
 | FR-RIDE-215 | P4 |
 | FR-RIDE-216 | P5 |
 | FR-RIDE-217 | P11b |
@@ -1547,6 +1547,7 @@ Unassigned FR count: 0 — (none)
 ---
 
 **End of PLAN-RIDEAUDIT-001 revision r3**
+
 
 
 

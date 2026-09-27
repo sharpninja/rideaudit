@@ -71,20 +71,6 @@
         "request_jsonl_commit": "a0dab6c4dc182a0706b2181c68b1d050b5aa7870",
         "response_jsonl_commit": "2f427d3a58ecc1aa0b91e15466ab01752f32e885"
       }
-    },
-    {
-      "round": "plan-review-astra-r5",
-      "utc": "20260927T223510Z",
-      "pair": "docs/reviews/hv-pairs/20260927T223510Z-plan-review-astra-r5.json",
-      "request_jsonl": "docs\\receipts\\hv\\20260927T223510Z-plan-review-astra-r5.request.jsonl",
-      "response_jsonl": "docs\\receipts\\hv\\20260927T223510Z-plan-review-astra-r5.response.jsonl",
-      "status": "completed",
-      "note": "DISAGREE confidence 97",
-      "custody": {
-        "pair_commit": "913e4a5954209b2dc026aace5962946a429730d5",
-        "request_jsonl_commit": "a0dab6c4dc182a0706b2181c68b1d050b5aa7870",
-        "response_jsonl_commit": "2f427d3a58ecc1aa0b91e15466ab01752f32e885"
-      }
     }
   ]
 }

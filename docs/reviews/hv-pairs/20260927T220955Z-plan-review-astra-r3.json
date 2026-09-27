@@ -43,8 +43,10 @@
     "provider": "xai",
     "model": null,
     "model_status": "unavailable",
-    "model_note": "Plan authored by Grok executor subagent; exact generator model id not retained in HV request metadata for R1-R4.",
-    "reasoning_effort": "xhigh"
+    "model_note": "Plan authored by Grok executor; exact generator model id not retained in HV request metadata.",
+    "reasoning_effort": null,
+    "reasoning_effort_status": "unavailable",
+    "reasoning_effort_note": "No retained evidence of generator reasoning_effort setting for plan authorship; do not assert xhigh without evidence."
   },
   "validator": {
     "agent": "Codex",
