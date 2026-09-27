@@ -1,0 +1,50 @@
+id: ART-RIDE-UX-001
+kind: ux-wireframes-storyboards
+version: "0.1.0"
+title: RideAudit dual-phone UI wireframes and storyboards
+license: GPL-2.0
+path: docs/ux/
+status: draft
+relatedFrIds:
+  - FR-RIDE-015  # Seal and encrypt at collection
+  - FR-RIDE-017  # Custody receipt content
+  - FR-RIDE-018  # Public immutable chain receipt
+  - FR-RIDE-025  # Play Integrity key binding
+  - FR-RIDE-026  # Reject failed Play Integrity
+  - FR-RIDE-029  # GPL-2.0 licensing
+  - FR-RIDE-035  # Sealed-only submission API
+  - FR-RIDE-036  # Admission verification chain
+  - FR-RIDE-041  # Dual-phone video capture
+  - FR-RIDE-042  # Shared session clock sync
+  - FR-RIDE-043  # On-device/edge compositing
+  - FR-RIDE-044  # Spider-graph overlay
+  - FR-RIDE-045  # Seal composite as first-class evidence
+  - FR-RIDE-046  # Court/desktop viewer
+  - FR-RIDE-053  # Bluetooth driver-rider phone pairing
+  - FR-RIDE-054  # Driver phone session coordination
+  - FR-RIDE-055  # Passenger video sync join and telematics overlay
+storyboards:
+  - SB-01-pairing
+  - SB-02-driver-coordinate
+  - SB-03-passenger-composite
+  - SB-04-seal-receipt
+  - SB-05-submit-admission
+  - SB-06-counsel-viewer
+wireframes:
+  - WF-01-splash-role-select
+  - WF-02-bt-discover
+  - WF-03-pairing-confirm
+  - WF-04-driver-dashboard
+  - WF-05-passenger-capture-spider
+  - WF-06-seal-progress
+  - WF-07-submit-status
+  - WF-08-fail-closed-errors
+flows:
+  - mermaid-session-flow
+chainDefault: btc-ots
+notes: >
+  ASCII Android wireframes and narrative storyboards for dual-phone RideAudit.
+  Bluetooth discovery creates driver-rider pairing. Driver phone coordinates.
+  Passenger phone composites video and overlays realtime telematics.
+  Seal-at-collect, Play Integrity fail-closed, GPL-2.0, public sealed submit.
+  Primary custody receipt path is Bitcoin OpenTimestamps (OTS).
