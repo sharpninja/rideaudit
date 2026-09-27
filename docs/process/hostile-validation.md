@@ -83,3 +83,10 @@ For an unavailable or failed run, use a truthful response status such as `unavai
 A generated change is not accepted until the required opposing-model HV has been run (or explicitly recorded as unavailable/failed with no false pass), the exact pair is stored, and the pair is committed. Reviewers must check the pair path and commit before treating HV claims as evidence.
 
 See [code-generation.md](code-generation.md) for the end-to-end generation checklist.
+
+## 6. Operator-authorized plan review exception (RideAudit)
+
+For `PLAN-RIDEAUDIT-001` plan reviews only, the operator may authorize Codex `gpt-6-astra` at `xhigh` as the plan hostile reviewer. This exception does **not** replace the product generator/validator matrix in section 2. Product code HV remains opposing-model as specified above.
+
+Plan and product reviews must retain raw JSONL under `docs/receipts/hv/` and the canonical single JSON pair under `docs/reviews/hv-pairs/`.
+

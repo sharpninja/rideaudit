@@ -25,7 +25,7 @@ BDPv4 batch files for Functional, Technical, Testing, Use-Case, and Mapping enti
    - `Additive-Bluetooth-Pairing-Batch.yaml`
    - `Additive-Avalonia-Grpc-Stack-Batch.yaml`
 4. Apply `Requirements-Mappings-Batch.yaml` after FR/TR/TEST/UC records exist (use-case localIds map to numeric MCP IDs at runtime).
-5. Verify counts: base 74 FRs (52 functional + 22 NFR-as-FR), plus additive FR-RIDE-053..055 (Bluetooth) and FR-RIDE-056..062 (Avalonia/gRPC stack), plus related TR/TEST/UC records and one mapping per FR.
+5. Verify counts: base 74 FRs (52 functional + 22 NFR-as-FR), plus additive FR-RIDE-053..055 (Bluetooth) and FR-RIDE-056..062 (Avalonia/gRPC stack), plus related TR/TEST/UC records and one mapping per FR. Use-Cases-Batch.yaml must contain a single top-level records key with all UC-RIDE-001..031 (duplicate records keys are invalid for strict parsers).
 
 ## ID conventions
 
