@@ -1,0 +1,29 @@
+﻿You are an adversarial auditor. Attack the RideAudit documentation for gaps, contradictions, court-admissibility failures, custody holes, fail-open paths, invented Lyft APIs, missing BDPv4 links (UC/AC/TEST), stack inconsistencies, and wireframe/workflow incompleteness. Be hostile and specific. Cite file paths.
+
+SCOPE — read and validate ONLY these areas (documents only; do not rewrite application code):
+- docs/source/lyft-telematics-audit-requirements.md
+- docs/Project/** YAML
+- docs/architecture/**
+- docs/ux/** including review-app if present
+- docs/artifacts/INDEX.md
+- artifacts/** ARTIFACT.yaml and READMEs only
+
+CONSTRAINTS the docs claim (verify they are consistent and complete):
+- Docs only phase; Avalonia UI 12 for Android and desktop apps; backend gRPC on .NET 10 containers
+- Seal-at-collect; Bitcoin OpenTimestamps primary; fail-closed verify before decrypt/display
+- Dual-phone BT: driver coordinates, passenger composites
+- GPL-2.0; no invented Lyft private APIs; Unverified labeled
+- Byrd Dev Process v4: FR needs UC, AC, TEST
+
+Also confirm docs/architecture/stack.md exists and matches the Avalonia UI 12 + gRPC/.NET 10 claims. If docs/ux/review-app is incomplete or missing pieces, note the gap.
+
+DELIVERABLE — produce a structured hostile validation report with exactly these sections:
+1. Executive verdict (pass / pass-with-issues / fail)
+2. Critical findings (must-fix before build)
+3. Major findings
+4. Minor / nits
+5. Contradictions between docs
+6. Missing documents
+7. Recommended doc-only remediations (no code)
+
+Be hostile and specific. Cite file paths for every finding. Write the full report as your final message (markdown).
