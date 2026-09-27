@@ -1,0 +1,13 @@
+# RideAudit MCP workspace trust status
+# Author: Sharp Ninja
+status: MCP_TRUSTED
+workspace: rideaudit
+workspacePath: F:\GitHub\rideaudit
+todoPath: docs/todo.yaml
+marker: AGENTS-README-FIRST.yaml
+baseUrl: http://PAYTON-LEGION2:7147
+notes: |
+  Workspace registered and initialized via mcpserver-grok-plugin.
+  Marker signature validated with Invoke-FullBootstrap.
+  BDPv4 requirements (FR/TR/TEST), mappings, and use cases ingested into McpServer.
+  Do not commit apiKey values; credentials live only in the signed marker file.

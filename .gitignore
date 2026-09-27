@@ -5,3 +5,5 @@ obj/
 *.user
 AGENTS-README-FIRST.yaml
 
+.mcpServer/
+cache/
