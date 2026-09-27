@@ -4,6 +4,19 @@
 **Storyboards:** SB-01  
 **Artifact:** ART-RIDE-UX-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-01 Splash / role select](../assets/wireframes/WF-01-splash-role-select.svg)
+
+[Open WF-01-splash-role-select.svg](../assets/wireframes/WF-01-splash-role-select.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 | 12:56                        5G  BT  |

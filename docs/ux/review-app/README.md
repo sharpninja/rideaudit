@@ -1,6 +1,6 @@
 # RideAudit desktop court / counsel review app (UX)
 
-ASCII wireframes, storyboards, and review workflow for the **Avalonia UI 12** desktop court/counsel viewer (Windows, Linux, macOS).
+SVG wireframes, ASCII structural specs, storyboards, and review workflow for the **Avalonia UI 12** desktop court/counsel viewer (Windows, Linux, macOS).
 
 ## Purpose
 
@@ -67,6 +67,8 @@ SB-06 in the mobile package is an overview handoff only. Detailed counsel screen
 | WF-R-07 | [wireframes/WF-R-07-provenance-custody-ots.md](wireframes/WF-R-07-provenance-custody-ots.md) | Provenance / OTS custody |
 | WF-R-08 | [wireframes/WF-R-08-export-opposing-counsel.md](wireframes/WF-R-08-export-opposing-counsel.md) | Export for opposing counsel |
 
+SVG window mocks with inline icons: [../assets/wireframes/README.md](../assets/wireframes/README.md).
+
 ### Flows
 
 - [flows/mermaid-review-workflow.md](flows/mermaid-review-workflow.md) sequential mermaid for the full review path
@@ -84,4 +86,4 @@ SB-06 in the mobile package is an overview handoff only. Detailed counsel screen
 
 - BDPv4 UX artifact. No em dashes in authored text.
 - Do not invent Lyft private APIs. Label **Unverified** gaps.
-- Docs and ASCII wireframes only in this package (no app scaffolds here).
+- Docs and wireframes only in this package (SVG mocks and ASCII structural specs; no app scaffolds).

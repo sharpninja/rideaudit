@@ -4,6 +4,19 @@
 **Storyboards:** SB-01 .. SB-05  
 **Artifact:** ART-RIDE-UX-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-08 Fail-closed errors](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+[Open WF-08-fail-closed-errors.svg](../assets/wireframes/WF-08-fail-closed-errors.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 |  Action blocked (fail-closed)        |

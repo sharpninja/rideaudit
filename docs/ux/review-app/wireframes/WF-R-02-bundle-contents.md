@@ -4,6 +4,19 @@
 **Storyboards:** SB-R-01, SB-R-05  
 **Artifact:** ART-RIDE-UX-REVIEW-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-02 Bundle contents (sealed)](../../assets/wireframes/WF-R-02-bundle-contents.svg)
+
+[Open WF-R-02-bundle-contents.svg](../../assets/wireframes/WF-R-02-bundle-contents.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | Bundle RB-77821  Case CASE-2026-0914-A1           ViewerSession open |

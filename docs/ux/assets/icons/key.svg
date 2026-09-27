@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RideAudit icon key. License: GPL-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img">
+  <title>key</title>
+  <circle cx="8" cy="12" r="3.3" fill="none" stroke="#1A2433" stroke-width="1.75"/><path d="M11.2 12H20.2" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 12v2.7" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.2 12v2.2" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

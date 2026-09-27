@@ -4,6 +4,19 @@
 **Storyboards:** SB-02, SB-05  
 **Artifact:** ART-RIDE-UX-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-04 Driver dashboard](../assets/wireframes/WF-04-driver-dashboard.svg)
+
+[Open WF-04-driver-dashboard.svg](../assets/wireframes/WF-04-driver-dashboard.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 |  Driver dashboard             Role:D |

@@ -1,6 +1,6 @@
 # RideAudit UX (dual-phone)
 
-ASCII wireframes, storyboards, and session flow for the Avalonia UI 12 dual-phone capture path (Android).
+SVG wireframes, ASCII structural specs, storyboards, and session flow for the Avalonia UI 12 dual-phone capture path (Android).
 
 ## Architecture reflected
 
@@ -43,6 +43,8 @@ ASCII wireframes, storyboards, and session flow for the Avalonia UI 12 dual-phon
 | WF-06 | [wireframes/WF-06-seal-progress.md](wireframes/WF-06-seal-progress.md) | Seal progress |
 | WF-07 | [wireframes/WF-07-submit-status.md](wireframes/WF-07-submit-status.md) | Submit status |
 | WF-08 | [wireframes/WF-08-fail-closed-errors.md](wireframes/WF-08-fail-closed-errors.md) | Fail-closed errors |
+
+SVG phone mocks with inline icons: [assets/wireframes/README.md](assets/wireframes/README.md).
 
 ### Flows
 

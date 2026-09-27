@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RideAudit icon battery. License: GPL-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img">
+  <title>battery</title>
+  <rect x="1.8" y="7.2" width="18.2" height="9.6" rx="2" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linejoin="round"/><rect x="20.4" y="10.2" width="1.8" height="3.6" rx="0.6" fill="#1A2433"/><rect x="3.6" y="9.1" width="9.516" height="5.8" rx="1" fill="#1A2433"/>
+</svg>

@@ -5,6 +5,19 @@
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **Backend:** gRPC .NET 10 containers (escrow service)
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-05 Escrow release / quorum](../../assets/wireframes/WF-R-05-escrow-release-quorum.svg)
+
+[Open WF-R-05-escrow-release-quorum.svg](../../assets/wireframes/WF-R-05-escrow-release-quorum.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | CourtRelease / Escrow (M-of-N dual control)                          |

@@ -4,6 +4,19 @@
 **Storyboards:** SB-01  
 **Artifact:** ART-RIDE-UX-001
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-03 Pairing confirm](../assets/wireframes/WF-03-pairing-confirm.svg)
+
+[Open WF-03-pairing-confirm.svg](../assets/wireframes/WF-03-pairing-confirm.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +--------------------------------------+
 | <-  Confirm pairing           Role:D |

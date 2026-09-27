@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RideAudit icon steering. License: GPL-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img">
+  <title>steering</title>
+  <circle cx="12" cy="12" r="8" fill="none" stroke="#1A2433" stroke-width="1.75"/><circle cx="12" cy="12" r="2.2" fill="none" stroke="#1A2433" stroke-width="1.75"/><path d="M12 4v5.8" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.1 15.5 9.5 13" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.9 15.5 14.5 13" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

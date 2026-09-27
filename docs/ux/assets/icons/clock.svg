@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RideAudit icon clock. License: GPL-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="8" fill="none" stroke="#1A2433" stroke-width="1.75"/><path d="M12 7.5V12l3.3 2.2" fill="none" stroke="#1A2433" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

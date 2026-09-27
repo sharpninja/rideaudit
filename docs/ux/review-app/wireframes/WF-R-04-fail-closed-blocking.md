@@ -5,6 +5,19 @@
 **Artifact:** ART-RIDE-UX-REVIEW-001  
 **Chain default:** Bitcoin OpenTimestamps (btc-ots)
 
+<!-- wireframe-svg:start -->
+
+## Visual wireframe
+
+Realistic SVG mock with inline icon paths. The ASCII block below stays the structural spec.
+
+![WF-R-04 Fail-closed blocking](../../assets/wireframes/WF-R-04-fail-closed-blocking.svg)
+
+[Open WF-R-04-fail-closed-blocking.svg](../../assets/wireframes/WF-R-04-fail-closed-blocking.svg)
+
+<!-- wireframe-svg:end -->
+
+
 ```
 +----------------------------------------------------------------------+
 | ACTION BLOCKED (fail-closed)                                         |
