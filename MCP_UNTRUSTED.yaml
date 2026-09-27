@@ -1,0 +1,6 @@
+﻿# Local-only marker stub. MCP registration skipped (MCP_UNTRUSTED).
+# Re-run workspace init via mcpserver-grok-plugin when McpServer health recovers.
+status: MCP_UNTRUSTED
+workspace: rideaudit
+workspacePath: F:\GitHub\rideaudit
+todoPath: docs/todo.yaml
