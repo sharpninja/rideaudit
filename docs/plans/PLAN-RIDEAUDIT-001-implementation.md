@@ -1,18 +1,58 @@
-# PLAN-RIDEAUDIT-001 — RideAudit implementation plan (BDPv4)
+# PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.2 + Astra r7 AGREE  
+**Revision:** r3.3 — portfolio/index after split into three child implementation plans  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
 **Process:** Byrd Dev Process v4 (BDPv4)  
-**Generator for this plan:** Grok (executor) — plan/docs only  
-**Hostile plan reviewer:** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Astra AGREE (r7, confidence/accuracy/completeness 98) — awaiting Payton AGREE before P1 app code  
-**Created:** 2026-09-27 (America/Chicago)  
-**Prior HV:** r1/r2 DISAGREE@0 (OS206); r3 DISAGREE@78; r4 DISAGREE@94. This revision applies r4 path_to_98.
+**Generator:** Grok (executor) — docs split only  
+**Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) — awaiting Payton AGREE before P1 app code. Child plans are scoped extracts and do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Created:** 2026-09-27 (America/Chicago)
 
-> **HARD GATE (section 8):** No Avalonia/gRPC application implementation, skeletons, application test projects, or generated application bindings until P0 docs repair is complete, Astra returns READY/AGREE with accuracy/completeness/confidence ≥98 on this revision, and Payton explicitly agrees. No waivers.
+> **HARD GATE (section 8):** No Avalonia/gRPC application implementation, skeletons, application test projects, or generated application bindings until P0 docs repair is complete, Astra returns READY/AGREE with accuracy/completeness/confidence ≥98 on the reviewed portfolio revision, and Payton explicitly agrees. No waivers.
+
+---
+
+## 0. Child implementation plans (portfolio split)
+
+| Child plan | Scope | Artifact primary | Path |
+| --- | --- | --- | --- |
+| **PLAN-RIDEAUDIT-001-BRACKET** | Headrest phone-mount / OpenSCAD / STL / physical mount | ART-RIDE-MOUNT-001 | [PLAN-RIDEAUDIT-001-BRACKET.md](./PLAN-RIDEAUDIT-001-BRACKET.md) |
+| **PLAN-RIDEAUDIT-001-ANDROID** | Avalonia UI 12 **clients**: Android dual-phone (driver+passenger) **and** desktop court/counsel review app | ART-RIDE-ANDROID-001, ART-RIDE-UX-001, ART-RIDE-UX-REVIEW-001 | [PLAN-RIDEAUDIT-001-ANDROID.md](./PLAN-RIDEAUDIT-001-ANDROID.md) |
+| **PLAN-RIDEAUDIT-001-SERVER** | gRPC .NET 10 backend containers, custody anchoring, sealed APIs, ingest, escrow, counsel services | ART-RIDE-API-001 | [PLAN-RIDEAUDIT-001-SERVER.md](./PLAN-RIDEAUDIT-001-SERVER.md) |
+
+**Bracket meaning (confirmed):** mechanical dual-phone **headrest mounting bracket** under `artifacts/hardware/headrest-phone-mount/` — not a software “bracket.” Desktop review is **not** Bracket; it is an Avalonia client under the ANDROID (Clients) plan.
+
+### 0.1 FR primary ownership by child (no portfolio orphans)
+
+| Child | FR count (primary + shared notices) | FR IDs |
+| --- | ---: | --- |
+| BRACKET | 3 | FR-RIDE-029, FR-RIDE-030, FR-RIDE-041 |
+| ANDROID | 31 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-025, FR-RIDE-026, FR-RIDE-027, FR-RIDE-029, FR-RIDE-030, FR-RIDE-031, FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045, FR-RIDE-046, FR-RIDE-047, FR-RIDE-048, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-053, FR-RIDE-054, FR-RIDE-055, FR-RIDE-056, FR-RIDE-057, FR-RIDE-058, FR-RIDE-215, FR-RIDE-219, FR-RIDE-220, FR-RIDE-221, FR-RIDE-222 |
+| SERVER | 56 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-014, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-201, FR-RIDE-202, FR-RIDE-203, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, FR-RIDE-208, FR-RIDE-209, FR-RIDE-210, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
+
+Union covers all **84** parent FRs (shared FR-029/030/026 appear in more than one child with role notes). Detailed FR→UC→AC→TEST rows live in each child; the complete 404-row AC ledger remains in **§2.7** below (authoritative inventory).
+
+### 0.2 Parent phase → child mapping
+
+| Parent phase | Child home |
+| --- | --- |
+| P0 docs/traceability | Portfolio (this index) |
+| P1 protos/GPL skeleton | SERVER (S1) + notices on all children |
+| P2 admission | SERVER (S2) |
+| P3 seal store + OTS | SERVER (S3); client seal UX in ANDROID (A2) |
+| P4 Play Integrity | ANDROID (A2); SERVER reject path FR-026 |
+| P5 escrow | SERVER (S4) |
+| P6 BT + Avalonia Android | ANDROID (A3) |
+| P7 desktop viewer | ANDROID (A4) |
+| P8 counsel/analysis services | SERVER (S5); viewer UX ANDROID |
+| P9 ingest | SERVER (S6) |
+| P10 privacy/RBAC | SERVER (S7) |
+| P11a alternate chain | SERVER (S8) |
+| P11b integrated release | Portfolio + all children |
+| HW0–HW2 mount | BRACKET |
 
 ---
 
@@ -24,11 +64,12 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 
 ### 1.2 Goals
 
-1. BDPv4-complete phased plan with FR ↔ UC ↔ AC ↔ TR ↔ TEST for every slice, including TR/TEST/UC-owned ACs.
+1. BDPv4-complete phased plan with FR → UC → AC → TR → TEST for every slice, including TR/TEST/UC-owned ACs.
 2. Align architecture to locked stack, BT roles (FR-RIDE-053–055), OTS custody primary + optional ETH L2.
 3. Evolve artifact packages into real code only after section 8 gate.
 4. Opposing-model HV with durable receipts under `docs/receipts/hv/` **and** canonical pairs under `docs/reviews/hv-pairs/`.
-5. Keep implementers from writing app code until Astra + Payton AGREE on this revision.
+5. Keep implementers from writing app code until Astra + Payton AGREE on the reviewed portfolio revision.
+6. **Portfolio split:** execution detail for Bracket / Android clients / Server lives in the three child plans above.
 
 ### 1.3 Non-goals
 
@@ -40,6 +81,7 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 - Treating interim OpenAPI as authoritative wire contract.
 - Private/permissioned chain as sole custody ledger.
 - Reconstructing existing UC YAML records from Markdown (preserve YAML flows/ACs).
+- Claiming Astra AGREE on child extracts without review.
 
 ### 1.4 Current baseline
 
@@ -47,22 +89,19 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 | --- | --- |
 | App source (`src/`) | Absent |
 | Requirements YAML | FR 84, TR 64, TEST 37, mappings 84/84 |
-| UC YAML | **31 unique UC-RIDE-001..031** under one `records:` key (duplicate keys at former lines 2/564/606 consolidated in P0 repair) |
+| UC YAML | **31 unique UC-RIDE-001..031** under one `records:` key |
 | UC markdown | UC-RIDE-001..031 under `docs/ux/use-cases/` |
 | Stack / custody / BT | Recorded under `docs/architecture/` |
 | Artifacts | ART-RIDE-ANDROID-001, ART-RIDE-API-001, ART-RIDE-MOUNT-001, ART-RIDE-UX-001, ART-RIDE-UX-REVIEW-001 |
-| MCP | `MCP_UNTRUSTED` until health recovers |
-| Plan HV | Astra R1-R2 env-blocked; R3 DISAGREE@78; R4 DISAGREE@94; R5 DISAGREE@97; this r3 addresses BR4/BR5 residual |
+| Plan HV | Astra R7 AGREE@98 on parent body prior to split |
 
 ### 1.5 BDPv4 order
 
 1. Requirements captured + P0 YAML/traceability repair.
-2. This plan revision + Astra READY/AGREE (≥98) + Payton AGREE.
-3. Per construction phase: RED → mocks green → real green → refactor; Failed 0 Skipped 0.
+2. Portfolio plan + child extracts + Astra READY/AGREE (≥98) on reviewed revision + Payton AGREE.
+3. Per construction phase (in owning child): RED → mocks green → real green → refactor; Failed 0 Skipped 0.
 4. Opposing-model product HV AGREE; retain JSONL + canonical pair; commit immediately.
 5. Mark phase complete only after HV + suite green.
-
-Code gen: `grok-4.6-xhigh` or `gpt-6-sol` xhigh. Product HV: opposing model per `docs/process/hostile-validation.md`. Plan HV: gpt-6-astra xhigh (operator-authorized exception; does not replace product matrix).
 
 ---
 
@@ -1451,7 +1490,7 @@ Before the gate, only documentation, requirement YAML, plans, process records, a
 - [ ] Payton AGREE on the same revision
 - [ ] Only then may implementers begin P1 tests-first skeleton
 
-## 10. Primary implementation ownership; final acceptance tracked separately
+## 10. Primary implementation ownership (parent phases); child homes in §0.2
 
 Appendix rows name the **primary implementation owner**. Final acceptance of broad TEST records may complete in a later phase per §3 partitions. **No application FR has P0 as its implementation owner.**
 
@@ -1546,7 +1585,9 @@ Unassigned FR count: 0 — (none)
 
 ---
 
-**End of PLAN-RIDEAUDIT-001 revision r3**
+**End of PLAN-RIDEAUDIT-001 revision r3.3 (portfolio index + child split)**
+
+Child plans: PLAN-RIDEAUDIT-001-BRACKET · PLAN-RIDEAUDIT-001-ANDROID · PLAN-RIDEAUDIT-001-SERVER
 
 
 
