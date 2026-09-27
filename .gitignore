@@ -7,3 +7,7 @@ AGENTS-README-FIRST.yaml
 
 .mcpServer/
 cache/
+
+mcp.db
+*.db-journal
+
