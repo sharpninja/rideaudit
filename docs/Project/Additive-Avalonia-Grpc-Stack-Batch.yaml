@@ -1,0 +1,196 @@
+# Additive batch: Avalonia UI 12 and gRPC .NET 10 stack (2026-09-27)
+# Author: Sharp Ninja
+# Architecture: docs/architecture/stack.md
+records:
+  - kind: fr
+    id: FR-RIDE-056
+    title: Avalonia UI 12 Android dual-phone capture client
+    description: Implement the Android dual-phone capture client (driver coordinator and passenger compositor) with Avalonia UI 12 as the sole UI framework for capture surfaces.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Stack decision. Cross-link docs/architecture/stack.md and ART-RIDE-ANDROID-001. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-056-001
+        text: Android capture client builds and runs with Avalonia UI 12 for driver and passenger roles.
+        isSatisfied: false
+      - id: AC-RIDE-056-002
+        text: Capture UX does not depend on a non-Avalonia UI framework for primary screens.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-057
+    title: Avalonia UI 12 desktop court viewer
+    description: Implement the desktop court and counsel review app with Avalonia UI 12 on Windows, Linux, and macOS, preserving escrow-only decrypt and fail-closed verification behavior.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Stack decision. Extends FR-RIDE-049. Cross-link docs/architecture/stack.md and ART-RIDE-UX-REVIEW-001. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-057-001
+        text: Desktop court viewer builds with Avalonia UI 12 on Windows, Linux, and macOS.
+        isSatisfied: false
+      - id: AC-RIDE-057-002
+        text: Viewer keeps escrow-only decrypt and fail-closed verification (FR-RIDE-049, FR-RIDE-050).
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-058
+    title: Shared Avalonia UI 12 constraints under GPL-2.0
+    description: Share Avalonia UI 12 controls, themes, and client libraries across Android capture and desktop review under GPL-2.0. Do not introduce a conflicting UI license for in-scope RideAudit application UI code.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Stack decision. Aligns with FR-RIDE-029 and FR-RIDE-217. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-058-001
+        text: Shared Avalonia UI 12 client libraries are licensed and published under GPL-2.0 with notices.
+        isSatisfied: false
+      - id: AC-RIDE-058-002
+        text: Android and desktop clients consume the shared Avalonia stack without substituting a non-GPL-2.0 UI license for in-scope app UI.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-059
+    title: Backend gRPC on .NET 10 containers
+    description: Expose the public RideAudit backend as gRPC services hosted on .NET 10 and deployed as containers. Accept only sealed ciphertext packages plus custody-receipt metadata at ingest. Never decrypt sealed payloads at public-server ingest.
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: Stack decision. Extends FR-RIDE-035. Cross-link docs/architecture/stack.md and ART-RIDE-API-001. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-059-001
+        text: Public backend services are gRPC on .NET 10 and ship as container images.
+        isSatisfied: false
+      - id: AC-RIDE-059-002
+        text: Ingest accepts only sealed ciphertext plus custody-receipt metadata and never decrypts at ingest.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-060
+    title: Proto and schema publication under GPL-2.0
+    description: Publish authoritative gRPC protobuf contracts and related custody or verification schemas under GPL-2.0 with versioned source and license notices so clients and forks can interoperate without inventing private Lyft APIs.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Stack decision. Aligns with FR-RIDE-029. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-060-001
+        text: Proto files and related schemas are published under GPL-2.0 with version and license notices.
+        isSatisfied: false
+      - id: AC-RIDE-060-002
+        text: Published contracts do not invent undocumented Lyft private APIs.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-061
+    title: Fail-closed admission over gRPC
+    description: Apply existing fail-closed admission verification (receipt, hash, chain, attestation, binding, authorized driver or vehicle) to all gRPC submit and admission RPCs. Reject and do not store on any verification failure.
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: Stack decision. Extends FR-RIDE-036 over the gRPC transport. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-061-001
+        text: gRPC submit and admission RPCs run the same fail-closed admission checks as FR-RIDE-036.
+        isSatisfied: false
+      - id: AC-RIDE-061-002
+        text: Any admission failure rejects the RPC without storing an admitted sealed package.
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-062
+    title: Interim OpenAPI companion non-authoritative
+    description: Treat any interim OpenAPI description as a non-authoritative human-readable companion. gRPC protobuf contracts are the sole authoritative service API for clients and admission behavior.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Stack decision. ART-RIDE-API-001 may retain OpenAPI as companion only. Author Sharp Ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-062-001
+        text: Documentation and ARTIFACT metadata state that OpenAPI is non-authoritative versus gRPC protos.
+        isSatisfied: false
+      - id: AC-RIDE-062-002
+        text: Client and server conformance tests bind to gRPC contracts, not OpenAPI, when they disagree.
+        isSatisfied: false
+  - kind: tr
+    id: TR-RIDE-VIDEO-012
+    title: Avalonia UI 12 Android capture client
+    description: Build the Android dual-phone capture client on Avalonia UI 12 for driver coordinator and passenger compositor surfaces.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: Implements/supports FR-RIDE-056. Author Sharp Ninja.
+  - kind: tr
+    id: TR-RIDE-VIEW-005
+    title: Avalonia UI 12 desktop court viewer
+    description: Build the cross-platform desktop court viewer on Avalonia UI 12 while retaining escrow-only decrypt and fail-closed verification.
+    priority: high
+    area: RIDE
+    subarea: VIEW
+    status: pending
+    notes: Implements/supports FR-RIDE-057. Author Sharp Ninja.
+  - kind: tr
+    id: TR-RIDE-GPL-004
+    title: Shared Avalonia UI under GPL-2.0
+    description: Package shared Avalonia UI 12 client libraries, themes, and controls under GPL-2.0 for Android and desktop reuse.
+    priority: high
+    area: RIDE
+    subarea: GPL
+    status: pending
+    notes: Implements/supports FR-RIDE-058. Author Sharp Ninja.
+  - kind: tr
+    id: TR-RIDE-SERVER-008
+    title: gRPC services on .NET 10 containers
+    description: Host sealed-submit and related public services as gRPC on .NET 10 container images with no decrypt at ingest.
+    priority: critical
+    area: RIDE
+    subarea: SERVER
+    status: pending
+    notes: Implements/supports FR-RIDE-059. Author Sharp Ninja.
+  - kind: tr
+    id: TR-RIDE-GPL-005
+    title: Publish gRPC protos under GPL-2.0
+    description: Version and publish protobuf contracts and related schemas under GPL-2.0 with license notices.
+    priority: high
+    area: RIDE
+    subarea: GPL
+    status: pending
+    notes: Implements/supports FR-RIDE-060. Author Sharp Ninja.
+  - kind: tr
+    id: TR-RIDE-SERVER-009
+    title: Fail-closed gRPC admission
+    description: Enforce fail-closed admission verification on gRPC submit and admission RPCs before any store of an admitted package.
+    priority: critical
+    area: RIDE
+    subarea: SERVER
+    status: pending
+    notes: Implements/supports FR-RIDE-061. Author Sharp Ninja.
+  - kind: tr
+    id: TR-RIDE-SERVER-010
+    title: OpenAPI companion non-authoritative
+    description: Keep interim OpenAPI as a human-readable companion only. Bind conformance and codegen to gRPC protos when documents disagree.
+    priority: high
+    area: RIDE
+    subarea: SERVER
+    status: pending
+    notes: Implements/supports FR-RIDE-062. Author Sharp Ninja.
+  - kind: test
+    id: TEST-RIDE-035
+    title: Avalonia UI 12 clients and GPL share
+    description: Verify Android capture and desktop court viewer build on Avalonia UI 12 and shared client UI is GPL-2.0.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Covers FR-RIDE-056 FR-RIDE-057 FR-RIDE-058. Author Sharp Ninja.
+  - kind: test
+    id: TEST-RIDE-036
+    title: gRPC .NET 10 sealed fail-closed admission
+    description: Verify gRPC on .NET 10 containers accepts sealed-only submit, never decrypts at ingest, and fails closed on admission errors.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Covers FR-RIDE-059 FR-RIDE-061. Author Sharp Ninja.
+  - kind: test
+    id: TEST-RIDE-037
+    title: Proto GPL authority over OpenAPI companion
+    description: Verify protos and schemas publish under GPL-2.0 and that OpenAPI is marked non-authoritative when it disagrees with gRPC.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: Covers FR-RIDE-060 FR-RIDE-062. Author Sharp Ninja.

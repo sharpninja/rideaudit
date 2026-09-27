@@ -35,3 +35,19 @@ Public sealed submit remains ciphertext-only at ingest. No decrypt at public-ser
 - Desktop review UX: `docs/ux/review-app/` (`ART-RIDE-UX-REVIEW-001`)
 - Android client package (scaffold path): `artifacts/android/` (`ART-RIDE-ANDROID-001`)
 - Server API package: `artifacts/server-api/` (`ART-RIDE-API-001`)
+
+## BDPv4 requirements (stack decision)
+
+Additive batch: `docs/Project/Additive-Avalonia-Grpc-Stack-Batch.yaml` (Author: Sharp Ninja).
+
+| Topic | FR | TR | TEST | UC |
+| --- | --- | --- | --- | --- |
+| Avalonia Android capture | FR-RIDE-056 | TR-RIDE-VIDEO-012 | TEST-RIDE-035 | UC-RIDE-025 |
+| Avalonia desktop court viewer | FR-RIDE-057 | TR-RIDE-VIEW-005 | TEST-RIDE-035 | UC-RIDE-026 |
+| Shared Avalonia / GPL-2.0 | FR-RIDE-058 | TR-RIDE-GPL-004 | TEST-RIDE-035 | UC-RIDE-027 |
+| gRPC on .NET 10 containers | FR-RIDE-059 | TR-RIDE-SERVER-008 | TEST-RIDE-036 | UC-RIDE-028 |
+| Proto/schema GPL-2.0 publish | FR-RIDE-060 | TR-RIDE-GPL-005 | TEST-RIDE-037 | UC-RIDE-029 |
+| Fail-closed admission over gRPC | FR-RIDE-061 | TR-RIDE-SERVER-009 | TEST-RIDE-036 | UC-RIDE-030 |
+| OpenAPI companion non-authoritative | FR-RIDE-062 | TR-RIDE-SERVER-010 | TEST-RIDE-037 | UC-RIDE-031 |
+
+Mappings live in `docs/Project/Requirements-Mappings-Batch.yaml`.

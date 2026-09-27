@@ -309,3 +309,32 @@ mappings:
     trIds: [TR-RIDE-VIDEO-011]
     testIds: [TEST-RIDE-034]
     useCaseLocalIds: [UC-RIDE-024]
+
+  - frId: FR-RIDE-056
+    trIds: [TR-RIDE-VIDEO-012]
+    testIds: [TEST-RIDE-035]
+    useCaseLocalIds: [UC-RIDE-025]
+  - frId: FR-RIDE-057
+    trIds: [TR-RIDE-VIEW-005]
+    testIds: [TEST-RIDE-035]
+    useCaseLocalIds: [UC-RIDE-026]
+  - frId: FR-RIDE-058
+    trIds: [TR-RIDE-GPL-004]
+    testIds: [TEST-RIDE-035]
+    useCaseLocalIds: [UC-RIDE-027]
+  - frId: FR-RIDE-059
+    trIds: [TR-RIDE-SERVER-008]
+    testIds: [TEST-RIDE-036]
+    useCaseLocalIds: [UC-RIDE-028]
+  - frId: FR-RIDE-060
+    trIds: [TR-RIDE-GPL-005]
+    testIds: [TEST-RIDE-037]
+    useCaseLocalIds: [UC-RIDE-029]
+  - frId: FR-RIDE-061
+    trIds: [TR-RIDE-SERVER-009]
+    testIds: [TEST-RIDE-036]
+    useCaseLocalIds: [UC-RIDE-030]
+  - frId: FR-RIDE-062
+    trIds: [TR-RIDE-SERVER-010]
+    testIds: [TEST-RIDE-037]
+    useCaseLocalIds: [UC-RIDE-031]

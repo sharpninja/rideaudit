@@ -600,3 +600,119 @@ records:
       2. Passenger syncs and joins dual video streams.
       3. Passenger overlays realtime telematics spider graph.
       4. Composite is sealed at collect on the composite path.
+
+# Additive use cases for Avalonia UI 12 and gRPC .NET 10 stack
+# Author: Sharp Ninja
+records:
+  - kind: usecase
+    localId: UC-RIDE-025
+    title: Capture ride evidence with Avalonia Android client
+    briefDescription: Driver and passenger use the Avalonia UI 12 Android client for dual-phone capture roles.
+    actors: [DriverPhone, PassengerPhone]
+    frLinks:
+      - frId: FR-RIDE-056
+        linkType: Realizes
+    basicFlow: |
+      1. Operator installs Avalonia UI 12 Android capture client.
+      2. Driver and passenger select roles and complete pairing.
+      3. Capture proceeds with Avalonia UI surfaces only for primary screens.
+    acceptanceCriteria:
+      - id: AC-UC-025-001
+        text: Capture primary screens run on Avalonia UI 12 Android client.
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-026
+    title: Review sealed bundle with Avalonia desktop viewer
+    briefDescription: Counsel or auditor opens a RideBundle in the Avalonia UI 12 desktop court viewer.
+    actors: [Counsel, Auditor]
+    frLinks:
+      - frId: FR-RIDE-057
+        linkType: Realizes
+    basicFlow: |
+      1. Reviewer launches Avalonia UI 12 desktop viewer on Win, Linux, or macOS.
+      2. Viewer verifies then decrypts only via escrow release.
+      3. Reviewer inspects synchronized timeline.
+    acceptanceCriteria:
+      - id: AC-UC-026-001
+        text: Desktop review path uses Avalonia UI 12 and keeps fail-closed escrow decrypt.
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-027
+    title: Reuse shared Avalonia UI under GPL-2.0
+    briefDescription: Shared Avalonia UI 12 libraries serve Android and desktop under GPL-2.0.
+    actors: [Developer, Auditor]
+    frLinks:
+      - frId: FR-RIDE-058
+        linkType: Realizes
+    basicFlow: |
+      1. Developer consumes shared Avalonia UI package from the GPL-2.0 tree.
+      2. Android and desktop apps reference the shared package.
+      3. License notices remain present on published artifacts.
+    acceptanceCriteria:
+      - id: AC-UC-027-001
+        text: Shared Avalonia UI is GPL-2.0 and reused by both clients.
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-028
+    title: Submit sealed package via gRPC .NET 10
+    briefDescription: Driver phone submits a sealed ciphertext package to the gRPC backend on .NET 10 containers.
+    actors: [DriverPhone, PublicServer]
+    frLinks:
+      - frId: FR-RIDE-059
+        linkType: Realizes
+    basicFlow: |
+      1. Client seals package on device.
+      2. Client calls gRPC submit on .NET 10 container backend.
+      3. Server stores ciphertext only and never decrypts at ingest.
+    acceptanceCriteria:
+      - id: AC-UC-028-001
+        text: Submit uses gRPC on .NET 10 containers with no decrypt at ingest.
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-029
+    title: Consume published GPL-2.0 gRPC protos
+    briefDescription: Clients and forks build against published GPL-2.0 protobuf contracts.
+    actors: [Developer]
+    frLinks:
+      - frId: FR-RIDE-060
+        linkType: Realizes
+    basicFlow: |
+      1. Developer obtains published proto and schema package.
+      2. Client codegen binds to versioned gRPC contracts.
+      3. No undocumented Lyft private APIs are invented.
+    acceptanceCriteria:
+      - id: AC-UC-029-001
+        text: Published protos are GPL-2.0 and used as the contract source.
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-030
+    title: Fail-closed gRPC admission
+    briefDescription: Public server rejects invalid sealed submits over gRPC without admitting storage.
+    actors: [DriverPhone, PublicServer]
+    frLinks:
+      - frId: FR-RIDE-061
+        linkType: Realizes
+    basicFlow: |
+      1. Client submits sealed package over gRPC.
+      2. Server runs fail-closed admission checks.
+      3. On failure, RPC rejects and nothing is admitted.
+    acceptanceCriteria:
+      - id: AC-UC-030-001
+        text: Failed admission over gRPC does not store an admitted package.
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-031
+    title: Prefer gRPC over interim OpenAPI companion
+    briefDescription: When OpenAPI and gRPC disagree, clients and tests follow gRPC contracts.
+    actors: [Developer, Auditor]
+    frLinks:
+      - frId: FR-RIDE-062
+        linkType: Realizes
+    basicFlow: |
+      1. Developer notes interim OpenAPI companion for human reading.
+      2. Conformance and codegen bind to gRPC protos.
+      3. Disagreement is resolved in favor of gRPC.
+    acceptanceCriteria:
+      - id: AC-UC-031-001
+        text: gRPC is authoritative when OpenAPI companion disagrees.
+        isSatisfied: false
