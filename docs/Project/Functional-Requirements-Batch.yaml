@@ -1,0 +1,1157 @@
+# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+records:
+  - kind: fr
+    id: FR-RIDE-001
+    title: "Ingest Lyft privacy-export ZIP"
+    description: "Ingest Lyft privacy-export ZIP files and parse files according to the included DataDictionary; surface unknown file types as Unverified."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-1. Privacy-export ZIP contents for drivers Unverified regarding Smooth Cruiser events / high-rate GPS."
+    acceptanceCriteria:
+      - id: AC-RIDE-001-001
+        text: "ZIP upload is accepted for an authenticated consented driver."
+        isSatisfied: false
+      - id: AC-RIDE-001-002
+        text: "Files listed in DataDictionary are parsed into structured records."
+        isSatisfied: false
+      - id: AC-RIDE-001-003
+        text: "Unknown file types are tagged Unverified and retained without silent discard."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-002
+    title: "Record Smooth Cruiser scores"
+    description: "Record Smooth Cruiser score and component values (gentle braking, smooth steering, phone mount use, vehicle speed relative to area) from structured export fields or consented manual/screenshot entry with timestamp and source tag."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-2."
+    acceptanceCriteria:
+      - id: AC-RIDE-002-001
+        text: "Structured export fields for Smooth Cruiser are stored when present."
+        isSatisfied: false
+      - id: AC-RIDE-002-002
+        text: "Manual or screenshot entry requires consent, timestamp, and provenance source tag."
+        isSatisfied: false
+      - id: AC-RIDE-002-003
+        text: "Components are stored individually when available."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-003
+    title: "Ingest trip-level records"
+    description: "Ingest trip-level records (start/end time, origin/destination or route summary, distance, earnings metadata) when present in exports or Business reports."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-3."
+    acceptanceCriteria:
+      - id: AC-RIDE-003-001
+        text: "Trip records are created when export or Business report fields are present."
+        isSatisfied: false
+      - id: AC-RIDE-003-002
+        text: "Missing trip fields are left null and flagged, not invented."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-004
+    title: "Optional Concierge/Business API integration"
+    description: "Optionally integrate Lyft Concierge/Business API: OAuth client credentials, program linkage, poll /concierge/rides/{id}/status for driver_location during active organizational rides only."
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: "Original FR-4. Concierge provides coarse driver_location for org-booked rides only. No public driver telematics API. Unverified partnership extras."
+    acceptanceCriteria:
+      - id: AC-RIDE-004-001
+        text: "OAuth client-credentials flow works when Business partnership is approved."
+        isSatisfied: false
+      - id: AC-RIDE-004-002
+        text: "Polling is limited to active organizational rides the org booked."
+        isSatisfied: false
+      - id: AC-RIDE-004-003
+        text: "No undocumented Lyft endpoints are called. Concierge location is coarse lat/lng only."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-005
+    title: "Import third-party telematics"
+    description: "Import third-party telematics files (CSV/JSON) for GPS track, speed, harsh brake/accel events from devices the driver/fleet controls."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-5."
+    acceptanceCriteria:
+      - id: AC-RIDE-005-001
+        text: "CSV/JSON imports for supported schemas succeed."
+        isSatisfied: false
+      - id: AC-RIDE-005-002
+        text: "Imported events are tagged third_party_telematics."
+        isSatisfied: false
+      - id: AC-RIDE-005-003
+        text: "Parallel evidence is not labeled as Lyft-native."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-006
+    title: "Provenance and consent ledger"
+    description: "Maintain a provenance and consent ledger for every dataset (who consented, when, jurisdiction, purpose)."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-6."
+    acceptanceCriteria:
+      - id: AC-RIDE-006-001
+        text: "Every dataset links to consent actor, timestamp, jurisdiction, and purpose."
+        isSatisfied: false
+      - id: AC-RIDE-006-002
+        text: "Ledger entries are append-only and auditable."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-007
+    title: "Coverage matrix"
+    description: "Produce a coverage matrix per audit subject listing: collected-by-Lyft vs available-to-auditor vs missing, per signal type."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-7."
+    acceptanceCriteria:
+      - id: AC-RIDE-007-001
+        text: "Matrix lists signal types with collected / available / missing columns."
+        isSatisfied: false
+      - id: AC-RIDE-007-002
+        text: "Gaps such as no public Smooth Cruiser API are explicitly shown."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-008
+    title: "Online-hours policy audit"
+    description: "Analyze online-hours against Lyft 12h / 6h break policy and configurable regional overrides; flag apparent violations only when hours data is present."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-8. Typical TNC not under FMCSA HOS/ELD; Unverified edge cases for regulated fleets."
+    acceptanceCriteria:
+      - id: AC-RIDE-008-001
+        text: "Policy rules are configurable including regional overrides."
+        isSatisfied: false
+      - id: AC-RIDE-008-002
+        text: "Violations are flagged only when hours data exists."
+        isSatisfied: false
+      - id: AC-RIDE-008-003
+        text: "FMCSA ELD schemas are not required for typical TNC use (Unverified edge cases)."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-009
+    title: "Time-window incident report"
+    description: "Time-window incident report: export GPS/route samples, scores, and third-party events for a selectable interval."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-9."
+    acceptanceCriteria:
+      - id: AC-RIDE-009-001
+        text: "User can select a time window and export available evidence for that interval."
+        isSatisfied: false
+      - id: AC-RIDE-009-002
+        text: "Export includes provenance for each included item."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-010
+    title: "Data subject access and deletion"
+    description: "Support data subject access and deletion workflows for data the audit app stores."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-10."
+    acceptanceCriteria:
+      - id: AC-RIDE-010-001
+        text: "Subject can request access export of audit-held data."
+        isSatisfied: false
+      - id: AC-RIDE-010-002
+        text: "Deletion honors legal holds and documents custody impact."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-011
+    title: "No undocumented Lyft private APIs"
+    description: "Do not implement undocumented Lyft private APIs, credential stuffing, or app traffic interception as product features."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-11."
+    acceptanceCriteria:
+      - id: AC-RIDE-011-001
+        text: "Product features list excludes private API scraping and traffic interception."
+        isSatisfied: false
+      - id: AC-RIDE-011-002
+        text: "Build and review gates reject such implementations."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-012
+    title: "Admin partnership gates"
+    description: "Admin UI to mark partnerships (Business API approved / denied) and disable Concierge features when ungated access is unavailable."
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: "Original FR-12."
+    acceptanceCriteria:
+      - id: AC-RIDE-012-001
+        text: "Admin can set Business API partnership status."
+        isSatisfied: false
+      - id: AC-RIDE-012-002
+        text: "Concierge features are disabled when status is denied or unavailable."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-013
+    title: "Hash and version raw imports"
+    description: "Hash and version raw imports; show integrity status on audit reports."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-13."
+    acceptanceCriteria:
+      - id: AC-RIDE-013-001
+        text: "Raw imports receive content hashes and version identifiers."
+        isSatisfied: false
+      - id: AC-RIDE-013-002
+        text: "Audit reports display integrity status."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-014
+    title: "Role-based access"
+    description: "Role-based access: auditor, subject (driver), admin; least privilege for precise location views."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-14."
+    acceptanceCriteria:
+      - id: AC-RIDE-014-001
+        text: "Roles auditor, subject, and admin exist with least-privilege defaults."
+        isSatisfied: false
+      - id: AC-RIDE-014-002
+        text: "Precise location views require authorized roles."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-015
+    title: "Seal and encrypt at collection"
+    description: "Seal and encrypt every audit datum at the exact collection moment, before any durable store, queue handoff, normalization, or analysis; record the sealing algorithm/version and content hash."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-15."
+    acceptanceCriteria:
+      - id: AC-RIDE-015-001
+        text: "Sealing occurs before durable store, queue, normalization, or analysis."
+        isSatisfied: false
+      - id: AC-RIDE-015-002
+        text: "Algorithm/version and content hash are recorded on the sealed record."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-016
+    title: "Per-session or per-sample keys"
+    description: "Generate encryption keys per session or per sample as configured for the evidence type; do not use one long-lived shared key for all records, and bind each key to its declared scope."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-16."
+    acceptanceCriteria:
+      - id: AC-RIDE-016-001
+        text: "Key scope is session or sample per configuration."
+        isSatisfied: false
+      - id: AC-RIDE-016-002
+        text: "Long-lived shared keys for all records are rejected."
+        isSatisfied: false
+      - id: AC-RIDE-016-003
+        text: "Keys are bound to declared scope."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-017
+    title: "Custody receipt content"
+    description: "Create a custody receipt for every sealed record containing, at minimum, the sealed-payload content hash, the public encryption key used (or key ID plus the public key material), collector identity, collection timestamp, provenance tag, and the blockchain transaction reference once confirmed."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-17."
+    acceptanceCriteria:
+      - id: AC-RIDE-017-001
+        text: "Receipt includes content hash, public key or key ID plus material, collector identity, timestamp, provenance tag."
+        isSatisfied: false
+      - id: AC-RIDE-017-002
+        text: "Blockchain transaction reference is recorded when confirmed."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-018
+    title: "Blockchain receipt write"
+    description: "Write each receipt synchronously with, or immediately after, sealing to a configurable public immutable blockchain within the same collection transaction boundary; record chain ID, transaction hash, block height, and write time when confirmed."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-18."
+    acceptanceCriteria:
+      - id: AC-RIDE-018-001
+        text: "Receipt write is synchronous with or immediately after sealing in the same collection boundary."
+        isSatisfied: false
+      - id: AC-RIDE-018-002
+        text: "Chain ID, tx hash, block height, and write time are recorded on confirmation."
+        isSatisfied: false
+      - id: AC-RIDE-018-003
+        text: "Chain brand is configurable, not hard-coded to one mainnet."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-019
+    title: "Blockchain write failure policy"
+    description: "Apply an explicit failure policy: if the blockchain write or confirmation fails, do not mark collection complete, do not place the sealed record in an admitted state, and quarantine/retry the sealed record and pending receipt without rewriting the ciphertext; surface the failure for operator action and preserve the local failure audit trail."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-19."
+    acceptanceCriteria:
+      - id: AC-RIDE-019-001
+        text: "Failed chain write leaves record non-admitted and not collection-complete."
+        isSatisfied: false
+      - id: AC-RIDE-019-002
+        text: "Ciphertext is not rewritten on retry."
+        isSatisfied: false
+      - id: AC-RIDE-019-003
+        text: "Operator sees failure and local audit trail is preserved."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-020
+    title: "Court-review decryption path docs"
+    description: "Document and implement the court-review decryption path: identify private-key custodians, legal-process requirements for counsel to obtain plaintext, escrow jurisdiction and controls, dual-control release and attestations, authorized working-copy scope/expiry, and exactly what the chain-of-custody receipt proves (and does not prove)."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-20."
+    acceptanceCriteria:
+      - id: AC-RIDE-020-001
+        text: "Documentation identifies custodians, legal process, escrow jurisdiction, dual-control, working-copy scope/expiry."
+        isSatisfied: false
+      - id: AC-RIDE-020-002
+        text: "Receipt proof boundaries are explicit (what it proves and does not prove)."
+        isSatisfied: false
+      - id: AC-RIDE-020-003
+        text: "Implementation matches documented path."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-021
+    title: "Verification UI/report"
+    description: "Provide a verification UI/report that recomputes the sealed-payload hash, compares it with the custody receipt, checks the on-chain receipt and transaction reference, and displays any mismatch, missing confirmation, or chain status clearly."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-21."
+    acceptanceCriteria:
+      - id: AC-RIDE-021-001
+        text: "UI recomputes hash and compares to receipt."
+        isSatisfied: false
+      - id: AC-RIDE-021-002
+        text: "On-chain receipt and tx reference are checked."
+        isSatisfied: false
+      - id: AC-RIDE-021-003
+        text: "Mismatches and missing confirmations are clearly displayed."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-022
+    title: "M-of-N key escrow"
+    description: "Escrow every private key or wrapped data-encryption key (DEK) needed for court decryption using dual control and a configurable M-of-N quorum, so sealed data remains decryptable if the original device or operator is unavailable; preserve the original sealed blob and receipt unchanged."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-22."
+    acceptanceCriteria:
+      - id: AC-RIDE-022-001
+        text: "Every court-needed private key or wrapped DEK is escrowed under M-of-N dual control."
+        isSatisfied: false
+      - id: AC-RIDE-022-002
+        text: "Sealed blob and receipt remain unchanged by escrow packaging."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-023
+    title: "Escrow separation from device"
+    description: "Keep escrow material separate from the collection device, operator account, and application database. Document per key whether the escrow package contains quorum-protected private-key shares or a wrapped DEK, while the device retains only the public key/key ID and transient or encrypted recovery material needed for collection; no plaintext private key may persist on-device after sealing."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-23."
+    acceptanceCriteria:
+      - id: AC-RIDE-023-001
+        text: "Escrow material is not stored on device, operator account, or app DB."
+        isSatisfied: false
+      - id: AC-RIDE-023-002
+        text: "Device retains only public key/key ID and transient/encrypted recovery material."
+        isSatisfied: false
+      - id: AC-RIDE-023-003
+        text: "No plaintext private key persists on-device after sealing."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-024
+    title: "Court-authorized escrow release"
+    description: "Implement a court-authorized escrow-release procedure that verifies the case and legal process, obtains the M-of-N dual-control approvals, releases only the minimum key or wrapped DEK needed, creates an append-only release log with approvers, shares/use, timestamps, and purpose, and never changes the sealed ciphertext, content hash, or on-chain receipt."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-24."
+    acceptanceCriteria:
+      - id: AC-RIDE-024-001
+        text: "Release verifies case and legal process and obtains M-of-N approvals."
+        isSatisfied: false
+      - id: AC-RIDE-024-002
+        text: "Only minimum key/DEK scope is released."
+        isSatisfied: false
+      - id: AC-RIDE-024-003
+        text: "Append-only release log is created; sealed ciphertext/hash/receipt unchanged."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-025
+    title: "Play Integrity key binding"
+    description: "Use Google Play Store app signing and/or Play Integrity API attestation as part of the encryption-key authentication chain. At collection, bind the generated key to the approved package identity and signing-certificate digest or a nonce-bound Integrity attestation, and retain evidence sufficient for later court verification."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-25."
+    acceptanceCriteria:
+      - id: AC-RIDE-025-001
+        text: "Key generation binds to approved package identity and cert digest or nonce-bound Integrity attestation."
+        isSatisfied: false
+      - id: AC-RIDE-025-002
+        text: "Attestation evidence sufficient for court verification is retained."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-026
+    title: "Reject failed Play Integrity"
+    description: "Verify the Play Integrity/signing-certificate result before key generation and sealing; reject collection when the device is compromised, the binary is modified or unofficial/sideloaded, the package or certificate is not approved, the attestation is stale or nonce-mismatched, or the verdict cannot be validated. Do not admit a record from a failed-attestation attempt."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-26."
+    acceptanceCriteria:
+      - id: AC-RIDE-026-001
+        text: "Integrity/signing check runs before key generation and sealing."
+        isSatisfied: false
+      - id: AC-RIDE-026-002
+        text: "Failed, stale, sideloaded, or unverifiable attestations reject collection."
+        isSatisfied: false
+      - id: AC-RIDE-026-003
+        text: "Failed-attestation attempts are not admitted."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-027
+    title: "Attestation on custody receipt"
+    description: "Include the app-attestation evidence or a cryptographic hash of it, plus the package identity, signing-certificate digest or attestation reference, in the custody receipt written on-chain and link it to the KeyMaterial and SealedRecord."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-27."
+    acceptanceCriteria:
+      - id: AC-RIDE-027-001
+        text: "On-chain receipt includes attestation evidence or hash plus package identity and cert digest/reference."
+        isSatisfied: false
+      - id: AC-RIDE-027-002
+        text: "Receipt links to KeyMaterial and SealedRecord."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-028
+    title: "Counsel verification steps"
+    description: "Provide counsel-verification steps that validate the public-chain receipt and payload hash, verify the Play Integrity evidence/signing certificate against the approved Google Play app identity and collection nonce/key binding, confirm the attestation timestamp and verdict, verify escrow quorum and release logs, and then document authorized decryption of an expiring working copy."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-28."
+    acceptanceCriteria:
+      - id: AC-RIDE-028-001
+        text: "Counsel flow validates chain receipt, payload hash, Play attestation, escrow quorum/release logs."
+        isSatisfied: false
+      - id: AC-RIDE-028-002
+        text: "Authorized decryption of expiring working copy is documented."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-029
+    title: "GPL-2.0 licensing"
+    description: "License the application, custody/verification schemas and tooling, and crowdsourced evidence-network code under GPL-2.0 (GPL2); publish the corresponding source and license notices so derivative works and forks are also open-sourced under GPL2."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-29."
+    acceptanceCriteria:
+      - id: AC-RIDE-029-001
+        text: "Application, schemas, tooling, and network code are GPL-2.0."
+        isSatisfied: false
+      - id: AC-RIDE-029-002
+        text: "Source and license notices are published."
+        isSatisfied: false
+      - id: AC-RIDE-029-003
+        text: "Apache-2.0 or MIT are not substituted for these components."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-030
+    title: "GPL2 notices on artifacts"
+    description: "Attach a GPL2 license/version and source-commit notice to shared software, schema, receipt, attestation, and verification artifacts, while ensuring that crowdsourced evidence payloads remain sealed and subject to consent, privacy controls, access policy, and legal holds rather than being exposed merely because the code is open source."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-30."
+    acceptanceCriteria:
+      - id: AC-RIDE-030-001
+        text: "Shared software/schema/receipt/attestation/verification artifacts carry GPL2 and commit notice."
+        isSatisfied: false
+      - id: AC-RIDE-030-002
+        text: "Sealed evidence payloads remain access-controlled despite open-source code."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-031
+    title: "Publish client via Play and source repo"
+    description: "Publish a downloadable GPL-2.0 client through Google Play Store distribution and a public source repository, with reproducible/versioned build and signing metadata."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-31."
+    acceptanceCriteria:
+      - id: AC-RIDE-031-001
+        text: "Client is available on Google Play and public source repository."
+        isSatisfied: false
+      - id: AC-RIDE-031-002
+        text: "Build and signing metadata are versioned and reproducible."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-032
+    title: "Public-server driver account"
+    description: "Provide a public-server driver account identity with authentication, consent records, jurisdiction/purpose, account recovery, and tenant-scoped authorization."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-32."
+    acceptanceCriteria:
+      - id: AC-RIDE-032-001
+        text: "Driver can create authenticated account with consent, jurisdiction, purpose."
+        isSatisfied: false
+      - id: AC-RIDE-032-002
+        text: "Authorization is tenant-scoped."
+        isSatisfied: false
+      - id: AC-RIDE-032-003
+        text: "Account recovery is supported."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-033
+    title: "Vehicle registration"
+    description: "Register each vehicle to an authorized driver account using VIN, plate, make/model, or the minimum appropriate attributes, with driver consent and an auditable change history."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-33."
+    acceptanceCriteria:
+      - id: AC-RIDE-033-001
+        text: "Vehicle attributes are registered with consent to a driver account."
+        isSatisfied: false
+      - id: AC-RIDE-033-002
+        text: "Change history is auditable."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-034
+    title: "Configuration profile gate"
+    description: "Require a valid configuration profile for the registered vehicle and verify that configuration before admitting a collection session or submission."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-34."
+    acceptanceCriteria:
+      - id: AC-RIDE-034-001
+        text: "Valid config profile is required before admitting collection or submission."
+        isSatisfied: false
+      - id: AC-RIDE-034-002
+        text: "Invalid or missing profile blocks admission."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-035
+    title: "Sealed-only submission API"
+    description: "Make the public submission API accept only already-sealed ciphertext packages plus custody-receipt metadata; reject plaintext, unsealed sensor/video data, missing receipts, or packages that cannot be tied to an authorized driver and vehicle."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-35."
+    acceptanceCriteria:
+      - id: AC-RIDE-035-001
+        text: "API rejects plaintext and unsealed payloads."
+        isSatisfied: false
+      - id: AC-RIDE-035-002
+        text: "Missing receipts or unauthorized driver/vehicle packages are rejected."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-036
+    title: "Admission verification chain"
+    description: "Integrate public-server admission with the existing seal, blockchain custody receipt, escrow, and Play Integrity/app-signing chain; verify receipt fields, payload hash, chain confirmation, app attestation, nonce/key binding, and approved package identity before adding a submission to the network index."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-36."
+    acceptanceCriteria:
+      - id: AC-RIDE-036-001
+        text: "Admission verifies receipt, hash, chain confirmation, attestation, nonce/key binding, package identity."
+        isSatisfied: false
+      - id: AC-RIDE-036-002
+        text: "Failed verification leaves package rejected or quarantined, not admitted."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-037
+    title: "Multi-driver per-record provenance"
+    description: "Preserve court multi-driver provenance: each submission must be independently verifiable through device attestation, collector_id, driver_id, vehicle_id, and its on-chain receipt; aggregation must not weaken per-record custody."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-37."
+    acceptanceCriteria:
+      - id: AC-RIDE-037-001
+        text: "Each submission is independently verifiable via attestation, collector_id, driver_id, vehicle_id, and receipt."
+        isSatisfied: false
+      - id: AC-RIDE-037-002
+        text: "Aggregation does not replace per-record custody."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-038
+    title: "Counsel multi-driver bundle"
+    description: "Generate a counsel bundle containing submissions from many drivers while providing a per-record verification report for each sealed record, receipt, attestation, vehicle registration, and escrow/decryption path."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-38."
+    acceptanceCriteria:
+      - id: AC-RIDE-038-001
+        text: "Counsel bundle can include many drivers submissions."
+        isSatisfied: false
+      - id: AC-RIDE-038-002
+        text: "Each record has its own verification report covering receipt, attestation, vehicle, escrow path."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-039
+    title: "Public-server abuse controls"
+    description: "Enforce public-server abuse controls: authenticated rate limits and quotas, idempotency, duplicate/replay rejection, tampered-attestation rejection, unregistered-vehicle rejection, failed-Integrity rejection, size limits, quarantine, and abuse/audit logs."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-39."
+    acceptanceCriteria:
+      - id: AC-RIDE-039-001
+        text: "Rate limits, quotas, idempotency, and size limits are enforced."
+        isSatisfied: false
+      - id: AC-RIDE-039-002
+        text: "Duplicates, replays, tampered attestations, unregistered vehicles, failed Integrity are rejected."
+        isSatisfied: false
+      - id: AC-RIDE-039-003
+        text: "Abuse/audit logs are written."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-040
+    title: "Multi-tenant isolation"
+    description: "Enforce strict multi-tenant isolation for account, vehicle, configuration, submission, admission, and counsel data; expose only authorized per-driver records and explicitly approved aggregate indexes."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-40."
+    acceptanceCriteria:
+      - id: AC-RIDE-040-001
+        text: "Tenant data is isolated across account/vehicle/config/submission/admission/counsel scopes."
+        isSatisfied: false
+      - id: AC-RIDE-040-002
+        text: "Cross-driver queries require explicit authorization."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-041
+    title: "Dual-phone video capture"
+    description: "Support two approved phones collecting video for the same authorized vehicle/session, retaining each source stream device identity, app attestation, camera metadata, and capture timestamps."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-41."
+    acceptanceCriteria:
+      - id: AC-RIDE-041-001
+        text: "Two approved phones can collect for one authorized session."
+        isSatisfied: false
+      - id: AC-RIDE-041-002
+        text: "Each stream retains device identity, attestation, camera metadata, timestamps."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-042
+    title: "Shared session clock sync"
+    description: "Establish a shared session clock between phones, record SyncClockOffset and drift/uncertainty, and align video frames, telematics, and accelerometer samples to that clock, including dropped-frame or unsynchronized intervals."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-42."
+    acceptanceCriteria:
+      - id: AC-RIDE-042-001
+        text: "Shared session clock and SyncClockOffset/drift are recorded."
+        isSatisfied: false
+      - id: AC-RIDE-042-002
+        text: "Frames and samples are aligned; dropped or unsynced intervals are exposed."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-043
+    title: "On-device/edge compositing"
+    description: "Run an on-device or trusted-edge compositing pipeline that produces one time-synchronized combined video stream from both source streams before public submission."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-43."
+    acceptanceCriteria:
+      - id: AC-RIDE-043-001
+        text: "Composite is produced on-device or trusted edge before public submission."
+        isSatisfied: false
+      - id: AC-RIDE-043-002
+        text: "Public server does not re-encode or composite plaintext."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-044
+    title: "Spider-graph overlay"
+    description: "Overlay telematics and accelerometer data in real time as a spider graph below the corresponding video stream, with frame-aligned timestamps and a versioned overlay/timeline manifest."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-44."
+    acceptanceCriteria:
+      - id: AC-RIDE-044-001
+        text: "Spider graph overlays telematics/accel below corresponding video."
+        isSatisfied: false
+      - id: AC-RIDE-044-002
+        text: "Overlay/timeline manifest is versioned and frame-aligned."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-045
+    title: "Seal composite as first-class evidence"
+    description: "Seal and encrypt the composited artifact at the collection-device boundary as a first-class SealedRecord, generate its custody receipt, and write the receipt to the configured public immutable blockchain under the same admission policy as raw sensor data."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-45."
+    acceptanceCriteria:
+      - id: AC-RIDE-045-001
+        text: "Composite is sealed at collection-device boundary as SealedRecord."
+        isSatisfied: false
+      - id: AC-RIDE-045-002
+        text: "Custody receipt is written to configured chain under same admission policy as sensors."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-046
+    title: "Optional raw stream sealing"
+    description: "Optionally seal each raw source video stream as its own first-class sealed artifact, linked to the composite, when the driver consents and storage/bandwidth/retention budgets allow; never replace a sealed source or composite by re-encoding plaintext on the public server."
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: "Original FR-46."
+    acceptanceCriteria:
+      - id: AC-RIDE-046-001
+        text: "Optional raw streams can be sealed and linked to composite with consent and budget checks."
+        isSatisfied: false
+      - id: AC-RIDE-046-002
+        text: "Public server never re-encodes plaintext to replace sealed artifacts."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-047
+    title: "Counsel composite playback"
+    description: "Provide counsel playback of an authorized expiring working copy of the sealed composite only after verifying its payload hash, blockchain receipt, source-stream links, clock offsets, overlay timeline, and app-attestation evidence; clearly report any missing or inconsistent component."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-47."
+    acceptanceCriteria:
+      - id: AC-RIDE-047-001
+        text: "Playback requires verification of hash, receipt, source links, clock offsets, overlay, attestation."
+        isSatisfied: false
+      - id: AC-RIDE-047-002
+        text: "Missing/inconsistent components are clearly reported; working copy expires."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-048
+    title: "Composite metadata in custody package"
+    description: "Include composite, source-stream, synchronization, overlay, codec, compression, dropped-frame, and device metadata in the custody and verification package without exposing plaintext to the public submission server at ingest."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-48."
+    acceptanceCriteria:
+      - id: AC-RIDE-048-001
+        text: "Custody/verification package includes listed metadata fields."
+        isSatisfied: false
+      - id: AC-RIDE-048-002
+        text: "Public ingest receives no plaintext evidence."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-049
+    title: "GPL-2.0 desktop court viewer"
+    description: "Provide a GPL-2.0 desktop court viewer for Windows, Linux, and macOS that decrypts sealed ride bundles only through the court-authorized escrow release path and never bypasses escrow controls."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-49."
+    acceptanceCriteria:
+      - id: AC-RIDE-049-001
+        text: "Viewer runs on Windows, Linux, and macOS under GPL-2.0."
+        isSatisfied: false
+      - id: AC-RIDE-049-002
+        text: "Decryption uses only court-authorized escrow release path."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-050
+    title: "Viewer fail-closed verification"
+    description: "Have the desktop viewer independently verify the blockchain custody receipt, payload hashes, Google Play signing certificate/Play Integrity attestation, nonce/key binding, and escrow release authorization before decrypting or displaying any data; fail closed on any verification failure."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-50."
+    acceptanceCriteria:
+      - id: AC-RIDE-050-001
+        text: "Viewer independently verifies receipt, hashes, Play attestation, binding, escrow authorization before decrypt/display."
+        isSatisfied: false
+      - id: AC-RIDE-050-002
+        text: "Any failure prevents decrypt/display and is auditable."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-051
+    title: "Synchronized timeline display"
+    description: "Display all collected data on a synchronized timeline, including composite video, telematics, accelerometer spider graph, GPS, and OBD2 where available, independently of the original collection device."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original FR-51."
+    acceptanceCriteria:
+      - id: AC-RIDE-051-001
+        text: "Timeline shows composite, telematics, spider graph, GPS, and OBD2 when available."
+        isSatisfied: false
+      - id: AC-RIDE-051-002
+        text: "Viewer operates without the original collection device."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-052
+    title: "ViewerSession and VerificationReport"
+    description: "Create an auditable ViewerSession and VerificationReport for every review, and publish versioned decryption, verification, synchronization, overlay, and rendering logic under GPL-2.0 so judge or opposing counsel can independently inspect the process."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original FR-52."
+    acceptanceCriteria:
+      - id: AC-RIDE-052-001
+        text: "Every review creates ViewerSession and VerificationReport."
+        isSatisfied: false
+      - id: AC-RIDE-052-002
+        text: "Decryption/verification/sync/overlay/rendering logic is versioned and GPL-2.0 published."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-201
+    title: "TLS and secrets vault"
+    description: "Security: encryption in transit (TLS 1.2+) and at rest; secrets in a vault; no plaintext API tokens in logs."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-1. Mapped into FR namespace as FR-RIDE-201 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-201-001
+        text: "TLS 1.2+ enforced for network traffic."
+        isSatisfied: false
+      - id: AC-RIDE-201-002
+        text: "Secrets stored in vault; no plaintext API tokens in logs."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-202
+    title: "Geolocation sensitive masking"
+    description: "Privacy-by-design: precise geolocation fields classified as sensitive; default UI masks exact coordinates except for authorized roles."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-2. Mapped into FR namespace as FR-RIDE-202 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-202-001
+        text: "Precise geolocation classified as sensitive PI."
+        isSatisfied: false
+      - id: AC-RIDE-202-002
+        text: "Default UI masks exact coordinates except authorized roles."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-203
+    title: "Append-only access logs"
+    description: "Auditability: immutable append-only access logs for views/exports of sensitive location and identity data."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-3. Mapped into FR namespace as FR-RIDE-203 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-203-001
+        text: "Views/exports of sensitive location and identity write append-only access logs."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-204
+    title: "Concierge ingestion resilience"
+    description: "Reliability: Concierge ingestion must tolerate API rate limits and partial outages without corrupting stored rides."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-4. Mapped into FR namespace as FR-RIDE-204 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-204-001
+        text: "Rate-limit and outage conditions do not corrupt stored rides."
+        isSatisfied: false
+      - id: AC-RIDE-204-002
+        text: "Retries are idempotent."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-205
+    title: "Scale multi-year histories"
+    description: "Scalability: support multi-year trip histories and multi-Hz GPS tracks from third-party devices without UI freezes (paginate / downsample for display)."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-5. Mapped into FR namespace as FR-RIDE-205 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-205-001
+        text: "UI paginates or downsamples large GPS tracks."
+        isSatisfied: false
+      - id: AC-RIDE-205-002
+        text: "Multi-year histories load without UI freezes."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-206
+    title: "No false Smooth Cruiser labeling"
+    description: "Accuracy: never present inferred speed/brake events from sparse Concierge lat/lng polls as Lyft Smooth Cruiser equivalents; label derived metrics clearly."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-6. Mapped into FR namespace as FR-RIDE-206 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-206-001
+        text: "Derived metrics from Concierge lat/lng are labeled as derived, not Smooth Cruiser."
+        isSatisfied: false
+      - id: AC-RIDE-206-002
+        text: "No false equivalence claims."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-207
+    title: "Portable audit ZIP export"
+    description: "Portability: export audit packages as ZIP (CSV + PDF summary + provenance JSON)."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-7. Mapped into FR namespace as FR-RIDE-207 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-207-001
+        text: "Export produces ZIP with CSV, PDF summary, and provenance JSON."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-208
+    title: "Per-state retention config"
+    description: "Compliance config: per-state retention and deletion timers; California sensitive-PI handling as default strict profile."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-8. Mapped into FR namespace as FR-RIDE-208 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-208-001
+        text: "Retention/deletion timers are per-state configurable."
+        isSatisfied: false
+      - id: AC-RIDE-208-002
+        text: "CA sensitive-PI strict profile is default."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-209
+    title: "In-product API gap notice"
+    description: "Documentation: in-product API gap notice stating Lyft does not offer a public driver telematics API (as of research date)."
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: "Original NFR-9. Mapped into FR namespace as FR-RIDE-209 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-209-001
+        text: "In-product notice states no public driver telematics API as of research date 2026-09-27."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-210
+    title: "Legal hold suspends deletion"
+    description: "Legal hold: ability to suspend deletion for designated cases under counsel instruction."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-10. Mapped into FR namespace as FR-RIDE-210 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-210-001
+        text: "Counsel can designate legal hold that suspends deletion for a case."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-211
+    title: "Cryptographic agility"
+    description: "Cryptographic agility: use versioned, configurable algorithms, key formats, and receipt schemas so cryptographic suites can be rotated or replaced without rewriting sealed records; preserve the algorithm identifier with each record."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-11. Mapped into FR namespace as FR-RIDE-211 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-211-001
+        text: "Algorithms/key formats/receipt schemas are versioned and configurable."
+        isSatisfied: false
+      - id: AC-RIDE-211-002
+        text: "Sealed records retain algorithm identifier; rotation does not rewrite ciphertext."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-212
+    title: "Configurable public chain"
+    description: "Chain choice configurability: support a configurable public immutable chain (or approved set of chains) by environment and jurisdiction; do not make any specific blockchain brand or mainnet mandatory, and preserve chain ID/transaction metadata for verification."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-12. Mapped into FR namespace as FR-RIDE-212 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-212-001
+        text: "Chain is configurable by environment/jurisdiction."
+        isSatisfied: false
+      - id: AC-RIDE-212-002
+        text: "No single chain brand is mandatory."
+        isSatisfied: false
+      - id: AC-RIDE-212-003
+        text: "Chain ID and tx metadata preserved."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-213
+    title: "Seal/receipt latency budget"
+    description: "Latency budget: define, measure, and monitor a configurable per-connector budget for sealing, receipt creation, and blockchain write/confirmation; collection completion and admitted state remain blocked until the configured receipt confirmation policy is satisfied."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-13. Mapped into FR namespace as FR-RIDE-213 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-213-001
+        text: "Per-connector latency budgets are defined and monitored."
+        isSatisfied: false
+      - id: AC-RIDE-213-002
+        text: "Admission blocked until confirmation policy satisfied."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-214
+    title: "HSM/KMS key custody"
+    description: "Key custody: private keys must be generated, stored, and used through an HSM/KMS or equivalent controlled service, never in the application database; support separation of duties, dual control, rotation, escrow, access logging, and documented legal-release procedures."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-14. Mapped into FR namespace as FR-RIDE-214 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-214-001
+        text: "Private keys never stored in application database."
+        isSatisfied: false
+      - id: AC-RIDE-214-002
+        text: "HSM/KMS or equivalent used with dual control, rotation, escrow, access logging."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-215
+    title: "Play authenticity allowlist"
+    description: "App authenticity: enforce a versioned allowlist of Google Play package identities and signing-certificate digests, or an equivalent Play Integrity verification policy; reject failed, tampered, unofficial, sideloaded, stale, or unverifiable attestations before collection is admitted, and support auditable certificate/key rotation."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-15. Mapped into FR namespace as FR-RIDE-215 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-215-001
+        text: "Versioned allowlist of package identities and cert digests enforced."
+        isSatisfied: false
+      - id: AC-RIDE-215-002
+        text: "Failed/tampered/sideloaded/stale attestations rejected before admission."
+        isSatisfied: false
+      - id: AC-RIDE-215-003
+        text: "Cert/key rotation is auditable."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-216
+    title: "Escrow resilience"
+    description: "Escrow resilience: maintain encrypted M-of-N escrow shares or wrapped-DEK recovery packages independently of collection devices and operators, with tested recovery, quorum enforcement, separate custodians, and append-only release logging that cannot alter sealed evidence."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-16. Mapped into FR namespace as FR-RIDE-216 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-216-001
+        text: "Escrow packages independent of devices/operators."
+        isSatisfied: false
+      - id: AC-RIDE-216-002
+        text: "Recovery tested; quorum enforced; release logging append-only and non-mutating of evidence."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-217
+    title: "GPL-2.0 governance NFR"
+    description: "Open-source governance: publish the application, custody/verification schemas, and crowdsourced evidence-network implementation under GPL-2.0 (GPL2), including source, notices, and build/version provenance; do not introduce Apache-2.0 or MIT as an alternative license for these components."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-17. Mapped into FR namespace as FR-RIDE-217 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-217-001
+        text: "GPL-2.0 published with source, notices, build/version provenance."
+        isSatisfied: false
+      - id: AC-RIDE-217-002
+        text: "Apache-2.0/MIT not used as alternative for these components."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-218
+    title: "Public-server admission capacity"
+    description: "Public-server admission: enforce tenant isolation, authenticated rate limits, quotas, resumable/idempotent uploads, duplicate/replay detection, abuse throttling, and backpressure; admission capacity must not bypass receipt, attestation, or seal verification."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-18. Mapped into FR namespace as FR-RIDE-218 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-218-001
+        text: "Isolation, rate limits, quotas, resumable/idempotent uploads, replay detection, backpressure enforced."
+        isSatisfied: false
+      - id: AC-RIDE-218-002
+        text: "Capacity controls never bypass receipt/attestation/seal verification."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-219
+    title: "Video storage and bandwidth quotas"
+    description: "Video storage and bandwidth: define per-driver/session quotas and maximum composite/raw-stream sizes; use documented lossless or approved lossy compression, resumable chunked transfer, integrity-checked chunks, retention tiers, lifecycle deletion/legal holds, and separate capacity budgets for composite output and optional raw streams."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-19. Mapped into FR namespace as FR-RIDE-219 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-219-001
+        text: "Per-driver/session quotas and max sizes defined."
+        isSatisfied: false
+      - id: AC-RIDE-219-002
+        text: "Resumable chunked transfer with integrity-checked chunks."
+        isSatisfied: false
+      - id: AC-RIDE-219-003
+        text: "Separate budgets for composite and raw streams."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-220
+    title: "Video performance thresholds"
+    description: "Video performance: measure device/edge CPU, memory, battery, thermal load, encoding latency, clock-sync error, frame drops, public-server ingress/egress, and counsel playback bandwidth; do not admit a composite whose synchronization or sealing quality falls below configured thresholds."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-20. Mapped into FR namespace as FR-RIDE-220 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-220-001
+        text: "Listed performance metrics are measured."
+        isSatisfied: false
+      - id: AC-RIDE-220-002
+        text: "Composites below sync/seal quality thresholds are not admitted."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-221
+    title: "Composite integrity for playback"
+    description: "Composite integrity and playback: preserve codec/compression and overlay-manifest versions, source-to-output hashes, sync offsets, frame/timestamp mapping, and verification status so counsel can reproduce the integrity check before playback."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Original NFR-21. Mapped into FR namespace as FR-RIDE-221 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-221-001
+        text: "Codec, overlay versions, hashes, sync offsets, frame mapping, verification status preserved."
+        isSatisfied: false
+      - id: AC-RIDE-221-002
+        text: "Counsel can reproduce integrity check before playback."
+        isSatisfied: false
+  - kind: fr
+    id: FR-RIDE-222
+    title: "Desktop portability fail-closed"
+    description: "Desktop portability and fail-closed behavior: test signed/reproducible GPL2 builds on Windows, Linux, and macOS; a viewer must not decrypt or render when receipt, attestation, escrow-release, hash, or bundle verification fails."
+    priority: critical
+    area: RIDE
+    status: pending
+    notes: "Original NFR-22. Mapped into FR namespace as FR-RIDE-222 per MCP entity conventions."
+    acceptanceCriteria:
+      - id: AC-RIDE-222-001
+        text: "Signed/reproducible GPL2 builds tested on Windows, Linux, macOS."
+        isSatisfied: false
+      - id: AC-RIDE-222-002
+        text: "Viewer does not decrypt/render on any verification failure."
+        isSatisfied: false

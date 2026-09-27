@@ -1,0 +1,497 @@
+# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+records:
+  - kind: test
+    id: TEST-RIDE-001
+    title: "Privacy-export ZIP parse and Unverified tagging"
+    description: "Parse sample ZIP with DataDictionary; assert known files mapped and unknown tagged Unverified."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-001; method: unit"
+    acceptanceCriteria:
+      - id: AC-TEST-001-001
+        text: "Test TEST-RIDE-001 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-001-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-002
+    title: "Smooth Cruiser ingest paths"
+    description: "Import structured fields and manual entry with consent/source tag."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-002; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-002-001
+        text: "Test TEST-RIDE-002 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-002-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-003
+    title: "Trip record ingest"
+    description: "Map trip fields when present; leave missing null."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-003; method: unit"
+    acceptanceCriteria:
+      - id: AC-TEST-003-001
+        text: "Test TEST-RIDE-003 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-003-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-004
+    title: "Concierge optional poll and partnership gate"
+    description: "With partnership approved, poll documented status only; when denied, features disabled; no private APIs."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-004, FR-RIDE-012, FR-RIDE-011; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-004-001
+        text: "Test TEST-RIDE-004 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-004-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-005
+    title: "Third-party telematics import"
+    description: "Import CSV/JSON and assert third_party_telematics provenance."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-005; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-005-001
+        text: "Test TEST-RIDE-005 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-005-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-006
+    title: "Consent and provenance ledger"
+    description: "Every dataset links to consent actor, time, jurisdiction, purpose."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-006; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-006-001
+        text: "Test TEST-RIDE-006 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-006-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-007
+    title: "Coverage matrix and API-gap notice"
+    description: "Matrix lists collected/available/missing; API-gap notice present."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-007, FR-RIDE-209; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-007-001
+        text: "Test TEST-RIDE-007 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-007-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-008
+    title: "Online-hours policy evaluation"
+    description: "Flag violations only when hours data present; apply regional overrides."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-008; method: unit"
+    acceptanceCriteria:
+      - id: AC-TEST-008-001
+        text: "Test TEST-RIDE-008 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-008-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-009
+    title: "Incident time-window export"
+    description: "Export GPS/scores/third-party events for selected interval with provenance."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-009; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-009-001
+        text: "Test TEST-RIDE-009 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-009-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-010
+    title: "DSAR access deletion and legal hold"
+    description: "Access export works; deletion blocked under legal hold and allowed when clear."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-010, FR-RIDE-210; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-010-001
+        text: "Test TEST-RIDE-010 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-010-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-011
+    title: "Hash version integrity on imports"
+    description: "Raw imports hashed/versioned; integrity status shown."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-013; method: unit"
+    acceptanceCriteria:
+      - id: AC-TEST-011-001
+        text: "Test TEST-RIDE-011 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-011-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-012
+    title: "RBAC least privilege location"
+    description: "Roles enforced; precise coordinates masked by default."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-014, FR-RIDE-202; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-012-001
+        text: "Test TEST-RIDE-012 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-012-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-013
+    title: "Seal-at-collect boundary"
+    description: "Seal before durable store; scoped keys; no shared long-lived all-record key."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-015, FR-RIDE-016; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-013-001
+        text: "Test TEST-RIDE-013 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-013-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-014
+    title: "Custody receipt and chain write"
+    description: "Receipt fields complete; chain write records chain ID/tx/block/time."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-017, FR-RIDE-018, FR-RIDE-212; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-014-001
+        text: "Test TEST-RIDE-014 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-014-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-015
+    title: "Chain failure non-admission"
+    description: "On chain failure, non-admitted, ciphertext unchanged, operator alerted."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-019; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-015-001
+        text: "Test TEST-RIDE-015 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-015-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-016
+    title: "Court decryption path documentation and verify UI"
+    description: "Docs present; verify UI recomputes hash and shows chain mismatches."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-020, FR-RIDE-021; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-016-001
+        text: "Test TEST-RIDE-016 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-016-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-017
+    title: "Escrow package and separation"
+    description: "M-of-N escrow off-device; no plaintext private key on-device after seal."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-022, FR-RIDE-023, FR-RIDE-216; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-017-001
+        text: "Test TEST-RIDE-017 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-017-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-018
+    title: "Court escrow release workflow"
+    description: "Quorum release logs append-only; sealed evidence unchanged; counsel verification steps pass."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-024, FR-RIDE-028; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-018-001
+        text: "Test TEST-RIDE-018 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-018-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-019
+    title: "Play Integrity gate and receipt attestation"
+    description: "Failed attestation rejects collection; success binds key and includes attestation on receipt."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-025, FR-RIDE-026, FR-RIDE-027, FR-RIDE-215; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-019-001
+        text: "Test TEST-RIDE-019 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-019-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-020
+    title: "GPL-2.0 licensing and distribution"
+    description: "LICENSE GPL-2.0; notices on artifacts; Play/source publish metadata present."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-029, FR-RIDE-030, FR-RIDE-031, FR-RIDE-217; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-020-001
+        text: "Test TEST-RIDE-020 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-020-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-021
+    title: "Driver account vehicle config"
+    description: "Account/consent/vehicle/config required before admit collection."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-032, FR-RIDE-033, FR-RIDE-034; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-021-001
+        text: "Test TEST-RIDE-021 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-021-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-022
+    title: "Sealed-only submit and admission verify"
+    description: "Plaintext rejected; admission verifies receipt/hash/chain/attestation/binding."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-035, FR-RIDE-036; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-022-001
+        text: "Test TEST-RIDE-022 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-022-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-023
+    title: "Multi-driver provenance and counsel bundle"
+    description: "Per-record verification in multi-driver bundle; aggregation does not weaken custody."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-037, FR-RIDE-038; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-023-001
+        text: "Test TEST-RIDE-023 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-023-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-024
+    title: "Abuse controls and tenant isolation"
+    description: "Rate limits, replay rejection, quarantine; no unauthorized cross-tenant access; capacity does not bypass verify."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-039, FR-RIDE-040, FR-RIDE-218; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-024-001
+        text: "Test TEST-RIDE-024 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-024-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-025
+    title: "Dual-phone sync and composite"
+    description: "Two-phone session syncs clocks, composites on-device with spider-graph overlay."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-025-001
+        text: "Test TEST-RIDE-025 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-025-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-026
+    title: "Composite seal optional raw and metadata"
+    description: "Composite sealed with chain receipt; optional raw sealed with consent; metadata in custody package; no server plaintext re-encode."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-045, FR-RIDE-046, FR-RIDE-048; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-026-001
+        text: "Test TEST-RIDE-026 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-026-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-027
+    title: "Counsel composite playback verification"
+    description: "Playback only after full verification; inconsistencies reported; integrity reproducible."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-047, FR-RIDE-221; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-027-001
+        text: "Test TEST-RIDE-027 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-027-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-028
+    title: "Desktop viewer fail-closed timeline"
+    description: "Viewer on Win/Linux/macOS verifies then shows timeline; creates ViewerSession/VerificationReport; fails closed on verify errors."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-028-001
+        text: "Test TEST-RIDE-028 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-028-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-029
+    title: "Security TLS vault and access logs"
+    description: "TLS 1.2+; secrets in vault; no plaintext tokens in logs; private keys not in app DB; sensitive access logged."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-201, FR-RIDE-203, FR-RIDE-214; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-029-001
+        text: "Test TEST-RIDE-029 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-029-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-030
+    title: "Concierge resilience and accuracy labeling"
+    description: "Rate-limit/outage does not corrupt rides; Concierge-derived metrics not labeled Smooth Cruiser."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-204, FR-RIDE-206; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-030-001
+        text: "Test TEST-RIDE-030 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-030-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-031
+    title: "Scalability pagination and portable export"
+    description: "Large histories paginate; export ZIP has CSV+PDF+provenance JSON."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-205, FR-RIDE-207; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-031-001
+        text: "Test TEST-RIDE-031 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-031-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-032
+    title: "Retention crypto agility latency"
+    description: "CA-strict retention default; algorithm IDs preserved on rotation; latency budgets gate admission."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-208, FR-RIDE-211, FR-RIDE-213; method: integration"
+    acceptanceCriteria:
+      - id: AC-TEST-032-001
+        text: "Test TEST-RIDE-032 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-032-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+  - kind: test
+    id: TEST-RIDE-033
+    title: "Video quotas and performance gates"
+    description: "Quotas/chunked uploads enforced; below-threshold composites not admitted."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-219, FR-RIDE-220; method: system"
+    acceptanceCriteria:
+      - id: AC-TEST-033-001
+        text: "Test TEST-RIDE-033 passes for happy path of covered requirements."
+        isSatisfied: false
+      - id: AC-TEST-033-002
+        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false

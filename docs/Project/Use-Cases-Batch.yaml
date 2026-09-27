@@ -1,0 +1,561 @@
+# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+records:
+  - kind: usecase
+    localId: UC-RIDE-001
+    title: "Ingest privacy-export ZIP"
+    briefDescription: "Driver or auditor uploads a consented Lyft privacy-export ZIP; system parses DataDictionary files and tags unknowns Unverified."
+    actors: [Driver, Auditor]
+    frLinks:
+      - frId: FR-RIDE-001
+        linkType: Realizes
+      - frId: FR-RIDE-003
+        linkType: Realizes
+      - frId: FR-RIDE-006
+        linkType: Realizes
+      - frId: FR-RIDE-013
+        linkType: Realizes
+    basicFlow: |
+      1. Actor authenticates and confirms consent/jurisdiction/purpose.
+      2. Actor uploads privacy-export ZIP.
+      3. System seals raw ZIP at collection boundary and creates custody receipt.
+      4. System parses DataDictionary-described files.
+      5. System tags unknown types Unverified.
+      6. System shows ingest summary and integrity status.
+    acceptanceCriteria:
+      - id: AC-UC-001-001
+        text: "Use case UC-RIDE-001 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-001-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-002
+    title: "Record Smooth Cruiser evidence"
+    briefDescription: "Capture Smooth Cruiser scores from export fields or consented manual/screenshot entry with provenance."
+    actors: [Driver, Auditor]
+    frLinks:
+      - frId: FR-RIDE-002
+        linkType: Realizes
+      - frId: FR-RIDE-006
+        linkType: Realizes
+    basicFlow: |
+      1. Actor selects subject and consent context.
+      2. System imports structured Smooth Cruiser fields if present.
+      3. Else actor enters consented screenshot/manual values with timestamp and source tag.
+      4. System seals and receipts the capture.
+    acceptanceCriteria:
+      - id: AC-UC-002-001
+        text: "Use case UC-RIDE-002 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-002-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-003
+    title: "Optional Concierge ride location poll"
+    briefDescription: "Admin-enabled org polls Concierge status for driver_location on active org-booked rides only."
+    actors: [Admin, Auditor]
+    frLinks:
+      - frId: FR-RIDE-004
+        linkType: Realizes
+      - frId: FR-RIDE-011
+        linkType: Realizes
+      - frId: FR-RIDE-012
+        linkType: Realizes
+      - frId: FR-RIDE-204
+        linkType: Realizes
+      - frId: FR-RIDE-206
+        linkType: Realizes
+    basicFlow: |
+      1. Admin marks Business partnership approved.
+      2. System obtains OAuth client credentials.
+      3. System polls documented status endpoint for active org rides only.
+      4. System stores coarse lat/lng with lyft_concierge_api provenance, never as Smooth Cruiser.
+      5. If partnership denied, Concierge features stay disabled.
+    acceptanceCriteria:
+      - id: AC-UC-003-001
+        text: "Use case UC-RIDE-003 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-003-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-004
+    title: "Import third-party telematics"
+    briefDescription: "Import CSV/JSON telematics from driver-controlled devices as parallel evidence."
+    actors: [Driver, Auditor]
+    frLinks:
+      - frId: FR-RIDE-005
+        linkType: Realizes
+      - frId: FR-RIDE-006
+        linkType: Realizes
+    basicFlow: |
+      1. Actor uploads third-party export.
+      2. System validates schema and tags third_party_telematics.
+      3. System seals package and writes custody receipt.
+      4. System links events to audit subject without claiming Lyft-native origin.
+    acceptanceCriteria:
+      - id: AC-UC-004-001
+        text: "Use case UC-RIDE-004 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-004-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-005
+    title: "Generate coverage matrix"
+    briefDescription: "Produce collected vs available vs missing signal matrix including API gaps."
+    actors: [Auditor, Counsel]
+    frLinks:
+      - frId: FR-RIDE-007
+        linkType: Realizes
+      - frId: FR-RIDE-209
+        linkType: Realizes
+    basicFlow: |
+      1. Auditor opens subject coverage view.
+      2. System lists Lyft-collected signal categories vs audit-available data.
+      3. System marks missing signals and shows API-gap notice.
+    acceptanceCriteria:
+      - id: AC-UC-005-001
+        text: "Use case UC-RIDE-005 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-005-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-006
+    title: "Online-hours policy check"
+    briefDescription: "Analyze online hours against 12h/6h and regional overrides when data present."
+    actors: [Auditor]
+    frLinks:
+      - frId: FR-RIDE-008
+        linkType: Realizes
+    basicFlow: |
+      1. Auditor selects subject and policy profile.
+      2. System loads available online intervals.
+      3. If data present, system evaluates 12h/6h and overrides.
+      4. System flags apparent violations only when hours data exists.
+    acceptanceCriteria:
+      - id: AC-UC-006-001
+        text: "Use case UC-RIDE-006 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-006-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-007
+    title: "Build incident time-window package"
+    briefDescription: "Export available GPS, scores, and third-party events for a counsel time window."
+    actors: [Auditor, Counsel]
+    frLinks:
+      - frId: FR-RIDE-009
+        linkType: Realizes
+      - frId: FR-RIDE-038
+        linkType: Realizes
+      - frId: FR-RIDE-207
+        linkType: Realizes
+    basicFlow: |
+      1. Actor selects interval and subject(s).
+      2. System assembles available sealed-record references and metadata.
+      3. System exports package with provenance and verification stubs.
+    acceptanceCriteria:
+      - id: AC-UC-007-001
+        text: "Use case UC-RIDE-007 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-007-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-008
+    title: "Data subject access or deletion"
+    briefDescription: "Honor DSAR access/deletion for audit-held data subject to legal holds."
+    actors: [Driver, Admin, Counsel]
+    frLinks:
+      - frId: FR-RIDE-010
+        linkType: Realizes
+      - frId: FR-RIDE-202
+        linkType: Realizes
+      - frId: FR-RIDE-203
+        linkType: Realizes
+      - frId: FR-RIDE-208
+        linkType: Realizes
+      - frId: FR-RIDE-210
+        linkType: Realizes
+    basicFlow: |
+      1. Subject or authorized agent requests access or deletion.
+      2. System checks legal holds.
+      3. Access: export audit-held data with access log.
+      4. Deletion: apply if no hold, document custody impact.
+    acceptanceCriteria:
+      - id: AC-UC-008-001
+        text: "Use case UC-RIDE-008 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-008-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-009
+    title: "Seal-at-collect with chain receipt"
+    briefDescription: "Collect datum, seal/encrypt immediately, write custody receipt to configured public chain, admit only on confirmation."
+    actors: [Driver, PublicServer]
+    frLinks:
+      - frId: FR-RIDE-015
+        linkType: Realizes
+      - frId: FR-RIDE-016
+        linkType: Realizes
+      - frId: FR-RIDE-017
+        linkType: Realizes
+      - frId: FR-RIDE-018
+        linkType: Realizes
+      - frId: FR-RIDE-019
+        linkType: Realizes
+      - frId: FR-RIDE-201
+        linkType: Realizes
+      - frId: FR-RIDE-211
+        linkType: Realizes
+      - frId: FR-RIDE-212
+        linkType: Realizes
+      - frId: FR-RIDE-213
+        linkType: Realizes
+    basicFlow: |
+      1. Collection begins on approved app after Integrity check.
+      2. System generates scoped key and seals payload.
+      3. System builds custody receipt.
+      4. System writes receipt to configured chain.
+      5. On confirmation, mark collection complete/admitted; on failure, quarantine and alert without rewriting ciphertext.
+    acceptanceCriteria:
+      - id: AC-UC-009-001
+        text: "Use case UC-RIDE-009 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-009-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-010
+    title: "Counsel verification and decrypt path"
+    briefDescription: "Counsel verifies hash, chain, attestation, escrow logs, then obtains expiring working copy via documented path."
+    actors: [Counsel, Admin]
+    frLinks:
+      - frId: FR-RIDE-020
+        linkType: Realizes
+      - frId: FR-RIDE-021
+        linkType: Realizes
+      - frId: FR-RIDE-028
+        linkType: Realizes
+      - frId: FR-RIDE-214
+        linkType: Realizes
+    basicFlow: |
+      1. Counsel opens verification report for sealed record.
+      2. System recomputes hash and checks on-chain receipt.
+      3. System verifies Play attestation and key binding.
+      4. Counsel follows documented legal-process and escrow release.
+      5. System issues expiring authorized working copy and logs access.
+    acceptanceCriteria:
+      - id: AC-UC-010-001
+        text: "Use case UC-RIDE-010 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-010-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-011
+    title: "Escrow key and court release"
+    briefDescription: "Escrow private key/wrapped DEK under M-of-N; release minimum scope for court without mutating sealed evidence."
+    actors: [Admin, Counsel]
+    frLinks:
+      - frId: FR-RIDE-022
+        linkType: Realizes
+      - frId: FR-RIDE-023
+        linkType: Realizes
+      - frId: FR-RIDE-024
+        linkType: Realizes
+      - frId: FR-RIDE-214
+        linkType: Realizes
+      - frId: FR-RIDE-216
+        linkType: Realizes
+    basicFlow: |
+      1. After sealing, system packages escrow shares/wrapped DEK off-device.
+      2. Court case triggers release request.
+      3. Custodians provide M-of-N approvals after legal-process check.
+      4. System releases minimum key scope, appends release log, leaves sealed blob/receipt unchanged.
+    acceptanceCriteria:
+      - id: AC-UC-011-001
+        text: "Use case UC-RIDE-011 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-011-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-012
+    title: "Play Integrity gated collection"
+    briefDescription: "Bind keys to Play Integrity/signing cert; reject failed attestations before seal."
+    actors: [Driver]
+    frLinks:
+      - frId: FR-RIDE-025
+        linkType: Realizes
+      - frId: FR-RIDE-026
+        linkType: Realizes
+      - frId: FR-RIDE-027
+        linkType: Realizes
+      - frId: FR-RIDE-215
+        linkType: Realizes
+    basicFlow: |
+      1. App requests nonce-bound Integrity attestation.
+      2. System verifies allowlisted package/cert and verdict.
+      3. On success, generate scoped key bound to attestation and seal.
+      4. On failure, reject collection and do not admit.
+    acceptanceCriteria:
+      - id: AC-UC-012-001
+        text: "Use case UC-RIDE-012 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-012-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-013
+    title: "GPL-2.0 publish and notice"
+    briefDescription: "Publish GPL-2.0 client/source and attach license metadata to shared artifacts without exposing sealed payloads."
+    actors: [Admin]
+    frLinks:
+      - frId: FR-RIDE-029
+        linkType: Realizes
+      - frId: FR-RIDE-030
+        linkType: Realizes
+      - frId: FR-RIDE-031
+        linkType: Realizes
+      - frId: FR-RIDE-217
+        linkType: Realizes
+    basicFlow: |
+      1. Maintain GPL-2.0 LICENSE and notices.
+      2. Publish source repo and Play build with signing metadata.
+      3. Attach LicenseMetadata to schemas/receipts/verification artifacts.
+      4. Confirm sealed evidence remains access-controlled.
+    acceptanceCriteria:
+      - id: AC-UC-013-001
+        text: "Use case UC-RIDE-013 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-013-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-014
+    title: "Driver self-registers on public server"
+    briefDescription: "Driver downloads GPL2 client, creates account, records consent, registers vehicle and config profile."
+    actors: [Driver, PublicServer]
+    frLinks:
+      - frId: FR-RIDE-031
+        linkType: Realizes
+      - frId: FR-RIDE-032
+        linkType: Realizes
+      - frId: FR-RIDE-033
+        linkType: Realizes
+      - frId: FR-RIDE-034
+        linkType: Realizes
+    basicFlow: |
+      1. Driver downloads client from Play or source.
+      2. Driver creates authenticated account with consent/jurisdiction/purpose.
+      3. Driver registers vehicle attributes with consent.
+      4. Driver selects valid configuration profile.
+      5. Server admits account/vehicle for later sealed submissions.
+    acceptanceCriteria:
+      - id: AC-UC-014-001
+        text: "Use case UC-RIDE-014 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-014-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-015
+    title: "Submit sealed package to public server"
+    briefDescription: "Driver submits sealed ciphertext plus receipt metadata; server verifies and admits or quarantines."
+    actors: [Driver, PublicServer]
+    frLinks:
+      - frId: FR-RIDE-035
+        linkType: Realizes
+      - frId: FR-RIDE-036
+        linkType: Realizes
+      - frId: FR-RIDE-037
+        linkType: Realizes
+      - frId: FR-RIDE-039
+        linkType: Realizes
+      - frId: FR-RIDE-040
+        linkType: Realizes
+      - frId: FR-RIDE-218
+        linkType: Realizes
+    basicFlow: |
+      1. Client submits sealed package and receipt metadata only.
+      2. Server rejects plaintext or missing receipt.
+      3. Server verifies hash, chain, attestation, binding, driver/vehicle/config.
+      4. On success, index admission; on failure, reject/quarantine and log.
+    acceptanceCriteria:
+      - id: AC-UC-015-001
+        text: "Use case UC-RIDE-015 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-015-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-016
+    title: "Counsel multi-driver bundle"
+    briefDescription: "Assemble independently admitted submissions from many drivers with per-record verification reports."
+    actors: [Counsel, Admin]
+    frLinks:
+      - frId: FR-RIDE-037
+        linkType: Realizes
+      - frId: FR-RIDE-038
+        linkType: Realizes
+    basicFlow: |
+      1. Counsel selects authorized case drivers/submissions.
+      2. System builds bundle preserving per-record receipts and attestations.
+      3. System attaches VerificationReport per record.
+      4. Aggregation does not weaken per-record custody.
+    acceptanceCriteria:
+      - id: AC-UC-016-001
+        text: "Use case UC-RIDE-016 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-016-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-017
+    title: "Dual-phone composite evidence"
+    briefDescription: "Two phones capture, sync clocks, composite with spider graph on-device, seal composite, submit sealed package."
+    actors: [Driver]
+    frLinks:
+      - frId: FR-RIDE-041
+        linkType: Realizes
+      - frId: FR-RIDE-042
+        linkType: Realizes
+      - frId: FR-RIDE-043
+        linkType: Realizes
+      - frId: FR-RIDE-044
+        linkType: Realizes
+      - frId: FR-RIDE-045
+        linkType: Realizes
+      - frId: FR-RIDE-046
+        linkType: Realizes
+      - frId: FR-RIDE-048
+        linkType: Realizes
+      - frId: FR-RIDE-219
+        linkType: Realizes
+      - frId: FR-RIDE-220
+        linkType: Realizes
+    basicFlow: |
+      1. Two approved phones join authorized session.
+      2. System establishes shared clock and SyncClockOffset.
+      3. On-device/edge pipeline composites streams with spider-graph overlay.
+      4. Composite sealed at device boundary with chain receipt.
+      5. Optional raw streams sealed if consented and within budget.
+      6. Only sealed packages submitted to public server.
+    acceptanceCriteria:
+      - id: AC-UC-017-001
+        text: "Use case UC-RIDE-017 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-017-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-018
+    title: "Counsel composite playback"
+    briefDescription: "Verify composite integrity then play expiring working copy."
+    actors: [Counsel]
+    frLinks:
+      - frId: FR-RIDE-047
+        linkType: Realizes
+      - frId: FR-RIDE-048
+        linkType: Realizes
+      - frId: FR-RIDE-050
+        linkType: Realizes
+      - frId: FR-RIDE-221
+        linkType: Realizes
+    basicFlow: |
+      1. Counsel opens composite record.
+      2. System verifies hash, receipt, source links, clock offsets, overlay, attestation.
+      3. On success, decrypt expiring working copy for playback.
+      4. On any failure, fail closed and report inconsistencies.
+    acceptanceCriteria:
+      - id: AC-UC-018-001
+        text: "Use case UC-RIDE-018 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-018-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-019
+    title: "Desktop court viewer review"
+    briefDescription: "Reviewer uses GPL2 desktop viewer to verify and display RideBundle via escrow release path."
+    actors: [Counsel, Auditor]
+    frLinks:
+      - frId: FR-RIDE-028
+        linkType: Realizes
+      - frId: FR-RIDE-049
+        linkType: Realizes
+      - frId: FR-RIDE-050
+        linkType: Realizes
+      - frId: FR-RIDE-051
+        linkType: Realizes
+      - frId: FR-RIDE-052
+        linkType: Realizes
+      - frId: FR-RIDE-222
+        linkType: Realizes
+    basicFlow: |
+      1. Reviewer opens RideBundle in desktop viewer on Win/Linux/macOS.
+      2. Viewer verifies receipt, hashes, Play attestation, escrow authorization.
+      3. On success, decrypt via escrow release and show synchronized timeline.
+      4. Viewer creates ViewerSession and VerificationReport.
+      5. On failure, fail closed with auditable error.
+    acceptanceCriteria:
+      - id: AC-UC-019-001
+        text: "Use case UC-RIDE-019 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-019-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-020
+    title: "Admin RBAC and partnership gates"
+    briefDescription: "Admin configures roles and Business API partnership status."
+    actors: [Admin]
+    frLinks:
+      - frId: FR-RIDE-011
+        linkType: Realizes
+      - frId: FR-RIDE-012
+        linkType: Realizes
+      - frId: FR-RIDE-014
+        linkType: Realizes
+      - frId: FR-RIDE-202
+        linkType: Realizes
+    basicFlow: |
+      1. Admin assigns roles with least privilege.
+      2. Admin sets Business partnership approved or denied.
+      3. System enables/disables Concierge features accordingly.
+      4. Precise location views remain least-privilege.
+    acceptanceCriteria:
+      - id: AC-UC-020-001
+        text: "Use case UC-RIDE-020 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-020-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
+  - kind: usecase
+    localId: UC-RIDE-021
+    title: "Cross-cutting compliance and quality gates"
+    briefDescription: "Covers remaining NFRs for accuracy labeling, portability export, and related cross-cutting controls."
+    actors: [Admin, Auditor, Counsel]
+    frLinks:
+      - frId: FR-RIDE-205
+        linkType: Realizes
+      - frId: FR-RIDE-207
+        linkType: Realizes
+    basicFlow: |
+      1. Admin reviews compliance configuration.
+      2. Auditor exports portable audit ZIP when needed.
+      3. System enforces accuracy labeling and remaining NFR gates.
+      4. Counsel confirms legal-hold and privacy controls remain active.
+    acceptanceCriteria:
+      - id: AC-UC-021-001
+        text: "Use case UC-RIDE-021 completes happy path without inventing undocumented Lyft APIs."
+        isSatisfied: false
+      - id: AC-UC-021-002
+        text: "Unverified caveats from source requirements remain visible where applicable."
+        isSatisfied: false
