@@ -6,19 +6,6 @@
 **Screens:** [WF-R-06](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
 **UI:** Avalonia UI 12 desktop
 
-<!-- wireframe-svg:start -->
-
-## Visual wireframes
-
-SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
-
-![WF-R-06 Synchronized playback and spider](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
-
-[Open WF-R-06-synchronized-playback.svg](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
-
-<!-- wireframe-svg:end -->
-
-
 ## Goal
 
 After authorized decrypt, counsel plays the sealed composite on a synchronized timeline with spider-graph telematics overlay (and GPS/OBD when present), using recorded `SyncClockOffset`.
@@ -34,14 +21,38 @@ After authorized decrypt, counsel plays the sealed composite on a synchronized t
 1. **Enter playback (WF-R-06)**  
    Working copy valid and non-expired. Composite loads with overlay manifest versions preserved.
 
+   ![WF-R-06 Synchronized playback and spider](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+   [Open WF-R-06-synchronized-playback.svg](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
 2. **Synchronized scrub**  
    Timeline scrub keeps video, spider graph, and optional GPS/OBD tracks aligned via `SyncClockOffset`. Missing components are listed, not invented.
+
+   ![WF-R-06 Synchronized playback and spider](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+   [Open WF-R-06-synchronized-playback.svg](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
 
 3. **Coverage / gaps**  
    Side panel shows coverage matrix and **Unverified** caveats for absent Lyft-native signals. No Lyft private API claims.
 
+   ![WF-R-06 Synchronized playback and spider](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
+   [Open WF-R-06-synchronized-playback.svg](../../assets/wireframes/WF-R-06-synchronized-playback.svg)
+
 4. **Integrity recall**  
    Counsel can jump to VerificationReport / provenance without leaving the review context.
+
+   Verification report:
+
+   ![WF-R-03 Verification report](../../assets/wireframes/WF-R-03-verification-report.svg)
+
+   [Open WF-R-03-verification-report.svg](../../assets/wireframes/WF-R-03-verification-report.svg)
+
+   Provenance:
+
+   ![WF-R-07 Provenance / OTS custody](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+   [Open WF-R-07-provenance-custody-ots.svg](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
 
 ## Success criteria
 

@@ -36,6 +36,8 @@ ASCII structural specs stay in the wireframe markdown next to these SVGs. These 
 
 ## Storyboard index
 
+Each storyboard beat embeds its SVG immediately under that beat. This table is only the screen map.
+
 | Storyboard | Screens |
 | --- | --- |
 | SB-01 Pairing | WF-01, WF-02, WF-03, WF-08 |

@@ -6,23 +6,6 @@
 **UI:** Avalonia UI 12 desktop  
 **Chain default:** Bitcoin OpenTimestamps (`btc-ots`)
 
-<!-- wireframe-svg:start -->
-
-## Visual wireframes
-
-SVG mocks for the screens in this storyboard. Icons are inline SVG paths.
-
-![WF-R-07 Provenance / OTS custody](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
-
-[Open WF-R-07-provenance-custody-ots.svg](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
-
-![WF-R-08 Export for opposing counsel](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
-
-[Open WF-R-08-export-opposing-counsel.svg](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
-
-<!-- wireframe-svg:end -->
-
-
 ## Goal
 
 Export a disclosure pack (sealed packages + portable `.ots` + attestation summary + `VerificationReport`) for opposing counsel independent verification, then close the `ViewerSession` with an audit log.
@@ -38,14 +21,30 @@ Export a disclosure pack (sealed packages + portable `.ots` + attestation summar
 1. **Assemble pack (WF-R-08)**  
    Select records in scope. Pack includes sealed ciphertext, `.ots` files, attestation summaries, and VerificationReport(s). Working-copy plaintext is not the disclosure default.
 
+   ![WF-R-08 Export for opposing counsel](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+   [Open WF-R-08-export-opposing-counsel.svg](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
 2. **Explain independent OTS path (WF-R-07)**  
    Provenance panel / export readme points to verifying `.ots` against Bitcoin headers without trusting RideAudit servers alone.
+
+   ![WF-R-07 Provenance / OTS custody](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
+
+   [Open WF-R-07-provenance-custody-ots.svg](../../assets/wireframes/WF-R-07-provenance-custody-ots.svg)
 
 3. **Export complete**  
    Write pack to counsel-chosen location. Log export event on ViewerSession.
 
+   ![WF-R-08 Export for opposing counsel](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+   [Open WF-R-08-export-opposing-counsel.svg](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
 4. **Close session**  
    End ViewerSession, append access/render events, enforce working-copy expiry/purge.
+
+   ![WF-R-08 Export for opposing counsel](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
+
+   [Open WF-R-08-export-opposing-counsel.svg](../../assets/wireframes/WF-R-08-export-opposing-counsel.svg)
 
 ## Success criteria
 
