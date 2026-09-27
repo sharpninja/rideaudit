@@ -85,6 +85,29 @@
         "request_jsonl_commit": "a06bf4da70a54294b40961834b4c8b15facd865d",
         "response_jsonl_commit": "6949f3bbe2946a7b25f2f8ea6198039ebc8cb73e"
       }
+    },
+    {
+      "round": "plan-review-astra-r7",
+      "utc": "20260927T225309Z",
+      "pair": "docs/reviews/hv-pairs/20260927T225309Z-plan-review-astra-r7.json",
+      "request_jsonl": "docs\\receipts\\hv\\20260927T225309Z-plan-review-astra-r7.request.jsonl",
+      "response_jsonl": "docs\\receipts\\hv\\20260927T225309Z-plan-review-astra-r7.response.jsonl",
+      "status": "completed",
+      "note": "AGREE confidence 98 READY",
+      "custody": {
+        "pair_commit": null,
+        "request_jsonl_commit": "0c1e21275bf03e5f79b7c585eb1616f13601e872",
+        "response_jsonl_commit": "4688b49a9937fa5204b96f2a640edffbf3b8dc0a"
+      }
     }
-  ]
+  ],
+  "final_verdict": {
+    "round": "r7",
+    "overallVerdict": "AGREE",
+    "verdict": "READY",
+    "confidence": 98,
+    "accuracy": 98,
+    "completeness": 98,
+    "utc": "20260927T225309Z"
+  }
 }
