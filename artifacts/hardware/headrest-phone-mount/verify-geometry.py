@@ -235,7 +235,9 @@ def main() -> int:
             expect(c["y_slot"] - c["slot_y0"] > 40, "cradle cannot slide back along the arm")
             expect(c["slot_y1"] > c["y_slot"] + 4, "arm slot does not contain the preview screw")
             expect(c["arm_rise"] == 0, "arms are not horizontal")
-            expect(c["gusset_h"] + 0.01 >= 8, "root gusset is too short")
+            expect(c["gusset_h"] + 0.01 >= 12, "collar does not stand far enough above the arm")
+            expect(abs((c["arm_thick"] + c["gusset_h"]) - c["block_t"]) < 0.05, "root blend rises past the collar")
+            expect(6 <= c["gusset_y1"] - c["gusset_y0"] <= 12, "root blend is not a short run")
             expect(c["gusset_y1"] + 1 < c["slot_y0"], "gusset runs into the arm slot")
             expect(c["gusset_y0"] > c["bore_cy"] + c["bore_id"] / 2, "gusset covers the post bore")
             expect(c["screw_count"] == 2, "model does not have one thumbscrew per arm")
@@ -256,7 +258,7 @@ def main() -> int:
             expect(abs(c["post_od"] - 14.0) < 0.05, "default post is not the 14 mm maximum")
             expect(abs(c["bore_id"] - 14.5) < 0.05, "default bore is not 14.5 mm")
             expect(abs(c["block_od"] - 25.5) < 0.05, "post block is not 25.5 mm outside")
-            expect(abs(c["block_t"] - 10.0) < 0.05, "post block is not 10 mm thick")
+            expect(abs(c["block_t"] - 33.0) < 0.05, "post block is not 33 mm thick")
             expect(c["block_wall"] + 0.01 >= 5, "collar wall is under 5 mm")
             expect(c["arm_thick"] + 0.01 >= 12, "arm is too thin")
             expect((c["arm_width"] - c["slot_span"]) / 2 >= 10, "arm rails are too narrow")
@@ -282,8 +284,8 @@ def main() -> int:
                 f"Each post block is one collar, bore {c['bore_id']:.1f} mm, outside {c['block_od']:.1f} mm, {c['block_t']:.0f} mm thick."
             )
             notes.append(
-                f"Root gussets rise {c['gusset_h']:.0f} mm above the arm on the collar and taper off before the slot. "
-                "Side fillets close the step from the collar out to the arm width."
+                f"The arm shares the collar bottom. Short blends rise {c['gusset_h']:.0f} mm into the collar "
+                f"and stop at its top, tapering onto the arm over {c['gusset_y1'] - c['gusset_y0']:.0f} mm before the slot."
             )
             notes.append("Arms lie in a horizontal plane and enter the receiver from the rear.")
             notes.append(
@@ -461,21 +463,33 @@ def main() -> int:
             ))
             probes.append(classify(
                 block_m,
-                (-c["half"] + 8.0, c["gusset_y0"] + 1.5, c["arm_thick"] + 4.0),
+                (-c["half"], c["gusset_y0"] + 0.6, c["arm_thick"] + 6.0),
                 True,
-                "root gusset stands on the collar above the arm",
+                "root blend is solid in the collar above the arm",
+            ))
+            probes.append(classify(
+                block_m,
+                (-c["half"], c["gusset_y0"] + 0.6, c["block_t"] + 1.5),
+                False,
+                "root blend does not stand above the collar",
+            ))
+            probes.append(classify(
+                block_m,
+                (-c["half"], c["gusset_y1"] + 2.5, c["arm_thick"] + 3.0),
+                False,
+                "root blend has ended before the slot",
             ))
             probes.append(classify(
                 block_m,
                 (-c["half"] - 18.0, c["bore_cy"] - 1.2, 4.0),
                 True,
-                "side fillet fills the step beside the collar",
+                "side blend fills the step beside the collar",
             ))
             probes.append(classify(
                 block_m,
                 (-c["half"] + beside, c["bore_cy"] + 80.0, c["z_arm"] + c["arm_thick"] / 2 + 2.0),
                 False,
-                "arm stays flat ahead of the root gussets",
+                "arm stays flat ahead of the root blends",
             ))
             probes.append(classify(
                 right_m,

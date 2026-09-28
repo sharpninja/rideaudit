@@ -32,5 +32,6 @@ Sealed evidence (AC-RIDE-030-002)
 No warranty. This mount is not crash-tested and is not a certified restraint
 or OEM accessory. On the default model the arms reach about 222 mm forward of
 the headrest face and the cradle stands about 114 mm above the block bottoms.
-The default collar bore is 14.5 mm for a 14 mm post (0.5 mm clearance). A
-different measured post_od needs a new coupon and new blocks. See README.md.
+The default collar is 33 mm thick along the post, 25.5 mm outside, with a
+14.5 mm bore for a 14 mm post (0.5 mm clearance). A different measured
+post_od needs a new coupon and new blocks. See README.md.

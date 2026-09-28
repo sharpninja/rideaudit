@@ -6,7 +6,7 @@ Not Apache-2.0. Not MIT.
 
 All figures are millimetres. Defaults are the customizer values in `headrest-phone-mount.scad`. Derived sizes are what `verify-geometry.py` measures for those defaults; they change when you edit the parameters and re-export.
 
-The mount is two identical post blocks and one cradle. Each post goes through one round collar. Both 200 mm arms lie in a horizontal plane, join that collar through gussets, and enter one receiver from the rear. A longitudinal slot in each arm lets the cradle slide to set depth. The slot is 1 mm clear of the M8 crest on each side. There is no beam and no sideways hole row.
+The mount is two identical post blocks and one cradle. Each post goes through one round collar, 33 mm thick along the post. Both 200 mm arms lie in a horizontal plane, join that collar through short blends into the collar body, and enter one receiver from the rear. A longitudinal slot in each arm lets the cradle slide to set depth. The slot is 1 mm clear of the M8 crest on each side. There is no beam and no sideways hole row.
 
 ## Parameters
 
@@ -19,7 +19,7 @@ The mount is two identical post blocks and one cradle. Each post goes through on
 | `post_clearance` | 0.5 | Diametral clearance, 0.2–0.5 mm |
 | `bore_id` | 14.5 | Derived: `post_od + post_clearance`. Default is 14 + 0.5 |
 | `block_od` | 25.5 | Outer diameter of the same collar |
-| `block_t` | 10 | Axial thickness of that collar |
+| `block_t` | 33 | Axial thickness of that collar, along the post |
 | `arm_length` | 200 | Post axis to arm tip, measured forward along the horizontal arm |
 | `slot_span` | 10 | Arm slot width. M8 crest 8 mm plus 1 mm on each side |
 | `slot_gap` | 14 | Length of each cradle-bottom slot along the arm |
@@ -36,12 +36,12 @@ The mount is two identical post blocks and one cradle. Each post goes through on
 
 | Item | Value |
 | --- | --- |
-| Post collar | One cylinder. Bore 14.5, outside 25.5, thickness 10, wall 5.5 |
+| Post collar | One cylinder. Bore 14.5, outside 25.5, thickness 33, wall 5.5 |
 | Arm section | 56 × 12. Each rail beside the 10 mm slot is 23 wide |
-| Root gussets | Two ribs, 10 mm above the arm at the collar, tapering off before the slot. Side fillets span the collar-to-arm step |
+| Root blends | The arm shares the collar bottom. A center web and two side blends rise 21 mm into the collar and stop at its top, tapering onto the arm over 9 mm, before the slot |
 | Arm slot | 171 long × 10.0 wide, 1.00 mm each side of the M8 crest, from 34 mm forward of the pad |
 | Depth adjustment behind the preview screw | 164 |
-| Block print size | 56.0 × 212.8 × 22.0. The 22 mm includes the gussets; the collar is 10 mm thick |
+| Block print size | 56.0 × 212.8 × 33.0. The print height is the collar |
 | Phone pocket (length × short side × thickness) | 173.6 × 85.8 × 12.5 |
 | Cradle print size | 242.0 × 120.2 × 33.5 |
 | Cradle bottom slots | 14 long × 9.0 wide, one under each arm |
@@ -49,7 +49,7 @@ The mount is two identical post blocks and one cradle. Each post goes through on
 | Cradle top above the block bottom | 114.0 |
 | Threaded holes | 2, one on each arm centerline, tap-drill 6.8 |
 | Thumbscrews | 2 modeled M8×1.25, one per arm, from below, crest Ø 8, 30.5 mm shank under the head, head Ø 22 |
-| Fit coupon | 25.5 × 25.5 × 10.0, the collar without the arm |
+| Fit coupon | 25.5 × 25.5 × 33.0, the collar without the arm |
 
 The pocket is the **maximum** phone. Smaller phones in the same range sit in that pocket with foam, as described in the README. The block heels are coplanar at Y = 0. The phone is flush on the vertical plate, about 200 mm forward of that plane.
 
@@ -74,6 +74,14 @@ The preview screws are fully seated. The head bearing face sits on the underside
 
 The channel height is fixed by the cheeks, so the screw does not close the 0.40 mm by stretching the plastic. That 0.40 mm is the clearance the seated head takes up.
 
+## Collar and arm joint
+
+The collar is **33 mm** along the post, bore **14.5 mm**, outside **25.5 mm**. That length of tube is what carries the arm.
+
+The 12 mm arm shares the collar's bottom face, so the compression side of a downward load at the phone bears straight into the tube. The collar continues 21 mm above the arm. A center web lands on the front wall of the tube, ahead of the bore, and two side blends carry the outer fibers of the 56 mm arm into the same tube. Both stop at the top face of the collar and taper back to the arm over 9 mm, ending before the longitudinal slot. They do not stand above the collar. The outside diameter stays 25.5 mm.
+
+The pinch screw is an M5 through the outboard wall at mid-height of the collar, behind the arm, so it bears on the post.
+
 ## How to measure
 
 1. **Post spacing.** Center-to-center of the two vertical posts. The CAD range is 120–170 mm. Published centers are often 130, 150, or 160 mm. Set `post_spacing` and re-export. The cradle is cut for that spacing. Cradle depth is the slide along the longitudinal slot.
@@ -84,7 +92,7 @@ The channel height is fixed by the cheeks, so the screw does not close the 0.40 
 
 ## Fit coupon
 
-`exports/fit-coupon.stl` is the collar without the arm. The default file is a 14.5 / 25.5 × 10 mm collar (14 mm post, 0.5 mm clearance). Reprint it after any change to `post_od` or `post_clearance`. Slide it onto the post:
+`exports/fit-coupon.stl` is the collar without the arm. The default file is a 14.5 / 25.5 × 33 mm collar (14 mm post, 0.5 mm clearance). Reprint it after any change to `post_od` or `post_clearance`. Slide it onto the post:
 
 - On a post that matches `post_od` it should start by hand and then hold.
 - The pinch screw is what locks rotation on the real block.
@@ -95,9 +103,9 @@ Print the arms only after the coupon fits.
 
 ## Headrest post diameters
 
-The documented common range across Chevrolet, Ford, Hyundai, Honda, Toyota, and Nissan compact SUVs is about 10–14 mm. The sizes that appear most often in Rosen fitment for about 2005–2012 are 10, 12, 12.7, and 14 mm. The design maximum is 14 mm. The collar stays 25.5 mm outside and 10 mm thick; only the bore follows the post.
+The documented common range across Chevrolet, Ford, Hyundai, Honda, Toyota, and Nissan compact SUVs is about 10–14 mm. The sizes that appear most often in Rosen fitment for about 2005–2012 are 10, 12, 12.7, and 14 mm. The design maximum is 14 mm. The collar stays 25.5 mm outside and 33 mm thick along the post; only the bore follows the post.
 
-`post_od` is a customizer spinbox from 10 to 14 mm in 0.1 mm steps, so a measured size that is not one of the presets still works. Presets: **10, 12, 12.7, 13.8, 14**. `post_clearance` runs from 0.2 to 0.5 mm. Bore = `post_od + post_clearance`. The shipped preview uses the maximum: 14 mm post, 0.5 mm clearance, 14.5 mm bore. A smaller preset changes the bore only. The arm and the gussets stay on the 25.5 mm collar.
+`post_od` is a customizer spinbox from 10 to 14 mm in 0.1 mm steps, so a measured size that is not one of the presets still works. Presets: **10, 12, 12.7, 13.8, 14**. `post_clearance` runs from 0.2 to 0.5 mm. Bore = `post_od + post_clearance`. The shipped preview uses the maximum: 14 mm post, 0.5 mm clearance, 14.5 mm bore. A smaller preset changes the bore only. The arm and the blends stay on the 25.5 × 33 mm collar.
 
 Center spacing in the same fitment notes is often 120–170 mm, commonly 130, 150, or 160 mm. The CAD range matches that span. The preview is 150 mm.
 

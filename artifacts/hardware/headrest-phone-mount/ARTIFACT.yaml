@@ -47,11 +47,12 @@ physicalRelease: not-claimed
 notes: >
   Two post blocks, one per headrest post. The post passes through the block
   and the rear of the collar is tangent to the pad. The collar is one
-  cylinder, outside 25.5 mm and 10 mm thick. The bore is post_od plus
-  0.2–0.5 mm clearance. The default is a 14 mm post, so the preview bore is
-  14.5 mm. Spacing in the CAD range is 120–170 mm; the preview is 150 mm.
-  Each block has a
-  horizontal 200 mm arm with root gussets. Both arms slide into one shared
+  cylinder, outside 25.5 mm and 33 mm thick along the post. The bore is
+  post_od plus 0.2–0.5 mm clearance. The default is a 14 mm post, so the
+  preview bore is 14.5 mm. Spacing in the CAD range is 120–170 mm; the
+  preview is 150 mm. Each block has a horizontal 200 mm arm. The arm shares
+  the collar bottom, and short blends rise into the 33 mm collar so the
+  moment enters the tube around the post. Both arms slide into one shared
   vertical cradle from the rear. Each arm has a longitudinal slot 1 mm clear
   of the M8 crest on each side, so the cradle depth can slide before it locks.
   One modeled M8×1.25 thumbscrew per arm, with an external thread on the shank,

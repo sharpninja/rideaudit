@@ -10,7 +10,7 @@ License: GPL-2.0
 | Check | Value |
 | --- | --- |
 | Post spacing | 120 – 170 mm center-to-center; preview 150 mm |
-| Post block | one collar, bore 14.5 mm, outside 25.5 mm, 10 mm thick, wall 5.5 mm |
+| Post block | one collar, bore 14.5 mm, outside 25.5 mm, 33 mm thick, wall 5.5 mm |
 | Default post | 14.0 mm OD, clearance 0.5 mm, bore 14.5 mm |
 | Arm length | 200 mm from the post axis, horizontal (rise 0) |
 | Arm section | 56 × 12 mm |
@@ -32,10 +32,10 @@ License: GPL-2.0
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 20784 | 469469 | 242.0 × 222.2 × 126.3 |
-| `post-block.stl` | 880 | 115869 | 56.0 × 212.8 × 22.0 |
+| `headrest-phone-mount.stl` | 20984 | 488200 | 242.0 × 222.2 × 126.3 |
+| `post-block.stl` | 980 | 125235 | 56.0 × 212.8 × 33.0 |
 | `phone-cradle.stl` | 696 | 231193 | 242.0 × 120.2 × 33.5 |
-| `fit-coupon.stl` | 768 | 3428 | 25.5 × 25.5 × 10.0 |
+| `fit-coupon.stl` | 768 | 11363 | 25.5 × 25.5 × 33.0 |
 | `thumbscrew.stl` | 7456 | 3276 | 32.0 × 22.0 × 36.5 |
 
 ## Probe results
@@ -45,8 +45,8 @@ License: GPL-2.0
 - The arms pass under the receiver roof and do not intersect the cradle.
 - Set post_spacing to the measured centers (120–170 mm) and re-export. Each arm then has one tap hole on its centerline.
 - The arm slot is 10.0 mm wide, 1.00 mm clear of the M8 crest on each side.
-- Each post block is one collar, bore 14.5 mm, outside 25.5 mm, 10 mm thick.
-- Root gussets rise 10 mm above the arm on the collar and taper off before the slot. Side fillets close the step from the collar out to the arm width.
+- Each post block is one collar, bore 14.5 mm, outside 25.5 mm, 33 mm thick.
+- The arm shares the collar bottom. Short blends rise 21 mm into the collar and stop at its top, tapering onto the arm over 9 mm before the slot.
 - Arms lie in a horizontal plane and enter the receiver from the rear.
 - Each arm has a longitudinal slot. The cradle slides along it to set depth, then each thumbscrew locks.
 - Each thumbscrew comes up through a bottom clearance slot, through that arm slot, and into the roof tap hole.
@@ -78,9 +78,11 @@ License: GPL-2.0
 - solid  left arm rail is solid beside the slot near the root
 - solid  left arm rail is solid beside the slot, under the roof
 - solid  left arm rail stays at the same height near the tip
-- solid  root gusset stands on the collar above the arm
-- solid  side fillet fills the step beside the collar
-- air  arm stays flat ahead of the root gussets
+- solid  root blend is solid in the collar above the arm
+- air  root blend does not stand above the collar
+- air  root blend has ended before the slot
+- solid  side blend fills the step beside the collar
+- air  arm stays flat ahead of the root blends
 - air  right arm slot is open on its own screw, not the left screw
 - solid  right arm is solid beside its slot
 - air  fit coupon bore is open

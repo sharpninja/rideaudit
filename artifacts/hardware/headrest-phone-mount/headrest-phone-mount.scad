@@ -19,10 +19,12 @@
 //
 // Two post blocks, one shared vertical cradle.
 // Each post passes through its block. The block is one round collar, 25.5 mm
-// outside and 10 mm thick. The bore is post_od plus 0.2–0.5 mm. The default
-// is a 14 mm post, so the preview bore is 14.5 mm. Its rear is tangent to the headrest
-// (Y = 0). Each collar carries a ~200 mm arm in a horizontal plane (constant Z).
-// Gussets at the collar thicken the root so the 10 mm collar can carry the arm.
+// outside and 33 mm thick along the post. The bore is
+// post_od plus 0.2–0.5 mm. The default is a 14 mm post, so the preview bore
+// is 14.5 mm. Its rear is tangent to the headrest (Y = 0). Each collar carries
+// a ~200 mm arm in a horizontal plane (constant Z). The arm shares the collar's
+// bottom face. Short blends rise into the collar above the arm and stop at the
+// collar top, so the bending moment enters the tube around the post.
 // Both arms slide into the cradle from the rear (from the posts, toward +Y).
 // Each arm has a longitudinal slot down its length, 1 mm wider than the M8
 // crest on each side, so the cradle can slide forward or back before it is
@@ -49,7 +51,7 @@ post_od = 14; // [10:0.1:14]
 post_clearance = 0.5; // [0.2:0.05:0.5]
 // One collar. Outside diameter stays put; only the bore follows the post.
 block_od = 25.5;  // mm, outer diameter of that collar
-block_t  = 10;    // mm, axial thickness of the collar
+block_t  = 33;    // mm, axial thickness of the collar along the post
 
 /* [Arms and lock] */
 arm_length   = 200;  // mm, post axis to arm tip, measured forward
@@ -123,10 +125,11 @@ z_arm = arm_z0 + arm_t / 2;
 arm_rise = 0; // the arm cube is horizontal; this is the acceptance flag
 slot_side_gap = (slot_span - screw_major) / 2;
 slot_y0 = block_od + 8;              // longitudinal slot starts clear of the collar
-// Ribs at the collar, in front of the bore and behind the slot.
-gusset_h = 10;
-gusset_y0 = bore_cy + bore_id / 2 + 0.8;
-gusset_y1 = slot_y0 - 3;
+// Short blends into the collar above the arm. They stop at the collar top
+// and taper onto the arm within about 10 mm, ahead of the bore and behind the slot.
+gusset_h = block_t - arm_t;
+gusset_y0 = bore_cy + bore_id / 2 + 1.2;
+gusset_y1 = min(slot_y0 - 3, gusset_y0 + 10);
 slot_y1 = arm_y1 - 8;                 // and stops short of the tip
 slot_len = slot_y1 - slot_y0;
 
@@ -188,7 +191,7 @@ assert(post_od + 0.001 >= post_od_min && post_od - 0.001 <= post_od_max, "post_o
 assert(post_clearance + 0.001 >= 0.2 && post_clearance - 0.001 <= 0.5, "clearance is outside 0.2..0.5 mm");
 assert(abs(bore_id - (post_od + post_clearance)) < 0.01, "bore is not post_od plus clearance");
 assert(abs(block_od - 25.5) < 0.01, "post block is not 25.5 mm outside");
-assert(abs(block_t - 10) < 0.01, "post block is not 10 mm thick");
+assert(abs(block_t - 33) < 0.01, "post collar is not 33 mm thick");
 assert(block_wall + 0.01 >= 5, "collar wall is under 5 mm");
 assert(bore_cy - bore_d / 2 + 0.01 >= block_wall - 0.05, "bore breaks the rear wall");
 assert(arm_length + 0.01 >= 190 && arm_length <= 260, "arm length is outside the 200 mm class");
@@ -222,7 +225,9 @@ assert(rail_span / 2 + 0.01 >= post_spacing_max / 2 + arm_width / 2, "roof does 
 assert(block_wall + 0.01 >= 5, "collar wall is thinner than 5 mm");
 assert(gusset_y0 > bore_cy + bore_id / 2, "gusset covers the post bore");
 assert(gusset_y1 + 1 < slot_y0, "gusset runs into the longitudinal slot");
-assert(gusset_h + 0.01 >= 8, "root gusset is too short");
+assert(abs((arm_t + gusset_h) - block_t) < 0.01, "root blend rises past the collar");
+assert(gusset_y1 - gusset_y0 >= 6 && gusset_y1 - gusset_y0 <= 12, "root blend is not a short run");
+assert(gusset_h + 0.01 >= 12, "collar does not stand far enough above the arm");
 
 echo(str("CHECK post_spacing_min=", post_spacing_min));
 echo(str("CHECK post_spacing_max=", post_spacing_max));
@@ -315,7 +320,7 @@ module post_block_use(side) {
     post_x = side * half;
     difference() {
         union() {
-            // One collar: 14.5 mm bore, 25.5 mm outside, 10 mm thick.
+            // One collar: bore follows the post, 25.5 mm outside, 33 mm thick.
             translate([post_x, bore_cy, 0])
                 cylinder(h = block_t, d = block_od, $fn = fn_bore);
             // Horizontal arm, joined into the front half of that same collar.
@@ -339,31 +344,30 @@ module post_block_use(side) {
 }
 
 module arm_gussets(post_x) {
-    // Two ribs on the collar's front wall. They taper onto the arm before the
-    // slot, so the 10 mm collar is not asked to carry the beam by itself.
-    for (x0 = [-8, 8]) {
-        hull() {
-            translate([post_x + x0 - 2.2, gusset_y0, arm_z0])
-                cube([4.4, 1.0, arm_t + gusset_h]);
-            translate([post_x + x0 - 1.6, gusset_y1, arm_z0])
-                cube([3.2, 1.0, arm_t]);
-        }
+    // The arm is the lower 12 mm of the collar. These blends stay inside the
+    // collar height and run only a short way forward. The center web lands on
+    // the front wall of the tube, ahead of the bore. The side blends carry the
+    // outer arm fibers into that same tube. Nothing stands above the collar.
+    hull() {
+        translate([post_x - 7.5, gusset_y0, 0])
+            cube([15, 1.4, block_t]);
+        translate([post_x - 6.0, gusset_y1, 0])
+            cube([12, 1.2, arm_t]);
     }
-    // Plan fillets close the step from the 25.5 mm collar out to the 56 mm arm.
     for (sx = [-1, 1]) {
         hull() {
             translate([
-                post_x + sx * (block_r - 2.2) - (sx < 0 ? 2.0 : 0),
-                bore_cy - 5,
+                post_x + sx * 9.2 - (sx < 0 ? 2.8 : 0),
+                bore_cy - 3.75,
                 0
             ])
-                cube([2.0, 3.0, block_t]);
+                cube([2.8, 3.2, block_t]);
             translate([
-                post_x + sx * (arm_width / 2 - 2.0) - (sx < 0 ? 2.0 : 0),
+                post_x + sx * (arm_width / 2 - 2.4) - (sx < 0 ? 2.4 : 0),
                 arm_y0,
                 0
             ])
-                cube([2.0, 10, arm_t]);
+                cube([2.4, 7.0, arm_t]);
         }
     }
 }

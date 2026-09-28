@@ -10,7 +10,7 @@ Copyright (C) 2026 RideAudit contributors. GPL-2.0-or-later. See [LICENSE](LICEN
 
 ## Purpose
 
-One landscape phone, held on a vertical plate. Two post blocks, one per post. Each block is one round collar, 25.5 mm outside and 10 mm thick. The bore is the measured post plus 0.2–0.5 mm. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. The rear of the collar is tangent to the headrest pad. Each collar carries a 200 mm arm in a horizontal plane, with gussets at the joint. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot 10 mm wide, 1 mm clear of the M8 crest on each side, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M8×1.25 thumbscrew comes up from below, on that arm's centerline, through a slot in the cradle bottom, through that arm slot, and into a tap hole in the receiver roof. Fully seated, the head face clamps the bottom plate and the arm.
+One landscape phone, held on a vertical plate. Two post blocks, one per post. Each block is one round collar, 25.5 mm outside and 33 mm thick along the post. The bore is the measured post plus 0.2–0.5 mm. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. The rear of the collar is tangent to the headrest pad. Each collar carries a 200 mm arm in a horizontal plane. The arm shares the collar's bottom face, and short blends rise into the 33 mm collar so the arm moment enters the tube around the post. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot 10 mm wide, 1 mm clear of the M8 crest on each side, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M8×1.25 thumbscrew comes up from below, on that arm's centerline, through a slot in the cradle bottom, through that arm slot, and into a tap hole in the receiver roof. Fully seated, the head face clamps the bottom plate and the arm.
 
 The phone sits flush on the forward face of the vertical plate. Nothing in this package is a second cradle, a shared rail, a sliding clip, or an arm that rises toward the phone.
 
@@ -30,12 +30,12 @@ Print the part STLs in `exports/`. `headrest-phone-mount.stl` is an assembly pre
 
 | Part | File | Qty | Notes |
 | --- | --- | --- | --- |
-| Fit coupon (print this first) | `exports/fit-coupon.stl` | 1 | The collar without the arm. Default file is 14.5 / 25.5 × 10 mm. Reprint it when `post_od` or `post_clearance` changes |
-| Post block | `exports/post-block.stl` | 2 | Round collar, horizontal arm, root gussets. |
+| Fit coupon (print this first) | `exports/fit-coupon.stl` | 1 | The collar without the arm. Default file is 14.5 / 25.5 × 33 mm. Reprint it when `post_od` or `post_clearance` changes |
+| Post block | `exports/post-block.stl` | 2 | Round 33 mm collar, horizontal arm, short blends into the collar. |
 | Phone cradle | `exports/phone-cradle.stl` | 1 | Shared landscape holder. Arms enter from the rear. Bottom slots line up with the roof threads. |
 | Thumbscrew | `exports/thumbscrew.stl` | 2 | Modeled M8×1.25 thumbscrew with an external thread. Shown in the assembly. Metal M8×30 is the hardware match. |
 
-The post block prints **56.0 × 212.8 × 22.0 mm**. The 22 mm height is the arm plus the 10 mm root gussets; the collar itself is 10 mm thick. It needs about **215 mm** of travel on one axis. The cradle is **242.0 × 120.2 × 33.5 mm** and needs about **250 mm** on one axis. The fit coupon is **25.5 × 25.5 × 10.0 mm**. The thumbscrew is **32.0 × 22.0 × 36.5 mm**.
+The post block prints **56.0 × 212.8 × 33.0 mm**. The 33 mm height is the collar. The blends stop at that top face. It needs about **215 mm** of travel on one axis. The cradle is **242.0 × 120.2 × 33.5 mm** and needs about **250 mm** on one axis. The fit coupon is **25.5 × 25.5 × 33.0 mm**. The thumbscrew is **32.0 × 22.0 × 36.5 mm**.
 
 **Post block**
 
@@ -88,7 +88,7 @@ Hardware is listed in [bom.md](bom.md).
 1. Slide each collar onto a post until its rear is against the headrest pad. Print the same STL twice.
 2. Slide both horizontal arms into the cradle from the rear, between the bottom plate and the roof. The phone plate stays vertical. Slide the cradle along the longitudinal slots until the phone is the depth you want.
 3. From below, run one thumbscrew up through the cradle-bottom slot, through that arm's slot, and into the tapped hole the slot exposes. Tighten until the head face is seated on the cradle bottom. Each screw clamps only its own arm. The modeled screw is `thumbscrew.stl`; a metal M8×30 matches the 30.5 mm shank. A longer screw can break out of the 16 mm roof.
-4. Run an M5 pinch screw through the outboard side of each collar until it bears on the post. The collar is only 10 mm thick, so the pinch is radial, not from the top. That stops the block rotating.
+4. Run an M5 pinch screw through the outboard wall of each collar, at mid-height, until it bears on the post. That stops the block rotating.
 5. Set the phone in from the top. The back of the phone sits flush on the vertical plate. The front lip keeps it from tipping out. A strap through the side slots is the backup retainer.
 
 Foam thickness, per side, when the phone is under the maximum:
@@ -115,7 +115,11 @@ Fully seated means the head bearing face is against the underside of the cradle 
 | Roof hole | 6.8 tap drill; the Ø 8 crest bites that wall |
 | Shank under the face | 30.5 |
 
-There is one bottom slot per arm, so the Ø 22 face bears on the plate around that 9 mm slot. The cheeks hold the channel at a fixed height, so the 0.40 mm is the seating take-up. Each arm rail beside the 10 mm slot is 23 mm wide and 12 mm thick. Two ribs at the collar rise 10 mm above the arm and taper off before the slot.
+There is one bottom slot per arm, so the Ø 22 face bears on the plate around that 9 mm slot. The cheeks hold the channel at a fixed height, so the 0.40 mm is the seating take-up. Each arm rail beside the 10 mm slot is 23 mm wide and 12 mm thick.
+
+## Collar and arm joint
+
+The collar is 33 mm along the post, 25.5 mm outside, with a 14.5 mm bore on the default 14 mm post. The 12 mm arm shares the bottom face of that collar, so a downward load at the phone puts compression straight into the tube. The collar stands 21 mm above the arm. A short center web and two side blends rise into that wall and taper onto the arm over 9 mm, stopping at the collar top and stopping before the slot. The moment goes into the tube around the post. The blends do not stand above the collar.
 
 ## Exporting STL and previews
 
@@ -136,7 +140,7 @@ openscad -o exports/post-block.stl --export-format binstl -D 'part="block"' head
 
 `part` is one of `assembly`, `block`, `tray`, `coupon`, `screw`.
 
-Check the geometry (pocket, camera windows, default 14 mm post and 14.5 mm bore, rear entry, tight arm slots, root gussets, cradle-bottom slots, modeled thumbscrews, flush heels, no arm interference):
+Check the geometry (pocket, camera windows, default 14 mm post and 14.5 mm bore, 33 mm collar, rear entry, tight arm slots, root blends, cradle-bottom slots, modeled thumbscrews, flush heels, no arm interference):
 
 ```text
 python3 verify-geometry.py
