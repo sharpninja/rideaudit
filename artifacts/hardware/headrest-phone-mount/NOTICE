@@ -1,0 +1,33 @@
+RideAudit headrest phone mount
+Artifact: ART-RIDE-MOUNT-001
+Package: artifacts/hardware/headrest-phone-mount/
+
+License: GNU General Public License, version 2, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0
+Copyright (C) 2026 RideAudit contributors
+
+This mount is free software under GPL-2.0. Apache-2.0 and MIT are not offered
+as substitute licenses for this package (AC-RIDE-029-003 / FR-RIDE-029).
+
+Source of truth
+  artifacts/hardware/headrest-phone-mount/headrest-phone-mount.scad
+
+The STL files in exports/ are generated from that OpenSCAD source. Regenerate
+them with export-stls.sh after any edit. Modify the .scad file, not the meshes.
+
+Source-commit notice (FR-RIDE-030 / AC-RIDE-030-001)
+  The git commit that contains the copy of this directory you are reading is
+  the source-commit of record for that revision. Identify it with:
+
+    git log -1 --format='%H%n%cI%n%s' -- artifacts/hardware/headrest-phone-mount
+
+  Full license text: LICENSE in this directory.
+
+Sealed evidence (AC-RIDE-030-002)
+  This hardware package contains no ride evidence, sealed payloads, attestation
+  records, or personal data. Publishing the mount under GPL-2.0 does not publish
+  or unlock sealed RideAudit evidence. Sealed evidence stays access-controlled
+  under the product's consent, privacy, and legal-hold rules.
+
+No warranty. This mount is not crash-tested and is not a certified restraint
+or OEM accessory. See README.md.

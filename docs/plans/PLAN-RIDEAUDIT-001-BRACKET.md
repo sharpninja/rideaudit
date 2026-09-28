@@ -118,9 +118,10 @@ No orphan HW-AC: each row links FR + (UC or TR) + TEST or explicit documentation
 
 ## 6. Acceptance of this child plan
 
-- [ ] HW0 design freeze complete
-- [ ] Child plan FR/UC/AC/TEST links complete (no orphans in slice)
-- [ ] Optional: Astra/child HV if process requires (parent R7 AGREE does not automatically cover this extract)
-- [ ] HW1/HW2 fabrication evidence before claiming mount “release”
+- [x] HW0 design freeze complete — parameters, [dimensions](../../artifacts/hardware/headrest-phone-mount/dimensions.md), [BOM](../../artifacts/hardware/headrest-phone-mount/bom.md), safety text, and `ARTIFACT.yaml` `relatedFrIds` match this plan. Version 1.0.0, status `geometry-verified`.
+- [x] Child plan FR/UC/AC/TEST links complete (no orphans in slice). Hardware checks stay HW-AC-MOUNT-001..005 against the FR/UC/TEST rows in §2; no new FR ids.
+- [ ] Optional: Astra/child HV if process requires (parent R7 AGREE does not automatically cover this extract). Not run for this implementation. Do not read this as a product-HV pass.
+- [x] HW2 notice package and regenerable STL — [LICENSE](../../artifacts/hardware/headrest-phone-mount/LICENSE), [NOTICE](../../artifacts/hardware/headrest-phone-mount/NOTICE), GPL-2.0 headers, `export-stls.sh`, and [geometry-report.md](../../artifacts/hardware/headrest-phone-mount/verification/geometry-report.md) (HW-AC-MOUNT-003/004/005).
+- [ ] HW1 on-vehicle print — CAD measurement is recorded; the operator checklist is [vehicle-fit-checklist.md](../../artifacts/hardware/headrest-phone-mount/verification/vehicle-fit-checklist.md). Do not claim a road release until that list is filled in.
 
 **Sibling plans:** [ANDROID](./PLAN-RIDEAUDIT-001-ANDROID.md) · [SERVER](./PLAN-RIDEAUDIT-001-SERVER.md) · [Portfolio index](./PLAN-RIDEAUDIT-001-implementation.md)
