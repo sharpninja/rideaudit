@@ -13,10 +13,12 @@ License: GPL-2.0
 | Assembly preview spacing | 140 mm |
 | Post bore | 14.40 mm (post 14 mm + clearance) |
 | Arm length | 200 mm from the post axis, horizontal (rise 0) |
-| Arm section | 22 × 8 mm |
-| Slot across the arm width | 16 mm span, 10 mm opening, at 185 mm along the arm |
+| Arm section | 28 × 8 mm |
+| Arm slot, along the arm | 157 mm long, 16 mm wide, from 46 to 203 mm forward of the pad |
+| Depth adjustment behind the preview screw | 150 mm |
+| Cradle bottom slots | 12 mm along the arm, one under each threaded hole |
 | Threaded holes | 19 in one row, pitch 10 mm, out to ±90 mm, M5 tap-drill 4.2 mm |
-| Thumbscrews | 2, one per arm, from below |
+| Thumbscrews | 2 modeled, one per arm, from below, shank 21.1 mm under the head |
 | Phone pocket (L × short side × thickness) | 173.6 × 85.8 × 12.5 mm |
 | Phone envelope | length 140–172 mm, short side 70–85 mm, thickness ≤ 12 mm |
 | Camera window | 18 mm square, both upper corners, through the back plate |
@@ -28,10 +30,11 @@ License: GPL-2.0
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 3928 | 303600 | 200.0 × 220.7 × 114.4 |
-| `post-block.stl` | 572 | 71742 | 36.0 × 211.2 × 44.0 |
-| `phone-cradle.stl` | 2344 | 158449 | 200.0 × 33.5 × 101.8 |
+| `headrest-phone-mount.stl` | 4720 | 330334 | 214.0 × 220.7 × 119.9 |
+| `post-block.stl` | 572 | 61671 | 36.0 × 211.2 × 44.0 |
+| `phone-cradle.stl` | 3008 | 204295 | 214.0 × 114.7 × 33.5 |
 | `fit-coupon.stl` | 528 | 16742 | 36.0 × 30.4 × 18.0 |
+| `thumbscrew.stl` | 284 | 1349 | 26.0 × 16.0 × 26.1 |
 
 ## Probe results
 
@@ -40,7 +43,8 @@ License: GPL-2.0
 - The arms pass under the receiver roof and do not intersect the cradle.
 - The hole row covers post centers from 110 mm to 170 mm.
 - Arms lie in a horizontal plane and enter the receiver from the rear.
-- One thumbscrew per arm comes up from below through that arm's slot.
+- Each arm has a longitudinal slot. The cradle slides along it to set depth, then each thumbscrew locks.
+- Each thumbscrew comes up through a bottom slot, through that arm slot, and into the roof thread.
 - Post-block heels bear on Y=0. The cradle sits at the forward end of the arms.
 - air  max-phone center is in the pocket
 - air  max-phone upper corner is not blocked
@@ -56,15 +60,24 @@ License: GPL-2.0
 - air  neighbor threaded hole is open
 - solid  receiver roof is solid above the arm
 - air  receiver is open at the rear on the arm centerline
+- air  left bottom slot is open under the threaded hole
+- air  right bottom slot is open under the threaded hole
+- solid  cradle bottom stays solid between the screw slots
 - air  post bore passes through the block
 - solid  flush heel is solid behind the bore
 - solid  arm root is solid in front of the bore
-- air  left arm slot is open for its own thumbscrew
-- solid  left arm is solid beside its slot, under the roof
-- solid  left arm stays at the same height along its length
+- air  longitudinal slot is open near the arm root
+- air  left arm slot is open at the preview screw
+- air  longitudinal slot is open near the arm tip
+- solid  left arm rail is solid beside the slot near the root
+- solid  left arm rail is solid beside the slot, under the roof
+- solid  left arm rail stays at the same height near the tip
 - air  nothing rises above the horizontal arm
 - air  right arm slot is open on its own screw, not the left screw
 - solid  right arm is solid beside its slot
 - air  fit coupon bore is open
 - solid  fit coupon wall surrounds the bore
+- solid  thumbscrew head is solid
+- solid  thumbscrew wing is solid
+- solid  thumbscrew shank is solid
 - air  minimum-length phone corner fits in the pocket

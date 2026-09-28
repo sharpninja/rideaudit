@@ -20,4 +20,5 @@ render assembly exports/headrest-phone-mount.stl
 render block exports/post-block.stl
 render tray exports/phone-cradle.stl
 render coupon exports/fit-coupon.stl
+render screw exports/thumbscrew.stl
 echo "Exported STLs under exports/. Print the part files. The assembly STL is a preview."

@@ -37,5 +37,6 @@ render() {
 render block verification/previews/post-block.png
 render tray verification/previews/phone-cradle.png
 render coupon verification/previews/fit-coupon.png
+render screw verification/previews/thumbscrew.png
 render assembly verification/previews/assembly.png
 echo "Wrote PNG previews under verification/previews/."

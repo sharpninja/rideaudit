@@ -12,7 +12,8 @@ One shared landscape cradle. Two identical post blocks. No rail, no cradle clip,
 | --- | --- | --- | --- |
 | Fit coupon | `exports/fit-coupon.stl` | 1 | Print before the blocks. Round bore, same diameter as the blocks. |
 | Post block | `exports/post-block.stl` | 2 | 36.0 × 211.2 × 44.0 mm print. Horizontal arm, vertical bore. |
-| Phone cradle | `exports/phone-cradle.stl` | 1 | 200.0 × 33.5 × 101.8 mm. Rear entry, one row of M5 holes in the roof. |
+| Phone cradle | `exports/phone-cradle.stl` | 1 | 214.0 × 114.7 × 33.5 mm. Rear entry, bottom slots, one row of M5 holes in the roof. |
+| Thumbscrew | `exports/thumbscrew.stl` | 2 | 26.0 × 16.0 × 26.1 mm. Modeled M5 thumbscrew used in the assembly preview. |
 
 Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` after a parameter change. Do not edit the meshes. `exports/headrest-phone-mount.stl` is the assembly preview only.
 
@@ -20,7 +21,7 @@ Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` af
 
 | Item | Qty | Notes |
 | --- | --- | --- |
-| M5×20 thumbscrew | 2 | One per arm. From below, through that arm's slot, into a tapped hole in the receiver roof. |
+| M5×25 thumbscrew | 2 | Optional metal match for the modeled screw. One per arm. From below, through that arm's bottom slot and longitudinal slot, into a tapped hole in the roof. Shank under the head is 21 mm on the model. |
 | M5×12 socket set screw or button head | 2 | One pinch screw in the top of each post block. |
 | M5×0.8 tap | 1 | Chase the hole row. Holes are modeled at 4.2 mm tap-drill. |
 

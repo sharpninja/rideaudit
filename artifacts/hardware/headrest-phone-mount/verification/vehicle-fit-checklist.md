@@ -14,7 +14,7 @@ Date: ____________________
 - [ ] Fit coupon slides onto the post and does not rattle.
 - [ ] Both blocks sit flush on the headrest face, posts through the bores.
 - [ ] Both arms lie in a horizontal plane and slide into the cradle from the rear. The phone plate is vertical, and the phone back sits flush on it.
-- [ ] Each arm slot has its own M5 thumbscrew, entered from below into a tapped hole. The two screws do not share one hole.
+- [ ] The cradle slides along the longitudinal arm slots to the depth you want, then each arm gets its own thumbscrew from below: cradle bottom slot, arm slot, tapped hole. The two screws do not share one hole.
 - [ ] Pinch screws, from the top of each block, stop the blocks rotating on the posts.
 - [ ] The phone sits in the landscape pocket with foam and the strap as needed. Camera windows are not buried in the cushion if the cameras face the pad.
 - [ ] The 220.7 mm forward reach and 110.2 mm height (or the re-exported equivalents) miss airbag stitch lines, the driver, the headliner, and the headrest height lock.

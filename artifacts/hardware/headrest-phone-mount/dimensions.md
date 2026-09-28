@@ -6,7 +6,7 @@ Not Apache-2.0. Not MIT.
 
 All figures are millimetres. Defaults are the customizer values in `headrest-phone-mount.scad`. Derived sizes are what `verify-geometry.py` measures for those defaults; they change when you edit the parameters and re-export.
 
-The mount is two identical post blocks and one cradle. Each post goes through its block. Both 200 mm arms lie in a horizontal plane and enter one receiver from the rear. There is no beam and no sliding clamp range.
+The mount is two identical post blocks and one cradle. Each post goes through its block. Both 200 mm arms lie in a horizontal plane and enter one receiver from the rear. A longitudinal slot in each arm lets the cradle slide to set depth. There is no beam and no sliding clamp range.
 
 ## Parameters
 
@@ -17,9 +17,9 @@ The mount is two identical post blocks and one cradle. Each post goes through it
 | `post_spacing` | 140 | Block positions in the assembly preview |
 | `post_diameter` | 14 | Nominal headrest-post outside diameter |
 | `arm_length` | 200 | Post axis to arm tip, measured forward along the horizontal arm |
-| `slot_span` | 16 | Slot length across the arm width |
-| `slot_gap` | 10 | Slot opening along the arm, wide enough for an M5 shank |
-| `slot_radius` | 185 | Post axis to the slot center, along the arm |
+| `slot_span` | 16 | Width of the longitudinal slot across the arm |
+| `slot_gap` | 12 | Length of each cradle-bottom slot along the arm |
+| `slot_radius` | 185 | Post axis to the preview thumbscrew, along the arm |
 | `hole_pitch` | 10 | Spacing of the M5 hole row |
 | `hole_x_max` | 90 | Half-width of the hole row |
 | `phone_width_min` | 70 | Narrowest landscape short side |
@@ -40,21 +40,24 @@ The mount is two identical post blocks and one cradle. Each post goes through it
 | Post bore | 14.40 |
 | Heel behind the bore | 4 |
 | Block depth off the pad | 30.4 |
-| Arm section | 22 × 8 |
+| Arm section | 28 × 8 |
+| Arm slot | 157 long × 16 wide, starting 46 mm forward of the pad |
+| Depth adjustment behind the preview screw | 150 |
 | Arm print length | 211.2 |
 | Phone pocket (length × short side × thickness) | 173.6 × 85.8 × 12.5 |
-| Cradle print size | 200.0 × 33.5 × 101.8 |
+| Cradle print size | 214.0 × 114.7 × 33.5 |
+| Cradle bottom slots | 12 long, one under each threaded hole |
 | Phone front from the headrest face | 220.7 |
 | Cradle top above the block bottom | 110.2 |
 | Threaded holes | 19 in one row at 10 mm, out to ±90, tap-drill 4.2 |
-| Thumbscrews | 2, one per arm, from below |
+| Thumbscrews | 2 modeled, one per arm, from below, 21.1 mm shank under the head |
 | Fit coupon | 36.0 × 30.4 × 18.0 |
 
 The pocket is the **maximum** phone. Smaller phones in the same range sit in that pocket with foam, as described in the README. The block heels are coplanar at Y = 0. The phone is flush on the vertical plate, about 200 mm forward of that plane.
 
 ## How to measure
 
-1. **Post spacing.** Center-to-center of the two vertical posts. Any value from `post_spacing_min` to `post_spacing_max` still puts each arm's slot over the hole row. Set `post_spacing` to the measured value before trusting the assembly preview.
+1. **Post spacing.** Center-to-center of the two vertical posts. Any value from `post_spacing_min` to `post_spacing_max` still puts each arm's slot over the hole row. Set `post_spacing` to the measured value before trusting the assembly preview. Cradle depth is the slide along the longitudinal slot, not a change in post spacing.
 2. **Post diameter.** The printed bore is `post_diameter + clearance`. The block bore and the fit coupon are both round, because the bore prints vertical.
 3. **Phone, landscape.** Long edge → `phone_length_*`. Short edge, the vertical one → `phone_width_*`. Thickness including the case → `phone_thickness_max`.
 4. **Camera.** The windows are `camera_clearance` squares in both upper corners and pass through the back plate.

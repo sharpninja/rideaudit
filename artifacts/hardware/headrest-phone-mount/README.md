@@ -10,11 +10,11 @@ Copyright (C) 2026 RideAudit contributors. GPL-2.0-or-later. See [LICENSE](LICEN
 
 ## Purpose
 
-One landscape phone, held on a vertical plate. Two post blocks, one per post. The post passes through the block. The block heel sits flush on the headrest pad. Each block has a 200 mm arm in a horizontal plane. Both arms slide into one shared cradle from the rear. Each arm has a slot across its width. Its own M5 thumbscrew comes up from below, through that slot, into a tapped hole in the receiver roof.
+One landscape phone, held on a vertical plate. Two post blocks, one per post. The post passes through the block. The block heel sits flush on the headrest pad. Each block has a 200 mm arm in a horizontal plane. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot down its length, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M5 thumbscrew comes up from below, through a slot in the cradle bottom, through that arm slot, and into a tapped hole in the receiver roof.
 
 The phone sits flush on the forward face of the vertical plate. Nothing in this package is a second cradle, a shared rail, a sliding clip, or an arm that rises toward the phone.
 
-The blocks are independent. A single row of M5 holes, 10 mm apart, is the discrete lock. Slide each arm in from the rear until its slot exposes a hole, then tighten that arm's screw. The slot is wider than the hole pitch, so a small yaw in the horizontal plane still finds a hole.
+The blocks are independent. A single row of M5 holes, 10 mm apart, is the sideways lock. The longitudinal slot is the depth lock: slide the cradle along the arms, then tighten each arm's thumbscrew. The arm slot is wider than the hole pitch, so a small yaw still finds a hole.
 
 ![Complete assembly](verification/previews/assembly.png)
 
@@ -32,9 +32,10 @@ Print the part STLs in `exports/`. `headrest-phone-mount.stl` is an assembly pre
 | --- | --- | --- | --- |
 | Fit coupon (print this first) | `exports/fit-coupon.stl` | 1 | 18 mm slice of the round post bore |
 | Post block | `exports/post-block.stl` | 2 | Horizontal arm, vertical bore. No support rib. |
-| Phone cradle | `exports/phone-cradle.stl` | 1 | Shared landscape holder. Arms enter from the rear. |
+| Phone cradle | `exports/phone-cradle.stl` | 1 | Shared landscape holder. Arms enter from the rear. Bottom slots line up with the roof threads. |
+| Thumbscrew | `exports/thumbscrew.stl` | 2 | Modeled M5 thumbscrew. Shown in the assembly. Metal M5×25 is the hardware match. |
 
-The post block is **36.0 × 211.2 × 44.0 mm**. It needs about **215 mm** of travel on one axis. The cradle is **200.0 × 33.5 × 101.8 mm**.
+The post block is **36.0 × 211.2 × 44.0 mm**. It needs about **215 mm** of travel on one axis. The cradle is **214.0 × 114.7 × 33.5 mm**. The thumbscrew is **26.0 × 16.0 × 26.1 mm**.
 
 **Post block**
 
@@ -48,6 +49,10 @@ The post block is **36.0 × 211.2 × 44.0 mm**. It needs about **215 mm** of tra
 
 ![Fit coupon](verification/previews/fit-coupon.png)
 
+**Thumbscrew**
+
+![Thumbscrew](verification/previews/thumbscrew.png)
+
 ## Print settings (starting point)
 
 | Setting | Recommendation |
@@ -59,7 +64,7 @@ The post block is **36.0 × 211.2 × 44.0 mm**. It needs about **215 mm** of tra
 | Infill | 40% gyroid or cubic |
 | Top/bottom layers | 5 |
 | Supports | None. The cradle pocket overhangs at 45°. |
-| Bed | Block: arm and heel down, bore vertical. Cradle: receiver underside down, plate standing. Coupon: bore vertical. |
+| Bed | Block: arm and heel down, bore vertical. Cradle: rear edge down (bottom and roof stand as walls). Thumbscrew: head and wings down, shank up. Coupon: bore vertical. |
 
 The block bore is a round vertical hole. The fit coupon is the same round bore; use it to judge the diameter.
 
@@ -81,8 +86,8 @@ Details: [dimensions.md](dimensions.md).
 Hardware is listed in [bom.md](bom.md).
 
 1. Slide each block onto a post until the flat heel is flush on the headrest pad. Print the same STL twice.
-2. Slide both horizontal arms into the cradle from the rear, under the receiver roof. The phone plate stays vertical.
-3. From below, run one M5×20 thumbscrew through each arm's slot into the tapped hole that slot exposes. Tighten until that arm cannot shift. Each screw clamps only its own arm.
+2. Slide both horizontal arms into the cradle from the rear, between the bottom plate and the roof. The phone plate stays vertical. Slide the cradle along the longitudinal slots until the phone is the depth you want.
+3. From below, run one thumbscrew up through the cradle-bottom slot, through that arm's slot, and into the tapped hole the slot exposes. Tighten until that arm cannot shift. Each screw clamps only its own arm. The modeled screw is `thumbscrew.stl`; a metal M5×25 matches the 21 mm shank.
 4. Run an M5 pinch screw into the top of each block until it bears on the post. That stops the block rotating after you have picked the holes.
 5. Set the phone in from the top. The back of the phone sits flush on the vertical plate. The front lip keeps it from tipping out. A strap through the side slots is the backup retainer.
 
@@ -92,7 +97,7 @@ Foam thickness, per side, when the phone is under the maximum:
 - Short side: `phone_width_max - actual short side` under the strap, at the top of the pocket
 - Thickness: `phone_thickness_max - actual thickness` against the back plate
 
-To move the phone, loosen the two thumbscrews, slide or yaw the arms in the horizontal plane until each slot meets a hole, and retighten. The holes are 10 mm apart along the roof. Then snug the pinch screws again.
+To move the phone closer to the pad or farther out, loosen the two thumbscrews and slide the cradle along the arm slots, then retighten. The holes are 10 mm apart across the roof if an arm needs a neighboring hole. Then snug the pinch screws again.
 
 ## Exporting STL and previews
 
@@ -103,7 +108,7 @@ The `.scad` source is the source of truth under GPL-2.0. From this directory:
 ./export-previews.sh
 ```
 
-`export-previews.sh` writes the isometric PNGs under `verification/previews/` for the post block, the cradle, the fit coupon, and the complete assembly.
+`export-previews.sh` writes the isometric PNGs under `verification/previews/` for the post block, the cradle, the fit coupon, the thumbscrew, and the complete assembly.
 
 Or one part at a time:
 
@@ -111,7 +116,7 @@ Or one part at a time:
 openscad -o exports/post-block.stl --export-format binstl -D 'part="block"' headrest-phone-mount.scad
 ```
 
-`part` is one of `assembly`, `block`, `tray`, `coupon`.
+`part` is one of `assembly`, `block`, `tray`, `coupon`, `screw`.
 
 Check the geometry (pocket, camera windows, post bore, rear entry, one slot per arm, hole row, flush heels, no arm interference):
 
