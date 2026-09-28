@@ -11,9 +11,9 @@ One shared landscape cradle. Two identical post blocks. No rail, no cradle clip,
 | Part | STL | Qty | Notes |
 | --- | --- | --- | --- |
 | Fit coupon | `exports/fit-coupon.stl` | 1 | Print before the blocks. Round bore, same diameter as the blocks. |
-| Post block | `exports/post-block.stl` | 2 | 36.0 × 211.2 × 44.0 mm print. Horizontal arm, vertical bore. |
-| Phone cradle | `exports/phone-cradle.stl` | 1 | 214.0 × 114.7 × 33.5 mm. Rear entry, bottom slots, one row of M5 holes in the roof. |
-| Thumbscrew | `exports/thumbscrew.stl` | 2 | 26.0 × 16.0 × 26.1 mm. Modeled M5 thumbscrew used in the assembly preview. |
+| Post block | `exports/post-block.stl` | 2 | 60.0 × 211.2 × 44.0 mm print. Horizontal arm, 56 × 12 mm section, vertical bore. |
+| Phone cradle | `exports/phone-cradle.stl` | 1 | 242.0 × 120.2 × 33.5 mm. Rear entry, bottom slots, one row of M8 holes in the roof. |
+| Thumbscrew | `exports/thumbscrew.stl` | 2 | 32.0 × 22.0 × 36.5 mm. Modeled M8×1.25 thumbscrew with an external thread, used in the assembly preview. |
 
 Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` after a parameter change. Do not edit the meshes. `exports/headrest-phone-mount.stl` is the assembly preview only.
 
@@ -21,9 +21,9 @@ Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` af
 
 | Item | Qty | Notes |
 | --- | --- | --- |
-| M5×25 thumbscrew | 2 | Optional metal match for the modeled screw. One per arm. From below, through that arm's bottom slot and longitudinal slot, into a tapped hole in the roof. Shank under the head is 21 mm on the model. |
+| M8×30 thumbscrew, M8×1.25 | 2 | Optional metal match for the modeled screw. One per arm. From below, through that arm's bottom slot and longitudinal slot, into a tapped hole in the roof. Shank under the head is 30.5 mm on the model. Do not substitute a longer screw; the tip would break out of the 16 mm roof. |
 | M5×12 socket set screw or button head | 2 | One pinch screw in the top of each post block. |
-| M5×0.8 tap | 1 | Chase the hole row. Holes are modeled at 4.2 mm tap-drill. |
+| M8×1.25 tap | 1 | Chase the hole row. Holes are modeled at 6.8 mm tap-drill. The modeled crest is Ø 8 mm. |
 
 No nuts. The thread is in the receiver roof.
 

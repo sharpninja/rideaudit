@@ -23,8 +23,9 @@
 // Both arms slide into the cradle from the rear (from the posts, toward +Y).
 // Each arm has a longitudinal slot down its length so the cradle can slide
 // forward or back before it is locked. Its own thumbscrew comes up from below,
-// through a slot in the cradle bottom, through that arm slot, and into a
-// tapped hole in the receiver roof.
+// through a clearance slot in the cradle bottom, through that arm slot, and
+// into an M8×1.25 tap hole in the receiver roof. Fully seated, the head face
+// clamps the bottom plate and the arm.
 // The phone sits flush on the vertical back plate.
 //
 // Use frame (assembly):
@@ -42,10 +43,10 @@ post_spacing     = 140;  // mm, block centers in the assembly preview
 
 /* [Arms and lock] */
 arm_length   = 200;  // mm, post axis to arm tip, measured forward
-slot_span    = 16;   // mm, longitudinal slot width across the arm
-slot_gap     = 12;   // mm, cradle-bottom slot length along the arm, at each screw
+slot_span    = 26;   // mm, wide enough for an M8 crest at the farthest hole
+slot_gap     = 14;   // mm, cradle-bottom clearance slot length along the arm
 slot_radius  = 185;  // mm, post axis to the preview screw, along the arm
-hole_pitch   = 10;   // mm, threaded holes across the receiver roof
+hole_pitch   = 16;   // mm, M8 hole row; wide enough that the head bears on solid plate
 hole_x_max   = 90;   // mm, half-width of the hole row
 
 /* [Phone cradle] */
@@ -68,26 +69,33 @@ part = "assembly";
 
 /* [Hidden] */
 plate_t = 6.0;
-arm_width = 28;     // horizontal width; leaves a rail on each side of the long slot
-arm_t = 8.0;        // vertical thickness; the arm lies flat
+arm_width = 56;     // wide rails beside the slot, so the arm does not flex
+arm_t = 12.0;       // vertical thickness; the arm lies flat
 arm_z0 = 0;
-block_w = 36;
+block_w = 60;       // wider than the arm so the root is fully backed
 block_h = 44;
 heel = 4.0;
 rail_half_y = 9.0;  // receiver roof fore-aft half-depth
-rail_h = 16.0;      // solid above the arm; also the 45° print wedge height
-bottom_t = 4.0;     // cradle bottom under the arms
+rail_h = 16.0;      // roof thickness; must exceed thread engagement
+bottom_t = 6.0;     // cradle bottom, the head's bearing plate
 cheek = 6.0;        // side ties from the bottom plate up to the roof, outside the arms
-arm_gap_z = 0.45;   // air between the arm and the roof, and between the arm and the bottom
-m5_tap = 4.2;
-m5_clear = 5.4;
-screw_head_d = 16;
-screw_head_h = 5.0;
-screw_wing_l = 26;
-screw_wing_t = 3.4;
-screw_wing_h = 3.2;
-screw_gap = 0.25;   // air between the thumbscrew head and the cradle bottom
-screw_engage = 8;   // shank depth into the roof threads
+arm_gap_z = 0.20;   // slide clearance each side; seating the head takes this up
+// M8×1.25. Crest is the major diameter. The roof hole is the tap drill.
+screw_pitch = 1.25;
+screw_major = 8.0;
+screw_crest_r = 4.0;
+// Valley is held 0.5 mm inside the tap-drill wall. A valley on that wall
+// leaves open edges where the helix meets the hole.
+screw_root_r = 2.90;
+hole_tap = 6.8;     // M8×1.25 tap drill in the roof
+hole_clear = 9.0;   // bottom slot, major diameter plus clearance
+screw_head_d = 22;  // flat bearing face around the clearance slot
+screw_head_h = 6.0;
+screw_wing_l = 32;
+screw_wing_t = 4.2;
+screw_wing_h = 3.6;
+screw_gap = 0.12;   // mesh gap; the seated face is this far off the bottom plate
+screw_engage = 12;  // thread inside the roof when the head is seated (1.5 × major)
 pinch_d = 4.2;
 fn_bore = 64;
 $fn = 32;
@@ -130,13 +138,20 @@ z_plate1 = z_pocket1;
 
 hole_nx = floor(2 * hole_x_max / hole_pitch) + 1;
 hole_nz = 1;
+// The screw sits on a hole, not on the post center. The arm slot is wide enough
+// that the crest still clears the slot wall at every spacing in the range.
+function nearest_hole(x) =
+    -hole_x_max + round((x + hole_x_max) / hole_pitch) * hole_pitch;
 // Bottom plate under the arm. Cheeks outside the arm sweep tie it to the roof.
 z_bot1 = arm_z0 - arm_gap_z;
 z_bot0 = z_bot1 - bottom_t;
-bot_slot_w = m5_clear + 1.0;
+bot_slot_w = hole_clear;
 rail_span = max(outer_x, post_spacing_max + arm_width + 2 * cheek + 4);
 z_bear = z_bot0 - screw_gap;
+// Seated shank: through the open stack and `screw_engage` into the roof.
 screw_shank_l = (rail_z0 + screw_engage) - z_bear;
+clamp_stack = bottom_t + arm_t;          // bottom plate + arm, gaps closed
+clamp_takeup = 2 * arm_gap_z;            // slide clearance the seating load closes
 asm_lift = -(z_bear - screw_head_h);
 
 standout_y = y_plate1 + pocket_y + front_lip_t;
@@ -166,16 +181,38 @@ assert(slot_y0 > block_depth + 4, "longitudinal slot cuts the post block");
 assert(slot_y1 + 4 < arm_y1, "longitudinal slot runs off the arm tip");
 assert(y_slot > slot_y0 + 30, "not enough rearward depth adjustment along the arm");
 assert(y_slot + 4 < slot_y1, "preview screw is past the end of the arm slot");
-assert(slot_span + 8 <= arm_width, "rails beside the longitudinal slot are too thin");
-assert(slot_gap >= m5_clear + 1, "bottom slot will not pass an M5 shank");
+assert((arm_width - slot_span) / 2 + 0.01 >= 10, "rails beside the longitudinal slot are too thin");
+assert(arm_t + 0.01 >= 12, "arm is too thin to stay stiff");
+assert(block_w + 0.01 >= arm_width, "block does not back the full arm width");
+assert(slot_gap + 0.01 >= hole_clear, "bottom slot is shorter than the screw clearance");
 assert(slot_gap + 2 < rail_y1 - rail_y0, "bottom slot does not fit on the cradle bottom");
 assert(hole_x_max + 0.01 >= post_spacing_max / 2, "hole row does not cover post_spacing_max");
 assert(hole_x_max + 0.01 >= post_spacing_min / 2, "hole row does not cover post_spacing_min");
-assert(hole_pitch >= 8 && hole_pitch <= 14, "hole pitch is outside the discrete-lock range");
-assert(slot_span / 2 + 0.01 >= hole_pitch / 2, "slot is narrower than the hole pitch");
+assert(hole_pitch >= 8 && hole_pitch <= 18, "hole pitch is outside the discrete-lock range");
+assert(screw_head_d / 2 + bot_slot_w / 2 + 0.3 < hole_pitch, "head bearing face falls into the next slot");
+assert(screw_engage + 0.01 >= screw_major * 1.25, "thread engagement is under 1.25 diameters");
+assert(rail_h >= screw_engage + 3, "screw tip breaks out of the roof when seated");
+assert(hole_tap + 0.01 < screw_major, "roof hole is not a thread; it clears the major diameter");
+assert(hole_tap / 2 > screw_root_r + 0.35, "thread valley grazes the tap hole");
+assert(bot_slot_w + 0.01 >= screw_major + 0.6, "bottom slot does not clear the major diameter");
+assert(screw_head_d >= bot_slot_w + 8, "head bearing annulus is too narrow");
+assert(slot_span / 2 + 0.01 >= hole_pitch / 2 + screw_major / 2 + 0.6,
+       "arm slot does not clear the threaded shank at half a hole pitch");
+assert(abs(nearest_hole(post_spacing / 2) - post_spacing / 2) + screw_crest_r + 0.6 <= slot_span / 2,
+       "preview screw crest hits the arm slot");
+assert(abs(nearest_hole(-post_spacing / 2) + post_spacing / 2) + screw_crest_r + 0.6 <= slot_span / 2,
+       "preview screw crest hits the arm slot");
+assert(abs(nearest_hole(post_spacing_min / 2) - post_spacing_min / 2) + screw_crest_r + 0.6 <= slot_span / 2,
+       "narrow-spacing screw crest hits the arm slot");
+assert(abs(nearest_hole(-post_spacing_min / 2) + post_spacing_min / 2) + screw_crest_r + 0.6 <= slot_span / 2,
+       "narrow-spacing screw crest hits the arm slot");
+assert(abs(nearest_hole(post_spacing_max / 2) - post_spacing_max / 2) + screw_crest_r + 0.6 <= slot_span / 2,
+       "wide-spacing screw crest hits the arm slot");
+assert(abs(nearest_hole(-post_spacing_max / 2) + post_spacing_max / 2) + screw_crest_r + 0.6 <= slot_span / 2,
+       "wide-spacing screw crest hits the arm slot");
 assert(y_slot > rail_y0 + 1 && y_slot < rail_y1 - 1, "slot is not under the receiver roof");
 assert(rail_z0 >= arm_z0 + arm_t, "receiver roof cuts the arm");
-assert(z_bot1 <= arm_z0 - 0.3, "cradle bottom cuts the arm");
+assert(z_bot1 <= arm_z0 - 0.15, "cradle bottom cuts the arm");
 assert(z_pocket0 >= rail_z1 - 0.01, "phone pocket overlaps the screw rail");
 assert(plate_t + 1 < pocket_z, "back plate is not a vertical plate");
 assert(arm_rise == 0, "arm is not horizontal");
@@ -209,13 +246,22 @@ echo(str("CHECK z_bot0=", z_bot0));
 echo(str("CHECK bottom_t=", bottom_t));
 echo(str("CHECK screw_shank_l=", screw_shank_l));
 echo(str("CHECK screw_head_d=", screw_head_d));
+echo(str("CHECK screw_major=", screw_major));
+echo(str("CHECK screw_pitch=", screw_pitch));
+echo(str("CHECK screw_engage=", screw_engage));
+echo(str("CHECK screw_crest_r=", screw_crest_r));
+echo(str("CHECK screw_root_r=", screw_root_r));
+echo(str("CHECK hole_tap=", hole_tap));
+echo(str("CHECK hole_clear=", hole_clear));
+echo(str("CHECK clamp_stack=", clamp_stack));
+echo(str("CHECK clamp_takeup=", clamp_takeup));
 echo(str("CHECK z_arm=", z_arm));
 echo(str("CHECK y_solid=", y_solid));
 echo(str("CHECK hole_pitch=", hole_pitch));
 echo(str("CHECK hole_nx=", hole_nx));
 echo(str("CHECK hole_nz=", hole_nz));
 echo(str("CHECK hole_x_max=", hole_x_max));
-echo(str("CHECK m5_tap=", m5_tap));
+echo(str("CHECK m5_tap=", hole_tap));
 echo(str("CHECK plate_t=", plate_t));
 echo(str("CHECK rail_z0=", rail_z0));
 echo(str("CHECK rail_z1=", rail_z1));
@@ -244,13 +290,15 @@ echo(str("CHECK standout_y=", standout_y));
 echo(str("CHECK asm_top_z=", asm_top_z));
 echo(str("CHECK cradle_count=", 1));
 echo(str("CHECK screw_count=", 2));
+echo(str("CHECK screw_x_left=", nearest_hole(-half)));
+echo(str("CHECK screw_x_right=", nearest_hole(half)));
 echo(str("CHECK front_lip_h=", front_lip_h));
 echo(str("CHECK front_lip_t=", front_lip_t));
 
 /* ----------------------- parts ----------------------- */
 
-module m5_hole(length) {
-    cylinder(h = length, d = m5_tap, $fn = 28);
+module tap_hole(length) {
+    cylinder(h = length, d = hole_tap, $fn = 36);
 }
 
 module post_block_use(side) {
@@ -283,8 +331,8 @@ module arm_gusset(post_x) {
     hull() {
         translate([post_x - arm_width / 2, y0, arm_z0])
             cube([arm_width, 16, arm_t]);
-        translate([post_x - 12, y0, arm_z0])
-            cube([24, 1.2, 22]);
+        translate([post_x - (arm_width / 2 - 2), y0, arm_z0])
+            cube([arm_width - 4, 1.2, 28]);
     }
 }
 
@@ -292,7 +340,7 @@ module hole_row() {
     for (ix = [0 : hole_nx - 1]) {
         hx = -hole_x_max + ix * hole_pitch;
         translate([hx, y_slot, rail_z0 - 0.4])
-            m5_hole(rail_h + 0.6);
+            tap_hole(rail_h + 0.6);
     }
 }
 
@@ -378,20 +426,40 @@ module coupon_use() {
     }
 }
 
+module external_thread(length) {
+    // Single-start external helix. The valley cylinder stays inside the tap drill.
+    // The tooth overlaps that cylinder and crosses the hole wall, so the crest bites
+    // the roof without a coplanar valley/hole surface.
+    turns = length / screw_pitch;
+    valley = screw_root_r;
+    buried = valley - 0.25;
+    union() {
+        cylinder(h = length, r = valley, $fn = 48);
+        linear_extrude(height = length, twist = 360 * turns, slices = ceil(turns * 8), convexity = 8)
+            polygon([
+                [buried * cos(-20), buried * sin(-20)],
+                [screw_crest_r * cos(-8), screw_crest_r * sin(-8)],
+                [screw_crest_r * cos(8), screw_crest_r * sin(8)],
+                [buried * cos(20), buried * sin(20)]
+            ]);
+    }
+}
+
 module thumbscrew_solid() {
-    // Bearing face at z = 0. Head and wings occupy z < 0. Shank goes up through
-    // the cradle bottom, the arm slot, and into the roof. No modeled helix.
-    shank_d = m5_tap - 0.4;
+    // Bearing face at z = 0. Head and wings occupy z < 0.
+    // Threaded shank goes up through the bottom slot, the arm slot, and into the roof.
+    // Seated, the face clamps the bottom plate and the arm; `screw_engage` of thread
+    // remains in the roof.
     translate([0, 0, -screw_head_h])
-        cylinder(h = screw_head_h, d = screw_head_d, $fn = 40);
+        cylinder(h = screw_head_h, d = screw_head_d, $fn = 48);
     translate([-screw_wing_l / 2, -screw_wing_t / 2, -screw_head_h])
         cube([screw_wing_l, screw_wing_t, screw_wing_h]);
-    translate([0, 0, -1.2])
-        cylinder(h = screw_shank_l + 1.2, d = shank_d, $fn = 24);
+    translate([0, 0, -0.45])
+        external_thread(screw_shank_l + 0.45);
 }
 
 module thumbscrew(side) {
-    translate([side * half, y_slot, z_bear])
+    translate([nearest_hole(side * half), y_slot, z_bear])
         thumbscrew_solid();
 }
 

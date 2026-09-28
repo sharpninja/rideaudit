@@ -13,28 +13,30 @@ License: GPL-2.0
 | Assembly preview spacing | 140 mm |
 | Post bore | 14.40 mm (post 14 mm + clearance) |
 | Arm length | 200 mm from the post axis, horizontal (rise 0) |
-| Arm section | 28 × 8 mm |
-| Arm slot, along the arm | 157 mm long, 16 mm wide, from 46 to 203 mm forward of the pad |
+| Arm section | 56 × 12 mm |
+| Arm slot, along the arm | 157 mm long, 26 mm wide, from 46 to 203 mm forward of the pad |
 | Depth adjustment behind the preview screw | 150 mm |
-| Cradle bottom slots | 12 mm along the arm, one under each threaded hole |
-| Threaded holes | 19 in one row, pitch 10 mm, out to ±90 mm, M5 tap-drill 4.2 mm |
-| Thumbscrews | 2 modeled, one per arm, from below, shank 21.1 mm under the head |
+| Cradle bottom slots | 14 mm along the arm, 9.0 mm wide, one under each threaded hole |
+| Thread | M8×1.25 external, crest Ø 8.0 mm, engagement 12 mm when seated |
+| Roof holes | 12 in one row, pitch 16 mm, out to ±90 mm, tap drill 6.8 mm |
+| Clamp stack | bottom plate 6 mm + arm 12 mm = 18 mm; slide take-up 0.40 mm |
+| Thumbscrews | 2 modeled, head Ø 22 mm, shank 30.5 mm under the face |
 | Phone pocket (L × short side × thickness) | 173.6 × 85.8 × 12.5 mm |
 | Phone envelope | length 140–172 mm, short side 70–85 mm, thickness ≤ 12 mm |
 | Camera window | 18 mm square, both upper corners, through the back plate |
 | Phone front from the headrest face | 220.7 mm |
-| Cradle top above the block bottom | 110.2 mm |
+| Cradle top above the block bottom | 114.0 mm |
 | Cradles | 1 shared landscape holder |
 
 ## Print meshes
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 4720 | 330334 | 214.0 × 220.7 × 119.9 |
-| `post-block.stl` | 572 | 61671 | 36.0 × 211.2 × 44.0 |
-| `phone-cradle.stl` | 3008 | 204295 | 214.0 × 114.7 × 33.5 |
-| `fit-coupon.stl` | 528 | 16742 | 36.0 × 30.4 × 18.0 |
-| `thumbscrew.stl` | 284 | 1349 | 26.0 × 16.0 × 26.1 |
+| `headrest-phone-mount.stl` | 21920 | 516929 | 242.0 × 220.7 × 126.3 |
+| `post-block.stl` | 572 | 146280 | 60.0 × 211.2 × 44.0 |
+| `phone-cradle.stl` | 2448 | 217831 | 242.0 × 120.2 × 33.5 |
+| `fit-coupon.stl` | 528 | 29874 | 60.0 × 30.4 × 18.0 |
+| `thumbscrew.stl` | 7456 | 3276 | 32.0 × 22.0 × 36.5 |
 
 ## Probe results
 
@@ -44,7 +46,8 @@ License: GPL-2.0
 - The hole row covers post centers from 110 mm to 170 mm.
 - Arms lie in a horizontal plane and enter the receiver from the rear.
 - Each arm has a longitudinal slot. The cradle slides along it to set depth, then each thumbscrew locks.
-- Each thumbscrew comes up through a bottom slot, through that arm slot, and into the roof thread.
+- Each thumbscrew comes up through a bottom clearance slot, through that arm slot, and into the roof tap hole.
+- Fully seated, the 22 mm head face clamps 18 mm (bottom plate 6 + arm 12); 0.40 mm of slide clearance is the take-up, and 12 mm of M8×1.25 thread stays in the roof.
 - Post-block heels bear on Y=0. The cradle sits at the forward end of the arms.
 - air  max-phone center is in the pocket
 - air  max-phone upper corner is not blocked
@@ -79,5 +82,6 @@ License: GPL-2.0
 - solid  fit coupon wall surrounds the bore
 - solid  thumbscrew head is solid
 - solid  thumbscrew wing is solid
-- solid  thumbscrew shank is solid
+- solid  thumbscrew shank core is solid
+- solid  external thread on 6 of 108 tooth samples, major-diameter crest on 2
 - air  minimum-length phone corner fits in the pocket

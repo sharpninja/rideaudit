@@ -17,10 +17,10 @@ The mount is two identical post blocks and one cradle. Each post goes through it
 | `post_spacing` | 140 | Block positions in the assembly preview |
 | `post_diameter` | 14 | Nominal headrest-post outside diameter |
 | `arm_length` | 200 | Post axis to arm tip, measured forward along the horizontal arm |
-| `slot_span` | 16 | Width of the longitudinal slot across the arm |
-| `slot_gap` | 12 | Length of each cradle-bottom slot along the arm |
+| `slot_span` | 26 | Width of the longitudinal slot across the arm. Clears an M8 crest at half a hole pitch |
+| `slot_gap` | 14 | Length of each cradle-bottom slot along the arm |
 | `slot_radius` | 185 | Post axis to the preview thumbscrew, along the arm |
-| `hole_pitch` | 10 | Spacing of the M5 hole row |
+| `hole_pitch` | 16 | Spacing of the M8 hole row. Wide enough that the Ø 22 head bears on solid plate |
 | `hole_x_max` | 90 | Half-width of the hole row |
 | `phone_width_min` | 70 | Narrowest landscape short side |
 | `phone_width_max` | 85 | Widest landscape short side (vertical in the cradle) |
@@ -40,20 +40,42 @@ The mount is two identical post blocks and one cradle. Each post goes through it
 | Post bore | 14.40 |
 | Heel behind the bore | 4 |
 | Block depth off the pad | 30.4 |
-| Arm section | 28 × 8 |
-| Arm slot | 157 long × 16 wide, starting 46 mm forward of the pad |
+| Arm section | 56 × 12. Each rail beside the slot is 15 wide |
+| Arm slot | 157 long × 26 wide, starting 46 mm forward of the pad |
 | Depth adjustment behind the preview screw | 150 |
 | Arm print length | 211.2 |
+| Block print size | 60.0 × 211.2 × 44.0 |
 | Phone pocket (length × short side × thickness) | 173.6 × 85.8 × 12.5 |
-| Cradle print size | 214.0 × 114.7 × 33.5 |
-| Cradle bottom slots | 12 long, one under each threaded hole |
+| Cradle print size | 242.0 × 120.2 × 33.5 |
+| Cradle bottom slots | 14 long × 9.0 wide, one under each threaded hole |
 | Phone front from the headrest face | 220.7 |
-| Cradle top above the block bottom | 110.2 |
-| Threaded holes | 19 in one row at 10 mm, out to ±90, tap-drill 4.2 |
-| Thumbscrews | 2 modeled, one per arm, from below, 21.1 mm shank under the head |
-| Fit coupon | 36.0 × 30.4 × 18.0 |
+| Cradle top above the block bottom | 114.0 |
+| Threaded holes | 12 in one row at 16 mm, out to ±90, tap-drill 6.8 |
+| Thumbscrews | 2 modeled M8×1.25, one per arm, from below, crest Ø 8, 30.5 mm shank under the head, head Ø 22 |
+| Fit coupon | 60.0 × 30.4 × 18.0 |
 
 The pocket is the **maximum** phone. Smaller phones in the same range sit in that pocket with foam, as described in the README. The block heels are coplanar at Y = 0. The phone is flush on the vertical plate, about 200 mm forward of that plane.
+
+## Clamp stack
+
+The preview screws are fully seated. The head bearing face sits on the underside of the cradle bottom (the 0.12 mm CAD gap is mesh clearance).
+
+| Member | mm |
+| --- | --- |
+| Bottom plate, the bearing member | 6 |
+| Arm | 12 |
+| Clamped stack, gaps closed | 18 |
+| Slide take-up, 0.20 under the arm and 0.20 over it | 0.40 |
+| External thread in the roof | 12 (1.5 × the 8 mm major diameter) |
+| Roof thickness | 16, so the tip stays about 4 mm below the phone pocket |
+| Head | Ø 22 flat face around the 9 mm clearance slot |
+| Thread | M8×1.25, crest Ø 8, valley held at Ø 5.8 so it stays inside the 6.8 tap drill |
+| Bottom slot | 9.0 wide × 14 along the arm (major diameter plus clearance) |
+| Roof hole | 6.8 tap drill. The modeled crest bites that wall. Chase it with an M8×1.25 tap for a metal screw |
+| Hole pitch | 16, so the head does not fall into the neighboring slot |
+| Shank under the face | 30.5. A metal M8×30 matches it. A longer screw can break out of the roof |
+
+The channel height is fixed by the cheeks, so the screw does not close the 0.40 mm by stretching the plastic. That 0.40 mm is the clearance the seated head takes up.
 
 ## How to measure
 
@@ -61,7 +83,7 @@ The pocket is the **maximum** phone. Smaller phones in the same range sit in tha
 2. **Post diameter.** The printed bore is `post_diameter + clearance`. The block bore and the fit coupon are both round, because the bore prints vertical.
 3. **Phone, landscape.** Long edge → `phone_length_*`. Short edge, the vertical one → `phone_width_*`. Thickness including the case → `phone_thickness_max`.
 4. **Camera.** The windows are `camera_clearance` squares in both upper corners and pass through the back plate.
-5. **Airbag and headrest.** The fixture bears on the posts and on the headrest face at the block heels. Keep the 220.7 mm forward reach and the 110.2 mm height off airbag covers, the driver, the headliner, and the headrest height lock.
+5. **Airbag and headrest.** The fixture bears on the posts and on the headrest face at the block heels. Keep the 220.7 mm forward reach and the 114.0 mm height off airbag covers, the driver, the headliner, and the headrest height lock.
 
 ## Fit coupon
 

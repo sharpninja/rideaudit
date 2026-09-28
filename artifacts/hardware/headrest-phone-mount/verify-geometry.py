@@ -11,6 +11,7 @@ STL is not a closed mesh sitting on the bed.
 
 from __future__ import annotations
 
+import math
 import struct
 import subprocess
 import sys
@@ -241,7 +242,21 @@ def main() -> int:
             expect(c["pocket_z"] >= c["phone_width_max"], "pocket shorter than the widest short side")
             expect(c["camera_clearance"] >= 12, "camera window too small")
             expect(c["cradle_count"] == 1, "model is not the single shared cradle")
-            expect(c["slot_span"] / 2 + 0.01 >= c["hole_pitch"] / 2, "slot is narrower than the hole pitch")
+            expect(
+                c["slot_span"] / 2 + 0.01 >= c["hole_pitch"] / 2 + c["screw_major"] / 2 + 0.6,
+                "arm slot does not clear the threaded shank",
+            )
+            expect(abs(c["screw_x_left"] + c["half"]) + c["screw_crest_r"] + 0.4 <= c["slot_span"] / 2,
+                   "left screw is outside its arm slot")
+            expect(abs(c["screw_x_right"] - c["half"]) + c["screw_crest_r"] + 0.4 <= c["slot_span"] / 2,
+                   "right screw is outside its arm slot")
+            expect(c["arm_thick"] + 0.01 >= 12, "arm is too thin")
+            expect((c["arm_width"] - c["slot_span"]) / 2 >= 10, "arm rails are too narrow")
+            expect(c["screw_major"] + 0.01 >= 8, "thumbscrew is not the thicker M8 shank")
+            expect(c["screw_engage"] + 0.01 >= c["screw_major"] * 1.25, "thread engagement is short")
+            expect(c["hole_tap"] + 0.05 < c["screw_major"], "roof hole clears the major diameter")
+            expect(c["hole_clear"] + 0.01 >= c["screw_major"] + 0.6, "bottom slot does not clear the thread")
+            expect(abs(c["clamp_stack"] - (c["bottom_t"] + c["arm_thick"])) < 0.05, "clamp stack is not bottom plate plus arm")
             for spacing in (c["post_spacing_min"], c["post_spacing_max"], c["post_spacing"]):
                 half_s = spacing / 2
                 expect(c["hole_x_max"] + 0.01 >= half_s, f"hole row does not cover {spacing:.0f} mm spacing")
@@ -257,7 +272,13 @@ def main() -> int:
                 "Each arm has a longitudinal slot. The cradle slides along it to set depth, then each thumbscrew locks."
             )
             notes.append(
-                "Each thumbscrew comes up through a bottom slot, through that arm slot, and into the roof thread."
+                "Each thumbscrew comes up through a bottom clearance slot, through that arm slot, and into the roof tap hole."
+            )
+            notes.append(
+                f"Fully seated, the {c['screw_head_d']:.0f} mm head face clamps {c['clamp_stack']:.0f} mm "
+                f"(bottom plate {c['bottom_t']:.0f} + arm {c['arm_thick']:.0f}); "
+                f"{c['clamp_takeup']:.2f} mm of slide clearance is the take-up, and "
+                f"{c['screw_engage']:.0f} mm of M{c['screw_major']:.0f}×{c['screw_pitch']:.2f} thread stays in the roof."
             )
 
             for part in ("raw_block", "raw_block_right", "raw_coupon"):
@@ -309,27 +330,29 @@ def main() -> int:
                 False,
                 "front of the cradle stays open above the lip",
             ))
+            lx = c["screw_x_left"]
+            rx = c["screw_x_right"]
             probes.append(classify(
                 tray_m,
-                (-c["half"], c["y_slot"], hole_z),
+                (lx, c["y_slot"], hole_z),
                 False,
                 "left thumbscrew hole is open in the roof",
             ))
             probes.append(classify(
                 tray_m,
-                (c["half"], c["y_slot"], hole_z),
+                (rx, c["y_slot"], hole_z),
                 False,
                 "right thumbscrew hole is open in the roof",
             ))
             probes.append(classify(
                 tray_m,
-                (c["half"] + c["hole_pitch"] / 2, c["y_slot"], hole_z),
+                (rx + c["hole_pitch"] / 2, c["y_slot"], hole_z),
                 True,
                 "roof stays solid between threaded holes",
             ))
             probes.append(classify(
                 tray_m,
-                (c["half"] + c["hole_pitch"], c["y_slot"], hole_z),
+                (rx + c["hole_pitch"], c["y_slot"], hole_z),
                 False,
                 "neighbor threaded hole is open",
             ))
@@ -348,19 +371,19 @@ def main() -> int:
             bot_z = c["z_bot0"] + c["bottom_t"] / 2
             probes.append(classify(
                 tray_m,
-                (-c["half"], c["y_slot"], bot_z),
+                (lx, c["y_slot"], bot_z),
                 False,
                 "left bottom slot is open under the threaded hole",
             ))
             probes.append(classify(
                 tray_m,
-                (c["half"], c["y_slot"], bot_z),
+                (rx, c["y_slot"], bot_z),
                 False,
                 "right bottom slot is open under the threaded hole",
             ))
             probes.append(classify(
                 tray_m,
-                (c["half"] + c["hole_pitch"] / 2, c["y_slot"], bot_z),
+                (rx + c["hole_pitch"] / 2, c["y_slot"], bot_z),
                 True,
                 "cradle bottom stays solid between the screw slots",
             ))
@@ -464,8 +487,27 @@ def main() -> int:
                 screw_m,
                 (0.0, 0.0, 6.0),
                 True,
-                "thumbscrew shank is solid",
+                "thumbscrew shank core is solid",
             ))
+            body_hits = 0
+            tip_hits = 0
+            crest_samples = 0
+            body_r = c["screw_crest_r"] - 0.45
+            tip_r = c["screw_crest_r"] - 0.12
+            for z in (4.0, 8.0, 14.0):
+                for deg in range(0, 360, 10):
+                    crest_samples += 1
+                    rad = math.radians(deg)
+                    if inside(screw_m, (body_r * math.cos(rad), body_r * math.sin(rad), z)):
+                        body_hits += 1
+                    if inside(screw_m, (tip_r * math.cos(rad), tip_r * math.sin(rad), z)):
+                        tip_hits += 1
+            expect(body_hits >= 4, "external thread tooth is missing from the shank")
+            expect(tip_hits >= 1, "external thread does not reach the major diameter")
+            probes.append(
+                f"solid  external thread on {body_hits} of {crest_samples} tooth samples, "
+                f"major-diameter crest on {tip_hits}"
+            )
             narrow_x = c["phone_length_min"] / 2 - 0.5
             narrow_z = c["z_pocket0"] + min(c["phone_width_min"], c["pocket_z"]) - 0.8
             probes.append(classify(
@@ -510,9 +552,11 @@ def write_report(checks: dict[str, float], stats: dict, notes: list[str]) -> Non
         f"| Arm section | {c['arm_width']:.0f} × {c['arm_thick']:.0f} mm |",
         f"| Arm slot, along the arm | {c['slot_len']:.0f} mm long, {c['slot_span']:.0f} mm wide, from {c['slot_y0']:.0f} to {c['slot_y1']:.0f} mm forward of the pad |",
         f"| Depth adjustment behind the preview screw | {c['y_slot'] - c['slot_y0']:.0f} mm |",
-        f"| Cradle bottom slots | {c['slot_gap']:.0f} mm along the arm, one under each threaded hole |",
-        f"| Threaded holes | {c['hole_nx']:.0f} in one row, pitch {c['hole_pitch']:.0f} mm, out to ±{c['hole_x_max']:.0f} mm, M5 tap-drill {c['m5_tap']:.1f} mm |",
-        f"| Thumbscrews | {c['screw_count']:.0f} modeled, one per arm, from below, shank {c['screw_shank_l']:.1f} mm under the head |",
+        f"| Cradle bottom slots | {c['slot_gap']:.0f} mm along the arm, {c['hole_clear']:.1f} mm wide, one under each threaded hole |",
+        f"| Thread | M{c['screw_major']:.0f}×{c['screw_pitch']:.2f} external, crest Ø {c['screw_major']:.1f} mm, engagement {c['screw_engage']:.0f} mm when seated |",
+        f"| Roof holes | {c['hole_nx']:.0f} in one row, pitch {c['hole_pitch']:.0f} mm, out to ±{c['hole_x_max']:.0f} mm, tap drill {c['hole_tap']:.1f} mm |",
+        f"| Clamp stack | bottom plate {c['bottom_t']:.0f} mm + arm {c['arm_thick']:.0f} mm = {c['clamp_stack']:.0f} mm; slide take-up {c['clamp_takeup']:.2f} mm |",
+        f"| Thumbscrews | {c['screw_count']:.0f} modeled, head Ø {c['screw_head_d']:.0f} mm, shank {c['screw_shank_l']:.1f} mm under the face |",
         f"| Phone pocket (L × short side × thickness) | {c['pocket_x']:.1f} × {c['pocket_z']:.1f} × {c['pocket_y']:.1f} mm |",
         f"| Phone envelope | length {c['phone_length_min']:.0f}–{c['phone_length_max']:.0f} mm, short side {c['phone_width_min']:.0f}–{c['phone_width_max']:.0f} mm, thickness ≤ {c['phone_thickness_max']:.0f} mm |",
         f"| Camera window | {c['camera_clearance']:.0f} mm square, both upper corners, through the back plate |",
