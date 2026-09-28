@@ -6,29 +6,30 @@ Not Apache-2.0. Not MIT.
 
 All figures are millimetres. Defaults are the customizer values in `headrest-phone-mount.scad`. Derived sizes are what `verify-geometry.py` measures for those defaults; they change when you edit the parameters and re-export.
 
-The mount is two independent post blocks and one cradle. Each post goes through its block. Both 200 mm arms enter one receiver. There is no beam and no sliding clamp range.
+The mount is two identical post blocks and one cradle. Each post goes through its block. Both 200 mm arms lie in a horizontal plane and enter one receiver from the rear. There is no beam and no sliding clamp range.
 
 ## Parameters
 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `post_spacing_min` | 110 | Narrowest post center-to-center whose arms can still meet |
-| `post_spacing_max` | 170 | Widest post center-to-center whose arms can still meet |
+| `post_spacing_min` | 110 | Narrowest post center-to-center the hole row still covers |
+| `post_spacing_max` | 170 | Widest post center-to-center the hole row still covers |
 | `post_spacing` | 140 | Block positions in the assembly preview |
 | `post_diameter` | 14 | Nominal headrest-post outside diameter |
-| `arm_length` | 200 | Post axis to arm tip |
+| `arm_length` | 200 | Post axis to arm tip, measured forward along the horizontal arm |
 | `slot_span` | 16 | Slot length across the arm width |
-| `slot_gap` | 8 | Slot opening along the arm, wide enough for an M5 shank when the arms cross |
-| `slot_radius` | 185 | Post axis to the slot center |
-| `hole_pitch` | 10 | Spacing of the M5 hole grid |
-| `hole_nx`, `hole_nz` | 5 × 3 | Grid size. Both counts are odd so a hole sits on the nominal overlap |
+| `slot_gap` | 10 | Slot opening along the arm, wide enough for an M5 shank |
+| `slot_radius` | 185 | Post axis to the slot center, along the arm |
+| `hole_pitch` | 10 | Spacing of the M5 hole row |
+| `hole_x_max` | 90 | Half-width of the hole row |
 | `phone_width_min` | 70 | Narrowest landscape short side |
 | `phone_width_max` | 85 | Widest landscape short side (vertical in the cradle) |
 | `phone_length_min` | 140 | Shortest landscape long side |
 | `phone_length_max` | 172 | Longest landscape long side |
 | `phone_thickness_max` | 12 | Thickest phone, including a slim case |
 | `camera_clearance` | 18 | Square window, both upper corners of the back plate |
-| `jaw_wall` | 4 | Material outside the post bore, and in front of the teardrop |
+| `jaw_wall` | 4 | Nominal material outside the post bore |
+| `front_wall` | 12 | Block material in front of the bore, where the arm roots |
 | `cradle_lip` | 3 | Front lip thickness. Lip height is `cradle_lip + 5` |
 | `clearance` | 0.4 | Extra diameter in the post bore |
 
@@ -38,25 +39,26 @@ The mount is two independent post blocks and one cradle. Each post goes through 
 | --- | --- |
 | Post bore | 14.40 |
 | Heel behind the bore | 4 |
-| Block depth off the pad | 22.4 |
-| Arm section | 22 × 5 |
-| Arm print length | 225.3 |
+| Block depth off the pad | 30.4 |
+| Arm section | 22 × 8 |
+| Arm print length | 211.2 |
 | Phone pocket (length × short side × thickness) | 173.6 × 85.8 × 12.5 |
-| Cradle print size | 180.4 × 159.8 × 21.5 |
-| Stand-off from the headrest face | 22.4 |
-| Cradle top above the block bottom | 307.0 |
-| Hole grid | 5 × 3 at 10 mm, tap-drill 4.2 |
-| Fit coupon | 36.0 × 22.4 × 18.0 |
+| Cradle print size | 200.0 × 33.5 × 101.8 |
+| Phone front from the headrest face | 220.7 |
+| Cradle top above the block bottom | 110.2 |
+| Threaded holes | 19 in one row at 10 mm, out to ±90, tap-drill 4.2 |
+| Thumbscrews | 2, one per arm, from below |
+| Fit coupon | 36.0 × 30.4 × 18.0 |
 
-The pocket is the **maximum** phone. Smaller phones in the same range sit in that pocket with foam, as described in the README. The cradle back and both block heels are coplanar at Y = 0.
+The pocket is the **maximum** phone. Smaller phones in the same range sit in that pocket with foam, as described in the README. The block heels are coplanar at Y = 0. The phone is flush on the vertical plate, about 200 mm forward of that plane.
 
 ## How to measure
 
-1. **Post spacing.** Center-to-center of the two vertical posts. Any value from `post_spacing_min` to `post_spacing_max` still lets the arms meet on the hole grid, because each block pivots on its own post. Set `post_spacing` to the measured value before trusting the assembly preview.
-2. **Post diameter.** The printed bore is `post_diameter + clearance`. The block bore adds a teardrop toward the front face for printing; the inscribed circle is still the bore diameter. The fit coupon is round.
+1. **Post spacing.** Center-to-center of the two vertical posts. Any value from `post_spacing_min` to `post_spacing_max` still puts each arm's slot over the hole row. Set `post_spacing` to the measured value before trusting the assembly preview.
+2. **Post diameter.** The printed bore is `post_diameter + clearance`. The block bore and the fit coupon are both round, because the bore prints vertical.
 3. **Phone, landscape.** Long edge → `phone_length_*`. Short edge, the vertical one → `phone_width_*`. Thickness including the case → `phone_thickness_max`.
 4. **Camera.** The windows are `camera_clearance` squares in both upper corners and pass through the back plate.
-5. **Airbag and headrest.** The fixture bears on the posts and on the headrest face. Keep the 22.4 mm stand-off and the 307 mm height off airbag covers, the headliner, and the headrest height lock.
+5. **Airbag and headrest.** The fixture bears on the posts and on the headrest face at the block heels. Keep the 220.7 mm forward reach and the 110.2 mm height off airbag covers, the driver, the headliner, and the headrest height lock.
 
 ## Fit coupon
 
@@ -67,4 +69,4 @@ The pocket is the **maximum** phone. Smaller phones in the same range sit in tha
 - If it will not start, increase `clearance` slightly and reprint the coupon only.
 - If it rattles, reduce `clearance`.
 
-Do not print the 225 mm blocks until the coupon fits.
+Do not print the 211 mm blocks until the coupon fits.

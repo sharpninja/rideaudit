@@ -11,7 +11,6 @@ STL is not a closed mesh sitting on the bed.
 
 from __future__ import annotations
 
-import math
 import struct
 import subprocess
 import sys
@@ -26,12 +25,11 @@ REPORT = ROOT / "verification" / "geometry-report.md"
 PRINT_PARTS = {
     "assembly": "headrest-phone-mount.stl",
     "block": "post-block.stl",
-    "block_outer": "post-block-outer.stl",
     "tray": "phone-cradle.stl",
     "coupon": "fit-coupon.stl",
 }
 
-RAW_PARTS = ("raw_block", "raw_block_outer", "raw_tray", "raw_coupon")
+RAW_PARTS = ("raw_block", "raw_block_right", "raw_tray", "raw_coupon")
 
 
 class Fail(Exception):
@@ -206,8 +204,8 @@ def main() -> int:
                 openscad(part, tmp_path / f"{part}.stl")
             for part in ("fitcheck", "fitcheck_arms"):
                 openscad(part, tmp_path / f"{part}.stl")
-            notes.append("Arms do not intersect each other.")
-            notes.append("Arms sit in the receiver and do not intersect the cradle.")
+            notes.append("The two arms do not intersect each other.")
+            notes.append("The arms pass under the receiver roof and do not intersect the cradle.")
 
             meshes = {name: load_stl(EXPORTS / name) for name in PRINT_PARTS.values()}
             raw = {part: load_stl(tmp_path / f"{part}.stl") for part in RAW_PARTS}
@@ -226,38 +224,51 @@ def main() -> int:
             c = checks
             tray = stats["phone-cradle.stl"]
             block = stats["post-block.stl"]
-            expect(abs((tray["max"][0] - tray["min"][0]) - c["outer_x"]) < 0.3, "cradle length is not the phone envelope")
-            expect((block["max"][0] - block["min"][0]) > c["arm_length"] - 1, "post block print is shorter than the arm")
+            block_span = max(block["max"][i] - block["min"][i] for i in range(3))
+            expect(abs((tray["max"][0] - tray["min"][0]) - c["rail_span"]) < 0.3, "cradle width is not the receiver span")
+            expect(block_span > c["arm_length"] - 1, "post block print is shorter than the arm")
             expect(c["bore_d"] > c["post_diameter"], "bore does not clear the post")
-            expect(c["slot_radius"] > c["post_spacing_max"] / 2 + 8, "arms cannot meet at post_spacing_max")
             expect(c["arm_length"] > c["slot_radius"], "slot is past the arm tip")
+            expect(c["arm_rise"] == 0, "arms are not horizontal")
+            expect(c["screw_count"] == 2, "model does not have one thumbscrew per arm")
+            expect(c["hole_nz"] == 1, "threaded holes are not a single row")
             expect(c["pocket_x"] >= c["phone_length_max"], "pocket shorter than the longest phone")
             expect(c["pocket_y"] >= c["phone_thickness_max"], "pocket shallower than the thickest phone")
             expect(c["pocket_z"] >= c["phone_width_max"], "pocket shorter than the widest short side")
             expect(c["camera_clearance"] >= 12, "camera window too small")
             expect(c["cradle_count"] == 1, "model is not the single shared cradle")
+            expect(c["slot_span"] / 2 + 0.01 >= c["hole_pitch"] / 2, "slot is narrower than the hole pitch")
             for spacing in (c["post_spacing_min"], c["post_spacing_max"], c["post_spacing"]):
-                half = spacing / 2
-                expect(c["slot_radius"] > half, f"slot radius does not reach across {spacing:.0f} mm spacing")
-                meet = math.sqrt(c["slot_radius"] ** 2 - half ** 2)
-                expect(meet > 20, f"arms barely meet at {spacing:.0f} mm spacing")
+                half_s = spacing / 2
+                expect(c["hole_x_max"] + 0.01 >= half_s, f"hole row does not cover {spacing:.0f} mm spacing")
+                expect(
+                    c["rail_span"] / 2 + 0.01 >= half_s + c["arm_width"] / 2,
+                    f"receiver roof does not cover an arm at {spacing:.0f} mm spacing",
+                )
             notes.append(
-                f"Arms meet between the posts from {c['post_spacing_min']:.0f} mm to {c['post_spacing_max']:.0f} mm centers."
+                f"The hole row covers post centers from {c['post_spacing_min']:.0f} mm to {c['post_spacing_max']:.0f} mm."
             )
+            notes.append("Arms lie in a horizontal plane and enter the receiver from the rear.")
+            notes.append("One thumbscrew per arm comes up from below through that arm's slot.")
 
-            for part in ("raw_block", "raw_block_outer", "raw_tray"):
+            for part in ("raw_block", "raw_block_right", "raw_coupon"):
                 st = raw_stats[part]
                 expect(st["min"][1] > -0.05, f"{part} breaks the flush plane (min y {st['min'][1]:.3f})")
                 expect(st["min"][1] < 0.05, f"{part} does not bear on Y=0 (min y {st['min'][1]:.3f})")
-            notes.append("Post blocks and the cradle share the Y=0 headrest face.")
+            tray_raw = raw_stats["raw_tray"]
+            expect(tray_raw["min"][1] > c["rail_y0"] - 0.5, "cradle reaches back to the headrest pad")
+            notes.append("Post-block heels bear on Y=0. The cradle sits at the forward end of the arms.")
 
             tray_m = raw["raw_tray"]
             block_m = raw["raw_block"]
-            outer_m = raw["raw_block_outer"]
+            right_m = raw["raw_block_right"]
             coupon_m = raw["raw_coupon"]
             probes = []
-            phone_y = c["plate_t"] + 1.0
+            plate_y = (c["y_plate0"] + c["y_plate1"]) / 2
+            phone_y = c["y_plate1"] + 1.0
             phone_z = c["z_pocket0"] + c["phone_width_max"] / 2
+            hole_z = c["rail_z0"] + 2.0
+            beside = c["slot_span"] / 2 + 1.5
             probes.append(classify(tray_m, (0.0, phone_y, phone_z), False, "max-phone center is in the pocket"))
             probes.append(classify(
                 tray_m,
@@ -267,19 +278,19 @@ def main() -> int:
             ))
             probes.append(classify(
                 tray_m,
-                (0.0, c["plate_t"] / 2, c["z_pocket0"] + c["pocket_z"] / 2),
+                (0.0, plate_y, c["z_pocket0"] + c["pocket_z"] / 2),
                 True,
                 "back plate is present behind the phone",
             ))
-            probes.append(classify(tray_m, (-c["win_x"], c["plate_t"] / 2, c["win_z"]), False, "camera window is open"))
-            probes.append(classify(tray_m, (c["win_x"], c["plate_t"] / 2, c["win_z"]), False, "opposite camera window is open"))
+            probes.append(classify(tray_m, (-c["win_x"], plate_y, c["win_z"]), False, "camera window is open"))
+            probes.append(classify(tray_m, (c["win_x"], plate_y, c["win_z"]), False, "opposite camera window is open"))
             probes.append(classify(
                 tray_m,
-                (0.0, c["plate_t"] / 2, c["win_z"]),
+                (0.0, plate_y, c["win_z"]),
                 True,
                 "back plate remains between the camera windows",
             ))
-            lip_y = c["plate_t"] + c["pocket_y"] + c["front_lip_t"] / 2
+            lip_y = c["y_plate1"] + c["front_lip_t"] / 2
             lip_z = c["z_pocket0"] + c["front_lip_h"] / 2
             probes.append(classify(tray_m, (0.0, lip_y, lip_z), True, "front retention lip is present"))
             probes.append(classify(
@@ -290,57 +301,93 @@ def main() -> int:
             ))
             probes.append(classify(
                 tray_m,
-                (0.0, c["plate_t"] / 2, c["z_slot"]),
+                (-c["half"], c["y_slot"], hole_z),
                 False,
-                "center threaded hole is open through the solid back",
+                "left thumbscrew hole is open in the roof",
             ))
             probes.append(classify(
                 tray_m,
-                (c["hole_pitch"] / 2, c["plate_t"] / 2, c["z_slot"]),
+                (c["half"], c["y_slot"], hole_z),
+                False,
+                "right thumbscrew hole is open in the roof",
+            ))
+            probes.append(classify(
+                tray_m,
+                (c["half"] + c["hole_pitch"] / 2, c["y_slot"], hole_z),
                 True,
-                "back stays solid between threaded holes",
+                "roof stays solid between threaded holes",
             ))
             probes.append(classify(
                 tray_m,
-                (c["hole_pitch"], c["plate_t"] / 2, c["z_slot"]),
+                (c["half"] + c["hole_pitch"], c["y_slot"], hole_z),
                 False,
                 "neighbor threaded hole is open",
             ))
             probes.append(classify(
                 tray_m,
-                (0.0, c["plate_t"] / 2, c["z_slot"] + c["hole_pitch"]),
+                (-c["half"], c["y_slot"] - 4.0, c["rail_z0"] + c["rail_h"] / 2),
+                True,
+                "receiver roof is solid above the arm",
+            ))
+            probes.append(classify(
+                tray_m,
+                (-c["half"], c["rail_y0"] + 2.0, c["z_arm"]),
                 False,
-                "threaded hole above the center is open",
+                "receiver is open at the rear on the arm centerline",
             ))
             probes.append(classify(
                 block_m,
-                (-c["half"], c["bore_cy"], c["z_post"]),
+                (-c["half"], c["bore_cy"], c["block_h"] / 2),
                 False,
                 "post bore passes through the block",
             ))
             probes.append(classify(
                 block_m,
-                (-c["half"], 1.2, c["z_post"]),
+                (-c["half"], 1.2, c["block_h"] / 2),
                 True,
                 "flush heel is solid behind the bore",
             ))
             probes.append(classify(
                 block_m,
-                (0.0, c["inner_slot_y"], c["z_slot"]),
-                False,
-                "inner arm slot is open on the screw axis",
+                (-c["half"], c["bore_cy"] + c["bore_d"] / 2 + 2.0, c["z_arm"]),
+                True,
+                "arm root is solid in front of the bore",
             ))
             probes.append(classify(
                 block_m,
-                (c["solid_x"], c["inner_slot_y"], c["solid_z"]),
-                True,
-                "inner arm is solid beside the slot",
+                (-c["half"], c["y_slot"], c["z_arm"]),
+                False,
+                "left arm slot is open for its own thumbscrew",
             ))
             probes.append(classify(
-                outer_m,
-                (0.0, c["outer_slot_y"], c["z_slot"]),
+                block_m,
+                (-c["half"] + beside, c["y_slot"], c["z_arm"]),
+                True,
+                "left arm is solid beside its slot, under the roof",
+            ))
+            probes.append(classify(
+                block_m,
+                (-c["half"], c["bore_cy"] + 80.0, c["z_arm"]),
+                True,
+                "left arm stays at the same height along its length",
+            ))
+            probes.append(classify(
+                block_m,
+                (-c["half"], c["bore_cy"] + 80.0, c["z_arm"] + c["arm_thick"] / 2 + 2.0),
                 False,
-                "outer arm slot is open on the same screw axis",
+                "nothing rises above the horizontal arm",
+            ))
+            probes.append(classify(
+                right_m,
+                (c["half"], c["y_slot"], c["z_arm"]),
+                False,
+                "right arm slot is open on its own screw, not the left screw",
+            ))
+            probes.append(classify(
+                right_m,
+                (c["half"] - beside, c["y_slot"], c["z_arm"]),
+                True,
+                "right arm is solid beside its slot",
             ))
             probes.append(classify(
                 coupon_m,
@@ -369,9 +416,9 @@ def main() -> int:
 
     write_report(checks, stats, notes)
     print(
-        f"PASS  arm {checks['arm_length']:.0f} mm  "
+        f"PASS  horizontal arms {checks['arm_length']:.0f} mm  "
         f"pocket {checks['pocket_x']:.1f}×{checks['pocket_z']:.1f}×{checks['pocket_y']:.1f} mm  "
-        f"standout {checks['standout_y']:.1f} mm"
+        f"reach {checks['standout_y']:.1f} mm"
     )
     print(f"report {REPORT}")
     return 0
@@ -391,18 +438,19 @@ def write_report(checks: dict[str, float], stats: dict, notes: list[str]) -> Non
         "",
         "| Check | Value |",
         "| --- | --- |",
-        f"| Post spacing the two blocks can join | {c['post_spacing_min']:.0f} – {c['post_spacing_max']:.0f} mm center-to-center |",
+        f"| Post spacing the hole row covers | {c['post_spacing_min']:.0f} – {c['post_spacing_max']:.0f} mm center-to-center |",
         f"| Assembly preview spacing | {c['post_spacing']:.0f} mm |",
         f"| Post bore | {c['bore_d']:.2f} mm (post {c['post_diameter']:.0f} mm + clearance) |",
-        f"| Arm length | {c['arm_length']:.0f} mm from the post axis |",
+        f"| Arm length | {c['arm_length']:.0f} mm from the post axis, horizontal (rise {c['arm_rise']:.0f}) |",
         f"| Arm section | {c['arm_width']:.0f} × {c['arm_thick']:.0f} mm |",
-        f"| Slot across the arm width | {c['slot_span']:.0f} mm span, {c['slot_gap']:.0f} mm opening, at {c['slot_radius']:.0f} mm radius |",
-        f"| Threaded-hole grid | {c['hole_nx']:.0f} × {c['hole_nz']:.0f} at {c['hole_pitch']:.0f} mm, M5 tap-drill {c['m5_tap']:.1f} mm |",
+        f"| Slot across the arm width | {c['slot_span']:.0f} mm span, {c['slot_gap']:.0f} mm opening, at {c['slot_radius']:.0f} mm along the arm |",
+        f"| Threaded holes | {c['hole_nx']:.0f} in one row, pitch {c['hole_pitch']:.0f} mm, out to ±{c['hole_x_max']:.0f} mm, M5 tap-drill {c['m5_tap']:.1f} mm |",
+        f"| Thumbscrews | {c['screw_count']:.0f}, one per arm, from below |",
         f"| Phone pocket (L × short side × thickness) | {c['pocket_x']:.1f} × {c['pocket_z']:.1f} × {c['pocket_y']:.1f} mm |",
         f"| Phone envelope | length {c['phone_length_min']:.0f}–{c['phone_length_max']:.0f} mm, short side {c['phone_width_min']:.0f}–{c['phone_width_max']:.0f} mm, thickness ≤ {c['phone_thickness_max']:.0f} mm |",
         f"| Camera window | {c['camera_clearance']:.0f} mm square, both upper corners, through the back plate |",
-        f"| Stand-off from the headrest face | {c['standout_y']:.1f} mm |",
-        f"| Assembly height above the block bottom | {c['asm_top_z']:.1f} mm |",
+        f"| Phone front from the headrest face | {c['standout_y']:.1f} mm |",
+        f"| Cradle top above the block bottom | {c['z_pocket1']:.1f} mm |",
         f"| Cradles | {c['cradle_count']:.0f} shared landscape holder |",
         "",
         "## Print meshes",

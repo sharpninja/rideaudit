@@ -9,37 +9,39 @@ License: GPL-2.0
 
 | Check | Value |
 | --- | --- |
-| Post spacing the two blocks can join | 110 – 170 mm center-to-center |
+| Post spacing the hole row covers | 110 – 170 mm center-to-center |
 | Assembly preview spacing | 140 mm |
 | Post bore | 14.40 mm (post 14 mm + clearance) |
-| Arm length | 200 mm from the post axis |
-| Arm section | 22 × 5 mm |
-| Slot across the arm width | 16 mm span, 8 mm opening, at 185 mm radius |
-| Threaded-hole grid | 5 × 3 at 10 mm, M5 tap-drill 4.2 mm |
+| Arm length | 200 mm from the post axis, horizontal (rise 0) |
+| Arm section | 22 × 8 mm |
+| Slot across the arm width | 16 mm span, 10 mm opening, at 185 mm along the arm |
+| Threaded holes | 19 in one row, pitch 10 mm, out to ±90 mm, M5 tap-drill 4.2 mm |
+| Thumbscrews | 2, one per arm, from below |
 | Phone pocket (L × short side × thickness) | 173.6 × 85.8 × 12.5 mm |
 | Phone envelope | length 140–172 mm, short side 70–85 mm, thickness ≤ 12 mm |
 | Camera window | 18 mm square, both upper corners, through the back plate |
-| Stand-off from the headrest face | 22.4 mm |
-| Assembly height above the block bottom | 307.0 mm |
+| Phone front from the headrest face | 220.7 mm |
+| Cradle top above the block bottom | 110.2 mm |
 | Cradles | 1 shared landscape holder |
 
 ## Print meshes
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 4004 | 281198 | 180.4 × 22.4 × 307.0 |
-| `post-block.stl` | 976 | 45202 | 225.3 × 48.5 × 22.4 |
-| `post-block-outer.stl` | 976 | 46068 | 225.3 × 48.5 × 22.4 |
-| `phone-cradle.stl` | 1864 | 192107 | 180.4 × 159.8 × 21.5 |
-| `fit-coupon.stl` | 528 | 11558 | 36.0 × 22.4 × 18.0 |
+| `headrest-phone-mount.stl` | 3928 | 303600 | 200.0 × 220.7 × 114.4 |
+| `post-block.stl` | 572 | 71742 | 36.0 × 211.2 × 44.0 |
+| `phone-cradle.stl` | 2344 | 158449 | 200.0 × 33.5 × 101.8 |
+| `fit-coupon.stl` | 528 | 16742 | 36.0 × 30.4 × 18.0 |
 
 ## Probe results
 
 - OpenSCAD assertions accepted the default parameters.
-- Arms do not intersect each other.
-- Arms sit in the receiver and do not intersect the cradle.
-- Arms meet between the posts from 110 mm to 170 mm centers.
-- Post blocks and the cradle share the Y=0 headrest face.
+- The two arms do not intersect each other.
+- The arms pass under the receiver roof and do not intersect the cradle.
+- The hole row covers post centers from 110 mm to 170 mm.
+- Arms lie in a horizontal plane and enter the receiver from the rear.
+- One thumbscrew per arm comes up from below through that arm's slot.
+- Post-block heels bear on Y=0. The cradle sits at the forward end of the arms.
 - air  max-phone center is in the pocket
 - air  max-phone upper corner is not blocked
 - solid  back plate is present behind the phone
@@ -48,15 +50,21 @@ License: GPL-2.0
 - solid  back plate remains between the camera windows
 - solid  front retention lip is present
 - air  front of the cradle stays open above the lip
-- air  center threaded hole is open through the solid back
-- solid  back stays solid between threaded holes
+- air  left thumbscrew hole is open in the roof
+- air  right thumbscrew hole is open in the roof
+- solid  roof stays solid between threaded holes
 - air  neighbor threaded hole is open
-- air  threaded hole above the center is open
+- solid  receiver roof is solid above the arm
+- air  receiver is open at the rear on the arm centerline
 - air  post bore passes through the block
 - solid  flush heel is solid behind the bore
-- air  inner arm slot is open on the screw axis
-- solid  inner arm is solid beside the slot
-- air  outer arm slot is open on the same screw axis
+- solid  arm root is solid in front of the bore
+- air  left arm slot is open for its own thumbscrew
+- solid  left arm is solid beside its slot, under the roof
+- solid  left arm stays at the same height along its length
+- air  nothing rises above the horizontal arm
+- air  right arm slot is open on its own screw, not the left screw
+- solid  right arm is solid beside its slot
 - air  fit coupon bore is open
 - solid  fit coupon wall surrounds the bore
 - air  minimum-length phone corner fits in the pocket

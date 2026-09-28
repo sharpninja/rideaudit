@@ -43,10 +43,11 @@ parameters:
   - camera_clearance
 physicalRelease: not-claimed
 notes: >
-  Two post blocks, one per headrest post. The post passes through the block.
-  Each block has a 200 mm arm. Both arms enter one shared landscape cradle.
-  A thumbscrew passes through both width-spanning slots into a tapped hole
-  on the solid back. Blocks and cradle bear flush on the headrest face.
+  Two post blocks, one per headrest post. The post passes through the block
+  and the heel is flush on the pad. Each block has a horizontal 200 mm arm.
+  Both arms slide into one shared vertical cradle from the rear. One thumbscrew
+  per arm comes up from below, through that arm's width-spanning slot, into
+  the hole row in the receiver roof. The phone sits flush on the vertical plate.
   Geometry is verified by verify-geometry.py. Not crash-rated. Not an on-vehicle
   release until the operator checklist in verification/vehicle-fit-checklist.md
   is completed. Supports RideAudit phone capture; it does not implement

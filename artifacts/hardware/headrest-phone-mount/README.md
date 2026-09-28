@@ -10,11 +10,11 @@ Copyright (C) 2026 RideAudit contributors. GPL-2.0-or-later. See [LICENSE](LICEN
 
 ## Purpose
 
-One landscape phone, held on the face of a headrest. Two post blocks, one per post. The post passes through the block. Each block has a 200 mm arm. Both arms slide into one receiver on a single cradle. A slot across each arm lets one M5 thumbscrew pass through both arms into a tapped hole in the solid back of the cradle.
+One landscape phone, held on a vertical plate. Two post blocks, one per post. The post passes through the block. The block heel sits flush on the headrest pad. Each block has a 200 mm arm in a horizontal plane. Both arms slide into one shared cradle from the rear. Each arm has a slot across its width. Its own M5 thumbscrew comes up from below, through that slot, into a tapped hole in the receiver roof.
 
-The flat heel of each block and the flat back of the cradle are the same plane. They sit flush on the headrest pad. The phone sits in the cradle against that back plate. Nothing in this package is a second cradle, a shared rail, or a sliding clip.
+The phone sits flush on the forward face of the vertical plate. Nothing in this package is a second cradle, a shared rail, a sliding clip, or an arm that rises toward the phone.
 
-The blocks pivot on the posts. A 5×3 grid of M5 holes, 10 mm apart, is the discrete lock: swing the arms until both slots line up on the same hole, then tighten.
+The blocks are independent. A single row of M5 holes, 10 mm apart, is the discrete lock. Slide each arm in from the rear until its slot exposes a hole, then tighten that arm's screw. The slot is wider than the hole pitch, so a small yaw in the horizontal plane still finds a hole.
 
 ![Complete assembly](verification/previews/assembly.png)
 
@@ -22,28 +22,23 @@ The blocks pivot on the posts. A 5×3 grid of M5 holes, 10 mm apart, is the disc
 
 **This mount is not crash-tested and is not a certified automotive restraint, child seat, or OEM accessory.** It is a DIY audit fixture. Do not place it where it can interfere with airbags, the head restraint as the vehicle maker designed it, seatbelt geometry, or the driver's view. Do not cover airbag stitch lines, the headliner, or the headrest height lock. If the posts or the pad do not hold the blocks firmly, do not use the mount in a moving vehicle. Users assume all risk.
 
-On the default model the blocks and the cradle stand **22.4 mm** off the headrest face, and the cradle top is **307 mm** above the bottom of the blocks. That whole footprint has to stay clear of airbags and the headrest release. Slide the blocks on the posts so the cradle lands on the pad, with the camera windows at or past the cushion edge if the phone cameras face the pad. Confirm the fit with [verification/vehicle-fit-checklist.md](verification/vehicle-fit-checklist.md) before any on-road use. Geometry checks in this repository are CAD checks, not a vehicle test.
+On the default model the block heels are flush on the pad, the arms run **200 mm** forward from the post axes, and the phone's front face is **220.7 mm** forward of the pad. The top of the cradle is **110.2 mm** above the bottom of the blocks. That forward reach has to stay clear of the driver, airbags, and the headrest release. Confirm the fit with [verification/vehicle-fit-checklist.md](verification/vehicle-fit-checklist.md) before any on-road use. Geometry checks in this repository are CAD checks, not a vehicle test.
 
 ## What you print
 
-Print the part STLs in `exports/`. `headrest-phone-mount.stl` is an assembly preview, not a print file.
+Print the part STLs in `exports/`. `headrest-phone-mount.stl` is an assembly preview, not a print file. Print `post-block.stl` twice; both blocks are the same part.
 
 | Part | File | Qty | Notes |
 | --- | --- | --- | --- |
 | Fit coupon (print this first) | `exports/fit-coupon.stl` | 1 | 18 mm slice of the round post bore |
-| Post block, inner arm | `exports/post-block.stl` | 1 | Arm lies against the cradle plate. Snap off the print rib. |
-| Post block, outer arm | `exports/post-block-outer.stl` | 1 | Arm stacks on the inner arm. Snap off the print rib. |
-| Phone cradle | `exports/phone-cradle.stl` | 1 | Shared landscape holder, receiver, and M5 hole grid |
+| Post block | `exports/post-block.stl` | 2 | Horizontal arm, vertical bore. No support rib. |
+| Phone cradle | `exports/phone-cradle.stl` | 1 | Shared landscape holder. Arms enter from the rear. |
 
-The post blocks are **225 mm** long. They need about **230 mm** of travel on one axis. The cradle is **180.4 × 159.8 × 21.5 mm**.
+The post block is **36.0 × 211.2 × 44.0 mm**. It needs about **215 mm** of travel on one axis. The cradle is **200.0 × 33.5 × 101.8 mm**.
 
-**Post block, inner arm**
+**Post block**
 
 ![Post block](verification/previews/post-block.png)
-
-**Post block, outer arm**
-
-![Post block, outer arm](verification/previews/post-block-outer.png)
 
 **Phone cradle**
 
@@ -52,8 +47,6 @@ The post blocks are **225 mm** long. They need about **230 mm** of travel on one
 **Fit coupon**
 
 ![Fit coupon](verification/previews/fit-coupon.png)
-
-Each post-block STL has a 1.1 mm rib under the arm. It only exists so the arm prints without slicer support. Snap or cut it off before the block goes on the post. The rib is not in the assembly model.
 
 ## Print settings (starting point)
 
@@ -65,21 +58,21 @@ Each post-block STL has a 1.1 mm rib under the arm. It only exists so the arm pr
 | Perimeters | 5 on the post blocks and the cradle; 4 on the coupon |
 | Infill | 40% gyroid or cubic |
 | Top/bottom layers | 5 |
-| Supports | None. The post-block rib is the support; remove it after printing. |
-| Bed | Heel of the block down. Cradle back plate down, pocket up. Coupon bore vertical. |
+| Supports | None. The cradle pocket overhangs at 45°. |
+| Bed | Block: arm and heel down, bore vertical. Cradle: receiver underside down, plate standing. Coupon: bore vertical. |
 
-The block bore is a circle plus a small teardrop toward the front face so the horizontal hole does not need support. The round part of that hole is the post size. The fit coupon is a true round bore; use it to judge the diameter, not the teardrop.
+The block bore is a round vertical hole. The fit coupon is the same round bore; use it to judge the diameter.
 
-The cradle back is 6 mm thick. The hole grid is modeled at the M5×0.8 tap-drill diameter (4.2 mm). Chase every hole you might use with an M5 tap before assembly. The plastic thread is the lock; there is no nut pocket.
+The receiver roof carries the M5 threads. Holes are modeled at the M5×0.8 tap-drill diameter (4.2 mm). Chase every hole you might use with an M5 tap before assembly. The plastic thread is the lock; there is no nut pocket.
 
 ## Measure, then print the coupon
 
-1. **Post spacing.** Center-to-center of the two posts. The arms can meet for spacings from 110 mm to 170 mm. Set `post_spacing` to your measurement and re-export so the preview angle matches the car. The blocks themselves are independent; spacing is not a slot in a rail.
+1. **Post spacing.** Center-to-center of the two posts. The hole row covers spacings from 110 mm to 170 mm. Set `post_spacing` to your measurement and re-export so the preview matches the car. The blocks themselves are independent; spacing is not a slot in a rail.
 2. **Post diameter.** Outside diameter of one post. Set `post_diameter`. The bore is that diameter plus `clearance` (default 0.4 mm).
 3. **Print `fit-coupon.stl`.** Slide it onto the post. The headrest may have to come out of the seat if the posts are captive. The coupon should start by hand and should not rattle. If it is tight, raise `clearance` toward 0.6 mm. If it is loose, lower `clearance` toward 0.2 mm.
 4. **Phone, landscape.** Long edge is `phone_length_*` (140–172 mm). Short edge, the vertical one, is `phone_width_*` (70–85 mm). Thickness including a slim case is `phone_thickness_max` (up to 12 mm).
 5. **Camera.** 18 mm square windows in both upper corners of the back plate. If the phone cameras face the pad, put those windows at the edge of the cushion so the lenses are not buried in foam. If the cameras face outward, the windows keep a corner camera bump off the plastic.
-6. **Airbag / headrest.** The mount may bear on the posts and on the headrest face. It may not bear on an airbag cover. Keep the 22.4 mm stand-off and the 307 mm height off airbag covers and the height lock.
+6. **Airbag / headrest.** The mount bears on the posts and on the headrest face at the block heels. It may not bear on an airbag cover. Keep the 220.7 mm forward reach and the 110.2 mm height off airbag covers, the driver, and the height lock.
 
 Details: [dimensions.md](dimensions.md).
 
@@ -87,12 +80,11 @@ Details: [dimensions.md](dimensions.md).
 
 Hardware is listed in [bom.md](bom.md).
 
-1. Snap the print rib off both post blocks.
-2. Slide each block onto a post until the flat heel is flush on the headrest pad. The inner-arm block is the one whose arm will lie against the cradle plate. The outer-arm block stacks on top of it.
-3. Hold the cradle flat on the same pad. Swing both arms along the pad until both width-slots expose the same hole in the grid.
-4. Run one M5×20 thumbscrew through both slots into that hole. Tighten until the arms and the cradle cannot shift. The screw clamps in tension into the solid back.
-5. Run an M5 pinch screw into the front of each block until it bears on the post. That stops the block rotating after you have picked the hole.
-6. Set the phone in from the top. The back of the phone sits on the back plate. The front lip keeps it from tipping out. A strap through the side slots is the backup retainer.
+1. Slide each block onto a post until the flat heel is flush on the headrest pad. Print the same STL twice.
+2. Slide both horizontal arms into the cradle from the rear, under the receiver roof. The phone plate stays vertical.
+3. From below, run one M5×20 thumbscrew through each arm's slot into the tapped hole that slot exposes. Tighten until that arm cannot shift. Each screw clamps only its own arm.
+4. Run an M5 pinch screw into the top of each block until it bears on the post. That stops the block rotating after you have picked the holes.
+5. Set the phone in from the top. The back of the phone sits flush on the vertical plate. The front lip keeps it from tipping out. A strap through the side slots is the backup retainer.
 
 Foam thickness, per side, when the phone is under the maximum:
 
@@ -100,7 +92,7 @@ Foam thickness, per side, when the phone is under the maximum:
 - Short side: `phone_width_max - actual short side` under the strap, at the top of the pocket
 - Thickness: `phone_thickness_max - actual thickness` against the back plate
 
-To move the phone, loosen the thumbscrew, pivot the blocks until the slots meet a different hole, and retighten. The grid is 10 mm in both directions. Then snug the pinch screws again.
+To move the phone, loosen the two thumbscrews, slide or yaw the arms in the horizontal plane until each slot meets a hole, and retighten. The holes are 10 mm apart along the roof. Then snug the pinch screws again.
 
 ## Exporting STL and previews
 
@@ -111,7 +103,7 @@ The `.scad` source is the source of truth under GPL-2.0. From this directory:
 ./export-previews.sh
 ```
 
-`export-previews.sh` writes the isometric PNGs under `verification/previews/` for both post blocks, the cradle, the fit coupon, and the complete assembly.
+`export-previews.sh` writes the isometric PNGs under `verification/previews/` for the post block, the cradle, the fit coupon, and the complete assembly.
 
 Or one part at a time:
 
@@ -119,9 +111,9 @@ Or one part at a time:
 openscad -o exports/post-block.stl --export-format binstl -D 'part="block"' headrest-phone-mount.scad
 ```
 
-`part` is one of `assembly`, `block`, `block_outer`, `tray`, `coupon`.
+`part` is one of `assembly`, `block`, `tray`, `coupon`.
 
-Check the geometry (pocket, camera windows, post bore, arm slots, hole grid, flush faces, no arm interference):
+Check the geometry (pocket, camera windows, post bore, rear entry, one slot per arm, hole row, flush heels, no arm interference):
 
 ```text
 python3 verify-geometry.py

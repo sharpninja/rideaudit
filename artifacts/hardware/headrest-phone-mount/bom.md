@@ -4,16 +4,15 @@ Copyright (C) 2026 RideAudit contributors
 License: GPL-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).  
 Not Apache-2.0. Not MIT.
 
-One shared landscape cradle. Two post blocks. No rail, no cradle clip, no stop pin.
+One shared landscape cradle. Two identical post blocks. No rail, no cradle clip, no stop pin.
 
 ## Printed parts
 
 | Part | STL | Qty | Notes |
 | --- | --- | --- | --- |
 | Fit coupon | `exports/fit-coupon.stl` | 1 | Print before the blocks. Round bore, same diameter as the blocks. |
-| Post block, inner arm | `exports/post-block.stl` | 1 | 225.3 × 48.5 × 22.4 mm print. Snap off the rib under the arm. |
-| Post block, outer arm | `exports/post-block-outer.stl` | 1 | Same print envelope. Arm stacks on the inner arm. Snap off the rib. |
-| Phone cradle | `exports/phone-cradle.stl` | 1 | 180.4 × 159.8 × 21.5 mm. Receiver and 5×3 M5 hole grid. |
+| Post block | `exports/post-block.stl` | 2 | 36.0 × 211.2 × 44.0 mm print. Horizontal arm, vertical bore. |
+| Phone cradle | `exports/phone-cradle.stl` | 1 | 200.0 × 33.5 × 101.8 mm. Rear entry, one row of M5 holes in the roof. |
 
 Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` after a parameter change. Do not edit the meshes. `exports/headrest-phone-mount.stl` is the assembly preview only.
 
@@ -21,11 +20,11 @@ Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` af
 
 | Item | Qty | Notes |
 | --- | --- | --- |
-| M5×20 thumbscrew | 1 | Through both arm slots into one tapped hole in the cradle back. |
-| M5×12 socket set screw or button head | 2 | One pinch screw in the front of each post block. |
-| M5×0.8 tap | 1 | Chase the hole grid. Holes are modeled at 4.2 mm tap-drill. |
+| M5×20 thumbscrew | 2 | One per arm. From below, through that arm's slot, into a tapped hole in the receiver roof. |
+| M5×12 socket set screw or button head | 2 | One pinch screw in the top of each post block. |
+| M5×0.8 tap | 1 | Chase the hole row. Holes are modeled at 4.2 mm tap-drill. |
 
-No nuts. The thread is in the solid back of the cradle.
+No nuts. The thread is in the receiver roof.
 
 ## Soft goods
 

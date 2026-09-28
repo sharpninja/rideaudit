@@ -3,6 +3,7 @@
 # Copyright (C) 2026 RideAudit contributors
 # SPDX-License-Identifier: GPL-2.0
 # Regenerates verification/previews/*.png from headrest-phone-mount.scad.
+# One post-block PNG: both blocks are the same printable part.
 # The .scad file is the source of truth. part= values match export-stls.sh.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -34,7 +35,6 @@ render() {
 }
 
 render block verification/previews/post-block.png
-render block_outer verification/previews/post-block-outer.png
 render tray verification/previews/phone-cradle.png
 render coupon verification/previews/fit-coupon.png
 render assembly verification/previews/assembly.png

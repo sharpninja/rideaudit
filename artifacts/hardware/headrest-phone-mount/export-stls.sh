@@ -18,7 +18,6 @@ render() {
 }
 render assembly exports/headrest-phone-mount.stl
 render block exports/post-block.stl
-render block_outer exports/post-block-outer.stl
 render tray exports/phone-cradle.stl
 render coupon exports/fit-coupon.stl
 echo "Exported STLs under exports/. Print the part files. The assembly STL is a preview."
