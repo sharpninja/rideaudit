@@ -24,11 +24,22 @@ This is not a Play Store receipt, not a live Bitcoin/OTS/L2 admission receipt, n
 - LEGION2 Docker client 29.8.0. Contexts `desktop-linux` and `default` both return HTTP 500 on the named pipes. `com.docker.service` is STOPPED (`WIN32_EXIT_CODE 1077`). `docker-desktop` WSL is Running but the engine API is not usable. No image was built on LEGION2.
 - PAYTON-OMARCHY (`192.168.0.149`) SSH BatchMode works. Engine 29.7.2, Compose 5.5.1, `dotnet` 10.0.111, 381G free. Existing Octopus/SQL/Caddy containers were left running.
 - Deploy scripts: `deploy/omarchy/`. `scp` is unusable because Omarchy’s login shell is pwsh and prints profile banners (`Received message too long`). Sync uses stdin into `exec /usr/bin/bash --noprofile --norc`. Checkout on Omarchy: `f51f454` at `/home/sharpninja/github/rideaudit`.
-- Preferred path exercised: `dotnet publish` linux-x64 on LEGION2 (`artifacts/omarchy-publish/admission`, not committed) → `Sync-Publish.ps1` → `remote-runtime-build.sh` on Omarchy. **Not composed. Not a CD green.**
-  - `rideaudit-admission:local` `sha256:3735900ad179a5f4a91c6f261c5379996abd483309eba41e059e3acb91d320e7` (runtime image from LEGION2 publish)
-  - `rideaudit-counsel:local` is the same tag (counsel is a role flag)
-- Earlier SDK rebuild from `dcb31bf` produced `sha256:df492589f5b313…ece97222` / `sha256:d6eca0dc9cf4…07550332` and was then retagged by the runtime build.
-- `Confirm-Cutover.ps1` dry-ran only. Coordinator after merge may pass `-ConfirmCutover`. Existing Octopus/SQL/Caddy containers were left running. No GHCR push exists in this tree.
+- Preferred path exercised: `dotnet publish` linux-x64 on LEGION2 (`artifacts/omarchy-publish/admission`, not committed) → `Sync-Publish.ps1` → `remote-runtime-build.sh` on Omarchy → `Confirm-Cutover.ps1 -ConfirmCutover`.
+  - `rideaudit-admission:local` / `rideaudit-counsel:local` `sha256:031a4a6e21cc0424a6276a59b9d38cabe15f7c5670468d3a99e4dcb8aad9fee5` (runtime image from LEGION2 publish at `2612693`)
+  - Earlier SDK rebuild from `dcb31bf` was superseded by this runtime build.
+  - `Confirm-Cutover.ps1 -ConfirmCutover` ran. Existing Octopus/SQL/Caddy containers were left running. No GHCR push exists in this tree.
+
+## Cutover (coordinator, post PR #7 merge)
+
+- Merged commit on Omarchy checkout: `2612693` (PR #7 squash: Close deferred tracks and prepare LEGION2→Omarchy deploy).
+- Publish on LEGION2: `artifacts/omarchy-publish/admission` (linux-x64, framework-dependent). Not committed.
+- Sync: `Sync-FromLegion2.ps1` + `Sync-Publish.ps1` (stdin into `exec /usr/bin/bash --noprofile --norc`).
+- Runtime image on Omarchy: `rideaudit-admission:local` / `rideaudit-counsel:local` `sha256:031a4a6e21cc0424a6276a59b9d38cabe15f7c5670468d3a99e4dcb8aad9fee5` (built 2026-09-28T15:20:20-05:00 from publish tree).
+- `Confirm-Cutover.ps1 -ConfirmCutover`: compose up on loopback only. Octopus/SQL/Caddy left running.
+- Container: `rideaudit-omarchy-admission-1` Up, `127.0.0.1:18080->8080/tcp`.
+- Probe `GET http://127.0.0.1:18080/`: HTTP 200, body `RideAudit admission gRPC. Contract authority: grpc-protobuf. OpenAPI is a non-authoritative companion.`
+- Still not a CD green, not GHCR, not TLS on Caddy edge, not Play Store.
+
 
 ## Chain probe
 
@@ -45,5 +56,5 @@ Passed 159, failed 0, skipped 0 (Host.Windows 2, Client 87, Chain 16, Protos 5, 
 - Live HSM hardware (in-process Shamir 2-of-3 only).
 - Physical dual-phone Android pairing (no device attached).
 - LEGION2 Docker Desktop engine.
-- Production cutover on Omarchy (coordinator after merge).
+- Caddy TLS 1.2+ if admission should leave Omarchy loopback.
 - Opposing-model HV (separate agent).
