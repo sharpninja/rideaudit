@@ -1,6 +1,8 @@
 # RideAudit admission (counsel RPCs on the same host).
 # Bind loopback only. Does not replace Octopus/SQL/Caddy on PAYTON-OMARCHY.
-# Production refuses documented-fixture calendars and fixture Play Integrity.
+# Images may be produced by remote-build.sh (SDK) or remote-runtime-build.sh
+# (LEGION2 linux-x64 publish). Production refuses documented-fixture calendars
+# and fixture Play Integrity. Not a CD green.
 
 name: rideaudit-omarchy
 
