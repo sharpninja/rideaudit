@@ -8,15 +8,17 @@ Avalonia UI 12 dual-phone capture client (FR-RIDE-056).
 
 ## Build
 
-The Android head targets `net10.0-android` and needs the .NET Android workload:
+The Android head targets `net10.0-android` and needs the .NET Android workload. On PAYTON-LEGION2 (2026-09-28) the workload, Android SDK platform 36, build-tools 36.0.0, and Microsoft OpenJDK 17 were present. `dotnet build -c Release` produced an APK. `adb devices` listed no device, so the APK was not installed. That is not a Play Store receipt.
 
 ```bash
 dotnet workload install android
 # Android SDK platform 36 and build-tools are required.
 export ANDROID_HOME="$HOME/android-sdk"
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-dotnet build src/RideAudit.Client.Android/RideAudit.Client.Android.csproj -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME"
+dotnet build src/RideAudit.Client.Android/RideAudit.Client.Android.csproj -c Release -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME"
 ```
+
+A successful Release build writes `src/RideAudit.Client.Android/bin/Release/net10.0-android/org.rideaudit.app-Signed.apk`. Do not commit that APK.
 
 Shared capture logic and Avalonia views build and test without the Android workload:
 

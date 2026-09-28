@@ -17,16 +17,17 @@ public static class AndroidCaptureHardware
 {
     public static void EnsureBluetoothOrThrow(Context context)
     {
-        var adapter = BluetoothAdapter.DefaultAdapter;
+        var manager = context.GetSystemService(Context.BluetoothService) as BluetoothManager;
+        var adapter = manager?.Adapter;
         if (adapter is null)
         {
             throw new RideAuditFailClosedException(
                 ErrorCodes.BluetoothDisabled,
                 "FR-RIDE-053",
-                "Android BluetoothAdapter is null.");
+                "Android BluetoothManager.Adapter is null.");
         }
 
-        if (!adapter.IsEnabled)
+        if (adapter.State != State.On)
         {
             throw new RideAuditFailClosedException(
                 ErrorCodes.BluetoothDisabled,

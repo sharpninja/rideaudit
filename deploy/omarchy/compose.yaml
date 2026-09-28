@@ -1,0 +1,43 @@
+# RideAudit admission (counsel RPCs on the same host).
+# Bind loopback only. Does not replace Octopus/SQL/Caddy on PAYTON-OMARCHY.
+# Production refuses documented-fixture calendars and fixture Play Integrity.
+
+name: rideaudit-omarchy
+
+services:
+  admission:
+    image: rideaudit-admission:local
+    build:
+      context: ../..
+      dockerfile: deploy/containers/admission/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      RIDEAUDIT_EDGE_TLS: "true"
+      RIDEAUDIT_OTS_CALENDAR: ${RIDEAUDIT_OTS_CALENDAR:-}
+      RIDEAUDIT_L2_CALENDAR: ${RIDEAUDIT_L2_CALENDAR:-}
+      RIDEAUDIT_L2_RPC: ${RIDEAUDIT_L2_RPC:-}
+      RIDEAUDIT_PLAY_INTEGRITY: ${RIDEAUDIT_PLAY_INTEGRITY:-}
+      RIDEAUDIT_TLS_CERT_PATH: ${RIDEAUDIT_TLS_CERT_PATH:-}
+    ports:
+      - "127.0.0.1:18080:8080"
+    restart: unless-stopped
+
+  counsel:
+    image: rideaudit-counsel:local
+    build:
+      context: ../..
+      dockerfile: deploy/containers/counsel/Dockerfile
+    profiles: ["counsel-split"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      RIDEAUDIT_EDGE_TLS: "true"
+      RIDEAUDIT_SERVICE_ROLE: counsel
+      RIDEAUDIT_OTS_CALENDAR: ${RIDEAUDIT_OTS_CALENDAR:-}
+      RIDEAUDIT_L2_CALENDAR: ${RIDEAUDIT_L2_CALENDAR:-}
+      RIDEAUDIT_L2_RPC: ${RIDEAUDIT_L2_RPC:-}
+      RIDEAUDIT_PLAY_INTEGRITY: ${RIDEAUDIT_PLAY_INTEGRITY:-}
+    ports:
+      - "127.0.0.1:18081:8080"
+    restart: unless-stopped

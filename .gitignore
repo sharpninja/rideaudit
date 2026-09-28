@@ -16,3 +16,4 @@ mcp.db
 
 TestResults/
 .dotnet/
+deploy/omarchy/.env
