@@ -160,8 +160,10 @@ public sealed class ProductionCaptureGraph
             fixtures.Add("FIXTURE: FixtureCameraSource is not a live camera.");
         if (play is FixturePlayIntegrityClient || LooksLikeFixtureType(play))
             fixtures.Add("FIXTURE: Play Integrity client is a labeled fixture, not live Play.");
-        if (admission is InterimInProcessAdmissionClient || LooksLikeFixtureType(admission))
+        if (admission is InterimInProcessAdmissionClient)
             fixtures.Add("FIXTURE: InterimInProcessAdmissionClient is a client preflight, not server admission.");
+        else if (admission is not null && LooksLikeFixtureType(admission))
+            fixtures.Add("FIXTURE: " + admission.GetType().Name + " is a labeled test admission seam, not production readiness.");
         if (escrow is not null && escrow is not UnavailableDeviceEscrowDeposit)
             fixtures.Add("FIXTURE: in-process escrow deposit is not hardware HSM.");
         return fixtures;

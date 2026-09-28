@@ -312,7 +312,8 @@ public class PathTo98RemediationTests
             "in-memory",
             "fixture-camera");
         Assert.False(graph.ProductionReady);
-        Assert.Contains(graph.FixtureSeams, item => item.Contains("InterimInProcessAdmissionClient", StringComparison.Ordinal));
+        Assert.Contains(graph.FixtureSeams, item => item.Contains("FIXTURE", StringComparison.Ordinal));
+        Assert.Contains("InterimInProcessAdmissionClient", admission.InnerTypeName, StringComparison.Ordinal);
         var runtime = new CaptureRuntime
         {
             Graph = graph,
