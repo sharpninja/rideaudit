@@ -152,7 +152,7 @@ public sealed class AdmissionCoordinator
         _logs.Write("submit session=" + command.SessionId + " bytes=" + command.EnvelopeBytes.Length);
 
         if (PlaintextDetector.ContentTypeIsPlain(command.ContentType)
-            || (!command.EnvelopeBytes.AsSpan().StartsWith(EnvelopeFormat.Magic) && PlaintextDetector.BodyLooksLikeMedia(command.EnvelopeBytes)))
+            || (!SealedIngest.IsRecognizedSeal(command.EnvelopeBytes) && PlaintextDetector.BodyLooksLikeMedia(command.EnvelopeBytes)))
         {
             _journal.RememberFailure("plaintext refused; body not stored");
             throw new RideAuditException(ErrorCodes.PlaintextRejected, "Public ingest accepts only sealed ciphertext.");
@@ -181,7 +181,13 @@ public sealed class AdmissionCoordinator
         ParsedEnvelope parsed;
         try
         {
-            parsed = EnvelopeFormat.Parse(command.EnvelopeBytes);
+            parsed = SealedIngest.Parse(
+                command.EnvelopeBytes,
+                command.SubmittedReceiptBytes,
+                _policyVersion,
+                command.Principal.TenantId,
+                command.SessionId,
+                command.VehicleId);
         }
         catch (RideAuditException ex)
         {
@@ -348,7 +354,7 @@ public sealed class AdmissionCoordinator
             throw new RideAuditException(ErrorCodes.ChunkOutOfOrder, "Chunk index is outside the declared upload.");
         if (!Ids.Sha256(chunk).AsSpan().SequenceEqual(expectedHash))
             throw new RideAuditException(ErrorCodes.ValidationFailed, "Chunk content hash does not match.");
-        if (index == 0 && PlaintextDetector.BodyLooksLikeMedia(chunk) && !chunk.AsSpan().StartsWith(EnvelopeFormat.Magic))
+        if (index == 0 && PlaintextDetector.BodyLooksLikeMedia(chunk) && !SealedIngest.IsRecognizedSeal(chunk))
             throw new RideAuditException(ErrorCodes.PlaintextRejected, "First chunk looks like plaintext media.");
 
         var key = principal.TenantId + "|" + uploadId;

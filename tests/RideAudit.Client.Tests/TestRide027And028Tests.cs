@@ -154,7 +154,7 @@ public class TestRide028ViewerTests
         Assert.Contains("net10.0", csproj);
         Assert.Contains("Avalonia.Desktop", csproj);
         Assert.DoesNotContain("win-x64", csproj);
-        Assert.Contains("Linux", DesktopPortability.CurrentOs());
+        Assert.Contains(DesktopPortability.CurrentOs(), ViewerLogic.PortableTargets);
         Assert.Contains("Windows", ViewerLogic.PortableTargets);
         Assert.Contains("macOS", ViewerLogic.PortableTargets);
         var manifest = RideAudit.Licensing.PublicationClaimGuard.LoadEmbedded();

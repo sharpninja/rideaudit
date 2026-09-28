@@ -11,6 +11,8 @@ The interim companion proto (`interim/rideaudit/v1/custody.proto`, namespace `Ri
 
 `InterimInProcessAdmissionClient` is still a client preflight. It does not call server admission, does not decrypt, and does not set `admitted`. The anchor envelope stays pending with `live_bitcoin_metadata` false and no transaction reference or block height.
 
-Device envelopes remain the client RAES layout in `RideAudit.Client.Seal`. This swap does not re-encode them into the server `RIDESEAL1` envelope. The attestation `token` field carries the SHA-256 hex already stored on the device receipt, not a raw Play Integrity JWT and not a server `fixture.v1.` token.
+`GrpcSealedAdmissionClient` is the generated gRPC path. Server admission accepts the device RAES bytes when the submitted `ReceiptCore` binds the SHA-256 of those bytes and the fixture attestation, escrow, and chain checks pass. Those checks use the documented server fixtures (`fixture.v1.` tokens and `documented-fixture` anchors). They are not live Play Integrity, Bitcoin, OpenTimestamps, or L2.
+
+Device envelopes remain the client RAES layout in `RideAudit.Client.Seal`. This path does not re-encode them into the server `RIDESEAL1` envelope. `SubmissionMapper` still puts the device SHA-256 hex in `AttestationSubmission.token`. That hex is not a server `fixture.v1.` token. A fixture admission test supplies the server fixture token separately. The device package identity (`org.rideaudit.app`) and the server allowlist (`app.rideaudit.capture`) stay distinct.
 
 Do not copy server admission, counsel, chain, escrow, or ingest implementations into this project.
