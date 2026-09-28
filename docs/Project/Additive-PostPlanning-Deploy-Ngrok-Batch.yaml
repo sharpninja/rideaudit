@@ -1,0 +1,241 @@
+# Additive batch: post-planning Octopus Deploy CD and ngrok ingress (2026-09-28)
+# Operator deltas after PLAN-RIDEAUDIT-001 / docs/Project/* planning batches.
+# Does not invent GHCR, Omarchy-as-FR, live Play, or extra product features.
+# Author: Sharp Ninja
+records:
+  - kind: fr
+    id: FR-RIDE-063
+    title: Octopus Deploy CD to PAYTON-DESKTOP
+    description: >
+      Build RideAudit admission, counsel, and related container images through
+      Octopus Deploy and deploy those images to PAYTON-DESKTOP. Octopus is the
+      container build and deploy path. GitHub Container Registry is not the
+      distribution path. If the default Octopus container is out of licenses,
+      provision a new Octopus container on PAYTON-DESKTOP and continue from that
+      instance. Release receipts must name the Octopus instance or container and
+      the target machine. Receipts must never claim GHCR greens.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator 2026-09-28. Supersedes any GHCR assumption from earlier HV path-to-98
+      notes, B08 GHCR wording, or plan distribution placeholders. Existing Omarchy
+      loopback cutover receipts are lab deploy evidence only and do not satisfy
+      this FR. Existing deploy/omarchy docs currently alias PAYTON-DESKTOP,
+      PAYTON-OMARCHY, and OMARCHY to 192.168.0.149; do not invent a second host
+      if those names resolve together, and do not treat the loopback cutover as
+      Octopus CD complete. Not a live Play FR.
+    acceptanceCriteria:
+      - id: AC-RIDE-063-001
+        text: Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to PAYTON-DESKTOP.
+        isSatisfied: false
+      - id: AC-RIDE-063-002
+        text: If the default Octopus container is out of licenses, a new Octopus container is provisioned on PAYTON-DESKTOP and subsequent releases use that instance.
+        isSatisfied: false
+      - id: AC-RIDE-063-003
+        text: Release receipts record the Octopus instance or container and the target machine, and never claim GHCR as the distribution path or a GHCR green.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-064
+    title: ngrok ingress for RideAudit service
+    description: >
+      The running RideAudit public service (admission and any documented companion
+      HTTP or gRPC front doors) must be reachable through a configured ngrok
+      tunnel. Checked-in deploy docs and scripts describe the tunnel. The ngrok
+      auth token and related secrets come from a secret store or environment
+      variable and are never committed. If ngrok is misconfigured or the tunnel
+      is not live, the system fails closed and does not advertise a public URL.
+      Docs must state which host currently terminates the tunnel. Interim
+      admission may still bind Omarchy loopback. The target CD host is
+      PAYTON-DESKTOP once the Octopus path in FR-RIDE-063 is live.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator 2026-09-28. Supersedes any GHCR assumption for public ingress.
+      Does not invent GHCR. Does not claim Omarchy loopback cutover or live Play
+      as this FR. Current vs target must stay honest in receipts.
+    acceptanceCriteria:
+      - id: AC-RIDE-064-001
+        text: A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.
+        isSatisfied: false
+      - id: AC-RIDE-064-002
+        text: ngrok token and related secrets are supplied from a secret store or environment and are not committed to git.
+        isSatisfied: false
+      - id: AC-RIDE-064-003
+        text: Misconfigured or non-live ngrok does not advertise a public URL. Docs name the current tunnel host and distinguish Omarchy loopback interim from PAYTON-DESKTOP target.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-032
+    title: Operator releases RideAudit via Octopus to PAYTON-DESKTOP
+    actors:
+      - Operator
+      - OctopusDeploy
+      - PaytonDesktop
+    briefDescription: Operator configures the RideAudit Octopus project and releases container images to PAYTON-DESKTOP without using GHCR.
+    basicFlow: |
+      1. Operator opens the RideAudit Octopus project on the licensed instance (default container, or a new container on PAYTON-DESKTOP if licenses are exhausted).
+      2. Operator confirms the process builds admission, counsel, and related images from deploy/containers.
+      3. Operator creates or promotes a release targeting PAYTON-DESKTOP.
+      4. Octopus deploys the images to PAYTON-DESKTOP.
+      5. Operator records the Octopus instance or container and target machine in a release receipt and does not claim GHCR.
+    acceptanceCriteria:
+      - id: AC-UC-032-001
+        text: Operator can configure the Octopus project and complete a release to PAYTON-DESKTOP with a receipt that names the instance and target and does not claim GHCR.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-063
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-033
+    title: Operator configures ngrok and probes admission health
+    actors:
+      - Operator
+      - NgrokTunnel
+      - PublicServer
+    briefDescription: Operator configures ngrok for the running RideAudit service and verifies an external probe reaches admission health.
+    basicFlow: |
+      1. Operator loads the ngrok token from a secret store or environment, not from git.
+      2. Operator starts or confirms the ngrok process on the documented host (interim Omarchy loopback or PAYTON-DESKTOP after Octopus CD).
+      3. Operator records the live public URL only when the tunnel is up.
+      4. Operator sends an external health or admission probe through that URL.
+      5. The probe reaches the running admission (or documented companion front door). If the tunnel is down or misconfigured, no public URL is advertised.
+    acceptanceCriteria:
+      - id: AC-UC-033-001
+        text: Operator configures ngrok without committing secrets and an external probe reaches admission health only when the tunnel is live.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-064
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-DEPLOY-001
+    title: Octopus project and image build process
+    description: >
+      Define the RideAudit Octopus project and deployment process so container
+      images are built from deploy/containers (admission, counsel, and related
+      Dockerfiles) and published only through that Octopus process, not GHCR.
+    priority: high
+    area: RIDE
+    subarea: DEPLOY
+    status: pending
+    notes: Implements/supports FR-RIDE-063. Operator 2026-09-28. Supersedes GHCR distribution assumptions.
+    acceptanceCriteria:
+      - id: AC-RIDE-DEPLOY-001-001
+        text: The Octopus project process builds RideAudit images from deploy/containers (or the documented successor path).
+        isSatisfied: false
+      - id: AC-RIDE-DEPLOY-001-002
+        text: The process definition does not require GHCR publish as the distribution path.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-DEPLOY-002
+    title: Octopus agent and license fallback on PAYTON-DESKTOP
+    description: >
+      Run an Octopus deployment agent (or equivalent tentacle/worker) on
+      PAYTON-DESKTOP so releases land on that target. If the default Octopus
+      container is out of licenses, provision a new Octopus container on
+      PAYTON-DESKTOP and point the RideAudit project at that instance.
+    priority: high
+    area: RIDE
+    subarea: DEPLOY
+    status: pending
+    notes: Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green.
+    acceptanceCriteria:
+      - id: AC-RIDE-DEPLOY-002-001
+        text: PAYTON-DESKTOP is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
+        isSatisfied: false
+      - id: AC-RIDE-DEPLOY-002-002
+        text: License exhaustion on the default Octopus container results in a new Octopus container on PAYTON-DESKTOP rather than a GHCR workaround.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-EDGE-001
+    title: ngrok tunnel config and host service wrapper
+    description: >
+      Check in ngrok configuration docs and scripts for the RideAudit public
+      service. Supply the token via secret store or environment. Wrap the tunnel
+      as a systemd unit, Windows service, or equivalent host-OS service on the
+      documented terminator host. Fail closed when the tunnel is not live.
+    priority: high
+    area: RIDE
+    subarea: EDGE
+    status: pending
+    notes: Implements/supports FR-RIDE-064. Operator 2026-09-28. Host OS wrapper follows the terminator host (Linux systemd on Omarchy/DESKTOP if Linux; Windows service if the terminator is Windows).
+    acceptanceCriteria:
+      - id: AC-RIDE-EDGE-001-001
+        text: Deploy docs and scripts configure ngrok to the admission or documented companion front door and load the token from secret store or environment.
+        isSatisfied: false
+      - id: AC-RIDE-EDGE-001-002
+        text: A host-OS service wrapper (systemd, Windows service, or documented equivalent) keeps the tunnel supervised, and a non-live tunnel is not advertised as a public URL.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-038
+    title: Octopus release receipt without GHCR
+    description: >
+      A documented Octopus dry-run or release receipt proves RideAudit images
+      were built and deployed to PAYTON-DESKTOP through Octopus, names the
+      instance or container and target machine, and does not claim GHCR.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28."
+    acceptanceCriteria:
+      - id: AC-TEST-038-001
+        text: Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP.
+        isSatisfied: false
+      - id: AC-TEST-038-002
+        text: Receipt names the Octopus instance or container and target machine and contains no GHCR green claim.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-039
+    title: ngrok URL reaches admission health
+    description: >
+      An external probe of the configured ngrok public URL returns the expected
+      admission health or documented companion front-door response. A down or
+      misconfigured tunnel fails closed and is not advertised.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-064. Method: external probe against the live tunnel. Operator 2026-09-28."
+    acceptanceCriteria:
+      - id: AC-TEST-039-001
+        text: The live ngrok URL returns the expected admission health or documented companion front-door response.
+        isSatisfied: false
+      - id: AC-TEST-039-002
+        text: When ngrok is down or misconfigured, no public URL is advertised as live.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-040
+    title: Deploy secrets absent from git
+    description: >
+      Repository scan confirms ngrok tokens, Octopus API keys, and related
+      deploy secrets are not committed. Checked-in docs and scripts reference
+      environment or secret-store placeholders only.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "Covers FR-RIDE-063 and FR-RIDE-064. Method: git content scan. Operator 2026-09-28."
+    acceptanceCriteria:
+      - id: AC-TEST-040-001
+        text: No ngrok auth token or Octopus API key is present in committed files.
+        isSatisfied: false
+      - id: AC-TEST-040-002
+        text: Checked-in deploy docs and scripts use environment or secret-store placeholders for those secrets.
+        isSatisfied: false
+
+mappings:
+  - frId: FR-RIDE-063
+    trIds: [TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002]
+    testIds: [TEST-RIDE-038, TEST-RIDE-040]
+    useCaseLocalIds: [UC-RIDE-032]
+  - frId: FR-RIDE-064
+    trIds: [TR-RIDE-EDGE-001]
+    testIds: [TEST-RIDE-039, TEST-RIDE-040]
+    useCaseLocalIds: [UC-RIDE-033]
