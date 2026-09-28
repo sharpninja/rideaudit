@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.Server.Admission</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Attest\RideAudit.Attest.csproj" />
+    <ProjectReference Include="..\RideAudit.Chain.EthL2\RideAudit.Chain.EthL2.csproj" />
+    <ProjectReference Include="..\RideAudit.Chain.OpenTimestamps\RideAudit.Chain.OpenTimestamps.csproj" />
+    <ProjectReference Include="..\RideAudit.Chain\RideAudit.Chain.csproj" />
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Escrow\RideAudit.Escrow.csproj" />
+    <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
+    <ProjectReference Include="..\RideAudit.Seal\RideAudit.Seal.csproj" />
+    <ProjectReference Include="..\RideAudit.Sec\RideAudit.Sec.csproj" />
+    <ProjectReference Include="..\RideAudit.Server.Identity\RideAudit.Server.Identity.csproj" />
+  </ItemGroup>
+</Project>

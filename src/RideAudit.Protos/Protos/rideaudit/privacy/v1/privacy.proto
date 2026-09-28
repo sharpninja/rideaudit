@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// Contract-Version: 0.2.0
+// S7 scaffold. DSAR must not delete under legal hold. Not implemented in this slice.
+syntax = "proto3";
+
+package rideaudit.privacy.v1;
+
+option csharp_namespace = "RideAudit.Protos.Privacy.V1";
+
+service Privacy {
+  rpc RequestAccessExport (AccessExportRequest) returns (AccessExportResponse);
+  rpc RequestDeletion (DeletionRequest) returns (DeletionResponse);
+}
+
+message AccessExportRequest {
+  string subject_driver_id = 1;
+}
+
+message AccessExportResponse {
+  string export_id = 1;
+  string status = 2;
+}
+
+message DeletionRequest {
+  string subject_driver_id = 1;
+  string case_id = 2;
+}
+
+message DeletionResponse {
+  string status = 1;
+  bool deleted = 2;
+}

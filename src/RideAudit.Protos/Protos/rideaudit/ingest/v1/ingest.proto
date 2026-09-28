@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// Contract-Version: 0.2.0
+// S6 scaffold. Driver-provided privacy-export ZIP only.
+// This contract defines no Lyft private or undocumented API (FR-RIDE-011).
+syntax = "proto3";
+
+package rideaudit.ingest.v1;
+
+option csharp_namespace = "RideAudit.Protos.Ingest.V1";
+
+service Ingest {
+  rpc IngestPrivacyExport (IngestPrivacyExportRequest) returns (IngestPrivacyExportResponse);
+}
+
+message IngestPrivacyExportRequest {
+  bytes zip_bytes = 1;
+  string provenance_tag = 2;
+  string source_label = 3;
+}
+
+message IngestPrivacyExportResponse {
+  string import_id = 1;
+  string status = 2;
+}

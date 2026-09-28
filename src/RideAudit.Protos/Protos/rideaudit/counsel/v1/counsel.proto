@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// Contract-Version: 0.2.0
+// S5 scaffold. The server returns UNIMPLEMENTED until the counsel slice lands.
+// FR-RIDE-037, FR-RIDE-038. No aggregation may replace per-record custody.
+syntax = "proto3";
+
+package rideaudit.counsel.v1;
+
+option csharp_namespace = "RideAudit.Protos.Counsel.V1";
+
+service Counsel {
+  rpc BuildMultiDriverBundle (BuildMultiDriverBundleRequest) returns (MultiDriverBundle);
+}
+
+message BuildMultiDriverBundleRequest {
+  string case_id = 1;
+  repeated string submission_ids = 2;
+}
+
+message PerRecordVerification {
+  string submission_id = 1;
+  string driver_id = 2;
+  string vehicle_id = 3;
+  string collector_id = 4;
+  bool independent_custody = 5;
+}
+
+message MultiDriverBundle {
+  string bundle_id = 1;
+  repeated PerRecordVerification records = 2;
+}

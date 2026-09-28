@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// COMPANION_NOTICE: artifacts/server-api/openapi.yaml is a non-authoritative companion.
+// Contract-Version: 0.2.0
+// FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-028, FR-RIDE-214, FR-RIDE-216
+syntax = "proto3";
+
+package rideaudit.escrow.v1;
+
+option csharp_namespace = "RideAudit.Protos.Escrow.V1";
+
+// Court-release surface. Share bytes and private keys are not returned here.
+// Packaging of collection secrets happens inside the HSM boundary, not via
+// a public "send me the private key" log line.
+service Escrow {
+  rpc GetEscrowStatus (GetEscrowStatusRequest) returns (EscrowPackageInfo);
+  rpc RequestCourtRelease (RequestCourtReleaseRequest) returns (CourtReleaseState);
+  rpc ApproveCourtRelease (ApproveCourtReleaseRequest) returns (CourtReleaseState);
+  rpc OpenExpiringWorkingCopy (OpenWorkingCopyRequest) returns (WorkingCopyDescriptor);
+  rpc VerifyForCounsel (VerifyForCounselRequest) returns (CounselVerificationReport);
+}
+
+message GetEscrowStatusRequest {
+  string key_id = 1;
+}
+
+message EscrowPackageInfo {
+  string key_id = 1;
+  string tenant_id = 2;
+  string sealed_record_id = 3;
+  int32 threshold_m = 4;
+  int32 total_n = 5;
+  repeated string custodian_ids = 6;
+  bool escrowed = 7;
+  string secret_kind = 8;
+}
+
+message RequestCourtReleaseRequest {
+  string key_id = 1;
+  string case_id = 2;
+  string legal_process_reference = 3;
+  string purpose = 4;
+  string requester_id = 5;
+}
+
+message ApproveCourtReleaseRequest {
+  string release_id = 1;
+  string custodian_id = 2;
+  string statement = 3;
+}
+
+message CourtReleaseState {
+  string release_id = 1;
+  string key_id = 2;
+  string case_id = 3;
+  int32 approvals = 4;
+  int32 threshold_m = 5;
+  bool quorum_met = 6;
+  string state = 7;
+}
+
+message OpenWorkingCopyRequest {
+  string release_id = 1;
+  string sealed_record_id = 2;
+}
+
+message WorkingCopyDescriptor {
+  string release_id = 1;
+  string sealed_record_id = 2;
+  int64 expires_unix_millis = 3;
+  bytes plaintext = 4;
+  bool minimum_scope = 5;
+}
+
+message VerifyForCounselRequest {
+  string submission_id = 1;
+  string release_id = 2;
+}
+
+message CounselVerificationReport {
+  bool payload_hash_match = 1;
+  bool chain_confirmed = 2;
+  bool attestation_ok = 3;
+  bool escrow_quorum_met = 4;
+  bool working_copy_authorized = 5;
+  repeated string mismatches = 6;
+  string proves = 7;
+  string does_not_prove = 8;
+  int64 working_copy_expires_unix_millis = 9;
+  bool live_bitcoin_metadata = 10;
+}

@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.Chain.EthL2</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Chain\RideAudit.Chain.csproj" />
+  </ItemGroup>
+</Project>

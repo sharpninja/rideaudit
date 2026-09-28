@@ -11,3 +11,6 @@ cache/
 mcp.db
 *.db-journal
 
+
+TestResults/
+.dotnet/
