@@ -33,15 +33,9 @@ render() {
     headrest-phone-mount.scad
 }
 
-render beam verification/previews/beam.png
-render extension verification/previews/beam-extension.png
-render clamp verification/previews/post-clamp.png
+render block verification/previews/post-block.png
+render block_outer verification/previews/post-block-outer.png
 render tray verification/previews/phone-cradle.png
-render clip verification/previews/cradle-clip.png
-render clip_cabin verification/previews/cradle-clip-cabin.png
-render pin verification/previews/stop-pin.png
 render coupon verification/previews/fit-coupon.png
-render assembly verification/previews/assembly-opposed.png
-render assembly_forward verification/previews/assembly-dual-forward.png
-render assembly_single verification/previews/assembly-single.png
+render assembly verification/previews/assembly.png
 echo "Wrote PNG previews under verification/previews/."

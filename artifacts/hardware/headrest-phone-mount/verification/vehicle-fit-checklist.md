@@ -8,17 +8,17 @@ Complete this on a real headrest before calling the mount a road release. The CA
 Vehicle: ____________________  
 Post spacing (center-to-center): ________ mm  
 Post diameter: ________ mm  
-Phone A (model, case, L × short × thick): ____________________  
-Phone B: ____________________  
+Phone (model, case, L × short × thick): ____________________  
 Date: ____________________
 
-- [ ] Fit coupon snaps onto the post and does not spin freely.
-- [ ] Both clamps reach the measured spacing and lock with the M3 screws.
-- [ ] Phone A (smaller of the two sizes) sits in a cradle with foam and the strap, camera looking through a corner window.
-- [ ] Phone B (larger of the two sizes) sits in the other cradle, camera clear.
-- [ ] Charge cables use the beam holes and do not cross an airbag cover.
-- [ ] The 57.9 mm projection and 89.8 mm height (or the re-exported equivalents) miss airbag stitch lines, the headliner, and the headrest height lock.
+- [ ] Fit coupon slides onto the post and does not rattle.
+- [ ] Both blocks sit flush on the headrest face, posts through the bores, print ribs removed.
+- [ ] The cradle back sits flush on the same face. The phone back sits on the cradle plate.
+- [ ] Both arm slots line up on one tapped hole. The M5 thumbscrew clamps both arms to the cradle.
+- [ ] Pinch screws stop the blocks rotating on the posts.
+- [ ] The phone sits in the landscape pocket with foam and the strap as needed. Camera windows are not buried in the cushion if the cameras face the pad.
+- [ ] The 22.4 mm stand-off and 307 mm height (or the re-exported equivalents) miss airbag stitch lines, the headliner, and the headrest height lock.
 - [ ] The mount does not block the driver's mirrors or forward view.
-- [ ] A firm tug on each phone and each clamp does not pull the fixture off the posts.
+- [ ] A firm tug on the phone and on each block does not pull the fixture off the posts or off the pad.
 
 If any box fails, change the parameters, re-export, and reprint. Do not carry a loose mount in a moving vehicle.

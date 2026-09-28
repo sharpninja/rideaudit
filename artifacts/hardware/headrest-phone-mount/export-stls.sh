@@ -17,13 +17,8 @@ render() {
   openscad -o "$out" --export-format binstl -D "part=\"${part}\"" headrest-phone-mount.scad
 }
 render assembly exports/headrest-phone-mount.stl
-render assembly_forward exports/headrest-phone-mount-dual-forward.stl
-render beam exports/beam.stl
-render extension exports/beam-extension.stl
-render clamp exports/post-clamp.stl
+render block exports/post-block.stl
+render block_outer exports/post-block-outer.stl
 render tray exports/phone-cradle.stl
-render clip exports/cradle-clip.stl
-render clip_cabin exports/cradle-clip-cabin.stl
-render pin exports/stop-pin.stl
 render coupon exports/fit-coupon.stl
-echo "Exported STLs under exports/. Print the individual part files, not the assembly previews."
+echo "Exported STLs under exports/. Print the part files. The assembly STL is a preview."

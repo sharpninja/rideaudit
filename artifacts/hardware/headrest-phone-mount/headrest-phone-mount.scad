@@ -15,166 +15,124 @@
 // along with this program; if not, see <https://www.gnu.org/licenses/>.
 // SPDX-License-Identifier: GPL-2.0
 //
-// Source of truth for the dual-cradle headrest bracket. STL files under
-// exports/ are generated from this file; do not hand-edit them.
+// Source of truth. STL files under exports/ are generated; do not hand-edit them.
+//
+// One shared landscape cradle. Two post blocks, one per headrest post.
+// Each post passes through its block. The flat heel of each block and the
+// flat back of the cradle sit on the same plane (Y = 0) against the headrest
+// face. Each block carries a ~200 mm arm. Both arms lie in one receiver on
+// the cradle. A slot across each arm's width lets one M5 thumbscrew pass
+// through both slots into a tapped hole in the solid back. A grid of those
+// holes is the discrete lock as the arms pivot on the posts.
 //
 // Use frame (assembly):
-//   X  across the headrest (post spacing)
-//   Y+ road / forward face
-//   Z  up, along the headrest posts
+//   X  across the headrest posts
+//   Y  out from the headrest face (Y = 0 is the flush bearing plane)
+//   Z  up, along the posts
 //
-// Print frames are applied by orient_* modules. Part STLs are already
-// oriented for FDM (flat on the bed, no required supports).
+// Print frames are applied by the orient modules.
 
 /* [Headrest posts] */
-post_spacing_min = 110;   // mm, center-to-center minimum
-post_spacing_max = 170;   // mm, center-to-center maximum
-post_diameter    = 14;    // mm, nominal post OD
-post_spacing     = 140;   // mm, clamp centers in the assembly preview
+post_spacing_min = 110;  // mm, narrowest center-to-center the arms can still join
+post_spacing_max = 170;  // mm, widest center-to-center the arms can still join
+post_diameter    = 14;   // mm, nominal post OD
+post_spacing     = 140;  // mm, block centers in the assembly preview
 
-/* [Phone cradles] */
-phone_width_min     = 70;   // mm, landscape short side, narrowest phone
-phone_width_max     = 85;   // mm, landscape short side, widest phone
-phone_length_min    = 140;  // mm, landscape long side, shortest phone
-phone_length_max    = 172;  // mm, landscape long side, longest phone
+/* [Arms and lock] */
+arm_length   = 200;  // mm, post axis to arm tip
+slot_span    = 16;   // mm, slot length across the arm width
+slot_gap     = 8;    // mm, slot opening along the arm (clears an M5 shank at an angle)
+slot_radius  = 185;  // mm, post axis to the slot center
+hole_pitch   = 10;   // mm, threaded-hole grid
+hole_nx      = 5;    // odd, so a hole sits on the centerline
+hole_nz      = 3;
+
+/* [Phone cradle] */
+phone_width_min     = 70;   // mm, landscape short side
+phone_width_max     = 85;
+phone_length_min    = 140;  // mm, landscape long side
+phone_length_max    = 172;
 phone_thickness_max = 12;   // mm, including a slim case
-camera_clearance    = 18;   // mm, square lens window on each upper corner
-dual_cradle         = true;
-// 0 = opposed (forward + cabin). 1 = dual-forward (both phones face +Y).
-cradle_layout       = 0;
+camera_clearance    = 18;   // mm, square window, both upper corners of the back plate
 
-/* [Clamp / structure] */
-clamp_depth    = 35;  // mm, jaw engagement along the post
-beam_thickness = 8;   // mm, rail height
-jaw_wall       = 4;   // mm
-cable_notch_w  = 10;  // mm, cable-slot width
-cable_notch_d  = 6;   // mm, documented tie depth; groove is capped for strength
-cradle_lip     = 3;   // mm, front retention lip thickness
-clearance      = 0.4; // mm, diametral print clearance on the post
+/* [Structure] */
+jaw_wall   = 4;    // mm, material outside the post bore
+clearance  = 0.4;  // mm, diametral clearance in the bore
+cradle_lip = 3;    // mm, front lip thickness
 
 /* [Export] */
-// assembly, assembly_forward, assembly_single,
-// beam, extension, clamp, tray, clip, clip_cabin, pin, coupon
+// assembly, block, block_outer, tray, coupon
 part = "assembly";
 
 /* [Hidden] */
 eps = 0.04;
-slide_clear = 0.32;
-channel_wall = 3.2;
-lip = 1.65;
-lip_h = 2.3;
-roof_t = 6.2;
-throat_ratio = 0.76;
-pad_t = 4.2;
-pad_w = 46;
-foot_len = 62;
-link_half = 18;
-bridge_overlap = 0.35;
-pin_r = 2.05;
-pin_gap = 0.55;
-tongue_len = 5.2;
-tongue_y = 7.0;
-tongue_z = 3.1;
-tongue_fit = 0.30;
-end_past_tongue = 1.15;
-stub_end_pad = 3.0;
-m3_clear = 3.4;
-m3_nut = 6.55;
-m3_nut_t = 2.7;
+plate_t = 6.0;
+arm_thick = 5.0;
+arm_gap = 0.35;
+arm_width = 22;
+block_w = 36;
+block_h = 40;
+heel = 4.0;
+m5_tap = 4.2;     // M5×0.8 tap-drill; chase with a tap
+m5_clear = 5.4;
+pinch_d = 4.2;
 fn_bore = 64;
+$fn = 32;
 
-$fn = 48;
-
-/* ----------------------- derived geometry ----------------------- */
-
-clamp_body_x = post_diameter + 2 * jaw_wall;
-clamp_body_y = post_diameter + 2 * jaw_wall;
-carriage_len = max(16, clamp_body_x - 6);
-
-beam_bar_y = 16;
-beam_bar_z = beam_thickness;
-beam_gap = 2.8;
-beam_y0 = clamp_body_y / 2 + beam_gap;
-beam_y1 = beam_y0 + beam_bar_y;
-rail_yc = (beam_y0 + beam_y1) / 2;
-
-stub_y0 = -beam_y1;
-stub_y1 = -beam_y0;
-stub_yc = (stub_y0 + stub_y1) / 2;
+/* ----------------------- derived ----------------------- */
 
 bore_d = post_diameter + clearance;
-throat_w = post_diameter * throat_ratio;
-lead_w = min(clamp_body_x - 2.2, throat_w + 3.4);
-
-// Rail sits high in the clamp so the channel roof is the top face.
-// That face is the FDM bed after the clamp/clip are flipped.
-roof_top = clamp_depth;
-void_z1 = roof_top - roof_t;
-beam_z1 = void_z1 - slide_clear;
-beam_z0 = beam_z1 - beam_bar_z;
-rail_zc = (beam_z0 + beam_z1) / 2;
-
-travel_outer = post_spacing_max / 2 + carriage_len / 2;
-pin_x = travel_outer + pin_gap + pin_r;
-tongue_x0 = pin_x + pin_r + 0.7;
-beam_half = tongue_x0 + tongue_len + end_past_tongue;
-beam_length = 2 * beam_half;
-
-stub_pin_x = foot_len / 2 + pin_gap + pin_r;
-stub_half = stub_pin_x + stub_end_pad;
+half = post_spacing / 2;
+z_meet = sqrt(slot_radius * slot_radius - half * half);
+ang = atan2(half, z_meet);
+z_post = block_h / 2;
+z_slot = z_post + z_meet;
+bore_cy = heel + bore_d / 2;
+block_depth = bore_cy + bore_d / 2 + jaw_wall;
+r_arm0 = bore_d / 2 + 2.6;
 
 side_wall = 3.4;
-back_t = 5.0;
-bottom_t = 4.0;
-front_lip_t = cradle_lip;
-front_lip_h = cradle_lip + 5;
+back_is_plate = plate_t;
 pocket_x = phone_length_max + 1.6;
 pocket_z = phone_width_max + 0.8;
 pocket_y = phone_thickness_max + 0.5;
+front_lip_t = cradle_lip;
+front_lip_h = cradle_lip + 5;
+floor_t = 4.0;
 outer_x = pocket_x + 2 * side_wall;
-outer_z = bottom_t + pocket_z;
 
-void_y0 = beam_y0 - slide_clear;
-void_y1 = beam_y1 + slide_clear;
-foot_y0 = void_y0 - channel_wall;
-foot_y1 = void_y1 + channel_wall;
-void_z0 = beam_z0 - slide_clear;
-foot_z0 = void_z0 - lip_h;
+recv_w = 108;
+recv_below = 44;
+recv_above = 26;
+z_recv0 = z_slot - recv_below;
+z_recv1 = z_slot + recv_above;
+z_pocket0 = z_recv1 + floor_t;
+z_pocket1 = z_pocket0 + pocket_z;
+z_plate0 = z_recv0;
+z_plate1 = z_pocket1;
 
-plate_y0 = foot_y1 + pad_t - 0.12;
-pocket_y0 = plate_y0 + back_t;
-pocket_y1 = pocket_y0 + pocket_y;
-front_y1 = pocket_y1 + front_lip_t;
-cradle_z0 = 0;
-pocket_z0 = cradle_z0 + bottom_t;
-pocket_z1 = pocket_z0 + pocket_z;
+arm_y0 = plate_t + 0.35;
+arm_y0_outer = arm_y0 + arm_thick + arm_gap;
+arm_y1_outer = arm_y0_outer + arm_thick;
+recv_y0 = plate_t;
+recv_y1 = arm_y1_outer + 0.8;
+standout_y = max(block_depth, plate_t + pocket_y + front_lip_t);
+asm_top_z = z_pocket1;
 
-forward_projection = front_y1;
-// Cabin cradle is the Y mirror of the forward cradle, on the mirrored stub rail.
-cabin_projection = forward_projection;
+ix0 = -(hole_nx - 1) / 2;
+iz0 = -(hole_nz - 1) / 2;
 
-layout = (part == "assembly_forward") ? 1
-       : (part == "assembly_single") ? -1
-       : cradle_layout;
-is_dual = (part == "assembly_single") ? false : dual_cradle;
-show_opposed = is_dual && layout == 0;
-show_forward = is_dual && layout == 1;
+solid_r = slot_radius - slot_gap / 2 - 3.5;
+dirx = half / slot_radius;
+dirz = z_meet / slot_radius;
+solid_x = -half + solid_r * dirx;
+solid_z = z_post + solid_r * dirz;
+inner_slot_y = arm_y0 + arm_thick / 2;
+outer_slot_y = arm_y0_outer + arm_thick / 2;
+win_x = pocket_x / 2 - camera_clearance / 2;
+win_z = z_pocket1 - camera_clearance / 2;
 
-cradle_gap = 8;
-df_center = outer_x / 2 + cradle_gap / 2;
-ext_pin_x = df_center + foot_len / 2 + pin_gap + pin_r;
-ext_end = ext_pin_x + stub_end_pad;
-
-cable_slot_w = min(6.5, max(3.5, cable_notch_w));
-cable_slot_x = foot_len / 2 + cable_slot_w / 2 + 4;
-cable_groove_d = min(2.2, max(1.2, cable_notch_d * 0.35));
-
-screw_x = 12;
-screw_z = rail_zc;
-
-lip_inner = lip - slide_clear;
-
-/* ----------------------- acceptance asserts ----------------------- */
+/* ----------------------- checks ----------------------- */
 
 assert(post_spacing_max > post_spacing_min + 8, "post spacing range collapsed");
 assert(post_spacing + 0.01 >= post_spacing_min && post_spacing - 0.01 <= post_spacing_max,
@@ -184,467 +142,276 @@ assert(phone_length_max + 0.01 >= phone_length_min, "phone length range");
 assert(phone_length_min + 0.01 >= phone_width_max, "landscape long side must exceed the short side");
 assert(phone_thickness_max >= 6 && phone_thickness_max <= 18, "phone thickness out of bracket range");
 assert(camera_clearance >= 12, "camera_clearance too small to uncover a lens");
-assert(2 * camera_clearance + 10 <= pocket_x, "camera windows do not fit across the back plate");
-assert(camera_clearance + 8 <= pocket_z, "camera window does not fit the short side");
-assert(pocket_z1 - camera_clearance >= screw_z + m3_nut / 2 + 2,
-       "camera window cuts the cradle screws");
-assert(throat_w < post_diameter - 1.5, "throat will not snap onto the post");
+assert(2 * camera_clearance + 12 <= pocket_x, "camera windows do not fit across the back plate");
+assert(camera_clearance + 6 <= pocket_z, "camera window does not fit the short side");
 assert(bore_d > post_diameter, "bore does not clear the post");
-assert(bore_d + 1.5 < clamp_body_y, "jaw wall swallowed by the bore");
-assert(lip_inner > 0.8, "rail lips do not stay engaged after slide clearance");
-assert(beam_z0 > 4, "rail is too low in the clamp to leave a grip below it");
-assert(roof_top + 0.01 >= void_z1 + roof_t, "roof is not the top of the clamp");
-assert(post_spacing_min / 2 - carriage_len / 2 >= foot_len / 2 + 1.5,
-       "clamps collide with the cradle clip at post_spacing_min");
-assert(link_half + post_diameter / 2 + 3 < post_spacing_min / 2,
-       "center link hits a headrest post at post_spacing_min");
-assert(pin_x - pin_r >= travel_outer + 0.5, "stop pin blocks maximum clamp travel");
-assert(tongue_x0 >= pin_x + pin_r + 0.6, "extension tongue cuts the stop-pin hole");
-assert(beam_half > tongue_x0 + tongue_len, "beam does not contain the tongue pocket");
-assert(cable_slot_x - cable_slot_w / 2 >= foot_len / 2 + 1.5, "cable slot hits the cradle clip");
-assert(cable_slot_x + cable_slot_w / 2 + 1.2 <= post_spacing_min / 2 - carriage_len / 2,
-       "cable slot hits a clamp at post_spacing_min");
-assert(stub_half + 1 < post_spacing_min / 2 - post_diameter / 2,
-       "cabin stub reaches a post at post_spacing_min");
-assert(pocket_x + 0.01 >= phone_length_max, "pocket shorter than the longest phone");
-assert(pocket_y + 0.01 >= phone_thickness_max, "pocket shallower than phone_thickness_max");
-assert(pocket_z + 0.01 >= phone_width_max, "pocket shorter than the widest short side");
-assert(front_lip_h + 1 < pocket_z - camera_clearance, "front lip rises into the camera window");
-assert(ext_end > df_center + foot_len / 2 + 1, "extension does not support the outer cradle");
-assert(jaw_wall >= 3 && clamp_depth >= 28, "clamp section is too light");
+assert(heel + 0.01 >= 3, "heel behind the bore is too thin to bear on the headrest");
+assert(bore_cy - bore_d / 2 + 0.01 >= heel - 0.01, "bore breaks the flush heel");
+assert(arm_length + 0.01 >= 190 && arm_length <= 260, "arm length is outside the 200 mm class");
+assert(slot_radius + slot_gap / 2 + 6 <= arm_length, "slot runs off the arm tip");
+assert(slot_span + 4 <= arm_width, "slot does not leave a margin across the arm width");
+assert(slot_gap >= m5_clear + 1.5, "slot will not pass an M5 shank when the arms cross at an angle");
+assert(slot_radius > post_spacing_max / 2 + 8, "arms cannot meet between the posts at post_spacing_max");
+assert(slot_radius > post_spacing_min / 2 + 8, "arms cannot meet between the posts at post_spacing_min");
+assert(hole_nx % 2 == 1 && hole_nz % 2 == 1, "hole grid needs a center hole");
+assert(hole_pitch >= 8 && hole_pitch <= 16, "hole pitch is outside the discrete-lock range");
+assert((hole_nx - 1) * hole_pitch + m5_tap < recv_w - 8, "hole row is wider than the receiver");
+assert(z_pocket0 > z_slot + recv_above - 0.01, "phone pocket overlaps the arm receiver");
+assert(arm_y0 + 0.01 >= plate_t, "inner arm is buried in the back plate");
+assert(arm_y0_outer >= arm_y0 + arm_thick + 0.2, "arm layers collide");
+assert(arm_y1_outer <= recv_y1, "outer arm stands out of the receiver");
+assert(r_arm0 > bore_d / 2 + 1, "arm root is cut by the post bore");
 
 echo(str("CHECK post_spacing_min=", post_spacing_min));
 echo(str("CHECK post_spacing_max=", post_spacing_max));
-echo(str("CHECK post_spacing_preview=", post_spacing));
+echo(str("CHECK post_spacing=", post_spacing));
 echo(str("CHECK post_diameter=", post_diameter));
 echo(str("CHECK bore_d=", bore_d));
-echo(str("CHECK throat_w=", throat_w));
-echo(str("CHECK beam_length=", beam_length));
-echo(str("CHECK beam_half=", beam_half));
-echo(str("CHECK carriage_len=", carriage_len));
-echo(str("CHECK foot_len=", foot_len));
+echo(str("CHECK bore_cy=", bore_cy));
+echo(str("CHECK block_depth=", block_depth));
+echo(str("CHECK block_w=", block_w));
+echo(str("CHECK block_h=", block_h));
+echo(str("CHECK heel=", heel));
+echo(str("CHECK arm_length=", arm_length));
+echo(str("CHECK arm_width=", arm_width));
+echo(str("CHECK arm_thick=", arm_thick));
+echo(str("CHECK slot_span=", slot_span));
+echo(str("CHECK slot_gap=", slot_gap));
+echo(str("CHECK slot_radius=", slot_radius));
+echo(str("CHECK hole_pitch=", hole_pitch));
+echo(str("CHECK hole_nx=", hole_nx));
+echo(str("CHECK hole_nz=", hole_nz));
+echo(str("CHECK m5_tap=", m5_tap));
+echo(str("CHECK plate_t=", plate_t));
+echo(str("CHECK z_post=", z_post));
+echo(str("CHECK z_slot=", z_slot));
+echo(str("CHECK z_meet=", z_meet));
+echo(str("CHECK ang=", ang));
+echo(str("CHECK half=", half));
 echo(str("CHECK pocket_x=", pocket_x));
 echo(str("CHECK pocket_y=", pocket_y));
 echo(str("CHECK pocket_z=", pocket_z));
-echo(str("CHECK camera_clearance=", camera_clearance));
+echo(str("CHECK z_pocket0=", z_pocket0));
+echo(str("CHECK z_pocket1=", z_pocket1));
+echo(str("CHECK z_recv0=", z_recv0));
+echo(str("CHECK outer_x=", outer_x));
 echo(str("CHECK phone_width_min=", phone_width_min));
 echo(str("CHECK phone_width_max=", phone_width_max));
 echo(str("CHECK phone_length_min=", phone_length_min));
 echo(str("CHECK phone_length_max=", phone_length_max));
 echo(str("CHECK phone_thickness_max=", phone_thickness_max));
-echo(str("CHECK forward_projection=", forward_projection));
-echo(str("CHECK cabin_projection=", cabin_projection));
-echo(str("CHECK cradle_top_z=", pocket_z1));
-echo(str("CHECK beam_z0=", beam_z0));
-echo(str("CHECK beam_z1=", beam_z1));
-echo(str("CHECK roof_top=", roof_top));
-echo(str("CHECK link_half=", link_half));
-echo(str("CHECK pin_x=", pin_x));
-echo(str("CHECK stub_half=", stub_half));
-echo(str("CHECK ext_end=", ext_end));
-echo(str("CHECK df_center=", df_center));
-echo(str("CHECK outer_x=", outer_x));
-echo(str("CHECK outer_z=", outer_z));
-echo(str("CHECK lip_inner=", lip_inner));
-echo(str("CHECK cable_slot_w=", cable_slot_w));
-echo(str("CHECK cable_slot_x=", cable_slot_x));
-echo(str("CHECK screw_z=", screw_z));
-echo(str("CHECK screw_x=", screw_x));
-echo(str("CHECK beam_y0=", beam_y0));
-echo(str("CHECK beam_y1=", beam_y1));
-echo(str("CHECK rail_yc=", rail_yc));
-echo(str("CHECK foot_y0=", foot_y0));
-echo(str("CHECK foot_y1=", foot_y1));
-echo(str("CHECK plate_y0=", plate_y0));
-echo(str("CHECK pocket_y0=", pocket_y0));
-echo(str("CHECK pocket_y1=", pocket_y1));
-echo(str("CHECK pocket_z0=", pocket_z0));
-echo(str("CHECK pocket_z1=", pocket_z1));
+echo(str("CHECK camera_clearance=", camera_clearance));
+echo(str("CHECK win_x=", win_x));
+echo(str("CHECK win_z=", win_z));
+echo(str("CHECK inner_slot_y=", inner_slot_y));
+echo(str("CHECK outer_slot_y=", outer_slot_y));
+echo(str("CHECK solid_x=", solid_x));
+echo(str("CHECK solid_z=", solid_z));
+echo(str("CHECK standout_y=", standout_y));
+echo(str("CHECK asm_top_z=", asm_top_z));
+echo(str("CHECK cradle_count=", 1));
 echo(str("CHECK front_lip_h=", front_lip_h));
-echo(str("CHECK clamp_body_x=", clamp_body_x));
-echo(str("CHECK clamp_body_y=", clamp_body_y));
-echo(str("CHECK pad_t=", pad_t));
-echo(str("CHECK dual=", is_dual ? 1 : 0));
-echo(str("CHECK layout=", layout));
-echo(str("CHECK cradle_count=", is_dual ? 2 : 1));
+echo(str("CHECK front_lip_t=", front_lip_t));
+echo(str("CHECK floor_t=", floor_t));
 
-/* ----------------------- primitives ----------------------- */
+/* ----------------------- parts ----------------------- */
 
-module m3_hole(h) {
-    cylinder(h = h, d = m3_clear, $fn = 28);
+module m5_hole(length) {
+    cylinder(h = length, d = m5_tap, $fn = 28);
 }
 
-module pin_shaft_hole(depth) {
-    cylinder(h = depth, d = pin_r * 2, $fn = 36);
-}
-
-module rail(x0, x1, y0) {
-    translate([x0, y0, beam_z0])
-        cube([x1 - x0, beam_bar_y, beam_bar_z]);
-}
-
-module slide_channel(len, open_inner = false) {
-    // open_inner drops the gap-side wall so a cradle clip can slide onto the
-    // rail from the end without hitting the center link. Floor ties keep the
-    // inner lip attached. Clamps leave the wall in place; it joins the C-body.
-    x0 = -len / 2;
+module post_block_use(side, outer) {
+    post_x = side * half;
+    y0 = outer ? arm_y0_outer : arm_y0;
     difference() {
-        translate([x0, foot_y0, foot_z0])
-            cube([len, foot_y1 - foot_y0, roof_top - foot_z0]);
-        translate([x0 - 1, void_y0, void_z0])
-            cube([len + 2, void_y1 - void_y0, void_z1 - void_z0 + 0.02]);
-        translate([x0 - 1, void_y0 + lip, foot_z0 - 1])
-            cube([len + 2, (void_y1 - void_y0) - 2 * lip, (void_z0 - foot_z0) + 1]);
-        if (open_inner)
-            translate([x0 - 1, foot_y0 - 1, void_z0 - 0.02])
-                cube([len + 2, (void_y0 + 0.8) - (foot_y0 - 1), roof_top]);
-    }
-    if (open_inner) {
-        tie_y0 = void_y0 + lip;
-        tie_y = (void_y1 - void_y0) - 2 * lip;
-        tie_z = void_z0 - foot_z0;
-        for (tx = [-1, 1])
-            translate([tx * (len / 2 - 8) - 2.4, tie_y0, foot_z0])
-                cube([4.8, tie_y, tie_z]);
-    }
-}
-
-module rail_lock_cuts() {
-    // Clearance hole through the roof. Square nut drops in from the flat top
-    // and sits on the shoulder; the screw tip bears on the rail.
-    translate([0, rail_yc, beam_z1 - 0.5])
-        m3_hole(roof_top - beam_z1 + 1);
-    translate([-m3_nut / 2, rail_yc - m3_nut / 2, roof_top - m3_nut_t])
-        cube([m3_nut, m3_nut, m3_nut_t + 0.08]);
-}
-
-module c_clamp() {
-    difference() {
-        translate([-clamp_body_x / 2, -clamp_body_y / 2, 0])
-            cube([clamp_body_x, clamp_body_y, clamp_depth]);
-        translate([0, 0, -1])
-            cylinder(h = clamp_depth + 2, d = bore_d, $fn = fn_bore);
-        translate([-throat_w / 2, -clamp_body_y / 2 - 1, -1])
-            cube([throat_w, clamp_body_y / 2 + bore_d / 4, clamp_depth + 2]);
-        translate([-lead_w / 2, -clamp_body_y / 2 - 1, -1])
-            cube([lead_w, 4.8, clamp_depth + 2]);
-        translate([0, 0, -0.05])
-            cylinder(h = 1.3, d1 = bore_d + 2.6, d2 = bore_d, $fn = fn_bore);
-        translate([0, 0, clamp_depth - 1.25])
-            cylinder(h = 1.35, d1 = bore_d, d2 = bore_d + 2.6, $fn = fn_bore);
-        for (sx = [-1, 1])
-            translate([sx * (throat_w / 2), -bore_d * 0.15, -1])
-                cylinder(h = clamp_depth + 2, d = 2.2, $fn = 20);
-    }
-}
-
-module clip_pad() {
-    pad_z0 = screw_z - 8;
-    pad_z1 = roof_top;
-    translate([-pad_w / 2, foot_y1 - 0.12, pad_z0])
-        cube([pad_w, pad_t + 0.12, pad_z1 - pad_z0]);
-}
-
-module clip_pad_cuts() {
-    for (sx = [-1, 1]) {
-        translate([sx * screw_x, foot_y1 - 0.4, screw_z])
+        union() {
+            translate([post_x - block_w / 2, 0, 0])
+                cube([block_w, block_depth, block_h]);
+            translate([post_x, y0, z_post])
+                rotate([0, -side * ang, 0])
+                    translate([-arm_width / 2, 0, r_arm0])
+                        cube([arm_width, arm_thick, arm_length - r_arm0]);
+        }
+        // Round bore plus a teardrop toward +Y so the horizontal print needs no support.
+        // The inscribed circle stays at bore_d; the coupon is the round fit gauge.
+        translate([post_x, 0, -1])
+            hull() {
+                translate([0, bore_cy, 0])
+                    cylinder(h = block_h + 2, d = bore_d, $fn = fn_bore);
+                translate([0, block_depth - 1.3, 0])
+                    cylinder(h = block_h + 2, d = 0.4, $fn = 6);
+            }
+        translate([post_x, bore_cy, -0.01])
+            cylinder(h = 1.35, d1 = bore_d + 2.4, d2 = bore_d, $fn = fn_bore);
+        translate([post_x, bore_cy, block_h - 1.34])
+            cylinder(h = 1.35, d1 = bore_d, d2 = bore_d + 2.4, $fn = fn_bore);
+        // Slot across the arm width, through the thickness.
+        translate([post_x, y0 - 0.8, z_post])
+            rotate([0, -side * ang, 0])
+                translate([-slot_span / 2, 0, slot_radius - slot_gap / 2])
+                    cube([slot_span, arm_thick + 1.6, slot_gap]);
+        // Pinch screw along +Y into the bore, so the block can be locked after it pivots.
+        translate([post_x, bore_cy, z_post])
             rotate([-90, 0, 0])
-                m3_hole(pad_t + 1.0);
-        // Nut pocket opens on the tray face (+Y). The tray closes it.
-        translate([sx * screw_x - m3_nut / 2,
-                   foot_y1 + pad_t - m3_nut_t,
-                   screw_z - m3_nut / 2])
-            cube([m3_nut, m3_nut_t + 0.25, m3_nut]);
+                cylinder(h = block_depth - bore_cy + 1, d = pinch_d, $fn = 24);
     }
 }
 
-/* ----------------------- parts in the use frame ----------------------- */
-
-module beam_use() {
-    difference() {
-        union() {
-            rail(-beam_half, beam_half, beam_y0);
-            rail(-stub_half, stub_half, stub_y0);
-            translate([-link_half, stub_y1 - bridge_overlap, beam_z0])
-                cube([2 * link_half,
-                      (beam_y0 + bridge_overlap) - (stub_y1 - bridge_overlap),
-                      beam_bar_z]);
-        }
-        for (sx = [-1, 1]) {
-            translate([sx * pin_x, rail_yc, beam_z0 - 1])
-                pin_shaft_hole(beam_bar_z + 2);
-            translate([sx * stub_pin_x, stub_yc, beam_z0 - 1])
-                pin_shaft_hole(beam_bar_z + 2);
-            extension_pocket(sx);
-            cable_slot(sx * cable_slot_x);
-        }
-        alignment_notch();
-    }
-}
-
-module extension_pocket(sign) {
-    depth = tongue_len + 0.45;
-    y0 = rail_yc - (tongue_y + tongue_fit) / 2;
-    z0 = beam_z0 + (beam_bar_z - (tongue_z + tongue_fit)) / 2;
-    x0 = sign > 0 ? beam_half - depth : -beam_half - 0.2;
-    translate([x0, y0, z0])
-        cube([depth + 0.2, tongue_y + tongue_fit, tongue_z + tongue_fit]);
-}
-
-module cable_slot(x) {
-    translate([x - cable_slot_w / 2, rail_yc - cable_slot_w / 2, beam_z0 - 1])
-        cube([cable_slot_w, cable_slot_w, beam_bar_z + 2]);
-    translate([x - cable_slot_w / 2, beam_y1 - cable_groove_d, beam_z0 + 1.4])
-        cube([cable_slot_w, cable_groove_d + 0.2, beam_bar_z - 2.8]);
-}
-
-module alignment_notch() {
-    translate([-1.1, rail_yc - 4, beam_z1 - 0.7])
-        cube([2.2, 8, 1.2]);
-}
-
-module extension_use() {
-    difference() {
-        union() {
-            translate([beam_half + 0.15, beam_y0, beam_z0])
-                cube([ext_end - beam_half - 0.15, beam_bar_y, beam_bar_z]);
-            translate([beam_half - tongue_len, rail_yc - tongue_y / 2,
-                       beam_z0 + (beam_bar_z - tongue_z) / 2])
-                cube([tongue_len - 0.05, tongue_y, tongue_z]);
-        }
-        translate([ext_pin_x, rail_yc, beam_z0 - 1])
-            pin_shaft_hole(beam_bar_z + 2);
-    }
-}
-
-module clamp_use() {
-    difference() {
-        union() {
-            c_clamp();
-            slide_channel(carriage_len, false);
-        }
-        rail_lock_cuts();
-    }
-}
-
-module clip_use() {
-    difference() {
-        union() {
-            slide_channel(foot_len, true);
-            clip_pad();
-        }
-        rail_lock_cuts();
-        clip_pad_cuts();
+module hole_grid() {
+    for (ix = [0 : hole_nx - 1], iz = [0 : hole_nz - 1]) {
+        hx = (ix + ix0) * hole_pitch;
+        hz = z_slot + (iz + iz0) * hole_pitch;
+        translate([hx, plate_t + 0.4, hz])
+            rotate([90, 0, 0])
+                m5_hole(plate_t + 0.8);
     }
 }
 
 module tray_use() {
     difference() {
         union() {
-            translate([-outer_x / 2, plate_y0, cradle_z0])
-                cube([outer_x, back_t, outer_z]);
-            translate([-outer_x / 2, plate_y0, cradle_z0])
-                cube([outer_x, front_y1 - plate_y0, bottom_t]);
+            // Flush back. The entire rear face is the headrest bearing.
+            translate([-outer_x / 2, 0, z_plate0])
+                cube([outer_x, plate_t, z_plate1 - z_plate0]);
+            // Floor between the receiver and the phone pocket.
+            translate([-outer_x / 2, plate_t, z_recv1])
+                cube([outer_x, pocket_y + front_lip_t, floor_t]);
+            // Side walls.
             for (sx = [-1, 1])
-                translate([sx * outer_x / 2 - (sx > 0 ? side_wall : 0), plate_y0, cradle_z0])
-                    cube([side_wall, front_y1 - plate_y0, outer_z]);
-            translate([-pocket_x / 2, pocket_y1, cradle_z0])
-                cube([pocket_x, front_lip_t, bottom_t + front_lip_h]);
+                translate([sx * outer_x / 2 - (sx > 0 ? side_wall : 0), plate_t, z_pocket0])
+                    cube([side_wall, pocket_y + front_lip_t, pocket_z]);
+            // Front lip, bottom of the pocket, so the phone stays seated.
+            translate([-pocket_x / 2, plate_t + pocket_y, z_pocket0])
+                cube([pocket_x, front_lip_t, front_lip_h]);
         }
+        // Receiver: open toward the posts (-Z) and toward +Y.
+        translate([-recv_w / 2, recv_y0, z_recv0 - 1])
+            cube([recv_w, recv_y1 - recv_y0, recv_above + recv_below + 1]);
+        hole_grid();
         camera_windows();
         strap_slots();
-        tray_screw_cuts();
     }
 }
 
 module camera_windows() {
     for (sx = [-1, 1]) {
-        x0 = sx > 0
-            ? pocket_x / 2 - camera_clearance
-            : -pocket_x / 2;
-        translate([x0, plate_y0 - 1, pocket_z1 - camera_clearance])
-            cube([camera_clearance, back_t + 2, camera_clearance + 1]);
+        x0 = sx > 0 ? pocket_x / 2 - camera_clearance : -pocket_x / 2;
+        translate([x0, -1, z_pocket1 - camera_clearance])
+            cube([camera_clearance, plate_t + 2, camera_clearance + 1]);
     }
 }
 
 module strap_slots() {
-    slot_z = pocket_z1 - 14;
-    slot_y0 = pocket_y0 + 1.2;
-    slot_d = max(4, pocket_y - 2.4);
+    slot_z = z_pocket1 - 16;
     for (sx = [-1, 1])
-        translate([sx * outer_x / 2 - side_wall - 0.6, slot_y0, slot_z])
-            cube([side_wall + 1.2, slot_d, 3.4]);
-}
-
-module tray_screw_cuts() {
-    for (sx = [-1, 1]) {
-        translate([sx * screw_x, plate_y0 - 0.4, screw_z])
-            rotate([-90, 0, 0])
-                m3_hole(back_t + 0.8);
-        translate([sx * screw_x, plate_y0 + back_t - 2.05, screw_z])
-            rotate([-90, 0, 0])
-                cylinder(h = 2.2, d1 = m3_clear, d2 = 6.8, $fn = 28);
-    }
-}
-
-module pin_use() {
-    cylinder(h = beam_bar_z + 1.6, d = pin_r * 2 - 0.28, $fn = 36);
-    translate([0, 0, beam_bar_z + 1.35])
-        cylinder(h = 2.1, d = 9.0, $fn = 36);
+        translate([sx * outer_x / 2 - side_wall - 0.8, plate_t + 1.4, slot_z])
+            cube([side_wall + 1.6, max(4, pocket_y - 2.8), 3.2]);
 }
 
 module coupon_use() {
     h = 18;
     difference() {
-        translate([-clamp_body_x / 2, -clamp_body_y / 2, 0])
-            cube([clamp_body_x, clamp_body_y, h]);
-        translate([0, 0, -1])
+        translate([-block_w / 2, 0, 0])
+            cube([block_w, block_depth, h]);
+        translate([0, bore_cy, -1])
             cylinder(h = h + 2, d = bore_d, $fn = fn_bore);
-        translate([-throat_w / 2, -clamp_body_y / 2 - 1, -1])
-            cube([throat_w, clamp_body_y / 2 + bore_d / 4, h + 2]);
-        translate([-lead_w / 2, -clamp_body_y / 2 - 1, -1])
-            cube([lead_w, 4.8, h + 2]);
-        translate([0, 0, -0.05])
-            cylinder(h = 1.3, d1 = bore_d + 2.6, d2 = bore_d, $fn = fn_bore);
+        translate([0, bore_cy, -0.01])
+            cylinder(h = 1.2, d1 = bore_d + 2.2, d2 = bore_d, $fn = fn_bore);
     }
 }
 
-module cradle_pair() {
-    tray_use();
-    clip_use();
+module thumbscrew() {
+    // Preview hardware only. Shank stays inside the flush face; head bears on the outer arm.
+    y_head = arm_y1_outer + 0.35;
+    translate([0, 0.6, z_slot])
+        rotate([-90, 0, 0])
+            cylinder(h = y_head - 0.6, d = m5_tap - 0.35, $fn = 24);
+    translate([0, y_head, z_slot])
+        rotate([-90, 0, 0])
+            cylinder(h = 3.6, d = 14, $fn = 32);
 }
 
 module assembly_use() {
-    beam_use();
-    translate([ post_spacing / 2, 0, 0]) clamp_use();
-    translate([-post_spacing / 2, 0, 0]) clamp_use();
-    if (!is_dual) {
-        cradle_pair(true);
-    } else if (show_opposed) {
-        cradle_pair(true);
-        mirror([0, 1, 0]) cradle_pair(true);
-    } else if (show_forward) {
-        translate([ df_center, 0, 0]) cradle_pair(false);
-        translate([-df_center, 0, 0]) cradle_pair(false);
-        extension_use();
-        mirror([1, 0, 0]) extension_use();
-    }
-    for (sx = [-1, 1]) {
-        translate([sx * pin_x, rail_yc, beam_z0 - 0.2]) pin_use();
-        translate([sx * stub_pin_x, stub_yc, beam_z0 - 0.2]) pin_use();
-        if (show_forward)
-            translate([sx * ext_pin_x, rail_yc, beam_z0 - 0.2]) pin_use();
-    }
+    post_block_use(-1, false);
+    post_block_use(1, true);
+    tray_use();
+    thumbscrew();
 }
 
 /* ----------------------- print orientation ----------------------- */
 
-module orient_beam() {
-    translate([beam_half, -stub_y0, -beam_z0])
-        beam_use();
+module print_rib(side, outer) {
+    // Sacrificial wall under the free length of the arm so the print STL needs
+    // no slicer support. Snap it off before assembly. Not part of the use frame.
+    post_x = side * half;
+    y0 = outer ? arm_y0_outer : arm_y0;
+    rib_start = block_h / 2 + 8;
+    rib_end = slot_radius - slot_gap / 2 - 6;
+    translate([post_x, 0, z_post])
+        rotate([0, -side * ang, 0])
+            translate([-0.55, 0, rib_start])
+                cube([1.1, y0 + 0.15, rib_end - rib_start]);
 }
 
-module orient_extension() {
-    translate([-beam_half + tongue_len, -beam_y0, -beam_z0])
-        extension_use();
-}
-
-module orient_clamp() {
-    // Roof on the bed, trench open upward, part in the +X/+Y octant.
-    translate([clamp_body_x / 2, foot_y1, roof_top])
-        rotate([180, 0, 0])
-            clamp_use();
+module orient_block(side, outer) {
+    post_x = side * half;
+    // Heel (use Y = 0) on the bed. Arm runs along +X. A snapped-off rib holds the arm up.
+    span = block_w / 2 * cos(ang) + block_h / 2 * sin(ang);
+    translate([arm_length, span, 0])
+        rotate([0, 0, -90])
+            rotate([90, 0, 0])
+                rotate([0, side * ang, 0])
+                    translate([-post_x, 0, -z_post])
+                        union() {
+                            post_block_use(side, outer);
+                            print_rib(side, outer);
+                        }
 }
 
 module orient_tray() {
-    // Back plate on the bed, pocket open upward, phone-bottom toward +Y.
-    // rotate([90,0,0]) maps use Z to -Y; the mirror puts the bottom lip at Y=0.
-    translate([outer_x / 2, 0, -plate_y0])
-        mirror([0, 1, 0])
-            rotate([90, 0, 0])
-                tray_use();
-}
-
-module orient_clip() {
-    translate([foot_len / 2, foot_y1 + pad_t, roof_top])
-        rotate([180, 0, 0])
-            clip_use();
-}
-
-module orient_clip_cabin() {
-    // Mirror of the forward clip so the open side faces the center link.
-    translate([foot_len / 2, -(foot_y0), roof_top])
-        rotate([180, 0, 0])
-            mirror([0, 1, 0])
-                clip_use();
-}
-
-module orient_pin() {
-    translate([4.6, 4.6, 0])
-        pin_use();
+    tray_depth = plate_t + pocket_y + front_lip_t;
+    translate([outer_x / 2, -z_plate0, tray_depth])
+        rotate([-90, 0, 0])
+            tray_use();
 }
 
 module orient_coupon() {
-    translate([clamp_body_x / 2, clamp_body_y / 2, 0])
+    translate([block_w / 2, 0, 0])
         coupon_use();
 }
 
 /* ----------------------- export switch ----------------------- */
 
-if (part == "assembly" || part == "assembly_forward" || part == "assembly_single")
+if (part == "assembly")
     assembly_use();
-else if (part == "beam")
-    orient_beam();
-else if (part == "extension")
-    orient_extension();
-else if (part == "clamp")
-    orient_clamp();
+else if (part == "block")
+    orient_block(-1, false);
+else if (part == "block_outer")
+    orient_block(1, true);
 else if (part == "tray")
     orient_tray();
-else if (part == "clip")
-    orient_clip();
-else if (part == "clip_cabin")
-    orient_clip_cabin();
-else if (part == "pin")
-    orient_pin();
 else if (part == "coupon")
     orient_coupon();
-else if (part == "raw_beam")
-    beam_use();
-else if (part == "raw_clamp")
-    clamp_use();
+else if (part == "raw_block")
+    post_block_use(-1, false);
+else if (part == "raw_block_outer")
+    post_block_use(1, true);
 else if (part == "raw_tray")
     tray_use();
-else if (part == "raw_clip")
-    clip_use();
 else if (part == "raw_coupon")
     coupon_use();
 else if (part == "fitcheck")
     intersection() {
-        beam_use();
+        tray_use();
         union() {
-            translate([ post_spacing / 2, 0, 0]) clamp_use();
-            translate([-post_spacing / 2, 0, 0]) clamp_use();
-            clip_use();
-            mirror([0, 1, 0]) clip_use();
+            post_block_use(-1, false);
+            post_block_use(1, true);
         }
     }
-else if (part == "fitcheck_ext")
+else if (part == "fitcheck_arms")
     intersection() {
-        union() {
-            beam_use();
-            extension_use();
-            mirror([1, 0, 0]) extension_use();
-        }
-        union() {
-            translate([ df_center, 0, 0]) clip_use();
-            translate([-df_center, 0, 0]) clip_use();
-        }
-    }
-else if (part == "fitcheck_tongue")
-    intersection() {
-        beam_use();
-        extension_use();
+        post_block_use(-1, false);
+        post_block_use(1, true);
     }
 else
     assert(false, str("unknown part: ", part));

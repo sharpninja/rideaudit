@@ -6,7 +6,7 @@ id: ART-RIDE-MOUNT-001
 kind: mechanical-3d
 format: openscad
 version: "1.0.0"
-title: Dual-phone headrest mounting bracket
+title: Headrest phone mount (single cradle, two post arms)
 license: GPL-2.0
 path: artifacts/hardware/headrest-phone-mount/
 status: geometry-verified
@@ -30,20 +30,24 @@ parameters:
   - post_spacing_max
   - post_spacing
   - post_diameter
+  - arm_length
+  - slot_span
+  - slot_gap
+  - slot_radius
+  - hole_pitch
   - phone_width_min
   - phone_width_max
   - phone_length_min
   - phone_length_max
   - phone_thickness_max
-  - clamp_depth
   - camera_clearance
-  - dual_cradle
-  - cradle_layout
 physicalRelease: not-claimed
 notes: >
-  Clamps to two vertical headrest posts and holds one or two landscape phones.
-  Default layout is opposed (road + cabin). Dual-forward uses the beam extensions.
+  Two post blocks, one per headrest post. The post passes through the block.
+  Each block has a 200 mm arm. Both arms enter one shared landscape cradle.
+  A thumbscrew passes through both width-spanning slots into a tapped hole
+  on the solid back. Blocks and cradle bear flush on the headrest face.
   Geometry is verified by verify-geometry.py. Not crash-rated. Not an on-vehicle
   release until the operator checklist in verification/vehicle-fit-checklist.md
-  is completed. Supports RideAudit dual-phone capture; it does not implement
+  is completed. Supports RideAudit phone capture; it does not implement
   the capture software.

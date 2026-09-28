@@ -9,54 +9,54 @@ License: GPL-2.0
 
 | Check | Value |
 | --- | --- |
-| Post spacing covered | 110 – 170 mm center-to-center |
+| Post spacing the two blocks can join | 110 – 170 mm center-to-center |
+| Assembly preview spacing | 140 mm |
 | Post bore | 14.40 mm (post 14 mm + clearance) |
-| Snap throat | 10.64 mm |
-| Beam length (print X) | 209.4 mm |
+| Arm length | 200 mm from the post axis |
+| Arm section | 22 × 5 mm |
+| Slot across the arm width | 16 mm span, 8 mm opening, at 185 mm radius |
+| Threaded-hole grid | 5 × 3 at 10 mm, M5 tap-drill 4.2 mm |
 | Phone pocket (L × short side × thickness) | 173.6 × 85.8 × 12.5 mm |
 | Phone envelope | length 140–172 mm, short side 70–85 mm, thickness ≤ 12 mm |
 | Camera window | 18 mm square, both upper corners, through the back plate |
-| Projection from post center, each face | 57.9 mm |
-| Cradle height above the clamp bottom | 89.8 mm |
-| Default cradles | 2 (layout 0 = opposed) |
+| Stand-off from the headrest face | 22.4 mm |
+| Assembly height above the block bottom | 307.0 mm |
+| Cradles | 1 shared landscape holder |
 
 ## Print meshes
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 5556 | 299269 | 209.4 × 115.8 × 89.8 |
-| `headrest-phone-mount-dual-forward.stl` | 6028 | 301490 | 368.8 × 87.7 × 89.8 |
-| `beam.stl` | 756 | 42591 | 209.4 × 59.6 × 8.0 |
-| `beam-extension.stl` | 172 | 3328 | 31.3 × 16.0 × 8.0 |
-| `post-clamp.stl` | 848 | 12232 | 22.0 × 44.3 × 35.0 |
-| `phone-cradle.stl` | 520 | 101882 | 180.4 × 89.8 × 20.5 |
-| `cradle-clip.stl` | 500 | 13859 | 62.0 × 27.2 × 18.5 |
-| `cradle-clip-cabin.stl` | 500 | 13859 | 62.0 × 27.2 × 18.5 |
-| `stop-pin.stl` | 284 | 240 | 9.0 × 9.0 × 11.4 |
-| `fit-coupon.stl` | 450 | 4657 | 22.0 × 22.0 × 18.0 |
+| `headrest-phone-mount.stl` | 4004 | 281198 | 180.4 × 22.4 × 307.0 |
+| `post-block.stl` | 976 | 45202 | 225.3 × 48.5 × 22.4 |
+| `post-block-outer.stl` | 976 | 46068 | 225.3 × 48.5 × 22.4 |
+| `phone-cradle.stl` | 1864 | 192107 | 180.4 × 159.8 × 21.5 |
+| `fit-coupon.stl` | 528 | 11558 | 36.0 × 22.4 × 18.0 |
 
 ## Probe results
 
 - OpenSCAD assertions accepted the default parameters.
-- Opposed clamps and clips do not intersect the beam.
-- Dual-forward clips do not intersect the beam or extensions.
-- Extension tongue fits the beam pocket with clearance.
+- Arms do not intersect each other.
+- Arms sit in the receiver and do not intersect the cradle.
+- Arms meet between the posts from 110 mm to 170 mm centers.
+- Post blocks and the cradle share the Y=0 headrest face.
 - air  max-phone center is in the pocket
 - air  max-phone upper corner is not blocked
-- solid  back plate is present
-- air  camera window is open through the back plate
+- solid  back plate is present behind the phone
+- air  camera window is open
 - air  opposite camera window is open
 - solid  back plate remains between the camera windows
 - solid  front retention lip is present
 - air  front of the cradle stays open above the lip
-- air  tray screw hole is clear
-- solid  main rail exists at center
-- solid  center link joins the two rails
-- solid  rail reaches post_spacing_max
-- solid  rail reaches post_spacing_min
-- air  clip channel clears the rail
-- solid  clip retains the outer rail face
-- air  clamp bore is open
-- air  coupon throat opens to the outside
-- solid  coupon jaw surrounds the bore
+- air  center threaded hole is open through the solid back
+- solid  back stays solid between threaded holes
+- air  neighbor threaded hole is open
+- air  threaded hole above the center is open
+- air  post bore passes through the block
+- solid  flush heel is solid behind the bore
+- air  inner arm slot is open on the screw axis
+- solid  inner arm is solid beside the slot
+- air  outer arm slot is open on the same screw axis
+- air  fit coupon bore is open
+- solid  fit coupon wall surrounds the bore
 - air  minimum-length phone corner fits in the pocket
