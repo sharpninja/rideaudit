@@ -106,6 +106,7 @@ public sealed class AdmissionCoordinator
     private readonly IClock _clock;
     private readonly AttestationArchive _archive;
     private readonly string _policyVersion;
+    private readonly DocumentedFixtureL2Calendar? _l2;
     private readonly Dictionary<string, ChunkUpload> _uploads = new(StringComparer.Ordinal);
 
     public AdmissionCoordinator(
@@ -122,7 +123,8 @@ public sealed class AdmissionCoordinator
         AppendOnlyAccessLog access,
         IClock clock,
         AttestationArchive archive,
-        string policyVersion)
+        string policyVersion,
+        DocumentedFixtureL2Calendar? l2 = null)
     {
         _identity = identity;
         _play = play;
@@ -138,6 +140,7 @@ public sealed class AdmissionCoordinator
         _clock = clock;
         _archive = archive;
         _policyVersion = policyVersion;
+        _l2 = l2;
     }
 
     public IReadOnlyList<string> FailureAudit => _journal.FailureAudit;
@@ -272,8 +275,10 @@ public sealed class AdmissionCoordinator
         AnchorAttempt anchored;
         if (ChainProfileIds.IsPrimaryOts(profile.ChainProfile))
             anchored = _anchoring.Anchor(_ots, anchorRequest);
-        else if (profile.ChainProfile is ChainProfileIds.EthL2Base or ChainProfileIds.EthL2Polygon or ChainProfileIds.DualBtcOtsL2)
-            anchored = _anchoring.Anchor(new EthL2Anchor(profile.ChainProfile), anchorRequest);
+        else if (profile.ChainProfile is ChainProfileIds.EthL2Base or ChainProfileIds.EthL2Polygon)
+            anchored = _anchoring.Anchor(new EthL2Anchor(profile.ChainProfile, _l2), anchorRequest);
+        else if (profile.ChainProfile == ChainProfileIds.DualBtcOtsL2)
+            anchored = _anchoring.Anchor(new DualProfileAnchor(_ots, new EthL2Anchor(ChainProfileIds.EthL2Base, _l2)), anchorRequest);
         else
             throw new RideAuditException(ErrorCodes.ChainProfileUnsupported, "Chain profile is not configured.");
 

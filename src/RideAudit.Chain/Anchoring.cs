@@ -157,27 +157,43 @@ public static class AnchorProofVerifier
             mismatches.Add("Live Bitcoin metadata was claimed without a verified OpenTimestamps upgrade.");
 
         if (string.Equals(envelope.ProofSource, "documented-fixture", StringComparison.Ordinal))
+            CheckFixture(envelope, mismatches, FixtureChainIds.BtcOts, "RIDEOTS-FIXTURE-1", digest, "Fixture transaction reference looks like a raw Bitcoin txid.");
+        else if (string.Equals(envelope.ProofSource, "documented-fixture-l2", StringComparison.Ordinal))
         {
-            if (!string.Equals(envelope.ChainId, "fixture-btc-ots", StringComparison.Ordinal))
-                mismatches.Add("Fixture proof chain id is not fixture-btc-ots.");
-            var tx = envelope.TransactionReference ?? "";
-            if (!tx.StartsWith("fixture:", StringComparison.Ordinal))
-                mismatches.Add("Fixture transaction reference is not fixture-scoped.");
-            if (System.Text.RegularExpressions.Regex.IsMatch(tx, "^[0-9a-fA-F]{64}$"))
-                mismatches.Add("Fixture transaction reference looks like a raw Bitcoin txid.");
-            var proof = envelope.ProofBytes.ToStringUtf8();
-            if (!proof.Contains("RIDEOTS-FIXTURE-1", StringComparison.Ordinal)
-                || !proof.Contains(Ids.Hex(digest), StringComparison.Ordinal))
-                mismatches.Add("Fixture proof bytes do not commit to the receipt digest.");
-            if (string.IsNullOrWhiteSpace(envelope.Disclaimer))
-                mismatches.Add("Fixture disclaimer is missing.");
+            var expected = envelope.ProfileId switch
+            {
+                ChainProfileIds.EthL2Base => FixtureChainIds.EthL2Base,
+                ChainProfileIds.EthL2Polygon => FixtureChainIds.EthL2Polygon,
+                _ => ""
+            };
+            if (expected.Length == 0)
+                mismatches.Add("L2 fixture profile is not Base or Polygon.");
+            else
+                CheckFixture(envelope, mismatches, expected, "RIDEL2-FIXTURE-1", digest, "Fixture transaction reference looks like a raw chain transaction id.");
         }
+        else if (string.Equals(envelope.ProofSource, "documented-fixture-dual", StringComparison.Ordinal))
+            CheckFixture(envelope, mismatches, FixtureChainIds.Dual, "RIDEDUAL-FIXTURE-1", digest, "Fixture transaction reference looks like a raw chain transaction id.");
         else if (!string.Equals(envelope.Status, "failed", StringComparison.Ordinal))
-        {
             mismatches.Add("Unsupported proof source.");
-        }
 
         var confirmed = mismatches.Count == 0 && string.Equals(envelope.Status, "upgraded", StringComparison.Ordinal);
         return new AnchorVerification(confirmed, payloadMatch, digestMatch, live, mismatches);
+    }
+
+    private static void CheckFixture(AnchorProofEnvelope envelope, List<string> mismatches, string expectedChainId, string magic, byte[] digest, string rawIdMessage)
+    {
+        if (!string.Equals(envelope.ChainId, expectedChainId, StringComparison.Ordinal))
+            mismatches.Add("Fixture proof chain id is not " + expectedChainId + ".");
+        var tx = envelope.TransactionReference ?? "";
+        if (!tx.StartsWith("fixture:", StringComparison.Ordinal))
+            mismatches.Add("Fixture transaction reference is not fixture-scoped.");
+        if (System.Text.RegularExpressions.Regex.IsMatch(tx, "^[0-9a-fA-F]{64}$")
+            || System.Text.RegularExpressions.Regex.IsMatch(tx, "^0x[0-9a-fA-F]{64}$"))
+            mismatches.Add(rawIdMessage);
+        var proof = envelope.ProofBytes.ToStringUtf8();
+        if (!proof.Contains(magic, StringComparison.Ordinal) || !proof.Contains(Ids.Hex(digest), StringComparison.Ordinal))
+            mismatches.Add("Fixture proof bytes do not commit to the receipt digest.");
+        if (string.IsNullOrWhiteSpace(envelope.Disclaimer))
+            mismatches.Add("Fixture disclaimer is missing.");
     }
 }

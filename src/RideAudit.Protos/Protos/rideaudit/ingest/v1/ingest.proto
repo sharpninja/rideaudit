@@ -2,8 +2,9 @@
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
 // Contract-Version: 0.2.0
-// S6 scaffold. Driver-provided privacy-export ZIP only.
-// This contract defines no Lyft private or undocumented API (FR-RIDE-011).
+// FR-RIDE-001 through FR-RIDE-006, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013.
+// Driver-provided files and a partnership-gated documented status connector only.
+// This contract defines no private or undocumented ride-hail API.
 syntax = "proto3";
 
 package rideaudit.ingest.v1;
@@ -12,15 +13,66 @@ option csharp_namespace = "RideAudit.Protos.Ingest.V1";
 
 service Ingest {
   rpc IngestPrivacyExport (IngestPrivacyExportRequest) returns (IngestPrivacyExportResponse);
+  rpc IngestThirdParty (IngestThirdPartyRequest) returns (IngestPrivacyExportResponse);
+  rpc RecordManualScore (RecordManualScoreRequest) returns (IngestPrivacyExportResponse);
+  rpc SetPartnership (SetPartnershipRequest) returns (PartnershipStatus);
+  rpc IngestConciergeStatus (IngestConciergeStatusRequest) returns (IngestPrivacyExportResponse);
 }
 
 message IngestPrivacyExportRequest {
   bytes zip_bytes = 1;
   string provenance_tag = 2;
   string source_label = 3;
+  string consent_statement = 4;
+  string jurisdiction = 5;
+  string purpose = 6;
+  bool consent_granted = 7;
 }
 
 message IngestPrivacyExportResponse {
   string import_id = 1;
   string status = 2;
+  string content_hash_hex = 3;
+  int32 version = 4;
+  string gap_notice = 5;
+  string provenance_tag = 6;
+}
+
+message IngestThirdPartyRequest {
+  bytes csv_bytes = 1;
+  string source_name = 2;
+  bool consent_granted = 3;
+  string consent_statement = 4;
+  string jurisdiction = 5;
+  string purpose = 6;
+}
+
+message RecordManualScoreRequest {
+  int64 observed_unix_millis = 1;
+  int32 overall = 2;
+  int32 gentle_braking = 3;
+  int32 smooth_steering = 4;
+  int32 phone_mount = 5;
+  int32 speed_vs_area = 6;
+  bool consent_granted = 7;
+  string consent_statement = 8;
+  string jurisdiction = 9;
+  string purpose = 10;
+}
+
+message SetPartnershipRequest {
+  bool approved = 1;
+}
+
+message PartnershipStatus {
+  bool approved = 1;
+  string notice = 2;
+}
+
+message IngestConciergeStatusRequest {
+  string ride_id = 1;
+  bool consent_granted = 2;
+  string consent_statement = 3;
+  string jurisdiction = 4;
+  string purpose = 5;
 }

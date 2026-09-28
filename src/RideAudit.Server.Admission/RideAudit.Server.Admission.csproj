@@ -15,6 +15,10 @@
     <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
     <ProjectReference Include="..\RideAudit.Seal\RideAudit.Seal.csproj" />
     <ProjectReference Include="..\RideAudit.Sec\RideAudit.Sec.csproj" />
+    <ProjectReference Include="..\RideAudit.Anal\RideAudit.Anal.csproj" />
+    <ProjectReference Include="..\RideAudit.Ingest\RideAudit.Ingest.csproj" />
+    <ProjectReference Include="..\RideAudit.Privacy\RideAudit.Privacy.csproj" />
+    <ProjectReference Include="..\RideAudit.Server.Counsel\RideAudit.Server.Counsel.csproj" />
     <ProjectReference Include="..\RideAudit.Server.Identity\RideAudit.Server.Identity.csproj" />
   </ItemGroup>
 </Project>

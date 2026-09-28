@@ -49,6 +49,14 @@ public static class ChainProfileIds
         string.Equals(profile, BtcOts, StringComparison.Ordinal);
 }
 
+public static class FixtureChainIds
+{
+    public const string BtcOts = "fixture-btc-ots";
+    public const string EthL2Base = "fixture-eth-l2-base";
+    public const string EthL2Polygon = "fixture-eth-l2-polygon";
+    public const string Dual = "fixture-dual-btc-ots+l2";
+}
+
 public enum CustodyState
 {
     LocalSealedPending = 1,

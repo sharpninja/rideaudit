@@ -1,12 +1,17 @@
 using System.Security.Authentication;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using RideAudit.Anal;
 using RideAudit.Attest;
 using RideAudit.Chain;
+using RideAudit.Chain.EthL2;
 using RideAudit.Chain.OpenTimestamps;
 using RideAudit.Contracts;
 using RideAudit.Escrow;
+using RideAudit.Ingest;
+using RideAudit.Privacy;
 using RideAudit.Seal;
 using RideAudit.Sec;
+using RideAudit.Server.Counsel;
 using RideAudit.Server.Identity;
 
 namespace RideAudit.Server.Admission;
@@ -16,6 +21,7 @@ public sealed class AdmissionServerOptions
     public string EnvironmentName { get; init; } = "Production";
     public bool AllowInsecureDevHttp { get; init; }
     public bool UseFixtureCalendar { get; init; }
+    public bool UseFixtureL2 { get; init; }
     public bool UseFixturePlayIntegrity { get; init; }
     public bool EdgeTerminatesTls { get; init; }
     public string? CertificatePath { get; init; }
@@ -32,6 +38,7 @@ public sealed class AdmissionServerOptions
             EnvironmentName = environment,
             AllowInsecureDevHttp = Flag("RIDEAUDIT_ALLOW_INSECURE_DEV_HTTP"),
             UseFixtureCalendar = string.Equals(Environment.GetEnvironmentVariable("RIDEAUDIT_OTS_CALENDAR"), "documented-fixture", StringComparison.Ordinal),
+            UseFixtureL2 = string.Equals(Environment.GetEnvironmentVariable("RIDEAUDIT_L2_CALENDAR"), "documented-fixture", StringComparison.Ordinal),
             UseFixturePlayIntegrity = string.Equals(Environment.GetEnvironmentVariable("RIDEAUDIT_PLAY_INTEGRITY"), "fixture", StringComparison.Ordinal),
             EdgeTerminatesTls = Flag("RIDEAUDIT_EDGE_TLS"),
             CertificatePath = Environment.GetEnvironmentVariable("RIDEAUDIT_TLS_CERT_PATH"),
@@ -47,6 +54,8 @@ public sealed class AdmissionServerOptions
             throw new InvalidOperationException("Production refuses insecure HTTP.");
         if (production && UseFixtureCalendar)
             throw new InvalidOperationException("Production refuses the documented OTS fixture calendar.");
+        if (production && UseFixtureL2)
+            throw new InvalidOperationException("Production refuses the documented L2 fixture calendar.");
         if (production && UseFixturePlayIntegrity)
             throw new InvalidOperationException("Production refuses the Play Integrity fixture decoder.");
         if (production && string.IsNullOrWhiteSpace(CertificatePath) && !EdgeTerminatesTls)
@@ -88,6 +97,13 @@ public sealed class AdmissionComposition
     public required IElapsedTimer Timer { get; init; }
     public required AlgorithmRegistry Algorithms { get; init; }
     public required CollectionBoundarySealer Sealer { get; init; }
+    public required DocumentedFixtureL2Calendar? L2 { get; init; }
+    public required RoleDirectory Roles { get; init; }
+    public required NormalizedStore Imports { get; init; }
+    public required IngestPipeline Ingest { get; init; }
+    public required AnalysisService Analysis { get; init; }
+    public required CounselDesk Counsel { get; init; }
+    public required PrivacyDesk Privacy { get; init; }
 }
 
 public static class AdmissionHost
@@ -112,6 +128,7 @@ public static class AdmissionHost
             : new FailClosedPlayIntegrityDecoder();
         var play = new PlayIntegrityVerifier(decoder, allowlist, clockService);
         var calendar = options.UseFixtureCalendar ? new DocumentedFixtureOtsCalendar() : null;
+        var l2 = options.UseFixtureL2 ? new DocumentedFixtureL2Calendar() : null;
         var ots = new BtcOtsAnchor(calendar);
         var latency = new LatencyMonitor();
         var elapsed = timer ?? new StopwatchTimer();
@@ -125,7 +142,15 @@ public static class AdmissionHost
         var alerts = new OperatorAlertSink();
         var archive = new AttestationArchive();
         var admission = new AdmissionCoordinator(
-            identity, play, ots, anchoring, hsm, journal, abuse, alerts, logs, redactor, access, clockService, archive, options.PolicyVersion);
+            identity, play, ots, anchoring, hsm, journal, abuse, alerts, logs, redactor, access, clockService, archive, options.PolicyVersion, l2);
+        var imports = new NormalizedStore();
+        var keys = new ImportKeyRing();
+        var roles = new RoleDirectory();
+        var ingest = new IngestPipeline(imports, keys, clockService, new NoNetworkConciergeSource());
+        var analysis = new AnalysisService(imports);
+        var recordSource = new JournalRecordSource(journal);
+        var counsel = new CounselDesk(recordSource);
+        var privacy = new PrivacyDesk(imports, keys, new LegalHoldRegistry(), access, clockService, recordSource);
         var algorithms = new AlgorithmRegistry(RideAuditPolicy.AlgorithmId);
         var sealer = new CollectionBoundarySealer(play, hsm, hsm, clockService, algorithms);
         return new AdmissionComposition
@@ -148,7 +173,14 @@ public static class AdmissionHost
             Anchoring = anchoring,
             Timer = elapsed,
             Algorithms = algorithms,
-            Sealer = sealer
+            Sealer = sealer,
+            L2 = l2,
+            Roles = roles,
+            Imports = imports,
+            Ingest = ingest,
+            Analysis = analysis,
+            Counsel = counsel,
+            Privacy = privacy
         };
     }
 
@@ -178,7 +210,7 @@ public static class AdmissionHost
         app.MapGrpcService<IdentityGrpcService>();
         app.MapGrpcService<AdmissionGrpcService>();
         app.MapGrpcService<EscrowGrpcService>();
-        app.MapGrpcService<DeferredGrpcService>();
+        app.MapGrpcService<CounselGrpcService>();
         app.MapGrpcService<IngestGrpcService>();
         app.MapGrpcService<PrivacyGrpcService>();
         app.MapGet("/", () => Results.Text(

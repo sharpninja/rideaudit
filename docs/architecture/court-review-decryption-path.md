@@ -4,7 +4,7 @@ Status: server path for PLAN-RIDEAUDIT-001-SERVER S4.
 License: GPL-2.0-only.  
 FR-RIDE-020, FR-RIDE-024, FR-RIDE-028.
 
-This document describes the implemented server path. It is not a viewer UI (that remains deferred with S5) and it is not legal advice.
+This document describes the implemented server path. The counsel verification report repeats these proves / does-not-prove statements and does not decrypt. A desktop viewer UI is outside this server plan. This document is not legal advice.
 
 ## Custodians
 

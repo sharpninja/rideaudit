@@ -68,6 +68,8 @@ public sealed class CustodyJournal
     public CustodyRecord? FindBySealedRecord(string sealedRecordId) =>
         _byId.Values.FirstOrDefault(record => record.SealedRecordId == sealedRecordId);
 
+    public IReadOnlyList<CustodyRecord> Snapshot() => _byId.Values.ToArray();
+
     public CustodyRecord CreatePending(
         string tenantId,
         string driverId,

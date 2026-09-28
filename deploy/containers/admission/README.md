@@ -30,16 +30,8 @@ The process serves gRPC over HTTP/2. Clients need cleartext HTTP/2 support. A br
 docker build -f deploy/containers/admission/Dockerfile -t rideaudit-admission:local .
 ```
 
-The image sets `ASPNETCORE_ENVIRONMENT=Production` and `RIDEAUDIT_EDGE_TLS=true`. The edge must terminate TLS 1.2 or newer. The process refuses to start in Production if fixture calendars or fixture Play Integrity decoders are enabled, and it refuses Production HTTP without either a certificate path or the edge-TLS acknowledgement.
+The image sets `ASPNETCORE_ENVIRONMENT=Production` and `RIDEAUDIT_EDGE_TLS=true`. The edge must terminate TLS 1.2 or newer. The process refuses to start in Production if fixture calendars (OTS or L2) or fixture Play Integrity decoders are enabled, and it refuses Production HTTP without either a certificate path or the edge-TLS acknowledgement.
 
-## Deferred slices
+## Counsel, ingest, and privacy
 
-S1 through S4 are implemented in this tree (protos, admission, identity, seal store, documented OTS fixture, M-of-N escrow). These remain deferred:
-
-- S5 counsel bundle and analysis UI: `src/RideAudit.Server.Counsel`, `src/RideAudit.Anal`. The counsel gRPC method returns UNIMPLEMENTED.
-- S6 ingest pipelines: `src/RideAudit.Ingest`. No undocumented Lyft private API is called. The ingest RPC returns UNIMPLEMENTED.
-- S7 privacy, DSAR, retention, legal hold: `src/RideAudit.Privacy`. Deletion is not performed.
-- S8 live Base, Polygon, and dual-anchor profiles: selecting them fails closed and writes no transaction metadata. `src/RideAudit.Chain.EthL2`.
-- S9 integrated acceptance and distribution receipts.
-
-Access logs for vehicle list and admission status are append-only. Full RBAC and geolocation masking remain in S7.
+Those RPCs are on this same host. See [../counsel/README.md](../counsel/README.md). Documented L2 fixtures are opt-in via `RIDEAUDIT_L2_CALENDAR=documented-fixture` and are not live Base, Polygon, or Bitcoin transactions. Dev, Staging, and Prod CD receipts are `not-run`.

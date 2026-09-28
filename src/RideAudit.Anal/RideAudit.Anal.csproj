@@ -2,4 +2,9 @@
   <PropertyGroup>
     <RootNamespace>RideAudit.Anal</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Ingest\RideAudit.Ingest.csproj" />
+    <ProjectReference Include="..\RideAudit.Sec\RideAudit.Sec.csproj" />
+  </ItemGroup>
 </Project>

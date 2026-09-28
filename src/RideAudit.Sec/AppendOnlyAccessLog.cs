@@ -34,15 +34,55 @@ public static class Roles
     public const string Subject = "subject";
     public const string Auditor = "auditor";
     public const string Admin = "admin";
+    public const string Counsel = "counsel";
 }
 
 /// <summary>
-/// S7 scaffold for precise-location least privilege. RideAudit public admission does not
-/// return coordinates. The checker fails closed for the subject role.
+/// FR-RIDE-202. Precise geolocation is limited to auditor, admin, and counsel.
+/// The subject role receives a masked coordinate.
 /// </summary>
 public static class LocationAccessPolicy
 {
     public static bool MayViewPreciseLocation(string role) =>
-        string.Equals(role, Roles.Auditor, StringComparison.Ordinal)
-        || string.Equals(role, Roles.Admin, StringComparison.Ordinal);
+        role is Roles.Auditor or Roles.Admin or Roles.Counsel;
+}
+
+public sealed class RoleDirectory
+{
+    private readonly Dictionary<string, HashSet<string>> _granted = new(StringComparer.Ordinal);
+
+    public void GrantBootstrap(string driverId, string role)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(driverId);
+        EnsureKnown(role);
+        if (!_granted.TryGetValue(driverId, out var set))
+        {
+            set = new HashSet<string>(StringComparer.Ordinal);
+            _granted[driverId] = set;
+        }
+        set.Add(role);
+    }
+
+    public void Grant(string actorRole, string driverId, string role)
+    {
+        if (!string.Equals(actorRole, Roles.Admin, StringComparison.Ordinal))
+            throw new RideAuditException(ErrorCodes.AuthForbidden, "Only an admin can grant roles.");
+        GrantBootstrap(driverId, role);
+    }
+
+    public bool Is(string driverId, string role)
+    {
+        if (string.Equals(role, Roles.Subject, StringComparison.Ordinal))
+            return true;
+        return _granted.TryGetValue(driverId, out var set) && set.Contains(role);
+    }
+
+    public static bool IsElevated(string role) =>
+        role is Roles.Admin or Roles.Auditor or Roles.Counsel;
+
+    private static void EnsureKnown(string role)
+    {
+        if (role is not (Roles.Subject or Roles.Auditor or Roles.Admin or Roles.Counsel))
+            throw new RideAuditException(ErrorCodes.ValidationFailed, "Role is not recognized.");
+    }
 }

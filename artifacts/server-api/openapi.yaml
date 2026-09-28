@@ -19,6 +19,9 @@ info:
     and sealed evidence submission. Ingest is fail-closed and never accepts
     plaintext video or sensor payloads. The server does not decrypt at ingest.
 
+    Counsel, ingest, and privacy operations are defined only in src/RideAudit.Protos.
+    This companion does not list them and is not their contract.
+
     License: GPL-2.0-only
   license:
     name: GPL-2.0

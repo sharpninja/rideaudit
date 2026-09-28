@@ -2,4 +2,8 @@
   <PropertyGroup>
     <RootNamespace>RideAudit.Ingest</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Sec\RideAudit.Sec.csproj" />
+  </ItemGroup>
 </Project>

@@ -2,8 +2,8 @@
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
 // Contract-Version: 0.2.0
-// S5 scaffold. The server returns UNIMPLEMENTED until the counsel slice lands.
-// FR-RIDE-037, FR-RIDE-038. No aggregation may replace per-record custody.
+// FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-020, FR-RIDE-021, FR-RIDE-037, FR-RIDE-038.
+// A bundle lists per-record custody. It does not replace or merge sealed records.
 syntax = "proto3";
 
 package rideaudit.counsel.v1;
@@ -12,6 +12,10 @@ option csharp_namespace = "RideAudit.Protos.Counsel.V1";
 
 service Counsel {
   rpc BuildMultiDriverBundle (BuildMultiDriverBundleRequest) returns (MultiDriverBundle);
+  rpc AnalyzeCoverage (AnalyzeCoverageRequest) returns (CoverageMatrix);
+  rpc AnalyzeOnlineHours (AnalyzeOnlineHoursRequest) returns (OnlineHoursAudit);
+  rpc AnalyzeIncidentWindow (AnalyzeIncidentWindowRequest) returns (IncidentReport);
+  rpc BuildVerificationReport (VerificationReportRequest) returns (VerificationReport);
 }
 
 message BuildMultiDriverBundleRequest {
@@ -25,9 +29,75 @@ message PerRecordVerification {
   string vehicle_id = 3;
   string collector_id = 4;
   bool independent_custody = 5;
+  string content_hash_hex = 6;
+  string custody_state = 7;
+  bool hash_matches = 8;
+  string anchor_status = 9;
 }
 
 message MultiDriverBundle {
   string bundle_id = 1;
   repeated PerRecordVerification records = 2;
+  string case_id = 3;
+  bool aggregation_replaces_records = 4;
+}
+
+message AnalyzeCoverageRequest {
+  string driver_id = 1;
+  string import_id = 2;
+}
+
+message CoverageCell {
+  string signal = 1;
+  bool collected_by_source = 2;
+  bool available_to_auditor = 3;
+  bool missing = 4;
+  string gap_notice = 5;
+}
+
+message CoverageMatrix {
+  string driver_id = 1;
+  repeated CoverageCell cells = 2;
+}
+
+message AnalyzeOnlineHoursRequest {
+  string driver_id = 1;
+  string jurisdiction = 2;
+  int32 max_hours = 3;
+  int32 break_hours = 4;
+}
+
+message OnlineHoursAudit {
+  bool hours_data_present = 1;
+  repeated string violations = 2;
+  string policy = 3;
+}
+
+message AnalyzeIncidentWindowRequest {
+  string driver_id = 1;
+  int64 start_unix_millis = 2;
+  int64 end_unix_millis = 3;
+}
+
+message IncidentReport {
+  int32 trip_count = 1;
+  int32 score_count = 2;
+  string gap_notice = 3;
+  repeated string lines = 4;
+}
+
+message VerificationReportRequest {
+  string submission_id = 1;
+  string case_id = 2;
+}
+
+message VerificationReport {
+  string submission_id = 1;
+  bool hash_matches = 2;
+  bool anchor_confirmed = 3;
+  bool decryption_performed = 4;
+  string proves = 5;
+  string does_not_prove = 6;
+  string anchor_status = 7;
+  string transaction_reference = 8;
 }

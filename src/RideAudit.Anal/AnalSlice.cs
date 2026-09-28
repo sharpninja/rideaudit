@@ -3,6 +3,6 @@ namespace RideAudit.Anal;
 public static class AnalSlice
 {
     public const string Phase = "S5";
-    public const string State = "deferred";
-    public const string Rule = "Analysis runs only on an authorized expiring working copy, never on public ingest.";
+    public const string State = "implemented";
+    public const string Rule = "Normalized import analysis does not decrypt sealed admissions. Court plaintext requires an authorized expiring working copy, never public ingest.";
 }

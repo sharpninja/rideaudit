@@ -439,11 +439,6 @@ public sealed class EscrowGrpcService : ProtoEscrow.EscrowBase
 
 public static class CourtReviewStatements
 {
-    public const string Proves =
-        "An upgraded custody anchor proves that the receipt-core digest was committed under the stated proof source. " +
-        "It binds the sealed-payload content hash, public key id, collector, time, provenance, and attestation hash that were inside the receipt core.";
-
-    public const string DoesNotProve =
-        "The receipt does not prove the plaintext contents, the truth of sensor readings, identity of persons depicted, " +
-        "or that a fixture calendar is a live Bitcoin transaction. Decryption still requires a court-authorized M-of-N release into an expiring working copy.";
+    public const string Proves = RideAudit.Server.Counsel.CourtReviewStatements.Proves;
+    public const string DoesNotProve = RideAudit.Server.Counsel.CourtReviewStatements.DoesNotProve;
 }

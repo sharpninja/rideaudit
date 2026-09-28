@@ -28,13 +28,14 @@ public sealed class ServerWorld
     public ScriptedTimer Timer { get; }
     public FakeClock Clock => App.Clock ?? throw new InvalidOperationException("Test world requires a fake clock.");
 
-    public static ServerWorld Create(bool fixtureCalendar = true, bool fixturePlay = true, ScriptedTimer? timer = null)
+    public static ServerWorld Create(bool fixtureCalendar = true, bool fixturePlay = true, ScriptedTimer? timer = null, bool fixtureL2 = false)
     {
         var options = new AdmissionServerOptions
         {
             EnvironmentName = "Development",
             AllowInsecureDevHttp = true,
             UseFixtureCalendar = fixtureCalendar,
+            UseFixtureL2 = fixtureL2,
             UseFixturePlayIntegrity = fixturePlay,
             EdgeTerminatesTls = false
         };

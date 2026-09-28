@@ -1,4 +1,5 @@
 using RideAudit.Chain;
+using RideAudit.Chain.EthL2;
 using RideAudit.Chain.OpenTimestamps;
 using RideAudit.Contracts;
 using RideAudit.Server.Admission;
@@ -91,6 +92,72 @@ public class TestRide014CustodyReceipt
         Assert.False(verification.Confirmed);
         Assert.Contains(verification.Mismatches, mismatch => mismatch.Contains("digest", StringComparison.OrdinalIgnoreCase));
     }
+
+    [Fact]
+    [Trait("TEST", "TEST-RIDE-014")]
+    [Trait("FR", "FR-RIDE-212")]
+    [Trait("AC", "AC-RIDE-212-003")]
+    public void Documented_l2_and_dual_fixtures_admit_without_live_transaction_ids()
+    {
+        foreach (var profile in new[] { ChainProfileIds.EthL2Base, ChainProfileIds.EthL2Polygon, ChainProfileIds.DualBtcOtsL2 })
+        {
+            var world = ServerWorld.Create(fixtureL2: true);
+            var driver = world.Register();
+            var vehicle = world.AddVehicle(driver);
+            world.PutProfile(driver, vehicle.VehicleId, profile, valid: true);
+            var session = world.OpenSession(driver, vehicle.VehicleId);
+            var ready = world.SealReady(driver, session);
+            var outcome = world.Submit(driver, ready.Package, ready.Token, ready.Nonce);
+            Assert.True(outcome.Admitted);
+            Assert.NotNull(outcome.Anchor);
+            Assert.StartsWith("fixture:", outcome.Anchor!.TransactionReference, StringComparison.Ordinal);
+            Assert.False(outcome.Anchor.LiveBitcoinMetadata);
+            Assert.DoesNotMatch("^(0x)?[0-9a-fA-F]{64}$", outcome.Anchor.TransactionReference);
+            Assert.DoesNotMatch("^[0-9a-fA-F]{64}$", outcome.Anchor.TransactionReference);
+        }
+    }
+
+    [Fact]
+    [Trait("TEST", "TEST-RIDE-014")]
+    [Trait("FR", "FR-RIDE-212")]
+    public void Unconfigured_polygon_and_dual_profiles_write_no_transaction_reference()
+    {
+        foreach (var profile in new[] { ChainProfileIds.EthL2Polygon, ChainProfileIds.DualBtcOtsL2 })
+        {
+            var world = ServerWorld.Create();
+            var driver = world.Register();
+            var vehicle = world.AddVehicle(driver);
+            world.PutProfile(driver, vehicle.VehicleId, profile, valid: true);
+            var session = world.OpenSession(driver, vehicle.VehicleId);
+            var ready = world.SealReady(driver, session);
+            var ex = Assert.Throws<RideAuditException>(() => world.Submit(driver, ready.Package, ready.Token, ready.Nonce));
+            var record = world.App.Journal.Find(ex.SubmissionId!);
+            Assert.NotEqual(CustodyState.Admitted, record!.State);
+            Assert.False(record.Anchor!.HasTransactionReference);
+            Assert.False(record.Anchor.LiveBitcoinMetadata);
+            Assert.Equal(ready.Package.Ciphertext, record.Ciphertext);
+        }
+    }
+
+    [Fact]
+    [Trait("TEST", "TEST-RIDE-014")]
+    [Trait("FR", "FR-RIDE-212")]
+    public void Dual_anchor_omits_transaction_metadata_when_the_l2_leg_fails()
+    {
+        var world = ServerWorld.Create(fixtureL2: true);
+        world.App.L2!.Mode = L2FixtureMode.FailSubmit;
+        var driver = world.Register();
+        var vehicle = world.AddVehicle(driver);
+        world.PutProfile(driver, vehicle.VehicleId, ChainProfileIds.DualBtcOtsL2, valid: true);
+        var session = world.OpenSession(driver, vehicle.VehicleId);
+        var ready = world.SealReady(driver, session);
+        var ex = Assert.Throws<RideAuditException>(() => world.Submit(driver, ready.Package, ready.Token, ready.Nonce));
+        Assert.Equal(ErrorCodes.ChainFailed, ex.Code);
+        var anchor = world.App.Journal.Find(ex.SubmissionId!)!.Anchor!;
+        Assert.False(anchor.HasTransactionReference);
+        Assert.False(anchor.HasChainId);
+        Assert.False(anchor.LiveBitcoinMetadata);
+    }
 }
 
 /// <summary>
@@ -165,7 +232,7 @@ public class TestRide015ChainFailure
 }
 
 /// <summary>
-/// TEST-RIDE-032 latency partition. FR-RIDE-213. Retention remains deferred.
+/// TEST-RIDE-032 latency partition. FR-RIDE-213. Retention is covered by the privacy tests.
 /// </summary>
 public class TestRide032Latency
 {
