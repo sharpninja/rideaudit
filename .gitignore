@@ -7,6 +7,8 @@ AGENTS-README-FIRST.yaml
 
 .mcpServer/
 cache/
+__pycache__/
+*.pyc
 
 mcp.db
 *.db-journal

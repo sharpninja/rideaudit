@@ -1,25 +1,67 @@
+# RideAudit headrest phone mount — ART-RIDE-MOUNT-001
+# Copyright (C) 2026 RideAudit contributors
+# SPDX-License-Identifier: GPL-2.0
+# License: GPL-2.0 (GPL-2.0-or-later as stated in LICENSE). Not Apache-2.0. Not MIT.
 id: ART-RIDE-MOUNT-001
 kind: mechanical-3d
 format: openscad
-version: "0.1.0"
-title: Dual-phone headrest mounting bracket
+version: "1.0.0"
+title: Headrest phone mount (single cradle, two post arms)
 license: GPL-2.0
 path: artifacts/hardware/headrest-phone-mount/
-status: parametric-model
+status: geometry-verified
+sourceOfTruth: artifacts/hardware/headrest-phone-mount/headrest-phone-mount.scad
+sourceCommitNotice: git log -1 --format=%H -- artifacts/hardware/headrest-phone-mount
+notices:
+  - LICENSE
+  - NOTICE
 relatedFrIds:
-  - FR-RIDE-041  # Dual-phone video capture
+  - FR-RIDE-041  # Dual-phone video capture — physical cradle fit only
   - FR-RIDE-029  # GPL-2.0 licensing
   - FR-RIDE-030  # GPL2 notices on artifacts
+acceptance:
+  - HW-AC-MOUNT-001
+  - HW-AC-MOUNT-002
+  - HW-AC-MOUNT-003
+  - HW-AC-MOUNT-004
+  - HW-AC-MOUNT-005
 parameters:
   - post_spacing_min
   - post_spacing_max
-  - post_diameter
+  - post_spacing
+  - post_od
+  - post_clearance
+  - arm_length
+  - bore_id
+  - block_od
+  - block_t
+  - slot_gap
+  - slot_radius
   - phone_width_min
   - phone_width_max
+  - phone_length_min
+  - phone_length_max
   - phone_thickness_max
-  - clamp_depth
   - camera_clearance
-  - dual_cradle
+physicalRelease: not-claimed
 notes: >
-  Clamps to two vertical headrest posts; landscape cradles for one or two phones.
-  Not crash-rated. Supports RideAudit Bluetooth driver-rider dual-phone capture.
+  Two post blocks, one per headrest post. The post passes through the block
+  and the rear of the collar is tangent to the pad. The collar is one
+  cylinder, outside 25.5 mm and 33 mm thick along the post. The bore is
+  post_od plus 0.2–0.5 mm clearance. The default is a 14 mm post, so the
+  preview bore is 14.5 mm. Spacing in the CAD range is 120–170 mm; the
+  preview is 150 mm. Each block has a horizontal 200 mm arm. The arm shares
+  the collar bottom, and short blends rise into the 33 mm collar so the
+  moment enters the tube around the post. Both arms slide into one shared
+  vertical cradle from the rear. Each arm has a longitudinal slot 1 mm clear
+  of the M8 crest on each side, so the cradle depth can slide before it locks.
+  One modeled M8×1.25 thumbscrew per arm, with an external thread on the shank,
+  comes up from below on the arm centerline, through a clearance slot in the
+  cradle bottom, through that arm slot, and into the roof. Fully seated, the
+  head clamps an 18 mm stack (6 mm bottom plate + 12 mm arm) and leaves 12 mm
+  of thread in the roof. Arms are 56 × 12 mm. The phone sits flush on the
+  vertical plate.
+  Geometry is verified by verify-geometry.py. Not crash-rated. Not an on-vehicle
+  release until the operator checklist in verification/vehicle-fit-checklist.md
+  is completed. Supports RideAudit phone capture; it does not implement
+  the capture software.
