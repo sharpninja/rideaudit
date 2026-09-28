@@ -11,11 +11,14 @@ License: GPL-2.0
 
 ## Client sequence
 
+The Avalonia client implements this gate in `src/RideAudit.PlayIntegrity/`. The Android host does not ship a user-reachable bypass.
+
 1. Start dual-phone session setup.
-2. Call `PlayIntegrityGate.requestAttestation(nonce)`.
-3. Send token to admission/attest endpoint (or include for server verification at submission).
-4. On success: proceed to keygen and seal.
-5. On failure: abort UI with clear error; log locally without leaking secrets.
+2. Call `PlayIntegrityGate.AuthorizeKeyGeneration`.
+3. On success: proceed to keygen and seal. Attestation fields are copied onto the custody receipt.
+4. On failure: abort with a fail-closed error. No key, no seal, no upload.
+
+Cloud and test builds do not call the Google Play Integrity API. `UnavailablePlayIntegrityClient` fail-closes. `StubPlayIntegrityClient` and `FixturePlayIntegrityClient` are explicit stand-ins and are not Play Store receipts.
 
 ## Server alignment
 

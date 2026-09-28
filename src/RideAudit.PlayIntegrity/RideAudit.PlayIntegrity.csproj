@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>RideAudit.PlayIntegrity</RootNamespace>
+    <Description>Play Integrity device gate. Fail closed. GPL-2.0-or-later. Real Play API is not called by the stub.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+  </ItemGroup>
+</Project>

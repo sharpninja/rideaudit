@@ -6,7 +6,7 @@
 **Version:** 0.1.0
 **License:** GPL-2.0
 
-> **SUPERSEDED IMPLEMENTATION NOTE:** The Kotlin and Gradle scaffold in this directory is historical and superseded. The target mobile UI stack is Avalonia UI 12, shared with the desktop app. Kotlin files remain only as non-authoritative placeholders. This documentation update does not rewrite the Kotlin stubs.
+> **IMPLEMENTATION:** Avalonia UI 12 client code is under `src/RideAudit.Client.Android/`, `src/RideAudit.Client.Desktop/`, and `src/RideAudit.Shared.Ui/`. The Kotlin and Gradle scaffold is archived under `legacy-kotlin/` and is not the target client.
 
 ## Purpose
 
@@ -52,7 +52,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 ## Status
 
-Documentation target: **Avalonia UI 12** for Android, shared with the desktop app. Skeleton only. The Gradle files and Kotlin stubs illustrate historical module boundaries and are superseded placeholders. Play Store publishing is **not** done. See FR-RIDE-031 for the publishing requirement track.
+Documentation and code target: **Avalonia UI 12** for Android, shared with the desktop app. Build and test instructions are in `src/README.md`. Play Store publishing is **not** done and no Play receipt is checked in. See FR-RIDE-031. The client is not road-ready. Play Integrity calls are not live in this tree; the production host fail-closes until a real token provider is injected.
 
 ## Related docs
 

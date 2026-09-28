@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Authors>Sharp Ninja</Authors>
+    <Company>RideAudit contributors</Company>
+    <Copyright>Copyright (C) 2026 RideAudit contributors</Copyright>
+    <Version>0.1.0</Version>
+    <PackageLicenseExpression>GPL-2.0-or-later</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/sharpninja/rideaudit</RepositoryUrl>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

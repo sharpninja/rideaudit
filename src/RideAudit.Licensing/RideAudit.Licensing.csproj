@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>RideAudit.Licensing</RootNamespace>
+    <Description>GPL-2.0 notices and honest distribution claims. GPL-2.0-or-later.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Distribution\client-distribution-manifest.json" />
+  </ItemGroup>
+</Project>

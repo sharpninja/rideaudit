@@ -1,4 +1,20 @@
-# Kotlin package layout
+# Package layout
+
+The live client is C# / Avalonia UI 12:
+
+```
+src/RideAudit.Client.Android/     # Android host
+src/RideAudit.Client.Desktop/     # Desktop court viewer host
+src/RideAudit.Shared.Ui/          # Shared Avalonia views
+src/RideAudit.Bt/                 # Bluetooth roles
+src/RideAudit.Video/              # Composite and quotas
+src/RideAudit.Seal/               # Seal-at-collect
+src/RideAudit.PlayIntegrity/      # Fail-closed attestation gate
+src/RideAudit.Viewer/             # ViewerSession and VerificationReport
+src/RideAudit.Client.Contracts/   # Interim gRPC stubs
+```
+
+Historical Kotlin package (archived, not the target):
 
 Root application package: `org.rideaudit.app`
 
@@ -17,7 +33,7 @@ org.rideaudit.app
 └── identity/                       # Driver token + vehicle binding
 ```
 
-Gradle module: `:app` under `artifacts/android/app/`.
+Gradle module: `:app` under `artifacts/android/legacy-kotlin/app/`.
 
 ### Role-oriented stubs (current skeleton)
 

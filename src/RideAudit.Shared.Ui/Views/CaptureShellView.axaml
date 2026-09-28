@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="RideAudit.Shared.Ui.Views.CaptureShellView">
+  <StackPanel Spacing="12">
+    <TextBlock x:Name="ScreenId" Text="WF-01" />
+    <TextBlock Text="Select your role for session" />
+    <Button x:Name="DriverButton" Content="DRIVER  Session coordinator" />
+    <Button x:Name="PassengerButton" Content="PASSENGER  Video compositor" />
+    <TextBlock x:Name="PairingStatus" Text="Bluetooth discovery idle" />
+    <Button x:Name="DiscoverButton" Content="Discover RideAudit peer" />
+    <TextBlock x:Name="ClockText" Text="Session clock not started" />
+    <Button x:Name="StartButton" Content="Start session" />
+    <Button x:Name="StopButton" Content="Stop session" IsEnabled="False" />
+    <TextBlock x:Name="SpiderGraph" Text="Spider graph idle" />
+    <TextBlock x:Name="SealStatus" Text="Seal not started" />
+    <TextBlock x:Name="FailClosedText" IsVisible="False" />
+    <TextBlock x:Name="SubmitStatus" Text="No submission" />
+  </StackPanel>
+</UserControl>
