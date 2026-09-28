@@ -32,7 +32,10 @@ public class TestRide017Escrow
     [Trait("FR", "FR-RIDE-023")]
     [Trait("AC", "AC-RIDE-022-001")]
     [Trait("AC", "AC-RIDE-023-001")]
-    [Trait("AC", "AC-RIDE-023-003")]
+        [Trait("AC", "AC-RIDE-023-003")]
+        [Trait("AC", "AC-RIDE-ESCROW-001-001")]
+        [Trait("AC", "AC-RIDE-ESCROW-001-002")]
+        [Trait("AC", "AC-RIDE-ESCROW-003-001")]
     public void Escrow_is_off_the_application_database_and_does_not_change_the_sealed_blob()
     {
         var world = ServerWorld.Create();
@@ -63,7 +66,10 @@ public class TestRide018CourtRelease
     [Trait("TEST", "TEST-RIDE-018")]
     [Trait("FR", "FR-RIDE-024")]
     [Trait("AC", "AC-RIDE-024-001")]
-    [Trait("AC", "AC-RIDE-024-003")]
+        [Trait("AC", "AC-RIDE-024-003")]
+        [Trait("AC", "AC-RIDE-ESCROW-002-001")]
+        [Trait("AC", "AC-RIDE-ESCROW-002-002")]
+        [Trait("AC", "AC-RIDE-ESCROW-003-002")]
     public void Quorum_release_opens_one_expiring_working_copy_and_leaves_ciphertext_unchanged()
     {
         var world = ServerWorld.Create();

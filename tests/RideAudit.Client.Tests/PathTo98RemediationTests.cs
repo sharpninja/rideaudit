@@ -23,7 +23,9 @@ public class PathTo98RemediationTests
 {
     [Fact]
     [Trait("FR", "FR-RIDE-025")]
-    [Trait("AC", "AC-RIDE-025-002")]
+        [Trait("AC", "AC-RIDE-025-002")]
+        [Trait("AC", "AC-RIDE-VIEW-002-001")]
+        [Trait("AC", "AC-RIDE-VIEW-002-002")]
     public void Fixture_play_fails_court_ready_play_attestation()
     {
         var fixture = Fixtures.CaptureHappy();
@@ -198,6 +200,103 @@ public class PathTo98RemediationTests
         Assert.Contains("PRODUCTION_UNAVAILABLE", view.FindControl<TextBlock>("FailClosedText")!.Text);
     }
 
+    [AvaloniaFact]
+    [Trait("FR", "FR-RIDE-035")]
+    [Trait("FR", "FR-RIDE-041")]
+    [Trait("FR", "FR-RIDE-056")]
+    [Trait("AC", "AC-RIDE-035-001")]
+    [Trait("AC", "AC-RIDE-041-001")]
+    [Trait("AC", "AC-RIDE-056-001")]
+    [Trait("AC", "AC-RIDE-PLAY-001-001")]
+    public void Capture_shell_start_stop_invokes_camera_play_seal_escrow_and_admission()
+    {
+        var clock = new FixedClock(new DateTimeOffset(2026, 9, 28, 12, 0, 0, TimeSpan.Zero));
+        var frames = new[] { TimeSpan.Zero, TimeSpan.FromMilliseconds(33), TimeSpan.FromMilliseconds(66) };
+        var stream = Stream("driver-stream", "device-driver", frames, "runtime-driver");
+        var admission = new RecordingAdmissionClient();
+        var escrow = new RecordingEscrowDeposit();
+        var (publicKey, _) = EscrowKeyFactory.CreateEphemeral("escrow-runtime");
+        var factory = new CanonicalAdmissionRequestFactory(new CanonicalAdmissionIdentity
+        {
+            TenantId = "tenant-runtime",
+            DriverId = "driver-runtime",
+            PolicyVersion = RideAuditPolicy.Version
+        });
+        var graph = ProductionCaptureGraph.Wire(
+            new InMemoryDiscoveryBus(),
+            new FixtureCameraSource(stream),
+            new FixturePlayIntegrityClient(),
+            factory,
+            admission,
+            escrow,
+            "in-memory",
+            "fixture-camera");
+        Assert.True(graph.ProductionReady);
+        var runtime = new CaptureRuntime
+        {
+            Graph = graph,
+            Clock = clock,
+            EscrowPublicKey = publicKey,
+            Identity = new CaptureSessionIdentity
+            {
+                TenantId = "tenant-runtime",
+                DriverId = "driver-runtime",
+                VehicleId = "vehicle-runtime",
+                SessionId = "session-runtime",
+                CollectorId = "driver-runtime",
+                PolicyVersion = RideAuditPolicy.Version
+            }
+        };
+        var view = runtime.CreateShell();
+        var window = new Window { Width = 400, Height = 800, Content = view };
+        window.Show();
+        view.SelectDriver();
+        view.StartSession();
+        Assert.True(runtime.LastResult!.Ok);
+        Assert.Contains("camera", runtime.LastResult.Attempted);
+        Assert.Contains("play", runtime.LastResult.Attempted);
+        view.StopSession();
+        Assert.True(runtime.LastResult.Ok);
+        Assert.Contains("seal", runtime.LastResult.Attempted);
+        Assert.Contains("escrow", runtime.LastResult.Attempted);
+        Assert.Contains("admission", runtime.LastResult.Attempted);
+        Assert.Equal(1, admission.Submits);
+        Assert.Equal(1, escrow.Deposits);
+        Assert.Equal("tenant-runtime", admission.LastRequest!.ReceiptCore.TenantId);
+        Assert.StartsWith(FixturePlayIntegrityClient.TokenPrefix, admission.LastRequest.Attestation.Token, StringComparison.Ordinal);
+        Assert.Contains("Seal-at-collect completed", view.FindControl<TextBlock>("SealStatus")!.Text);
+    }
+
+    [AvaloniaFact]
+    [Trait("FR", "FR-RIDE-041")]
+    [Trait("AC", "AC-RIDE-041-002")]
+    [Trait("AC", "AC-RIDE-PLAY-001-002")]
+    public void Capture_shell_start_invokes_unavailable_camera_and_play_and_fail_closes()
+    {
+        var graph = ProductionCaptureGraph.Wire(
+            new UnavailableDiscoveryBus(),
+            new UnavailableCameraSource(),
+            new UnavailablePlayIntegrityClient(),
+            CanonicalAdmissionRequestFactory.FromEnvironment(),
+            null,
+            null,
+            "radio missing",
+            "camera missing");
+        var runtime = new CaptureRuntime { Graph = graph };
+        var view = runtime.CreateShell();
+        var window = new Window { Width = 400, Height = 800, Content = view };
+        window.Show();
+        Assert.Contains("PRODUCTION_UNAVAILABLE", view.FindControl<TextBlock>("FailClosedText")!.Text);
+        view.SelectDriver();
+        view.StartSession();
+        Assert.False(runtime.LastResult!.Ok);
+        Assert.Contains("camera", runtime.LastResult.Attempted);
+        Assert.Contains("play", runtime.LastResult.Attempted);
+        Assert.Equal(ErrorCodes.CameraUnavailable, runtime.LastResult.Code);
+        Assert.Contains("CAMERA_UNAVAILABLE", view.FindControl<TextBlock>("FailClosedText")!.Text);
+        Assert.Contains("ATTESTATION_FAILED", runtime.LastResult.Message!);
+    }
+
     [Fact]
     [Trait("FR", "FR-RIDE-056")]
     public void Android_application_installs_production_composition()
@@ -207,6 +306,10 @@ public class PathTo98RemediationTests
         Assert.Contains("AndroidProductionComposition.Install", application);
         Assert.Contains("ProductionCaptureGraph.FromEnvironment", composition);
         Assert.Contains("UnavailableDiscoveryBus", composition);
+        Assert.Contains("MissingRuntimePermissions", composition);
+        var hardware = File.ReadAllText(Path.Combine(Repo.Root(), "src/RideAudit.Client.Android/AndroidCaptureHardware.cs"));
+        Assert.Contains("MissingRuntimePermissions", hardware);
+        Assert.Contains("Manifest.Permission.Camera", hardware);
     }
 
     [Fact]
@@ -254,4 +357,32 @@ public class PathTo98RemediationTests
             new CameraMetadata(id + "-cam", "rear", 1280, 720),
             frames,
             System.Text.Encoding.UTF8.GetBytes(payload));
+
+    private sealed class RecordingAdmissionClient : ISealedAdmissionClient
+    {
+        public int Submits { get; private set; }
+
+        public RideAudit.Protos.Admission.V1.SubmitSealedRequest? LastRequest { get; private set; }
+
+        public RideAudit.Protos.Admission.V1.AdmissionDecision SubmitSealed(RideAudit.Protos.Admission.V1.SubmitSealedRequest request)
+        {
+            Submits++;
+            LastRequest = request;
+            return new InterimInProcessAdmissionClient().SubmitSealed(request);
+        }
+
+        public RideAudit.Protos.Admission.V1.AdmissionDecision GetAdmissionStatus(RideAudit.Protos.Admission.V1.GetAdmissionStatusRequest request) =>
+            new InterimInProcessAdmissionClient().GetAdmissionStatus(request);
+    }
+
+    private sealed class RecordingEscrowDeposit : IDeviceEscrowDeposit
+    {
+        public int Deposits { get; private set; }
+
+        public void Deposit(SealedRecord record)
+        {
+            ArgumentNullException.ThrowIfNull(record);
+            Deposits++;
+        }
+    }
 }

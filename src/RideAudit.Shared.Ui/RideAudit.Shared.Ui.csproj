@@ -13,7 +13,14 @@
   <ItemGroup>
     <ProjectReference Include="..\RideAudit.Bt\RideAudit.Bt.csproj" />
     <ProjectReference Include="..\RideAudit.Capture\RideAudit.Capture.csproj" />
+    <ProjectReference Include="..\RideAudit.Client.Contracts\RideAudit.Client.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+    <ProjectReference Include="..\RideAudit.Client.Seal\RideAudit.Client.Seal.csproj" />
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
     <ProjectReference Include="..\RideAudit.Licensing\RideAudit.Licensing.csproj" />
+    <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
+    <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
+    <ProjectReference Include="..\RideAudit.Video\RideAudit.Video.csproj" />
     <ProjectReference Include="..\RideAudit.Viewer\RideAudit.Viewer.csproj" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,4 @@
+using System.Text;
 using RideAudit.Attest;
 using RideAudit.Chain;
 using RideAudit.Chain.EthL2;
@@ -40,6 +41,7 @@ public sealed class SubmitSealedCommand
 
 public sealed class AbuseGuard
 {
+    private readonly object _gate = new();
     private readonly Dictionary<string, Queue<DateTimeOffset>> _window = new(StringComparer.Ordinal);
     private readonly IClock _clock;
 
@@ -56,17 +58,20 @@ public sealed class AbuseGuard
         if (ForceBackpressure)
             throw new RideAuditException(ErrorCodes.RateLimited, "Admission backpressure rejected the request without admitting it.");
 
-        var now = _clock.UtcNow;
-        if (!_window.TryGetValue(bucket, out var hits))
+        lock (_gate)
         {
-            hits = new Queue<DateTimeOffset>();
-            _window[bucket] = hits;
+            var now = _clock.UtcNow;
+            if (!_window.TryGetValue(bucket, out var hits))
+            {
+                hits = new Queue<DateTimeOffset>();
+                _window[bucket] = hits;
+            }
+            while (hits.Count > 0 && now - hits.Peek() > TimeSpan.FromMinutes(1))
+                hits.Dequeue();
+            if (hits.Count >= LimitPerMinute)
+                throw new RideAuditException(ErrorCodes.RateLimited, "Authenticated rate limit exceeded.");
+            hits.Enqueue(now);
         }
-        while (hits.Count > 0 && now - hits.Peek() > TimeSpan.FromMinutes(1))
-            hits.Dequeue();
-        if (hits.Count >= LimitPerMinute)
-            throw new RideAuditException(ErrorCodes.RateLimited, "Authenticated rate limit exceeded.");
-        hits.Enqueue(now);
     }
 }
 
@@ -80,11 +85,20 @@ public sealed class OperatorAlertSink
 
 public sealed class AttestationArchive
 {
+    private readonly object _gate = new();
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
 
-    public void Put(string sealedRecordId, string token) => _tokens[sealedRecordId] = token;
+    public void Put(string sealedRecordId, string token)
+    {
+        lock (_gate)
+            _tokens[sealedRecordId] = token;
+    }
 
-    public bool ContainsToken(string token) => _tokens.Values.Contains(token, StringComparer.Ordinal);
+    public bool ContainsToken(string token)
+    {
+        lock (_gate)
+            return _tokens.Values.Contains(token, StringComparer.Ordinal);
+    }
 }
 
 /// <summary>
@@ -107,6 +121,7 @@ public sealed class AdmissionCoordinator
     private readonly AttestationArchive _archive;
     private readonly string _policyVersion;
     private readonly IEthL2Client? _l2;
+    private readonly object _stateGate = new();
     private readonly Dictionary<string, ChunkUpload> _uploads = new(StringComparer.Ordinal);
 
     public int MaxConcurrentChunkUploads { get; set; } = 8;
@@ -151,6 +166,12 @@ public sealed class AdmissionCoordinator
     public IReadOnlyList<string> FailureAudit => _journal.FailureAudit;
 
     public AdmissionOutcome Submit(SubmitSealedCommand command)
+    {
+        lock (_stateGate)
+            return SubmitCore(command);
+    }
+
+    private AdmissionOutcome SubmitCore(SubmitSealedCommand command)
     {
         _redactor.Track(command.RawBearerToken);
         _redactor.Track(command.AttestationToken);
@@ -319,6 +340,12 @@ public sealed class AdmissionCoordinator
 
     public AdmissionOutcome GetStatus(DriverPrincipal? principal, string submissionId)
     {
+        lock (_stateGate)
+            return GetStatusCore(principal, submissionId);
+    }
+
+    private AdmissionOutcome GetStatusCore(DriverPrincipal? principal, string submissionId)
+    {
         if (principal is null)
             throw new RideAuditException(ErrorCodes.AuthRequired, "Driver authentication is required.");
         var record = _journal.Find(submissionId);
@@ -353,10 +380,6 @@ public sealed class AdmissionCoordinator
     {
         if (principal is null)
             throw new RideAuditException(ErrorCodes.AuthRequired, "Driver authentication is required.");
-        var key = principal.TenantId + "|" + uploadId;
-        SweepExpiredUploads(exceptKey: key);
-        var bucket = principal.TenantId + "|" + clientIp + "|chunks";
-        _abuse.Check(bucket, chunk.Length);
         if (PlaintextDetector.ContentTypeIsPlain(contentType))
             throw new RideAuditException(ErrorCodes.PlaintextRejected, "Chunk content type is not a sealed envelope.");
         if (index < 0 || total < 1 || index >= total)
@@ -368,59 +391,79 @@ public sealed class AdmissionCoordinator
         if (index == 0 && PlaintextDetector.BodyLooksLikeMedia(chunk) && !SealedIngest.IsRecognizedSeal(chunk))
             throw new RideAuditException(ErrorCodes.PlaintextRejected, "First chunk looks like plaintext media.");
 
-        if (_uploads.TryGetValue(key, out var existingUpload) && IsExpired(existingUpload))
+        var key = principal.TenantId + "|" + uploadId;
+        lock (_stateGate)
         {
-            _uploads.Remove(key);
-            throw new RideAuditException(ErrorCodes.WorkingCopyExpired, "Chunk upload expired before completion.");
-        }
+            SweepExpiredUploads(exceptKey: key);
+            var bucket = principal.TenantId + "|" + clientIp + "|chunks";
+            _abuse.Check(bucket, chunk.Length);
 
-        if (!_uploads.TryGetValue(key, out var upload))
-        {
-            if (_uploads.Count >= MaxConcurrentChunkUploads)
-                throw new RideAuditException(ErrorCodes.QuotaExceeded, "Too many incomplete chunk uploads are already retained.");
-            upload = new ChunkUpload(total, sessionId, vehicleId, idempotencyKey, contentType, _clock.UtcNow);
-            _uploads[key] = upload;
-        }
-        if (upload.Total != total)
-            throw new RideAuditException(ErrorCodes.ChunkOutOfOrder, "Chunk upload declared a conflicting total.");
-        if (upload.Chunks.TryGetValue(index, out var existing))
-        {
-            if (!existing.AsSpan().SequenceEqual(chunk))
-                throw new RideAuditException(ErrorCodes.ChunkOutOfOrder, "Chunk index was already stored with different bytes.");
-        }
-        else
-        {
-            var added = chunk.Length;
-            if (CurrentAggregateBytes() + added > MaxAggregateChunkBytes)
+            if (_uploads.TryGetValue(key, out var existingUpload) && IsExpired(existingUpload))
+            {
+                _uploads.Remove(key);
+                throw new RideAuditException(ErrorCodes.WorkingCopyExpired, "Chunk upload expired before completion.");
+            }
+
+            if (!_uploads.TryGetValue(key, out var upload))
+            {
+                if (_uploads.Count >= MaxConcurrentChunkUploads)
+                    throw new RideAuditException(ErrorCodes.QuotaExceeded, "Too many incomplete chunk uploads are already retained.");
+                upload = new ChunkUpload(total, sessionId, vehicleId, idempotencyKey, contentType, _clock.UtcNow);
+                _uploads[key] = upload;
+            }
+            if (upload.Total != total)
+                throw new RideAuditException(ErrorCodes.ChunkOutOfOrder, "Chunk upload declared a conflicting total.");
+
+            var nextReceipt = receiptBytes is { Length: > 0 } ? receiptBytes : upload.ReceiptBytes;
+            var nextToken = receiptBytes is { Length: > 0 } ? attestationToken : upload.AttestationToken;
+            var nextNonce = receiptBytes is { Length: > 0 } ? attestationNonce : upload.AttestationNonce;
+            var nextBound = receiptBytes is { Length: > 0 } ? boundKeyId : upload.BoundKeyId;
+            var addedChunk = 0;
+            if (upload.Chunks.TryGetValue(index, out var existing))
+            {
+                if (!existing.AsSpan().SequenceEqual(chunk))
+                    throw new RideAuditException(ErrorCodes.ChunkOutOfOrder, "Chunk index was already stored with different bytes.");
+            }
+            else
+            {
+                addedChunk = chunk.Length;
+            }
+
+            var prospective = CurrentAggregateBytes()
+                - upload.RetainedBytes
+                + upload.StoredBytes + addedChunk
+                + MetadataBytes(nextReceipt, nextToken, nextNonce, nextBound);
+            if (prospective > MaxAggregateChunkBytes)
                 throw new RideAuditException(ErrorCodes.SizeLimit, "Incomplete chunk uploads exceed the aggregate byte bound.");
-            if (upload.StoredBytes + added > _abuse.MaxPayloadBytes)
+            if (upload.StoredBytes + addedChunk > _abuse.MaxPayloadBytes)
                 throw new RideAuditException(ErrorCodes.SizeLimit, "Chunk upload exceeds the sealed payload size limit.");
-            upload.Chunks[index] = chunk.ToArray();
-            upload.StoredBytes += added;
-        }
-        if (receiptBytes is { Length: > 0 })
-        {
-            upload.ReceiptBytes = receiptBytes;
-            upload.AttestationToken = attestationToken;
-            upload.AttestationNonce = attestationNonce;
-            upload.BoundKeyId = boundKeyId;
-        }
-        if (upload.Chunks.Count < upload.Total)
-            return (false, null);
 
-        var assembled = new byte[upload.StoredBytes];
-        var offset = 0;
-        for (var i = 0; i < upload.Total; i++)
-        {
-            var part = upload.Chunks[i];
-            part.CopyTo(assembled, offset);
-            offset += part.Length;
-        }
-        if (assembled.Length > _abuse.MaxPayloadBytes)
-            throw new RideAuditException(ErrorCodes.SizeLimit, "Assembled sealed payload exceeds the configured size limit.");
-        try
-        {
-            var decision = Submit(new SubmitSealedCommand
+            if (addedChunk > 0)
+            {
+                upload.Chunks[index] = chunk.ToArray();
+                upload.StoredBytes += addedChunk;
+            }
+            if (receiptBytes is { Length: > 0 })
+            {
+                upload.ReceiptBytes = receiptBytes;
+                upload.AttestationToken = attestationToken;
+                upload.AttestationNonce = attestationNonce;
+                upload.BoundKeyId = boundKeyId;
+            }
+            if (upload.Chunks.Count < upload.Total)
+                return (false, null);
+
+            var assembled = new byte[upload.StoredBytes];
+            var offset = 0;
+            for (var i = 0; i < upload.Total; i++)
+            {
+                var part = upload.Chunks[i];
+                part.CopyTo(assembled, offset);
+                offset += part.Length;
+            }
+            if (assembled.Length > _abuse.MaxPayloadBytes)
+                throw new RideAuditException(ErrorCodes.SizeLimit, "Assembled sealed payload exceeds the configured size limit.");
+            var command = new SubmitSealedCommand
             {
                 Principal = principal,
                 RawBearerToken = rawToken,
@@ -434,14 +477,9 @@ public sealed class AdmissionCoordinator
                 BoundKeyId = upload.BoundKeyId ?? "",
                 SessionId = sessionId,
                 VehicleId = vehicleId
-            });
+            };
             _uploads.Remove(key);
-            return (true, decision);
-        }
-        catch
-        {
-            _uploads.Remove(key);
-            throw;
+            return (true, SubmitCore(command));
         }
     }
 
@@ -458,7 +496,13 @@ public sealed class AdmissionCoordinator
         _clock.UtcNow - upload.CreatedAt > ChunkUploadMaxAge;
 
     private long CurrentAggregateBytes() =>
-        _uploads.Values.Sum(upload => (long)upload.StoredBytes);
+        _uploads.Values.Sum(upload => upload.RetainedBytes);
+
+    private static long MetadataBytes(byte[]? receipt, string? token, string? nonce, string? boundKeyId) =>
+        (receipt?.Length ?? 0)
+        + Encoding.UTF8.GetByteCount(token ?? "")
+        + Encoding.UTF8.GetByteCount(nonce ?? "")
+        + Encoding.UTF8.GetByteCount(boundKeyId ?? "");
 
     private static byte[] Concat(byte[] left, byte[] right)
     {
@@ -492,5 +536,12 @@ public sealed class AdmissionCoordinator
         public string? AttestationToken { get; set; }
         public string? AttestationNonce { get; set; }
         public string? BoundKeyId { get; set; }
+
+        public long RetainedBytes =>
+            StoredBytes
+            + (ReceiptBytes?.Length ?? 0)
+            + Encoding.UTF8.GetByteCount(AttestationToken ?? "")
+            + Encoding.UTF8.GetByteCount(AttestationNonce ?? "")
+            + Encoding.UTF8.GetByteCount(BoundKeyId ?? "");
     }
 }
