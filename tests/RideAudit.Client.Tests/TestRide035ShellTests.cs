@@ -3,6 +3,7 @@
 
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using RideAudit.Bt;
 using RideAudit.Client.Contracts;
 using RideAudit.Client.Tests.Support;
 using RideAudit.Shared.Ui;
@@ -151,11 +152,21 @@ public class TestRide035ShellTests
         Assert.Contains("driver", view.FindControl<TextBlock>("FailClosedText")!.Text, StringComparison.OrdinalIgnoreCase);
         view.SelectDriver();
         view.Discover();
-        Assert.Contains("No Lyft private API", view.FindControl<TextBlock>("PairingStatus")!.Text);
-        view.StartSession();
-        Assert.Contains("clock master", view.FindControl<TextBlock>("ClockText")!.Text, StringComparison.OrdinalIgnoreCase);
-        view.StopSession();
-        Assert.Equal("WF-06", view.FindControl<TextBlock>("ScreenId")!.Text);
+        Assert.Equal("WF-08", view.FindControl<TextBlock>("ScreenId")!.Text);
+        Assert.Contains("BT_DISABLED", view.FindControl<TextBlock>("FailClosedText")!.Text, StringComparison.Ordinal);
+        Assert.Contains("No Lyft private API", view.FindControl<TextBlock>("FailClosedText")!.Text);
+
+        var radio = new CaptureShellView(new InMemoryDiscoveryBus());
+        var radioWindow = new Window { Width = 400, Height = 800, Content = radio };
+        radioWindow.Show();
+        radio.SelectDriver();
+        radio.Discover();
+        Assert.Contains("in-memory", radio.FindControl<TextBlock>("PairingStatus")!.Text, StringComparison.Ordinal);
+        Assert.Contains("No Lyft private API", radio.FindControl<TextBlock>("PairingStatus")!.Text);
+        radio.StartSession();
+        Assert.Contains("clock master", radio.FindControl<TextBlock>("ClockText")!.Text, StringComparison.OrdinalIgnoreCase);
+        radio.StopSession();
+        Assert.Equal("WF-06", radio.FindControl<TextBlock>("ScreenId")!.Text);
     }
 
     [AvaloniaFact]

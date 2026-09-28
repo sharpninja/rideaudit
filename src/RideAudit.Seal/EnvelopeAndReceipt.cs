@@ -203,6 +203,15 @@ public static class AuthorizedDecryptor
 {
     public static byte[] Open(byte[] envelope, byte[] dek)
     {
+        if (envelope.AsSpan().StartsWith(EnvelopeFormat.Magic))
+            return OpenRideSeal1(envelope, dek);
+        if (RaesEnvelopeFormat.HasMagic(envelope))
+            return RaesEnvelopeFormat.Open(envelope, dek);
+        throw new RideAuditException(ErrorCodes.PlaintextRejected, "Payload is not a RideAudit sealed envelope.");
+    }
+
+    private static byte[] OpenRideSeal1(byte[] envelope, byte[] dek)
+    {
         var parsed = EnvelopeFormat.Parse(envelope);
         var nonce = Convert.FromBase64String(parsed.Header.AesNonceB64);
         if (parsed.Ciphertext.Length < 16)

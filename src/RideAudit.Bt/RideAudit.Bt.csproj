@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
     <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
   </ItemGroup>
 </Project>

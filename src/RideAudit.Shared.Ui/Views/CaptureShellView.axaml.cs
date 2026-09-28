@@ -3,15 +3,23 @@
 
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using RideAudit.Bt;
 
 namespace RideAudit.Shared.Ui.Views;
 
 public partial class CaptureShellView : UserControl
 {
+    private readonly IDiscoveryBus _bus;
     private string? _role;
 
     public CaptureShellView()
+        : this(new UnavailableDiscoveryBus())
     {
+    }
+
+    public CaptureShellView(IDiscoveryBus bus)
+    {
+        _bus = bus;
         InitializeComponent();
         DriverButton.Click += OnDriver;
         PassengerButton.Click += OnPassenger;
@@ -63,7 +71,13 @@ public partial class CaptureShellView : UserControl
             return;
         }
 
-        PairingStatus.Text = "RideAudit Bluetooth discovery. No Lyft private API.";
+        if (!_bus.RadioAvailable)
+        {
+            ShowFailClosed("BT_DISABLED: No Bluetooth radio is available on this host. No Lyft private API.");
+            return;
+        }
+
+        PairingStatus.Text = "RideAudit Bluetooth discovery on " + _bus.TransportKind + ". No Lyft private API.";
     }
 
     private void OnStart(object? sender, RoutedEventArgs e)

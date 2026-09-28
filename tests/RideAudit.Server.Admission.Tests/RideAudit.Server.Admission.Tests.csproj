@@ -18,9 +18,12 @@
     <ProjectReference Include="..\RideAudit.TestSupport\RideAudit.TestSupport.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Server.Admission\RideAudit.Server.Admission.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Ingest\RideAudit.Ingest.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Capture\RideAudit.Capture.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Client.Seal\RideAudit.Client.Seal.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Client.Contracts\RideAudit.Client.Contracts.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Bt\RideAudit.Bt.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Video\RideAudit.Video.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />

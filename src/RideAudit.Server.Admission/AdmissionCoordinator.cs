@@ -106,7 +106,7 @@ public sealed class AdmissionCoordinator
     private readonly IClock _clock;
     private readonly AttestationArchive _archive;
     private readonly string _policyVersion;
-    private readonly DocumentedFixtureL2Calendar? _l2;
+    private readonly IEthL2Client? _l2;
     private readonly Dictionary<string, ChunkUpload> _uploads = new(StringComparer.Ordinal);
 
     public AdmissionCoordinator(
@@ -124,7 +124,7 @@ public sealed class AdmissionCoordinator
         IClock clock,
         AttestationArchive archive,
         string policyVersion,
-        DocumentedFixtureL2Calendar? l2 = null)
+        IEthL2Client? l2 = null)
     {
         _identity = identity;
         _play = play;

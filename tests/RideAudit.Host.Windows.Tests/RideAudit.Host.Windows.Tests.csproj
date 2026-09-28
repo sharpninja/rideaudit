@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>RideAudit.Host.Windows.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\RideAudit.Host.Windows\RideAudit.Host.Windows.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Bt\RideAudit.Bt.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Video\RideAudit.Video.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

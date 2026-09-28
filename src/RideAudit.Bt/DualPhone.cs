@@ -2,7 +2,9 @@
 // Copyright (C) 2026 RideAudit contributors
 
 using RideAudit.Client.Core;
+using RideAudit.Contracts;
 using RideAudit.PlayIntegrity;
+using IClock = RideAudit.Client.Core.IClock;
 
 namespace RideAudit.Bt;
 
@@ -72,12 +74,29 @@ public sealed class Advertisement
     public required string Service { get; init; }
 }
 
+public interface IDiscoveryBus
+{
+    string TransportKind { get; }
+
+    bool RadioAvailable { get; }
+
+    void Advertise(Advertisement advertisement);
+
+    IReadOnlyList<Advertisement> Scan(string exceptAddress);
+
+    void Clear();
+}
+
 /// <summary>
-/// In-memory stand-in for Bluetooth discovery. Real radio access is platform-specific.
+/// In-memory stand-in for Bluetooth discovery. Not a live radio.
 /// </summary>
-public sealed class InMemoryDiscoveryBus
+public sealed class InMemoryDiscoveryBus : IDiscoveryBus
 {
     private readonly List<Advertisement> _ads = [];
+
+    public string TransportKind => "in-memory";
+
+    public bool RadioAvailable => true;
 
     public void Advertise(Advertisement advertisement) => _ads.Add(advertisement);
 
@@ -85,6 +104,32 @@ public sealed class InMemoryDiscoveryBus
         _ads.Where(ad => !string.Equals(ad.Address, exceptAddress, StringComparison.OrdinalIgnoreCase)).ToList();
 
     public void Clear() => _ads.Clear();
+}
+
+/// <summary>
+/// Production default when no platform radio adapter is injected. Never claims discovery success.
+/// </summary>
+public sealed class UnavailableDiscoveryBus : IDiscoveryBus
+{
+    public string TransportKind => "unavailable";
+
+    public bool RadioAvailable => false;
+
+    public void Advertise(Advertisement advertisement) =>
+        throw new RideAuditFailClosedException(
+            ErrorCodes.BluetoothDisabled,
+            "FR-RIDE-053",
+            "Bluetooth radio is unavailable. Discovery refused.");
+
+    public IReadOnlyList<Advertisement> Scan(string exceptAddress) =>
+        throw new RideAuditFailClosedException(
+            ErrorCodes.BluetoothDisabled,
+            "FR-RIDE-053",
+            "Bluetooth radio is unavailable. Scan refused.");
+
+    public void Clear()
+    {
+    }
 }
 
 public sealed class PairedSession
@@ -117,12 +162,20 @@ public sealed class PairingResult
 
 public sealed class BluetoothPairingService
 {
-    private readonly InMemoryDiscoveryBus _bus;
+    private readonly IDiscoveryBus _bus;
 
-    public BluetoothPairingService(InMemoryDiscoveryBus bus) => _bus = bus;
+    public BluetoothPairingService(IDiscoveryBus bus) => _bus = bus;
 
     public IReadOnlyList<Advertisement> Discover(PhoneNode local)
     {
+        if (!_bus.RadioAvailable)
+        {
+            throw new RideAuditFailClosedException(
+                ErrorCodes.BluetoothDisabled,
+                "FR-RIDE-053",
+                "Bluetooth radio is unavailable. Pairing refused.");
+        }
+
         _bus.Advertise(new Advertisement
         {
             Address = local.Address,
@@ -136,6 +189,13 @@ public sealed class BluetoothPairingService
 
     public PairingResult Pair(PhoneNode local, PhoneNode remote)
     {
+        if (!_bus.RadioAvailable)
+        {
+            return PairingResult.Fail(
+                ErrorCodes.BluetoothDisabled,
+                "Bluetooth radio is unavailable. Pairing refused.");
+        }
+
         var seen = Discover(local);
         if (seen.Count == 0 || seen.All(ad => !string.Equals(ad.Address, remote.Address, StringComparison.OrdinalIgnoreCase)))
         {

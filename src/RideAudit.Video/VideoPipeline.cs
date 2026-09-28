@@ -4,6 +4,7 @@
 using System.Text;
 using RideAudit.Bt;
 using RideAudit.Client.Core;
+using RideAudit.Contracts;
 
 namespace RideAudit.Video;
 
@@ -16,6 +17,69 @@ public sealed record SourceStream(
     CameraMetadata Camera,
     IReadOnlyList<TimeSpan> FrameTimestamps,
     byte[] Payload);
+
+public sealed record CameraCaptureRequest(
+    string StreamId,
+    string DeviceId,
+    string AttestationReference,
+    string Facing);
+
+public interface ICameraSource
+{
+    string SourceKind { get; }
+
+    bool CameraAvailable { get; }
+
+    SourceStream Capture(CameraCaptureRequest request);
+}
+
+/// <summary>
+/// Production default when no platform camera adapter is injected. Never returns fixture frames.
+/// </summary>
+public sealed class UnavailableCameraSource : ICameraSource
+{
+    public string SourceKind => "unavailable";
+
+    public bool CameraAvailable => false;
+
+    public SourceStream Capture(CameraCaptureRequest request) =>
+        throw new RideAuditFailClosedException(
+            ErrorCodes.CameraUnavailable,
+            "FR-RIDE-041",
+            "Camera hardware is unavailable. Capture refused.");
+}
+
+/// <summary>
+/// Test double. Not a live camera. Payload is caller-supplied fixture bytes.
+/// </summary>
+public sealed class FixtureCameraSource : ICameraSource
+{
+    private readonly SourceStream _stream;
+
+    public FixtureCameraSource(SourceStream stream) => _stream = stream;
+
+    public string SourceKind => "fixture";
+
+    public bool CameraAvailable => true;
+
+    public SourceStream Capture(CameraCaptureRequest request) => _stream;
+}
+
+public static class CaptureMedia
+{
+    public static SourceStream Require(ICameraSource source, CameraCaptureRequest request)
+    {
+        if (!source.CameraAvailable)
+        {
+            throw new RideAuditFailClosedException(
+                ErrorCodes.CameraUnavailable,
+                "FR-RIDE-041",
+                "Camera hardware is unavailable. Capture refused.");
+        }
+
+        return source.Capture(request);
+    }
+}
 
 public sealed record TelematicsSample(
     TimeSpan SessionTime,

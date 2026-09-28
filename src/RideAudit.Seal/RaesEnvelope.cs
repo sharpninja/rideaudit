@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Google.Protobuf;
 using RideAudit.Contracts;
 using RideAudit.Protos.Custody.V1;
@@ -6,7 +7,8 @@ namespace RideAudit.Seal;
 
 /// <summary>
 /// Device RAES envelopes (magic RAES, version, 12-byte nonce, 16-byte tag, ciphertext).
-/// Admission commits the untouched envelope bytes. It does not re-encode them as RIDESEAL1 and it does not decrypt.
+/// Admission commits the untouched envelope bytes. It does not re-encode them as RIDESEAL1.
+/// Court working-copy decrypt may open an already-escrowed RAES envelope after M-of-N release.
 /// </summary>
 public static class RaesEnvelopeFormat
 {
@@ -90,6 +92,25 @@ public static class RaesEnvelopeFormat
             Ciphertext = envelope.ToArray(),
             ContentHash = contentHash
         };
+    }
+
+    public static byte[] Open(byte[] envelope, byte[] dek)
+    {
+        var span = envelope.AsSpan();
+        if (!HasMagic(span))
+            throw new RideAuditException(ErrorCodes.PlaintextRejected, "Payload is not a device RAES envelope.");
+        if (span.Length < PrefixLength + 1)
+            throw new RideAuditException(ErrorCodes.ReceiptInvalid, "Device RAES envelope is truncated.");
+        if (span[4] != Version)
+            throw new RideAuditException(ErrorCodes.ReceiptInvalid, "Unsupported device RAES envelope version.");
+
+        var nonce = span.Slice(5, 12);
+        var tag = span.Slice(17, 16);
+        var data = span[PrefixLength..];
+        var plain = new byte[data.Length];
+        using var aes = new AesGcm(dek, 16);
+        aes.Decrypt(nonce, data, tag, plain);
+        return plain;
     }
 
     private static void Require(string value, string name)

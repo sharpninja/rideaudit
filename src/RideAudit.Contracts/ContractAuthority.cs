@@ -57,6 +57,17 @@ public static class FixtureChainIds
     public const string Dual = "fixture-dual-btc-ots+l2";
 }
 
+public static class ProofSources
+{
+    public const string DocumentedFixture = "documented-fixture";
+    public const string DocumentedFixtureL2 = "documented-fixture-l2";
+    public const string DocumentedFixtureDual = "documented-fixture-dual";
+    public const string OpenTimestampsCalendar = "opentimestamps-calendar";
+    public const string EthL2Rpc = "eth-l2-rpc";
+    public const string Unconfigured = "unconfigured";
+    public const string DualIncomplete = "dual-incomplete";
+}
+
 public enum CustodyState
 {
     LocalSealedPending = 1,

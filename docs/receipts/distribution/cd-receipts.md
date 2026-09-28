@@ -9,6 +9,8 @@ These rows are honest placeholders. No continuous-delivery runner executed in th
 | Dev | not-run | not-claimed | GPL-2.0-only |
 | Staging | not-run | not-claimed | GPL-2.0-only |
 | Prod | not-run | not-claimed | GPL-2.0-only |
+| PAYTON-LEGION2 Docker Desktop | engine-http-500 | not-claimed | GPL-2.0-only |
+| PAYTON-OMARCHY lab images | built-not-started (runtime from LEGION2 publish `f51f454`; see `legion2-omarchy-20260928.md`) | not-claimed | GPL-2.0-only |
 
 The same values are returned by `RideAudit.Sec.DistributionReceipts.ServerPortions`.
 

@@ -36,6 +36,7 @@ public sealed record LicenseMetadata(
 public static class ApiBoundary
 {
     public const string RideAuditBluetooth = "bluetooth-rideaudit-device-pairing";
+    public static readonly Guid RideAuditBluetoothService = Guid.Parse("f0a1d17e-6c2b-4e3a-9b11-81c3a4d5e6f7");
     public const string SealedContentType = "application/vnd.rideaudit.sealed+octet-stream";
 
     /// <summary>

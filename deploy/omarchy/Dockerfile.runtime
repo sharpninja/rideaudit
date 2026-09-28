@@ -1,0 +1,15 @@
+# Runtime-only admission image. Build context is the linux-x64 publish folder
+# produced on PAYTON-LEGION2 by Publish-Admission.ps1:
+#   docker build -f deploy/omarchy/Dockerfile.runtime -t rideaudit-admission:local artifacts/omarchy-publish/admission
+#
+# GPL-2.0-only. Production refuses fixture calendars and fixture Play Integrity.
+# This file does not invent a CD green.
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+WORKDIR /app
+COPY . .
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:8080
+ENV RIDEAUDIT_EDGE_TLS=true
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "RideAudit.Server.Admission.dll"]
