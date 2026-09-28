@@ -27,15 +27,18 @@
         "pair_commit": "caaaad409c2783d236a24f09e45c4caa3cd82af2",
         "request_jsonl_commit": "75c8b1430133bfdbf8717dacf57235c64ee3495a",
         "response_jsonl_initial_commit": "65af159b3f1b8244087180b67fbbbfe7f57e0e7b",
-        "response_jsonl_commit": "08ca816238817fa21cd24bc6af7efd148bb73878",
-        "verdict_commit": "f84f2fbe0195e1feece784124a1f84b1d17ac161"
+        "response_jsonl_syntax_commit": "08ca816238817fa21cd24bc6af7efd148bb73878",
+        "response_jsonl_commit": "65d55d2da6bfa8a913c96951f222d087e31da390",
+        "verdict_initial_commit": "f84f2fbe0195e1feece784124a1f84b1d17ac161",
+        "verdict_commit": "65d55d2da6bfa8a913c96951f222d087e31da390"
       },
       "evidence": {
         "tests": "159 passed, 0 failed, 0 skipped",
         "android_release_build": "succeeded, 0 warnings, 0 errors",
         "requirements": "404 AC IDs; 107 referenced by test source; 297 absent",
         "deployment": "Omarchy loopback verified; production CD unproven",
-        "mcp_session_log": "unavailable because mcpserver-box namespace discovery failed"
+        "mcp_session_log": "unavailable because mcpserver-box namespace discovery failed",
+        "validator_eligibility": "gpt-5.6-sol run does not match current repository matrix requiring gpt-6-sol"
       }
     }
   ],
