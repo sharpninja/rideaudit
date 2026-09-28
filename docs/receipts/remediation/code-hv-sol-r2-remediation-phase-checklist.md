@@ -18,7 +18,7 @@
 - [x] B02 UI start/stop invoke camera, Play, seal, escrow, authenticated admission (Unavailable* when missing)
 - [x] B03 CanonicalAdmissionRequestFactory → AdmissionGrpcService (in-process server)
 - [x] B01 rem-phase HV custody note + this checklist
-- [x] B06 AC ledger coverage raised; remaining live ACs deferred-with-reason
+- [x] B06 AC ledger coverage raised (170/36/198 of 404); remaining live ACs deferred-with-reason
 - [x] CODE-HV READY scope note dated 2026-09-28
 
 ## Explicitly not claimed

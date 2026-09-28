@@ -5,7 +5,6 @@ using Android;
 using Android.Bluetooth;
 using Android.Content;
 using Android.Hardware.Camera2;
-using Android.OS;
 using RideAudit.Client.Core;
 using RideAudit.Contracts;
 using Permission = Android.Content.PM.Permission;
@@ -58,7 +57,7 @@ public static class AndroidCaptureHardware
     public static IReadOnlyList<string> MissingRuntimePermissions(Context context)
     {
         var required = new List<string> { Manifest.Permission.Camera };
-        if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
+        if (OperatingSystem.IsAndroidVersionAtLeast(31))
         {
             required.Add(Manifest.Permission.BluetoothConnect);
             required.Add(Manifest.Permission.BluetoothScan);

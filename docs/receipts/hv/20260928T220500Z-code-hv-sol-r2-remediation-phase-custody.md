@@ -30,7 +30,7 @@ Those historical boxes remain unchecked. Do not fabricate P0 checks.
 | code-hv-sol-r1 | `docs/receipts/hv/20260928T204619Z-code-hv-sol-r1.*` + pair | NOT-READY / DISAGREE@99 |
 | rem r1 | `docs/receipts/remediation/20260928T211500Z-code-hv-sol-r1-round1.md` | merged `bfb8a35` |
 | code-hv-sol-r2 | `docs/receipts/hv/20260928T214239Z-code-hv-sol-r2.*` + pair (`bf8f6ac`, PR #10) | NOT-READY / DISAGREE@99 |
-| rem r2 | this note + rem r2 receipt | in progress; Sol HV after merge |
+| rem r2 | this note + rem r2 receipt + PR #11 | code closures in review; Sol HV after merge |
 
 Live tracks (physical dual-phone media, real Play decode, hardware HSM, OTS confirm, L2 signer, GHCR/CD/edge TLS/Play publication) remain **deferred** and fail-closed.
 

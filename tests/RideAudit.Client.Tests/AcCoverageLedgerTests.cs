@@ -56,7 +56,7 @@ public class AcCoverageLedgerTests
         var covered = rows.Count(row => row.Item3 == "covered");
         var deferred = rows.Count(row => row.Item3 == "deferred");
         var missing = rows.Count(row => row.Item3 == "missing");
-        Assert.True(covered >= 111, "Coverage ledger regressed below the rem-r1 named-AC count.");
+        Assert.True(covered >= 170, "Coverage ledger regressed below the rem-r2 named-AC count.");
 
         var output = new StringBuilder();
         output.AppendLine("# RideAudit AC coverage ledger");
