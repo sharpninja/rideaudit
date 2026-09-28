@@ -26,7 +26,7 @@ pwsh -NoProfile -File deploy/omarchy/Sync-FromLegion2.ps1
 # Remote commands use bash --noprofile --norc so login snippets cannot rewrite paths.
 ```
 
-The script creates a git bundle of `HEAD`, copies it over SSH, and clones or fast-forwards `/home/sharpninja/github/rideaudit`. It does not delete remote volumes or other repositories.
+The script creates a git bundle of `HEAD` and copies it over SSH stdin into `exec /usr/bin/bash --noprofile --norc`. `scp`/`sftp` cannot be used while the Omarchy login shell is pwsh: profile banners break the SFTP handshake (`Received message too long`). The remote side `git init`s if needed, fetches the bundle, and checks out `FETCH_HEAD`. It does not delete remote volumes or other repositories.
 
 After this branch is merged, the coordinator may instead `git clone` / `git pull` from GitHub on Omarchy if that host has credentials.
 
