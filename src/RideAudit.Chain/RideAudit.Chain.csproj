@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.Chain</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
+  </ItemGroup>
+</Project>

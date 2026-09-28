@@ -1,13 +1,22 @@
 id: ART-RIDE-API-001
 kind: grpc-api
-version: "0.1.0"
+version: "0.2.0"
 title: RideAudit public sealed-submission API
 author: Sharp Ninja
-license: GPL-2.0
+license: GPL-2.0-only
 path: artifacts/server-api/
-status: draft-spec
+status: contract-ready-admission-runtime
 targetStack: gRPC on .NET 10 containers
+authoritativeContract: src/RideAudit.Protos/
+authoritativeContractFormat: proto3
+contractVersion: "0.2.0"
+companionAuthority: non-authoritative
 interimHumanReadableCompanion: openapi.yaml
+implementationStatus: >
+  S1 protos are authoritative. S2 admission and identity gRPC run in-process
+  with a container sketch. S3 btc-ots uses a documented fixture calendar, not
+  live Bitcoin. S4 escrow is an in-process HSM boundary. S5-S9 are scaffolded
+  and not runtime-validated. OpenAPI remains a non-authoritative companion.
 relatedFrIds:
   - FR-RIDE-032  # Public-server driver account
   - FR-RIDE-033  # Vehicle registration
@@ -20,9 +29,12 @@ relatedFrIds:
   - FR-RIDE-218  # Public-server admission capacity
   - FR-RIDE-029  # GPL-2.0 licensing
   - FR-RIDE-030  # GPL2 notices on artifacts
-spec: openapi.yaml  # Interim human-readable companion only
+spec: openapi.yaml  # Non-authoritative human-readable companion only
 notes: >
-  Target API is gRPC on .NET 10 containers. openapi.yaml is an interim
-  human-readable companion, not the target wire contract. Public sealed-
-  submission API only. Fail-closed admission. No decrypt at ingest. Bearer
-  driver-account token is a placeholder scheme in the interim OpenAPI document.
+  Authoritative wire contracts are src/RideAudit.Protos/ (FR-RIDE-060).
+  openapi.yaml is a non-authoritative companion (FR-RIDE-062). When they
+  disagree, grpc-protobuf wins. Public sealed-submission API only.
+  Fail-closed admission. No decrypt at ingest. Bearer driver-account token
+  is a placeholder scheme in the interim OpenAPI document. Admission runtime
+  in this tree is in-process plus deploy/containers/admission; it is not a
+  claim of production custody against live Bitcoin.

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.Chain.OpenTimestamps</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Chain\RideAudit.Chain.csproj" />
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fixtures\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

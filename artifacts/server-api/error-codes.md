@@ -1,8 +1,8 @@
 # API error codes
 
-License: GPL-2.0
+License: GPL-2.0-only
 
-Machine-readable `code` values returned in the `Error` schema.
+Machine-readable `code` values. The gRPC status mapping in `RideAudit.Server.Admission` is authoritative if this companion list drifts (FR-RIDE-062). Admission failures are fail-closed and must not be softened to a partial accept.
 
 | Code | HTTP | Meaning |
 |------|------|---------|
@@ -20,6 +20,25 @@ Machine-readable `code` values returned in the `Error` schema.
 | `RATE_LIMITED` | 429 | Abuse control / rate limit |
 | `TENANT_ISOLATION` | 403 | Cross-tenant access denied |
 | `INTERNAL_ERROR` | 500 | Unexpected server fault (no sensitive detail) |
-| `NOT_IMPLEMENTED` | 501 | Placeholder endpoint behavior in draft |
+| `NOT_IMPLEMENTED` | 501 | Reserved. Counsel, ingest, and privacy RPCs in this tree are implemented. |
+| `CONSENT_REQUIRED` | 422 | Import refused because consent was not granted |
+| `PARTNERSHIP_DISABLED` | 422 | Ride-status connector is gated off |
+| `LEGAL_HOLD_ACTIVE` | 422 | Deletion or retention removal blocked by a legal hold |
+| `IMPORT_REJECTED` | 422 | Raw import could not be parsed |
+| `CONFIG_PROFILE_INVALID` | 422 | Missing or invalid vehicle configuration profile |
+| `CHAIN_UNCONFIRMED` | 422 | Anchor pending or otherwise not confirmed |
+| `CHAIN_FAILED` | 422 | Chain write or confirmation failed; record not admitted |
+| `CHAIN_PROFILE_UNSUPPORTED` | 422 | Selected public-chain profile is not implemented |
+| `ESCROW_UNAVAILABLE` | 422 | Collection key is not escrowed for the tenant |
+| `ESCROW_QUORUM` | 422 | M-of-N approvals are incomplete |
+| `ESCROW_INTEGRITY` | 422 | Reconstructed escrow secret failed its check |
+| `DUPLICATE_REPLAY` | 422 | Duplicate or replayed sealed submission |
+| `IDEMPOTENCY_CONFLICT` | 409 | Idempotency key reused with a different body |
+| `SIZE_LIMIT` | 429 | Payload exceeds the configured size limit |
+| `QUOTA_EXCEEDED` | 429 | Tenant quota exceeded |
+| `POLICY_MISMATCH` | 422 | Receipt policy version is not active |
+| `KEY_SCOPE_REJECTED` | 422 | Key scope is not session or sample |
+| `LATENCY_BUDGET_EXCEEDED` | 422 | Seal/receipt latency budget blocked admission |
+| `WORKING_COPY_EXPIRED` | 422 | Authorized working copy expired |
 
 Admission failures (`RECEIPT_*`, `ATTESTATION_FAILED`, `VEHICLE_UNREGISTERED`, `PLAINTEXT_REJECTED`) are intentional fail-closed outcomes and MUST NOT be softened to partial accept.

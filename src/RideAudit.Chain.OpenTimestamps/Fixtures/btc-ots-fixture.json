@@ -1,0 +1,12 @@
+{
+  "fixtureId": "rideaudit-btc-ots-fixture-001",
+  "disclaimer": "SYNTHETIC TEST FIXTURE. Not a live Bitcoin transaction. Not broadcast. Not a real txid.",
+  "source": "documented-fixture",
+  "profile": "btc-ots",
+  "chainId": "fixture-btc-ots",
+  "transactionReference": "fixture:not-a-bitcoin-txid:rideaudit-btc-ots-fixture-001",
+  "blockHeight": 9000000001,
+  "blockHeightMeaning": "Intentionally outside Bitcoin block height space. Not a mainnet height.",
+  "writeTimeUnixMillis": 1759010000000,
+  "liveBitcoinMetadata": false
+}

@@ -1,0 +1,25 @@
+{
+  "live_chain_metadata": false,
+  "profiles": {
+    "eth-l2-base": {
+      "chain_id": "fixture-eth-l2-base",
+      "transaction_reference": "fixture:not-an-ethereum-txid:rideaudit-l2-base-fixture-001",
+      "block_height": 9000000001,
+      "proof_magic": "RIDEL2-FIXTURE-1"
+    },
+    "eth-l2-polygon": {
+      "chain_id": "fixture-eth-l2-polygon",
+      "transaction_reference": "fixture:not-an-ethereum-txid:rideaudit-l2-polygon-fixture-001",
+      "block_height": 9000000002,
+      "proof_magic": "RIDEL2-FIXTURE-1"
+    },
+    "dual-btc-ots+l2": {
+      "chain_id": "fixture-dual-btc-ots+l2",
+      "transaction_reference": "fixture:not-a-live-txid:rideaudit-dual-btc-ots-l2-fixture-001",
+      "block_height": 9000000003,
+      "proof_magic": "RIDEDUAL-FIXTURE-1",
+      "l2_leg": "eth-l2-base"
+    }
+  },
+  "disclaimer": "SYNTHETIC TEST FIXTURE. Not a live Base, Polygon, or Bitcoin transaction."
+}

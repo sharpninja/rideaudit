@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.Server.Counsel</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Anal\RideAudit.Anal.csproj" />
+    <ProjectReference Include="..\RideAudit.Chain\RideAudit.Chain.csproj" />
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
+    <ProjectReference Include="..\RideAudit.Sec\RideAudit.Sec.csproj" />
+  </ItemGroup>
+</Project>

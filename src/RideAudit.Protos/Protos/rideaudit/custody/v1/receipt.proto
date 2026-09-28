@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// COMPANION_NOTICE: artifacts/server-api/openapi.yaml is a non-authoritative companion.
+// Contract-Version: 0.2.0
+//
+// Immutable receipt core vs append-only anchor-proof envelope (plan section 4.5).
+// Canonical digest = SHA-256 of the deterministic protobuf encoding of ReceiptCore.
+// Anchor updates MUST NOT rewrite ReceiptCore or sealed ciphertext.
+// A pending anchor is not confirmation and cannot satisfy admission.
+// FR-RIDE-017, FR-RIDE-018, FR-RIDE-027, FR-RIDE-211, FR-RIDE-212.
+syntax = "proto3";
+
+package rideaudit.custody.v1;
+
+option csharp_namespace = "RideAudit.Protos.Custody.V1";
+
+// Committed receipt core. Every field below is part of the digest.
+// Public chain metadata (tx reference, block height, write time) lives only
+// on AnchorProofEnvelope and is recorded when confirmation actually exists.
+message ReceiptCore {
+  string schema_version = 1;
+  string receipt_id = 2;
+  string policy_version = 3;
+  bytes content_hash = 4;
+  string algorithm_id = 5;
+  string key_id = 6;
+  bytes public_key_material = 7;
+  string key_scope = 8;
+  string scope_binding = 9;
+  string collector_id = 10;
+  string driver_id = 11;
+  string vehicle_id = 12;
+  string session_id = 13;
+  string tenant_id = 14;
+  int64 collection_unix_millis = 15;
+  string provenance_tag = 16;
+  bytes attestation_evidence_hash = 17;
+  string package_identity = 18;
+  string signing_cert_digest = 19;
+  string nonce = 20;
+  string sealed_record_id = 21;
+}
+
+// Append-only proof envelope. Do not treat fixture values as live Bitcoin.
+// live_bitcoin_metadata must stay false unless a real upgraded OTS proof
+// parser has verified Bitcoin header linkage. This slice does not do that.
+message AnchorProofEnvelope {
+  bytes receipt_core_digest = 1;
+  string profile_id = 2;
+  string proof_source = 3;
+  string status = 4;
+  optional string chain_id = 5;
+  optional string transaction_reference = 6;
+  optional int64 block_height = 7;
+  optional int64 write_time_unix_millis = 8;
+  bytes proof_bytes = 9;
+  string disclaimer = 10;
+  optional bool live_bitcoin_metadata = 11;
+  string failure_code = 12;
+}

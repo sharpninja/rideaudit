@@ -1,0 +1,117 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// COMPANION_NOTICE: artifacts/server-api/openapi.yaml is a non-authoritative companion.
+// Contract-Version: 0.2.0
+// FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, UC-RIDE-014
+syntax = "proto3";
+
+package rideaudit.identity.v1;
+
+option csharp_namespace = "RideAudit.Protos.Identity.V1";
+
+// Bearer tokens travel in the authorization metadata header, never in logs.
+service Identity {
+  rpc RegisterDriver (RegisterDriverRequest) returns (RegisterDriverResponse);
+  rpc RecoverAccount (RecoverAccountRequest) returns (RecoverAccountResponse);
+  rpc RegisterVehicle (RegisterVehicleRequest) returns (Vehicle);
+  rpc UpdateVehicle (UpdateVehicleRequest) returns (Vehicle);
+  rpc ListVehicles (ListVehiclesRequest) returns (ListVehiclesResponse);
+  rpc PutConfigurationProfile (PutConfigurationProfileRequest) returns (ConfigurationProfile);
+  rpc GetConfigurationProfile (GetConfigurationProfileRequest) returns (ConfigurationProfile);
+}
+
+message RegisterDriverRequest {
+  string email = 1;
+  string display_name = 2;
+  string jurisdiction = 3;
+  string purpose = 4;
+  bool consent_accepted = 5;
+  string consent_statement = 6;
+}
+
+message RegisterDriverResponse {
+  string driver_id = 1;
+  string tenant_id = 2;
+  string email = 3;
+  int64 created_unix_millis = 4;
+  string access_token = 5;
+  string recovery_code = 6;
+}
+
+message RecoverAccountRequest {
+  string email = 1;
+  string recovery_code = 2;
+}
+
+message RecoverAccountResponse {
+  string driver_id = 1;
+  string tenant_id = 2;
+  string access_token = 3;
+}
+
+message RegisterVehicleRequest {
+  string vin_or_plate_key = 1;
+  string label = 2;
+  string make = 3;
+  string model = 4;
+  int32 year = 5;
+  bool consent_accepted = 6;
+}
+
+message UpdateVehicleRequest {
+  string vehicle_id = 1;
+  string label = 2;
+  string make = 3;
+  string model = 4;
+  int32 year = 5;
+  string change_reason = 6;
+}
+
+message VehicleChange {
+  int64 at_unix_millis = 1;
+  string actor_driver_id = 2;
+  string summary = 3;
+}
+
+message Vehicle {
+  string vehicle_id = 1;
+  string driver_id = 2;
+  string tenant_id = 3;
+  string vin_or_plate_key = 4;
+  string label = 5;
+  string make = 6;
+  string model = 7;
+  int32 year = 8;
+  int64 registered_unix_millis = 9;
+  repeated VehicleChange changes = 10;
+}
+
+message ListVehiclesRequest {}
+
+message ListVehiclesResponse {
+  repeated Vehicle vehicles = 1;
+}
+
+message PutConfigurationProfileRequest {
+  string vehicle_id = 1;
+  string jurisdiction = 2;
+  // btc-ots | eth-l2-base | eth-l2-polygon | dual-btc-ots+l2
+  string chain_profile = 3;
+  bool valid = 4;
+  string notes = 5;
+}
+
+message GetConfigurationProfileRequest {
+  string vehicle_id = 1;
+}
+
+message ConfigurationProfile {
+  string profile_id = 1;
+  string vehicle_id = 2;
+  string tenant_id = 3;
+  string jurisdiction = 4;
+  string chain_profile = 5;
+  bool valid = 6;
+  string policy_version = 7;
+}
