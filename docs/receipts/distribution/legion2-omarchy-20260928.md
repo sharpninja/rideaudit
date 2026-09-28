@@ -30,6 +30,10 @@ This is not a Play Store receipt, not a live Bitcoin/OTS/L2 admission receipt, n
 - Public OTS client code can POST to `https://alice.btc.calendar.opentimestamps.org/digest`. A pending calendar body is labeled `RIDEOTS-PENDING-1` and never writes a txid or block height.
 - L2 `Commit` always fail-closes without a signer. `eth_blockNumber` probes do not admit.
 
+## `dotnet test RideAudit.sln` on PAYTON-LEGION2
+
+Passed 159, failed 0, skipped 0 (Host.Windows 2, Client 87, Chain 16, Protos 5, Seal 8, Escrow 4, Workflow 21, Admission 16). Android is not a test project; the Release APK was built separately.
+
 ## What remains blocked
 
 - Live Play Integrity JWTs and Play publication.

@@ -22,6 +22,8 @@ From the repository root on LEGION2:
 
 ```powershell
 pwsh -NoProfile -File deploy/omarchy/Sync-FromLegion2.ps1
+# Default remote path: /home/sharpninja/github/rideaudit
+# Remote commands use bash --noprofile --norc so login snippets cannot rewrite paths.
 ```
 
 The script creates a git bundle of `HEAD`, copies it over SSH, and clones or fast-forwards `/home/sharpninja/github/rideaudit`. It does not delete remote volumes or other repositories.
