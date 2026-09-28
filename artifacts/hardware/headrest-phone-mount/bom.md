@@ -11,8 +11,8 @@ One shared landscape cradle. Two identical post blocks. No rail, no cradle clip,
 | Part | STL | Qty | Notes |
 | --- | --- | --- | --- |
 | Fit coupon | `exports/fit-coupon.stl` | 1 | Print before the blocks. Round bore, same diameter as the blocks. |
-| Post block | `exports/post-block.stl` | 2 | 60.0 × 211.2 × 44.0 mm print. Horizontal arm, 56 × 12 mm section, vertical bore. |
-| Phone cradle | `exports/phone-cradle.stl` | 1 | 242.0 × 120.2 × 33.5 mm. Rear entry, bottom slots, one row of M8 holes in the roof. |
+| Post block | `exports/post-block.stl` | 2 | 56.0 × 212.8 × 22.0 mm print. One 14.5 / 25.5 × 10 mm collar, 56 × 12 mm arm, root gussets. |
+| Phone cradle | `exports/phone-cradle.stl` | 1 | 242.0 × 120.2 × 33.5 mm. Rear entry, one M8 tap hole per arm on the arm centerline. |
 | Thumbscrew | `exports/thumbscrew.stl` | 2 | 32.0 × 22.0 × 36.5 mm. Modeled M8×1.25 thumbscrew with an external thread, used in the assembly preview. |
 
 Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` after a parameter change. Do not edit the meshes. `exports/headrest-phone-mount.stl` is the assembly preview only.
@@ -22,8 +22,8 @@ Regenerate every STL from `headrest-phone-mount.scad` with `./export-stls.sh` af
 | Item | Qty | Notes |
 | --- | --- | --- |
 | M8×30 thumbscrew, M8×1.25 | 2 | Optional metal match for the modeled screw. One per arm. From below, through that arm's bottom slot and longitudinal slot, into a tapped hole in the roof. Shank under the head is 30.5 mm on the model. Do not substitute a longer screw; the tip would break out of the 16 mm roof. |
-| M5×12 socket set screw or button head | 2 | One pinch screw in the top of each post block. |
-| M8×1.25 tap | 1 | Chase the hole row. Holes are modeled at 6.8 mm tap-drill. The modeled crest is Ø 8 mm. |
+| M5×12 socket set screw or button head | 2 | One radial pinch screw in the outboard wall of each collar. |
+| M8×1.25 tap | 1 | Chase the two roof holes. They are modeled at 6.8 mm tap-drill. The modeled crest is Ø 8 mm. |
 
 No nuts. The thread is in the receiver roof.
 

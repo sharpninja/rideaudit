@@ -9,22 +9,22 @@ License: GPL-2.0
 
 | Check | Value |
 | --- | --- |
-| Post spacing the hole row covers | 110 – 170 mm center-to-center |
-| Assembly preview spacing | 140 mm |
-| Post bore | 14.40 mm (post 14 mm + clearance) |
+| Post spacing | 110 – 170 mm center-to-center; preview 140 mm |
+| Post block | one collar, bore 14.5 mm, outside 25.5 mm, 10 mm thick, wall 5.5 mm |
+| Bore vs largest sourced post | 14 mm post, 0.5 mm diametral clearance |
 | Arm length | 200 mm from the post axis, horizontal (rise 0) |
 | Arm section | 56 × 12 mm |
-| Arm slot, along the arm | 157 mm long, 26 mm wide, from 46 to 203 mm forward of the pad |
-| Depth adjustment behind the preview screw | 150 mm |
-| Cradle bottom slots | 14 mm along the arm, 9.0 mm wide, one under each threaded hole |
+| Arm slot, along the arm | 171 mm long, 10.0 mm wide (1.00 mm each side of the crest), from 34 to 205 mm forward of the pad |
+| Depth adjustment behind the preview screw | 164 mm |
+| Cradle bottom slots | 14 mm along the arm, 9.0 mm wide, one under each arm |
 | Thread | M8×1.25 external, crest Ø 8.0 mm, engagement 12 mm when seated |
-| Roof holes | 12 in one row, pitch 16 mm, out to ±90 mm, tap drill 6.8 mm |
+| Roof holes | 2, one on each arm centerline, tap drill 6.8 mm |
 | Clamp stack | bottom plate 6 mm + arm 12 mm = 18 mm; slide take-up 0.40 mm |
 | Thumbscrews | 2 modeled, head Ø 22 mm, shank 30.5 mm under the face |
 | Phone pocket (L × short side × thickness) | 173.6 × 85.8 × 12.5 mm |
 | Phone envelope | length 140–172 mm, short side 70–85 mm, thickness ≤ 12 mm |
 | Camera window | 18 mm square, both upper corners, through the back plate |
-| Phone front from the headrest face | 220.7 mm |
+| Phone front from the headrest face | 222.2 mm |
 | Cradle top above the block bottom | 114.0 mm |
 | Cradles | 1 shared landscape holder |
 
@@ -32,10 +32,10 @@ License: GPL-2.0
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 21920 | 516929 | 242.0 × 220.7 × 126.3 |
-| `post-block.stl` | 572 | 146280 | 60.0 × 211.2 × 44.0 |
-| `phone-cradle.stl` | 2448 | 217831 | 242.0 × 120.2 × 33.5 |
-| `fit-coupon.stl` | 528 | 29874 | 60.0 × 30.4 × 18.0 |
+| `headrest-phone-mount.stl` | 20786 | 469467 | 242.0 × 222.2 × 126.3 |
+| `post-block.stl` | 880 | 115869 | 56.0 × 212.8 × 22.0 |
+| `phone-cradle.stl` | 698 | 231191 | 242.0 × 120.2 × 33.5 |
+| `fit-coupon.stl` | 768 | 3428 | 25.5 × 25.5 × 10.0 |
 | `thumbscrew.stl` | 7456 | 3276 | 32.0 × 22.0 × 36.5 |
 
 ## Probe results
@@ -43,7 +43,10 @@ License: GPL-2.0
 - OpenSCAD assertions accepted the default parameters.
 - The two arms do not intersect each other.
 - The arms pass under the receiver roof and do not intersect the cradle.
-- The hole row covers post centers from 110 mm to 170 mm.
+- Set post_spacing to the measured centers (110–170 mm) and re-export. Each arm then has one tap hole on its centerline.
+- The arm slot is 10.0 mm wide, 1.00 mm clear of the M8 crest on each side.
+- Each post block is one collar, bore 14.5 mm, outside 25.5 mm, 10 mm thick.
+- Root gussets rise 10 mm above the arm on the collar and taper off before the slot. Side fillets close the step from the collar out to the arm width.
 - Arms lie in a horizontal plane and enter the receiver from the rear.
 - Each arm has a longitudinal slot. The cradle slides along it to set depth, then each thumbscrew locks.
 - Each thumbscrew comes up through a bottom clearance slot, through that arm slot, and into the roof tap hole.
@@ -59,15 +62,15 @@ License: GPL-2.0
 - air  front of the cradle stays open above the lip
 - air  left thumbscrew hole is open in the roof
 - air  right thumbscrew hole is open in the roof
-- solid  roof stays solid between threaded holes
-- air  neighbor threaded hole is open
+- solid  roof stays solid between the two arm holes
 - solid  receiver roof is solid above the arm
 - air  receiver is open at the rear on the arm centerline
 - air  left bottom slot is open under the threaded hole
 - air  right bottom slot is open under the threaded hole
 - solid  cradle bottom stays solid between the screw slots
-- air  post bore passes through the block
+- air  post bore passes through the collar
 - solid  flush heel is solid behind the bore
+- air  post block is round in plan, not a square corner
 - solid  arm root is solid in front of the bore
 - air  longitudinal slot is open near the arm root
 - air  left arm slot is open at the preview screw
@@ -75,7 +78,9 @@ License: GPL-2.0
 - solid  left arm rail is solid beside the slot near the root
 - solid  left arm rail is solid beside the slot, under the roof
 - solid  left arm rail stays at the same height near the tip
-- air  nothing rises above the horizontal arm
+- solid  root gusset stands on the collar above the arm
+- solid  side fillet fills the step beside the collar
+- air  arm stays flat ahead of the root gussets
 - air  right arm slot is open on its own screw, not the left screw
 - solid  right arm is solid beside its slot
 - air  fit coupon bore is open

@@ -18,14 +18,17 @@
 // Source of truth. STL files under exports/ are generated; do not hand-edit them.
 //
 // Two post blocks, one shared vertical cradle.
-// Each post passes through its block. The block heel is flush on the headrest
-// (Y = 0). Each block carries a ~200 mm arm in a horizontal plane (constant Z).
+// Each post passes through its block. The block is one round collar: bore
+// 14.5 mm, outside 25.5 mm, 10 mm thick. Its rear is tangent to the headrest
+// (Y = 0). Each collar carries a ~200 mm arm in a horizontal plane (constant Z).
+// Gussets at the collar thicken the root so the 10 mm collar can carry the arm.
 // Both arms slide into the cradle from the rear (from the posts, toward +Y).
-// Each arm has a longitudinal slot down its length so the cradle can slide
-// forward or back before it is locked. Its own thumbscrew comes up from below,
-// through a clearance slot in the cradle bottom, through that arm slot, and
-// into an M8×1.25 tap hole in the receiver roof. Fully seated, the head face
-// clamps the bottom plate and the arm.
+// Each arm has a longitudinal slot down its length, 1 mm wider than the M8
+// crest on each side, so the cradle can slide forward or back before it is
+// locked. Its own thumbscrew comes up from below, through a clearance slot in
+// the cradle bottom, through that arm slot, and into an M8×1.25 tap hole in
+// the receiver roof, on the arm centerline. Fully seated, the head face clamps
+// the bottom plate and the arm.
 // The phone sits flush on the vertical back plate.
 //
 // Use frame (assembly):
@@ -36,18 +39,18 @@
 // Print frames are applied by the orient modules.
 
 /* [Headrest posts] */
-post_spacing_min = 110;  // mm, narrowest centers whose arms still find a hole
-post_spacing_max = 170;  // mm, widest centers whose arms still find a hole
-post_diameter    = 14;   // mm, nominal post OD
+post_spacing_min = 110;  // mm, narrowest centers the receiver still accepts
+post_spacing_max = 170;  // mm, widest centers the receiver still accepts
 post_spacing     = 140;  // mm, block centers in the assembly preview
+// One collar. Bore and outside diameter are this same cylinder, not two parts.
+bore_id  = 14.5;  // mm, inner diameter. Clears a 14 mm post by 0.5 mm
+block_od = 25.5;  // mm, outer diameter of that collar
+block_t  = 10;    // mm, axial thickness of the collar
 
 /* [Arms and lock] */
 arm_length   = 200;  // mm, post axis to arm tip, measured forward
-slot_span    = 26;   // mm, wide enough for an M8 crest at the farthest hole
 slot_gap     = 14;   // mm, cradle-bottom clearance slot length along the arm
 slot_radius  = 185;  // mm, post axis to the preview screw, along the arm
-hole_pitch   = 16;   // mm, M8 hole row; wide enough that the head bears on solid plate
-hole_x_max   = 90;   // mm, half-width of the hole row
 
 /* [Phone cradle] */
 phone_width_min     = 70;   // mm, landscape short side (vertical on the plate)
@@ -58,9 +61,6 @@ phone_thickness_max = 12;   // mm, including a slim case
 camera_clearance    = 18;   // mm, square window, both upper corners of the back plate
 
 /* [Structure] */
-jaw_wall   = 4;    // mm, material outside the post bore
-front_wall = 12;   // mm, block material in front of the bore, where the arm roots
-clearance  = 0.4;  // mm, diametral clearance in the bore
 cradle_lip = 3;    // mm, front lip thickness
 
 /* [Export] */
@@ -69,12 +69,9 @@ part = "assembly";
 
 /* [Hidden] */
 plate_t = 6.0;
-arm_width = 56;     // wide rails beside the slot, so the arm does not flex
+arm_width = 56;     // wide rails beside the tight slot, so the arm does not flex
 arm_t = 12.0;       // vertical thickness; the arm lies flat
 arm_z0 = 0;
-block_w = 60;       // wider than the arm so the root is fully backed
-block_h = 44;
-heel = 4.0;
 rail_half_y = 9.0;  // receiver roof fore-aft half-depth
 rail_h = 16.0;      // roof thickness; must exceed thread engagement
 bottom_t = 6.0;     // cradle bottom, the head's bearing plate
@@ -83,6 +80,8 @@ arm_gap_z = 0.20;   // slide clearance each side; seating the head takes this up
 // M8×1.25. Crest is the major diameter. The roof hole is the tap drill.
 screw_pitch = 1.25;
 screw_major = 8.0;
+// 1 mm of air on each side of the crest. The screw stays on the arm centerline.
+slot_span = screw_major + 2.0;
 screw_crest_r = 4.0;
 // Valley is held 0.5 mm inside the tap-drill wall. A valley on that wall
 // leaves open edges where the helix meets the hole.
@@ -102,17 +101,29 @@ $fn = 32;
 
 /* ----------------------- derived ----------------------- */
 
-bore_d = post_diameter + clearance;
+bore_d = bore_id;
+block_r = block_od / 2;
+block_wall = (block_od - bore_id) / 2;
+// Largest post the 14.5 mm bore is cut to clear. Smaller posts are looser;
+// the radial pinch screw takes up that slack. See dimensions.md for sources.
+post_diameter_max = 14;
+post_clearance = bore_id - post_diameter_max;
 half = post_spacing / 2;
-bore_cy = heel + bore_d / 2;
-block_depth = bore_cy + bore_d / 2 + front_wall;
-r_arm0 = bore_d / 2 + 1.2;
-arm_y0 = bore_cy + r_arm0 - bore_d / 2; // overlaps the front wall of the bore
+// Rear of the collar is tangent to the pad.
+bore_cy = block_r;
+block_depth = block_od;
+// The arm embeds in the front half of the same collar, then runs forward.
+arm_y0 = bore_cy;
 arm_y1 = bore_cy + arm_length;
 y_slot = bore_cy + slot_radius;
 z_arm = arm_z0 + arm_t / 2;
 arm_rise = 0; // the arm cube is horizontal; this is the acceptance flag
-slot_y0 = block_depth + 16;          // longitudinal slot starts clear of the block
+slot_side_gap = (slot_span - screw_major) / 2;
+slot_y0 = block_od + 8;              // longitudinal slot starts clear of the collar
+// Ribs at the collar, in front of the bore and behind the slot.
+gusset_h = 10;
+gusset_y0 = bore_cy + bore_id / 2 + 0.8;
+gusset_y1 = slot_y0 - 3;
 slot_y1 = arm_y1 - 8;                 // and stops short of the tip
 slot_len = slot_y1 - slot_y0;
 
@@ -136,12 +147,10 @@ z_pocket1 = z_pocket0 + pocket_z;
 z_plate0 = rail_z0;
 z_plate1 = z_pocket1;
 
-hole_nx = floor(2 * hole_x_max / hole_pitch) + 1;
+// One tap hole per arm, on that arm's centerline. The slot is too tight to
+// reach a neighboring hole, so post_spacing is set before export.
+hole_nx = 2;
 hole_nz = 1;
-// The screw sits on a hole, not on the post center. The arm slot is wide enough
-// that the crest still clears the slot wall at every spacing in the range.
-function nearest_hole(x) =
-    -hole_x_max + round((x + hole_x_max) / hole_pitch) * hole_pitch;
 // Bottom plate under the arm. Cheeks outside the arm sweep tie it to the roof.
 z_bot1 = arm_z0 - arm_gap_z;
 z_bot0 = z_bot1 - bottom_t;
@@ -172,10 +181,12 @@ assert(phone_thickness_max >= 6 && phone_thickness_max <= 18, "phone thickness o
 assert(camera_clearance >= 12, "camera_clearance too small to uncover a lens");
 assert(2 * camera_clearance + 12 <= pocket_x, "camera windows do not fit across the back plate");
 assert(camera_clearance + 6 <= pocket_z, "camera window does not fit the short side");
-assert(bore_d > post_diameter, "bore does not clear the post");
-assert(heel + 0.01 >= jaw_wall, "heel behind the bore is thinner than jaw_wall");
-assert((block_w - bore_d) / 2 + 0.01 >= jaw_wall, "block side wall is thinner than jaw_wall");
-assert(bore_cy - bore_d / 2 + 0.01 >= heel - 0.01, "bore breaks the flush heel");
+assert(abs(bore_id - 14.5) < 0.01, "post bore is not 14.5 mm");
+assert(abs(block_od - 25.5) < 0.01, "post block is not 25.5 mm outside");
+assert(abs(block_t - 10) < 0.01, "post block is not 10 mm thick");
+assert(abs(block_wall - 5.5) < 0.05, "collar wall is not 5.5 mm");
+assert(post_clearance + 0.01 >= 0.4, "14.5 mm bore does not clear a 14 mm post");
+assert(bore_cy - bore_d / 2 + 0.01 >= block_wall - 0.05, "bore breaks the rear wall");
 assert(arm_length + 0.01 >= 190 && arm_length <= 260, "arm length is outside the 200 mm class");
 assert(slot_y0 > block_depth + 4, "longitudinal slot cuts the post block");
 assert(slot_y1 + 4 < arm_y1, "longitudinal slot runs off the arm tip");
@@ -183,33 +194,18 @@ assert(y_slot > slot_y0 + 30, "not enough rearward depth adjustment along the ar
 assert(y_slot + 4 < slot_y1, "preview screw is past the end of the arm slot");
 assert((arm_width - slot_span) / 2 + 0.01 >= 10, "rails beside the longitudinal slot are too thin");
 assert(arm_t + 0.01 >= 12, "arm is too thin to stay stiff");
-assert(block_w + 0.01 >= arm_width, "block does not back the full arm width");
+assert(slot_side_gap <= 1.001, "arm slot gap is over 1 mm on a side");
+assert(slot_side_gap + 0.001 >= 0.8, "arm slot does not clear the crest");
 assert(slot_gap + 0.01 >= hole_clear, "bottom slot is shorter than the screw clearance");
 assert(slot_gap + 2 < rail_y1 - rail_y0, "bottom slot does not fit on the cradle bottom");
-assert(hole_x_max + 0.01 >= post_spacing_max / 2, "hole row does not cover post_spacing_max");
-assert(hole_x_max + 0.01 >= post_spacing_min / 2, "hole row does not cover post_spacing_min");
-assert(hole_pitch >= 8 && hole_pitch <= 18, "hole pitch is outside the discrete-lock range");
-assert(screw_head_d / 2 + bot_slot_w / 2 + 0.3 < hole_pitch, "head bearing face falls into the next slot");
+assert(post_spacing_min > screw_head_d + bot_slot_w, "the two screw heads collide at minimum spacing");
 assert(screw_engage + 0.01 >= screw_major * 1.25, "thread engagement is under 1.25 diameters");
 assert(rail_h >= screw_engage + 3, "screw tip breaks out of the roof when seated");
 assert(hole_tap + 0.01 < screw_major, "roof hole is not a thread; it clears the major diameter");
 assert(hole_tap / 2 > screw_root_r + 0.35, "thread valley grazes the tap hole");
 assert(bot_slot_w + 0.01 >= screw_major + 0.6, "bottom slot does not clear the major diameter");
 assert(screw_head_d >= bot_slot_w + 8, "head bearing annulus is too narrow");
-assert(slot_span / 2 + 0.01 >= hole_pitch / 2 + screw_major / 2 + 0.6,
-       "arm slot does not clear the threaded shank at half a hole pitch");
-assert(abs(nearest_hole(post_spacing / 2) - post_spacing / 2) + screw_crest_r + 0.6 <= slot_span / 2,
-       "preview screw crest hits the arm slot");
-assert(abs(nearest_hole(-post_spacing / 2) + post_spacing / 2) + screw_crest_r + 0.6 <= slot_span / 2,
-       "preview screw crest hits the arm slot");
-assert(abs(nearest_hole(post_spacing_min / 2) - post_spacing_min / 2) + screw_crest_r + 0.6 <= slot_span / 2,
-       "narrow-spacing screw crest hits the arm slot");
-assert(abs(nearest_hole(-post_spacing_min / 2) + post_spacing_min / 2) + screw_crest_r + 0.6 <= slot_span / 2,
-       "narrow-spacing screw crest hits the arm slot");
-assert(abs(nearest_hole(post_spacing_max / 2) - post_spacing_max / 2) + screw_crest_r + 0.6 <= slot_span / 2,
-       "wide-spacing screw crest hits the arm slot");
-assert(abs(nearest_hole(-post_spacing_max / 2) + post_spacing_max / 2) + screw_crest_r + 0.6 <= slot_span / 2,
-       "wide-spacing screw crest hits the arm slot");
+assert(slot_span + 0.01 >= screw_major + 1.6, "arm slot binds on the crest");
 assert(y_slot > rail_y0 + 1 && y_slot < rail_y1 - 1, "slot is not under the receiver roof");
 assert(rail_z0 >= arm_z0 + arm_t, "receiver roof cuts the arm");
 assert(z_bot1 <= arm_z0 - 0.15, "cradle bottom cuts the arm");
@@ -219,23 +215,33 @@ assert(arm_rise == 0, "arm is not horizontal");
 assert(abs(arm_y1 - arm_y0) > 100, "arm does not reach forward");
 assert(rail_h + 0.01 >= pocket_y + front_lip_t, "pocket overhang is steeper than 45 degrees");
 assert(rail_span / 2 + 0.01 >= post_spacing_max / 2 + arm_width / 2, "roof does not cover the wide-spacing arm");
-assert(front_wall >= 8, "arm root in front of the bore is too short");
+assert(block_wall + 0.01 >= 5, "collar wall is thinner than 5 mm");
+assert(gusset_y0 > bore_cy + bore_id / 2, "gusset covers the post bore");
+assert(gusset_y1 + 1 < slot_y0, "gusset runs into the longitudinal slot");
+assert(gusset_h + 0.01 >= 8, "root gusset is too short");
 
 echo(str("CHECK post_spacing_min=", post_spacing_min));
 echo(str("CHECK post_spacing_max=", post_spacing_max));
 echo(str("CHECK post_spacing=", post_spacing));
-echo(str("CHECK post_diameter=", post_diameter));
+echo(str("CHECK post_diameter=", post_diameter_max));
+echo(str("CHECK post_diameter_max=", post_diameter_max));
+echo(str("CHECK post_clearance=", post_clearance));
 echo(str("CHECK bore_d=", bore_d));
+echo(str("CHECK bore_id=", bore_id));
 echo(str("CHECK bore_cy=", bore_cy));
 echo(str("CHECK block_depth=", block_depth));
-echo(str("CHECK block_w=", block_w));
-echo(str("CHECK block_h=", block_h));
-echo(str("CHECK heel=", heel));
+echo(str("CHECK block_od=", block_od));
+echo(str("CHECK block_t=", block_t));
+echo(str("CHECK block_wall=", block_wall));
 echo(str("CHECK arm_length=", arm_length));
 echo(str("CHECK arm_width=", arm_width));
 echo(str("CHECK arm_thick=", arm_t));
 echo(str("CHECK arm_rise=", arm_rise));
 echo(str("CHECK slot_span=", slot_span));
+echo(str("CHECK slot_side_gap=", slot_side_gap));
+echo(str("CHECK gusset_h=", gusset_h));
+echo(str("CHECK gusset_y0=", gusset_y0));
+echo(str("CHECK gusset_y1=", gusset_y1));
 echo(str("CHECK slot_gap=", slot_gap));
 echo(str("CHECK slot_radius=", slot_radius));
 echo(str("CHECK slot_y0=", slot_y0));
@@ -257,10 +263,8 @@ echo(str("CHECK clamp_stack=", clamp_stack));
 echo(str("CHECK clamp_takeup=", clamp_takeup));
 echo(str("CHECK z_arm=", z_arm));
 echo(str("CHECK y_solid=", y_solid));
-echo(str("CHECK hole_pitch=", hole_pitch));
 echo(str("CHECK hole_nx=", hole_nx));
 echo(str("CHECK hole_nz=", hole_nz));
-echo(str("CHECK hole_x_max=", hole_x_max));
 echo(str("CHECK m5_tap=", hole_tap));
 echo(str("CHECK plate_t=", plate_t));
 echo(str("CHECK rail_z0=", rail_z0));
@@ -268,7 +272,7 @@ echo(str("CHECK rail_z1=", rail_z1));
 echo(str("CHECK rail_h=", rail_h));
 echo(str("CHECK rail_span=", rail_span));
 echo(str("CHECK rail_y0=", rail_y0));
-echo(str("CHECK front_wall=", front_wall));
+echo(str("CHECK block_wall_echo=", block_wall));
 echo(str("CHECK y_plate0=", y_plate0));
 echo(str("CHECK y_plate1=", y_plate1));
 echo(str("CHECK half=", half));
@@ -290,8 +294,8 @@ echo(str("CHECK standout_y=", standout_y));
 echo(str("CHECK asm_top_z=", asm_top_z));
 echo(str("CHECK cradle_count=", 1));
 echo(str("CHECK screw_count=", 2));
-echo(str("CHECK screw_x_left=", nearest_hole(-half)));
-echo(str("CHECK screw_x_right=", nearest_hole(half)));
+echo(str("CHECK screw_x_left=", -half));
+echo(str("CHECK screw_x_right=", half));
 echo(str("CHECK front_lip_h=", front_lip_h));
 echo(str("CHECK front_lip_t=", front_lip_t));
 
@@ -305,53 +309,70 @@ module post_block_use(side) {
     post_x = side * half;
     difference() {
         union() {
-            translate([post_x - block_w / 2, 0, 0])
-                cube([block_w, block_depth, block_h]);
-            // Horizontal arm. Length is +Y, width is X, thickness is Z.
+            // One collar: 14.5 mm bore, 25.5 mm outside, 10 mm thick.
+            translate([post_x, bore_cy, 0])
+                cylinder(h = block_t, d = block_od, $fn = fn_bore);
+            // Horizontal arm, joined into the front half of that same collar.
             translate([post_x - arm_width / 2, arm_y0, arm_z0])
                 cube([arm_width, arm_y1 - arm_y0, arm_t]);
-            arm_gusset(post_x);
+            arm_gussets(post_x);
         }
         translate([post_x, bore_cy, -1])
-            cylinder(h = block_h + 2, d = bore_d, $fn = fn_bore);
+            cylinder(h = block_t + 2, d = bore_id, $fn = fn_bore);
         translate([post_x, bore_cy, -0.01])
-            cylinder(h = 1.3, d1 = bore_d + 2.2, d2 = bore_d, $fn = fn_bore);
+            cylinder(h = 1.2, d1 = bore_id + 1.6, d2 = bore_id, $fn = fn_bore);
         // Longitudinal slot down the arm. The cradle slides along it to set depth.
         translate([post_x - slot_span / 2, slot_y0, arm_z0 - 1])
             cube([slot_span, slot_len, arm_t + 2]);
-        // Pinch screw from the top of the block down into the bore.
-        translate([post_x, bore_cy, block_h - 10])
-            cylinder(h = 12, d = pinch_d, $fn = 24);
+        // Radial pinch through the collar wall, behind the arm, from the outboard side.
+        translate([post_x, bore_cy - 4, block_t / 2])
+            rotate([0, 90 * side, 0])
+                translate([0, 0, bore_id / 2 - 1.5])
+                    cylinder(h = block_wall + 4, d = pinch_d, $fn = 24);
     }
 }
 
-module arm_gusset(post_x) {
-    // Fillet in front of the bore so the arm is not carried by the front wall alone.
-    y0 = bore_cy + bore_d / 2 + 0.6;
-    hull() {
-        translate([post_x - arm_width / 2, y0, arm_z0])
-            cube([arm_width, 16, arm_t]);
-        translate([post_x - (arm_width / 2 - 2), y0, arm_z0])
-            cube([arm_width - 4, 1.2, 28]);
+module arm_gussets(post_x) {
+    // Two ribs on the collar's front wall. They taper onto the arm before the
+    // slot, so the 10 mm collar is not asked to carry the beam by itself.
+    for (x0 = [-8, 8]) {
+        hull() {
+            translate([post_x + x0 - 2.2, gusset_y0, arm_z0])
+                cube([4.4, 1.0, arm_t + gusset_h]);
+            translate([post_x + x0 - 1.6, gusset_y1, arm_z0])
+                cube([3.2, 1.0, arm_t]);
+        }
+    }
+    // Plan fillets close the step from the 25.5 mm collar out to the 56 mm arm.
+    for (sx = [-1, 1]) {
+        hull() {
+            translate([
+                post_x + sx * (block_r - 2.2) - (sx < 0 ? 2.0 : 0),
+                bore_cy - 5,
+                0
+            ])
+                cube([2.0, 3.0, block_t]);
+            translate([
+                post_x + sx * (arm_width / 2 - 2.0) - (sx < 0 ? 2.0 : 0),
+                arm_y0,
+                0
+            ])
+                cube([2.0, 10, arm_t]);
+        }
     }
 }
 
-module hole_row() {
-    for (ix = [0 : hole_nx - 1]) {
-        hx = -hole_x_max + ix * hole_pitch;
-        translate([hx, y_slot, rail_z0 - 0.4])
+module roof_holes() {
+    for (sx = [-1, 1])
+        translate([sx * half, y_slot, rail_z0 - 0.4])
             tap_hole(rail_h + 0.6);
-    }
 }
 
 module bottom_slots() {
-    // One clearance slot under each threaded hole. The shank passes through,
-    // then through the arm's longitudinal slot, then into the roof thread.
-    for (ix = [0 : hole_nx - 1]) {
-        hx = -hole_x_max + ix * hole_pitch;
-        translate([hx - bot_slot_w / 2, y_slot - slot_gap / 2, z_bot0 - 0.6])
+    // One clearance slot under each arm's tap hole.
+    for (sx = [-1, 1])
+        translate([sx * half - bot_slot_w / 2, y_slot - slot_gap / 2, z_bot0 - 0.6])
             cube([bot_slot_w, slot_gap, bottom_t + 1.2]);
-    }
 }
 
 module tray_use() {
@@ -392,7 +413,7 @@ module tray_use() {
                     cube([pocket_x, 0.02, front_lip_h]);
             }
         }
-        hole_row();
+        roof_holes();
         bottom_slots();
         camera_windows();
         strap_slots();
@@ -415,14 +436,14 @@ module strap_slots() {
 }
 
 module coupon_use() {
-    h = 18;
+    // Same collar as the post block, without the arm. Bore gauge only.
     difference() {
-        translate([-block_w / 2, 0, 0])
-            cube([block_w, block_depth, h]);
+        translate([0, bore_cy, 0])
+            cylinder(h = block_t, d = block_od, $fn = fn_bore);
         translate([0, bore_cy, -1])
-            cylinder(h = h + 2, d = bore_d, $fn = fn_bore);
+            cylinder(h = block_t + 2, d = bore_id, $fn = fn_bore);
         translate([0, bore_cy, -0.01])
-            cylinder(h = 1.2, d1 = bore_d + 2.2, d2 = bore_d, $fn = fn_bore);
+            cylinder(h = 1.2, d1 = bore_id + 1.6, d2 = bore_id, $fn = fn_bore);
     }
 }
 
@@ -459,7 +480,7 @@ module thumbscrew_solid() {
 }
 
 module thumbscrew(side) {
-    translate([nearest_hole(side * half), y_slot, z_bear])
+    translate([side * half, y_slot, z_bear])
         thumbscrew_solid();
 }
 
@@ -481,7 +502,7 @@ module assembly_use() {
 module orient_block(side) {
     post_x = side * half;
     // Arm already lies on Z = 0 with the bore vertical. Shift into +X.
-    translate([-(post_x - block_w / 2), 0, 0])
+    translate([-(post_x - arm_width / 2), 0, 0])
         post_block_use(side);
 }
 
@@ -499,7 +520,7 @@ module orient_screw() {
 }
 
 module orient_coupon() {
-    translate([block_w / 2, 0, 0])
+    translate([block_r, 0, 0])
         coupon_use();
 }
 

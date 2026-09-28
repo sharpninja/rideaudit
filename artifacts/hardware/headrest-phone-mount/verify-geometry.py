@@ -235,6 +235,9 @@ def main() -> int:
             expect(c["y_slot"] - c["slot_y0"] > 40, "cradle cannot slide back along the arm")
             expect(c["slot_y1"] > c["y_slot"] + 4, "arm slot does not contain the preview screw")
             expect(c["arm_rise"] == 0, "arms are not horizontal")
+            expect(c["gusset_h"] + 0.01 >= 8, "root gusset is too short")
+            expect(c["gusset_y1"] + 1 < c["slot_y0"], "gusset runs into the arm slot")
+            expect(c["gusset_y0"] > c["bore_cy"] + c["bore_id"] / 2, "gusset covers the post bore")
             expect(c["screw_count"] == 2, "model does not have one thumbscrew per arm")
             expect(c["hole_nz"] == 1, "threaded holes are not a single row")
             expect(c["pocket_x"] >= c["phone_length_max"], "pocket shorter than the longest phone")
@@ -242,14 +245,16 @@ def main() -> int:
             expect(c["pocket_z"] >= c["phone_width_max"], "pocket shorter than the widest short side")
             expect(c["camera_clearance"] >= 12, "camera window too small")
             expect(c["cradle_count"] == 1, "model is not the single shared cradle")
-            expect(
-                c["slot_span"] / 2 + 0.01 >= c["hole_pitch"] / 2 + c["screw_major"] / 2 + 0.6,
-                "arm slot does not clear the threaded shank",
-            )
-            expect(abs(c["screw_x_left"] + c["half"]) + c["screw_crest_r"] + 0.4 <= c["slot_span"] / 2,
-                   "left screw is outside its arm slot")
-            expect(abs(c["screw_x_right"] - c["half"]) + c["screw_crest_r"] + 0.4 <= c["slot_span"] / 2,
-                   "right screw is outside its arm slot")
+            expect(c["slot_side_gap"] <= 1.001, "arm slot gap is over 1 mm on a side")
+            expect(c["slot_side_gap"] + 0.001 >= 0.8, "arm slot does not clear the crest")
+            expect(abs(c["slot_span"] - (c["screw_major"] + 2.0)) < 0.05, "arm slot is not major diameter plus 2 mm")
+            expect(abs(c["screw_x_left"] + c["half"]) < 0.05, "left screw is off the arm centerline")
+            expect(abs(c["screw_x_right"] - c["half"]) < 0.05, "right screw is off the arm centerline")
+            expect(abs(c["bore_id"] - 14.5) < 0.05, "post bore is not 14.5 mm")
+            expect(abs(c["block_od"] - 25.5) < 0.05, "post block is not 25.5 mm outside")
+            expect(abs(c["block_t"] - 10.0) < 0.05, "post block is not 10 mm thick")
+            expect(abs(c["block_wall"] - 5.5) < 0.1, "collar wall is not 5.5 mm")
+            expect(c["bore_id"] > c["post_diameter_max"], "bore does not clear the largest sourced post")
             expect(c["arm_thick"] + 0.01 >= 12, "arm is too thin")
             expect((c["arm_width"] - c["slot_span"]) / 2 >= 10, "arm rails are too narrow")
             expect(c["screw_major"] + 0.01 >= 8, "thumbscrew is not the thicker M8 shank")
@@ -259,13 +264,23 @@ def main() -> int:
             expect(abs(c["clamp_stack"] - (c["bottom_t"] + c["arm_thick"])) < 0.05, "clamp stack is not bottom plate plus arm")
             for spacing in (c["post_spacing_min"], c["post_spacing_max"], c["post_spacing"]):
                 half_s = spacing / 2
-                expect(c["hole_x_max"] + 0.01 >= half_s, f"hole row does not cover {spacing:.0f} mm spacing")
                 expect(
                     c["rail_span"] / 2 + 0.01 >= half_s + c["arm_width"] / 2,
                     f"receiver roof does not cover an arm at {spacing:.0f} mm spacing",
                 )
             notes.append(
-                f"The hole row covers post centers from {c['post_spacing_min']:.0f} mm to {c['post_spacing_max']:.0f} mm."
+                f"Set post_spacing to the measured centers ({c['post_spacing_min']:.0f}–{c['post_spacing_max']:.0f} mm) and re-export. "
+                "Each arm then has one tap hole on its centerline."
+            )
+            notes.append(
+                f"The arm slot is {c['slot_span']:.1f} mm wide, {c['slot_side_gap']:.2f} mm clear of the M{c['screw_major']:.0f} crest on each side."
+            )
+            notes.append(
+                f"Each post block is one collar, bore {c['bore_id']:.1f} mm, outside {c['block_od']:.1f} mm, {c['block_t']:.0f} mm thick."
+            )
+            notes.append(
+                f"Root gussets rise {c['gusset_h']:.0f} mm above the arm on the collar and taper off before the slot. "
+                "Side fillets close the step from the collar out to the arm width."
             )
             notes.append("Arms lie in a horizontal plane and enter the receiver from the rear.")
             notes.append(
@@ -346,15 +361,9 @@ def main() -> int:
             ))
             probes.append(classify(
                 tray_m,
-                (rx + c["hole_pitch"] / 2, c["y_slot"], hole_z),
+                (0.0, c["y_slot"], hole_z),
                 True,
-                "roof stays solid between threaded holes",
-            ))
-            probes.append(classify(
-                tray_m,
-                (rx + c["hole_pitch"], c["y_slot"], hole_z),
-                False,
-                "neighbor threaded hole is open",
+                "roof stays solid between the two arm holes",
             ))
             probes.append(classify(
                 tray_m,
@@ -383,21 +392,27 @@ def main() -> int:
             ))
             probes.append(classify(
                 tray_m,
-                (rx + c["hole_pitch"] / 2, c["y_slot"], bot_z),
+                (0.0, c["y_slot"], bot_z),
                 True,
                 "cradle bottom stays solid between the screw slots",
             ))
             probes.append(classify(
                 block_m,
-                (-c["half"], c["bore_cy"], c["block_h"] / 2),
+                (-c["half"], c["bore_cy"], c["block_t"] / 2),
                 False,
-                "post bore passes through the block",
+                "post bore passes through the collar",
             ))
             probes.append(classify(
                 block_m,
-                (-c["half"], 1.2, c["block_h"] / 2),
+                (-c["half"], 1.2, c["block_t"] / 2),
                 True,
                 "flush heel is solid behind the bore",
+            ))
+            probes.append(classify(
+                block_m,
+                (-c["half"] + c["block_od"] / 2 - 0.6, 0.6, c["block_t"] / 2),
+                False,
+                "post block is round in plan, not a square corner",
             ))
             probes.append(classify(
                 block_m,
@@ -443,9 +458,21 @@ def main() -> int:
             ))
             probes.append(classify(
                 block_m,
+                (-c["half"] + 8.0, c["gusset_y0"] + 1.5, c["arm_thick"] + 4.0),
+                True,
+                "root gusset stands on the collar above the arm",
+            ))
+            probes.append(classify(
+                block_m,
+                (-c["half"] - 18.0, c["bore_cy"] - 1.2, 4.0),
+                True,
+                "side fillet fills the step beside the collar",
+            ))
+            probes.append(classify(
+                block_m,
                 (-c["half"] + beside, c["bore_cy"] + 80.0, c["z_arm"] + c["arm_thick"] / 2 + 2.0),
                 False,
-                "nothing rises above the horizontal arm",
+                "arm stays flat ahead of the root gussets",
             ))
             probes.append(classify(
                 right_m,
@@ -461,13 +488,13 @@ def main() -> int:
             ))
             probes.append(classify(
                 coupon_m,
-                (0.0, c["bore_cy"], 9.0),
+                (0.0, c["bore_cy"], c["block_t"] / 2),
                 False,
                 "fit coupon bore is open",
             ))
             probes.append(classify(
                 coupon_m,
-                (c["block_w"] / 2 - 1.4, c["bore_cy"], 9.0),
+                (c["block_od"] / 2 - 1.2, c["bore_cy"], c["block_t"] / 2),
                 True,
                 "fit coupon wall surrounds the bore",
             ))
@@ -545,16 +572,16 @@ def write_report(checks: dict[str, float], stats: dict, notes: list[str]) -> Non
         "",
         "| Check | Value |",
         "| --- | --- |",
-        f"| Post spacing the hole row covers | {c['post_spacing_min']:.0f} – {c['post_spacing_max']:.0f} mm center-to-center |",
-        f"| Assembly preview spacing | {c['post_spacing']:.0f} mm |",
-        f"| Post bore | {c['bore_d']:.2f} mm (post {c['post_diameter']:.0f} mm + clearance) |",
+        f"| Post spacing | {c['post_spacing_min']:.0f} – {c['post_spacing_max']:.0f} mm center-to-center; preview {c['post_spacing']:.0f} mm |",
+        f"| Post block | one collar, bore {c['bore_id']:.1f} mm, outside {c['block_od']:.1f} mm, {c['block_t']:.0f} mm thick, wall {c['block_wall']:.1f} mm |",
+        f"| Bore vs largest sourced post | {c['post_diameter_max']:.0f} mm post, {c['post_clearance']:.1f} mm diametral clearance |",
         f"| Arm length | {c['arm_length']:.0f} mm from the post axis, horizontal (rise {c['arm_rise']:.0f}) |",
         f"| Arm section | {c['arm_width']:.0f} × {c['arm_thick']:.0f} mm |",
-        f"| Arm slot, along the arm | {c['slot_len']:.0f} mm long, {c['slot_span']:.0f} mm wide, from {c['slot_y0']:.0f} to {c['slot_y1']:.0f} mm forward of the pad |",
+        f"| Arm slot, along the arm | {c['slot_len']:.0f} mm long, {c['slot_span']:.1f} mm wide ({c['slot_side_gap']:.2f} mm each side of the crest), from {c['slot_y0']:.0f} to {c['slot_y1']:.0f} mm forward of the pad |",
         f"| Depth adjustment behind the preview screw | {c['y_slot'] - c['slot_y0']:.0f} mm |",
-        f"| Cradle bottom slots | {c['slot_gap']:.0f} mm along the arm, {c['hole_clear']:.1f} mm wide, one under each threaded hole |",
+        f"| Cradle bottom slots | {c['slot_gap']:.0f} mm along the arm, {c['hole_clear']:.1f} mm wide, one under each arm |",
         f"| Thread | M{c['screw_major']:.0f}×{c['screw_pitch']:.2f} external, crest Ø {c['screw_major']:.1f} mm, engagement {c['screw_engage']:.0f} mm when seated |",
-        f"| Roof holes | {c['hole_nx']:.0f} in one row, pitch {c['hole_pitch']:.0f} mm, out to ±{c['hole_x_max']:.0f} mm, tap drill {c['hole_tap']:.1f} mm |",
+        f"| Roof holes | {c['hole_nx']:.0f}, one on each arm centerline, tap drill {c['hole_tap']:.1f} mm |",
         f"| Clamp stack | bottom plate {c['bottom_t']:.0f} mm + arm {c['arm_thick']:.0f} mm = {c['clamp_stack']:.0f} mm; slide take-up {c['clamp_takeup']:.2f} mm |",
         f"| Thumbscrews | {c['screw_count']:.0f} modeled, head Ø {c['screw_head_d']:.0f} mm, shank {c['screw_shank_l']:.1f} mm under the face |",
         f"| Phone pocket (L × short side × thickness) | {c['pocket_x']:.1f} × {c['pocket_z']:.1f} × {c['pocket_y']:.1f} mm |",
