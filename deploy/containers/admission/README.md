@@ -24,6 +24,8 @@ The process serves gRPC over HTTP/2. Clients need cleartext HTTP/2 support. A br
 
 `RIDEAUDIT_PLAY_INTEGRITY=fixture` accepts only `fixture.v1.` tokens. Any other configuration rejects attestation as unverifiable.
 
+Public ingest accepts `RIDESEAL1` envelopes and untouched device `RAES` envelopes. A RAES body is stored as submitted. Admission does not re-encode it as `RIDESEAL1` and does not decrypt it. The RAES receipt core must carry the SHA-256 of the envelope bytes, the active policy, and the fixture attestation binding. Court working-copy decrypt still opens `RIDESEAL1` only.
+
 ## Container sketch
 
 ```bash
