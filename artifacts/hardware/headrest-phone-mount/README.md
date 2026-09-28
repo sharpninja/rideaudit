@@ -14,7 +14,17 @@ Parametric dual-phone headrest mount for RideAudit rideshare audit capture. It c
 
 Default layout is **opposed**: one phone faces the road, the other faces the cabin. Set `cradle_layout = 1` for **dual-forward** (both phones face the road) and print the beam extensions.
 
-![Opposed assembly preview](verification/previews/assembly-opposed.png)
+**Opposed assembly** (default, `part="assembly"`):
+
+![Opposed assembly](verification/previews/assembly-opposed.png)
+
+**Dual-forward assembly** (`part="assembly_forward"`):
+
+![Dual-forward assembly](verification/previews/assembly-dual-forward.png)
+
+**Single-phone assembly** (`part="assembly_single"`):
+
+![Single-phone assembly](verification/previews/assembly-single.png)
 
 ## Safety disclaimer
 
@@ -39,9 +49,37 @@ Print the part STLs in `exports/`. They are already oriented for FDM (flat on th
 
 The default beam is **209.4 mm** long and **8 mm** thick. It needs a printer with at least **220 mm** of travel on one axis. Turn the skirt off and keep the brim on the short side only. If the bed is shorter, lower `post_spacing_max` toward your measured post spacing and re-export; the beam length follows that parameter.
 
+**Beam**
+
 ![Beam](verification/previews/beam.png)
+
+**Beam extension**
+
+![Beam extension](verification/previews/beam-extension.png)
+
+**Post clamp**
+
 ![Post clamp](verification/previews/post-clamp.png)
+
+**Phone cradle**
+
 ![Phone cradle](verification/previews/phone-cradle.png)
+
+**Cradle clip, road side**
+
+![Cradle clip, road side](verification/previews/cradle-clip.png)
+
+**Cradle clip, cabin side**
+
+![Cradle clip, cabin side](verification/previews/cradle-clip-cabin.png)
+
+**Stop pin**
+
+![Stop pin](verification/previews/stop-pin.png)
+
+**Fit coupon**
+
+![Fit coupon](verification/previews/fit-coupon.png)
 
 ## Print settings (starting point)
 
@@ -88,13 +126,16 @@ Foam thickness, per side, when the phone is under the maximum:
 - Short side: `phone_width_max - actual short side` under the strap, at the top of the pocket
 - Thickness: `phone_thickness_max - actual thickness` against the back plate
 
-## Exporting STL
+## Exporting STL and previews
 
 The `.scad` source is the source of truth under GPL-2.0. From this directory:
 
 ```text
 ./export-stls.sh
+./export-previews.sh
 ```
+
+`export-previews.sh` writes the isometric PNGs under `verification/previews/` (parts, the opposed assembly, the dual-forward assembly, and the single-phone assembly). Same `part=` names as the STL export.
 
 Or one part at a time:
 
