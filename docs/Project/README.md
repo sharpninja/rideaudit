@@ -11,7 +11,7 @@ BDPv4 batch files for Functional, Technical, Testing, Use-Case, and Mapping enti
 
 ## MCP status
 
-`MCP_UNTRUSTED` is set at the repo root (`MCP_UNTRUSTED.yaml`). Do not treat the MCP workspace as registered until McpServer health recovers. Re-run workspace init via `mcpserver-grok-plugin` when healthy.
+Repo root currently has `MCP_TRUSTED.yaml` for workspace `F:\GitHub\rideaudit`. The post-planning Octopus + ngrok batch was ingested via `mcpserver-grok-plugin` on 2026-09-28 (see `docs/receipts/requirements/20260928T234854Z-post-planning-octopus-ngrok.md`). If marker signature or health nonce fails, log `MCP_UNTRUSTED` and keep YAML as the reviewable source of truth.
 
 ## How to ingest (when MCP is healthy)
 
@@ -24,13 +24,14 @@ BDPv4 batch files for Functional, Technical, Testing, Use-Case, and Mapping enti
    - `Use-Cases-Batch.yaml`
    - `Additive-Bluetooth-Pairing-Batch.yaml`
    - `Additive-Avalonia-Grpc-Stack-Batch.yaml`
-4. Apply `Requirements-Mappings-Batch.yaml` after FR/TR/TEST/UC records exist (use-case localIds map to numeric MCP IDs at runtime).
-5. Verify counts: base 74 FRs (52 functional + 22 NFR-as-FR), plus additive FR-RIDE-053..055 (Bluetooth) and FR-RIDE-056..062 (Avalonia/gRPC stack), plus related TR/TEST/UC records and one mapping per FR. Use-Cases-Batch.yaml must contain a single top-level records key with all UC-RIDE-001..031 (duplicate records keys are invalid for strict parsers).
+   - `Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`
+4. Apply `Requirements-Mappings-Batch.yaml` after FR/TR/TEST/UC records exist (use-case localIds map to numeric MCP IDs at runtime). Apply `Additive-PostPlanning-Deploy-Ngrok-Mappings.yaml` after the post-planning batch records exist.
+5. Verify counts: base 74 FRs (52 functional + 22 NFR-as-FR), plus additive FR-RIDE-053..055 (Bluetooth), FR-RIDE-056..062 (Avalonia/gRPC stack), and FR-RIDE-063..064 (Octopus CD + ngrok), plus related TR/TEST/UC records and one mapping per FR. Use-Cases-Batch.yaml must contain a single top-level records key with UC-RIDE-001..031 (duplicate records keys are invalid for strict parsers). UC-RIDE-032..033 live in Additive-PostPlanning-Deploy-Ngrok-Batch.yaml.
 
 ## ID conventions
 
 - FR: `FR-RIDE-001`..`FR-RIDE-052`, NFRs as `FR-RIDE-201`..`FR-RIDE-222`, additive `FR-RIDE-053`+
-- TR: `TR-RIDE-<SUBAREA>-NNN` with SUBAREA in INGEST, STORE, ANAL, SEAL, CHAIN, ESCROW, PLAY, GPL, SERVER, VIDEO, VIEW, PRIV, SEC, PERF
+- TR: `TR-RIDE-<SUBAREA>-NNN` with SUBAREA in INGEST, STORE, ANAL, SEAL, CHAIN, ESCROW, PLAY, GPL, SERVER, VIDEO, VIEW, PRIV, SEC, PERF, DEPLOY, EDGE
 - TEST: `TEST-RIDE-NNN`
 - Use cases: local `UC-RIDE-NNN` (MCP assigns numeric IDs at ingest)
 
@@ -46,6 +47,7 @@ Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-
 | --- | --- | --- | --- | --- |
 | Bluetooth pairing | FR-RIDE-053..055 | TR-RIDE-VIDEO-010..011 | TEST-RIDE-034 | UC-RIDE-022..024 |
 | Avalonia/gRPC stack | FR-RIDE-056..062 | TR-RIDE-VIDEO-012, VIEW-005, GPL-004..005, SERVER-008..010 | TEST-RIDE-035..037 | UC-RIDE-025..031 |
+| Post-planning Octopus + ngrok | FR-RIDE-063..064 | TR-RIDE-DEPLOY-001..002, EDGE-001 | TEST-RIDE-038..040 | UC-RIDE-032..033 |
 
 ## Notes
 
