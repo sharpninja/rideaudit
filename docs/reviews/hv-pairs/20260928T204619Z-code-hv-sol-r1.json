@@ -94,5 +94,5 @@
                            "reconstructed_at":  "2026-09-28T21:02:41.212Z",
                            "reason":  "Canonical pair from retained request and response JSONL"
                        },
-    "custody_commit":  null
+    "custody_commit":  "caaaad409c2783d236a24f09e45c4caa3cd82af2"
 }
