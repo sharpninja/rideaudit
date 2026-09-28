@@ -118,7 +118,7 @@ openscad -o exports/post-block.stl --export-format binstl -D 'part="block"' head
 
 `part` is one of `assembly`, `block`, `tray`, `coupon`, `screw`.
 
-Check the geometry (pocket, camera windows, post bore, rear entry, one slot per arm, hole row, flush heels, no arm interference):
+Check the geometry (pocket, camera windows, post bore, rear entry, longitudinal arm slots, cradle-bottom slots, modeled thumbscrews, hole row, flush heels, no arm interference):
 
 ```text
 python3 verify-geometry.py
