@@ -13,12 +13,18 @@ public sealed class CaptureAdmissionOptions
 {
     public string? AdmissionAddress { get; init; }
     public string? BearerToken { get; init; }
+    public string? TenantId { get; init; }
+    public string? DriverId { get; init; }
+    public string? PolicyVersion { get; init; }
 
     public static CaptureAdmissionOptions FromEnvironment() =>
         new()
         {
             AdmissionAddress = Environment.GetEnvironmentVariable("RIDEAUDIT_ADMISSION_ADDRESS"),
-            BearerToken = Environment.GetEnvironmentVariable("RIDEAUDIT_ADMISSION_BEARER")
+            BearerToken = Environment.GetEnvironmentVariable("RIDEAUDIT_ADMISSION_BEARER"),
+            TenantId = Environment.GetEnvironmentVariable("RIDEAUDIT_TENANT_ID"),
+            DriverId = Environment.GetEnvironmentVariable("RIDEAUDIT_DRIVER_ID"),
+            PolicyVersion = Environment.GetEnvironmentVariable("RIDEAUDIT_POLICY_VERSION") ?? RideAuditPolicy.Version
         };
 
     public void EnsureReady()

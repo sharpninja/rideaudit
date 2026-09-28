@@ -17,13 +17,13 @@ This is not a Play Store receipt, not a live Bitcoin/OTS/L2 admission receipt, n
 
 - `WindowsBleDiscoveryBus.Create` can see a BLE adapter (`RadioAvailable=true`) and still fail-closed on unpackaged WinRT advertise (`ArgumentException` → `BT_DISABLED`). No invented peers.
 - `WindowsCameraSource` uses WinRT `DeviceInformation` / `MediaCapture`. Tests pass without returning fixture bytes.
-- Avalonia capture shell still defaults to `UnavailableDiscoveryBus`. That is fail-closed, not a silent radio success.
+- Avalonia capture shell no longer treats `new CaptureShellView()` as the production APK entry. Android installs `AndroidProductionComposition`; missing radio/camera/Play/admission is `PRODUCTION_UNAVAILABLE`. That is fail-closed, not a silent radio success. Physical dual-phone pairing is still not proven (`adb devices` listed no device).
 
 ## Track 6 — Docker
 
 - LEGION2 Docker client 29.8.0. Contexts `desktop-linux` and `default` both return HTTP 500 on the named pipes. `com.docker.service` is STOPPED (`WIN32_EXIT_CODE 1077`). `docker-desktop` WSL is Running but the engine API is not usable. No image was built on LEGION2.
 - PAYTON-OMARCHY (`192.168.0.149`) SSH BatchMode works. Engine 29.7.2, Compose 5.5.1, `dotnet` 10.0.111, 381G free. Existing Octopus/SQL/Caddy containers were left running.
-- Deploy scripts: `deploy/omarchy/`. `scp` is unusable because Omarchy’s login shell is pwsh and prints profile banners (`Received message too long`). Sync uses stdin into `exec /usr/bin/bash --noprofile --norc`. Checkout on Omarchy: `f51f454` at `/home/sharpninja/github/rideaudit`.
+- Deploy scripts: `deploy/omarchy/`. `scp` is unusable because Omarchy’s login shell is pwsh and prints profile banners (`Received message too long`). Sync uses stdin into `exec /usr/bin/bash --noprofile --norc`. An earlier Track 6 note recorded checkout `f51f454`; that is historical only. The cutover checkout is `2612693` at `/home/sharpninja/github/rideaudit` (see Cutover).
 - Preferred path exercised: `dotnet publish` linux-x64 on LEGION2 (`artifacts/omarchy-publish/admission`, not committed) → `Sync-Publish.ps1` → `remote-runtime-build.sh` on Omarchy → `Confirm-Cutover.ps1 -ConfirmCutover`.
   - `rideaudit-admission:local` / `rideaudit-counsel:local` `sha256:031a4a6e21cc0424a6276a59b9d38cabe15f7c5670468d3a99e4dcb8aad9fee5` (runtime image from LEGION2 publish at `2612693`)
   - Earlier SDK rebuild from `dcb31bf` was superseded by this runtime build.

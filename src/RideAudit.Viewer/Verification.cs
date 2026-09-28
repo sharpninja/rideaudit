@@ -4,6 +4,7 @@
 using RideAudit.Client.Core;
 using RideAudit.PlayIntegrity;
 using RideAudit.Client.Seal;
+using RideAudit.Video;
 
 namespace RideAudit.Viewer;
 
@@ -126,7 +127,7 @@ public sealed class VerificationGate
         Add("ots_receipt", ots.Ok, ots.Detail);
 
         var simulatedOk = _allowSimulatedAttestation && receipt.AttestationProvider == PlayIntegrityProviders.Stub;
-        var realProvider = receipt.AttestationProvider == PlayIntegrityProviders.Real && string.IsNullOrEmpty(receipt.StubNotice);
+        var realProvider = PlayIntegrityProviders.IsCourtReadyReal(receipt.AttestationProvider, receipt.StubNotice);
         var providerOk = realProvider || simulatedOk;
         var allowlisted = _allowlist.IsAllowed(receipt.PackageIdentity, receipt.SigningCertDigest);
         var attestationOk = providerOk && allowlisted && !string.IsNullOrWhiteSpace(receipt.AttestationTokenHash);
@@ -149,8 +150,13 @@ public sealed class VerificationGate
         if (receipt.Composite)
         {
             var meta = receipt.CompositeMetadata;
-            var linksOk = meta is not null && meta.SourceStreamIds.Count >= 2 && meta.SourceContentHashes.Count >= 2;
-            Add("source_stream_links", linksOk, linksOk ? "Source streams are linked." : "Source stream links are missing.");
+            var linksOk = meta is not null
+                && meta.SourceStreamIds.Count >= 2
+                && meta.SourceContentHashes.Count >= 2
+                && string.Equals(meta.Codec, CompositeSourceContainer.CodecId, StringComparison.Ordinal);
+            Add("source_stream_links", linksOk, linksOk
+                ? "Source streams are linked in a source-payload container."
+                : "Source stream links are missing or the composite is not a source-payload container.");
             var clockOk = meta is not null && !string.IsNullOrWhiteSpace(meta.SyncClockOffset);
             Add("clock_offsets", clockOk, clockOk ? "SyncClockOffset is present." : "SyncClockOffset is missing.");
             var overlayOk = meta is not null && !string.IsNullOrWhiteSpace(meta.OverlayManifestVersion) && !string.IsNullOrWhiteSpace(meta.TimelineManifestVersion);

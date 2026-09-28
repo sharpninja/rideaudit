@@ -337,11 +337,12 @@ public sealed class ExplicitDeviceProbe : IDeviceProbe
 }
 
 /// <summary>
-/// Passenger compositor. Produces a canonical on-device composite. This is not a production H.264 encoder.
+/// Passenger compositor. Produces a canonical on-device source-payload container.
+/// This is not a production H.264 encoder and is not a Bluetooth media transport.
 /// </summary>
 public sealed class PassengerCompositor
 {
-    public const string CodecId = "rideaudit-composite-canonical-v1";
+    public const string CodecId = CompositeSourceContainer.CodecId;
     public const string CompressionId = "none-canonical";
     public const string OverlayVersion = "spider-graph-overlay-v1";
     public const string TimelineVersion = "timeline-manifest-v1";
@@ -381,7 +382,7 @@ public sealed class PassengerCompositor
         }
 
         var manifest = new OverlayManifest(OverlayVersion, TimelineVersion, points);
-        var canonical = CanonicalEncode(compositeId, driver, passenger, sync, manifest);
+        var canonical = CompositeSourceContainer.Encode(compositeId, driver, passenger, sync, manifest);
         var latency = DateTimeOffset.UtcNow - started;
         if (latency < TimeSpan.Zero)
         {
@@ -404,37 +405,166 @@ public sealed class PassengerCompositor
         };
     }
 
-    private static byte[] CanonicalEncode(
+}
+
+public sealed record ParsedCompositeContainer(
+    string CompositeId,
+    string HeaderText,
+    string DriverStreamId,
+    string PassengerStreamId,
+    byte[] DriverPayload,
+    byte[] PassengerPayload);
+
+/// <summary>
+/// Binary container that includes both source payloads and their SHA-256 bindings.
+/// Not H.264, not a Play Store asset, and not a dual-phone Bluetooth media path.
+/// </summary>
+public static class CompositeSourceContainer
+{
+    public const string Magic = "RIDEAUDIT-COMPOSITE-v2\n";
+    public const string CodecId = "rideaudit-composite-source-container-v2";
+
+    public static byte[] Encode(
         string compositeId,
         SourceStream driver,
         SourceStream passenger,
         SyncClockOffset sync,
         OverlayManifest manifest)
     {
-        var builder = new StringBuilder();
-        builder.AppendLine("RIDEAUDIT-COMPOSITE-v1");
-        builder.AppendLine("id=" + compositeId);
-        builder.AppendLine("codec=" + CodecId);
-        builder.AppendLine("driver=" + driver.StreamId + " device=" + driver.DeviceId + " attest=" + driver.AttestationReference);
-        builder.AppendLine("passenger=" + passenger.StreamId + " device=" + passenger.DeviceId + " attest=" + passenger.AttestationReference);
-        builder.AppendLine("camera-driver=" + driver.Camera.CameraId + " " + driver.Camera.Width + "x" + driver.Camera.Height);
-        builder.AppendLine("camera-passenger=" + passenger.Camera.CameraId + " " + passenger.Camera.Width + "x" + passenger.Camera.Height);
-        builder.AppendLine("syncOffsetMs=" + sync.Offset.TotalMilliseconds.ToString("0.###"));
-        builder.AppendLine("driftMs=" + sync.Drift.TotalMilliseconds.ToString("0.###"));
-        builder.AppendLine("uncertaintyMs=" + sync.Uncertainty.TotalMilliseconds.ToString("0.###"));
-        builder.AppendLine("overlay=" + manifest.Version);
-        builder.AppendLine("timeline=" + manifest.TimelineManifestVersion);
+        var header = new StringBuilder();
+        header.AppendLine("id=" + compositeId);
+        header.AppendLine("codec=" + CodecId);
+        header.AppendLine("driver=" + driver.StreamId + " device=" + driver.DeviceId + " attest=" + driver.AttestationReference);
+        header.AppendLine("passenger=" + passenger.StreamId + " device=" + passenger.DeviceId + " attest=" + passenger.AttestationReference);
+        header.AppendLine("driverHash=" + Hashes.Sha256Hex(driver.Payload));
+        header.AppendLine("passengerHash=" + Hashes.Sha256Hex(passenger.Payload));
+        header.AppendLine("camera-driver=" + driver.Camera.CameraId + " " + driver.Camera.Width + "x" + driver.Camera.Height);
+        header.AppendLine("camera-passenger=" + passenger.Camera.CameraId + " " + passenger.Camera.Width + "x" + passenger.Camera.Height);
+        header.AppendLine("syncOffsetMs=" + sync.Offset.TotalMilliseconds.ToString("0.###"));
+        header.AppendLine("driftMs=" + sync.Drift.TotalMilliseconds.ToString("0.###"));
+        header.AppendLine("uncertaintyMs=" + sync.Uncertainty.TotalMilliseconds.ToString("0.###"));
+        header.AppendLine("overlay=" + manifest.Version);
+        header.AppendLine("timeline=" + manifest.TimelineManifestVersion);
+        header.AppendLine("media=source-payload-container;not-h264;not-bt-transport");
         foreach (var point in manifest.Points)
         {
-            builder.AppendLine("spider " + point.SessionTime.TotalMilliseconds.ToString("0.###")
+            header.AppendLine("spider " + point.SessionTime.TotalMilliseconds.ToString("0.###")
                 + " " + point.AccelX + " " + point.AccelY + " " + point.AccelZ + " " + point.SpeedMps);
         }
 
         foreach (var gap in sync.UnsyncedIntervals)
         {
-            builder.AppendLine("unsynced " + gap.Start.TotalMilliseconds + " " + gap.End.TotalMilliseconds + " " + gap.Reason);
+            header.AppendLine("unsynced " + gap.Start.TotalMilliseconds + " " + gap.End.TotalMilliseconds + " " + gap.Reason);
         }
 
-        return Encoding.UTF8.GetBytes(builder.ToString());
+        var headerBytes = Encoding.UTF8.GetBytes(header.ToString());
+        using var buffer = new MemoryStream();
+        var magic = Encoding.ASCII.GetBytes(Magic);
+        buffer.Write(magic);
+        WriteInt(buffer, headerBytes.Length);
+        buffer.Write(headerBytes);
+        WriteInt(buffer, driver.Payload.Length);
+        buffer.Write(driver.Payload);
+        WriteInt(buffer, passenger.Payload.Length);
+        buffer.Write(passenger.Payload);
+        return buffer.ToArray();
+    }
+
+    public static bool TryParse(ReadOnlySpan<byte> data, out ParsedCompositeContainer parsed)
+    {
+        parsed = null!;
+        var magic = Encoding.ASCII.GetBytes(Magic);
+        if (data.Length < magic.Length + 12 || !data[..magic.Length].SequenceEqual(magic))
+            return false;
+
+        var cursor = magic.Length;
+        if (!TryReadInt(data, ref cursor, out var headerLen) || headerLen < 1 || cursor + headerLen > data.Length)
+            return false;
+        var headerText = Encoding.UTF8.GetString(data.Slice(cursor, headerLen));
+        cursor += headerLen;
+        if (!TryReadInt(data, ref cursor, out var driverLen) || driverLen < 0 || cursor + driverLen > data.Length)
+            return false;
+        var driver = data.Slice(cursor, driverLen).ToArray();
+        cursor += driverLen;
+        if (!TryReadInt(data, ref cursor, out var passengerLen) || passengerLen < 0 || cursor + passengerLen > data.Length)
+            return false;
+        var passenger = data.Slice(cursor, passengerLen).ToArray();
+        cursor += passengerLen;
+        if (cursor != data.Length)
+            return false;
+
+        parsed = new ParsedCompositeContainer(
+            ReadField(headerText, "id="),
+            headerText,
+            ReadToken(headerText, "driver="),
+            ReadToken(headerText, "passenger="),
+            driver,
+            passenger);
+        return parsed.CompositeId.Length > 0 && parsed.DriverStreamId.Length > 0 && parsed.PassengerStreamId.Length > 0;
+    }
+
+    public static (bool Ok, string Detail) VerifyBindings(
+        ReadOnlySpan<byte> plaintext,
+        IReadOnlyList<string> sourceIds,
+        IReadOnlyList<string> sourceHashes)
+    {
+        if (!TryParse(plaintext, out var parsed))
+        {
+            return (false, "Composite plaintext is not a source-payload container. Court-ready media is blocked.");
+        }
+
+        if (sourceIds.Count < 2 || sourceHashes.Count < 2)
+            return (false, "Receipt source bindings are missing.");
+        if (!string.Equals(parsed.DriverStreamId, sourceIds[0], StringComparison.Ordinal)
+            || !string.Equals(parsed.PassengerStreamId, sourceIds[1], StringComparison.Ordinal))
+        {
+            return (false, "Embedded stream ids do not match the receipt.");
+        }
+
+        var driverHash = Hashes.Sha256Hex(parsed.DriverPayload);
+        var passengerHash = Hashes.Sha256Hex(parsed.PassengerPayload);
+        if (!string.Equals(driverHash, sourceHashes[0], StringComparison.OrdinalIgnoreCase)
+            || !string.Equals(passengerHash, sourceHashes[1], StringComparison.OrdinalIgnoreCase))
+        {
+            return (false, "Embedded source payloads do not match receipt source hashes.");
+        }
+
+        return (true, "Source payloads are bound to the receipt hashes.");
+    }
+
+    private static void WriteInt(Stream stream, int value)
+    {
+        Span<byte> bytes = stackalloc byte[4];
+        BitConverter.TryWriteBytes(bytes, value);
+        stream.Write(bytes);
+    }
+
+    private static bool TryReadInt(ReadOnlySpan<byte> data, ref int cursor, out int value)
+    {
+        value = 0;
+        if (cursor + 4 > data.Length)
+            return false;
+        value = BitConverter.ToInt32(data.Slice(cursor, 4));
+        cursor += 4;
+        return true;
+    }
+
+    private static string ReadField(string header, string prefix)
+    {
+        foreach (var line in header.Split('\n'))
+        {
+            var trimmed = line.TrimEnd('\r');
+            if (trimmed.StartsWith(prefix, StringComparison.Ordinal))
+                return trimmed[prefix.Length..].Trim();
+        }
+
+        return "";
+    }
+
+    private static string ReadToken(string header, string prefix)
+    {
+        var line = ReadField(header, prefix);
+        var space = line.IndexOf(' ');
+        return space < 0 ? line : line[..space];
     }
 }

@@ -12,6 +12,8 @@ public partial class App : Application
 {
     public static ShellMode Mode { get; set; } = ShellMode.Review;
 
+    public static CaptureRuntime? CaptureRuntime { get; set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

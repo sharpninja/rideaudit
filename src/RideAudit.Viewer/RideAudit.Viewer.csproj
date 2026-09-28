@@ -8,5 +8,6 @@
     <ProjectReference Include="..\RideAudit.Client.Seal\RideAudit.Client.Seal.csproj" />
     <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
     <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+    <ProjectReference Include="..\RideAudit.Video\RideAudit.Video.csproj" />
   </ItemGroup>
 </Project>

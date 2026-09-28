@@ -247,4 +247,6 @@ Custody contracts: parent §4.5 (immutable receipt-core, OTS semantics, fail-clo
 - [ ] Payton AGREE on portfolio before S1 app code
 - [ ] Phase HV AGREE + Failed 0 Skipped 0 for partitions
 
+These boxes remain historically unchecked. Payton 2026-09-28 authorized iterate-until-HV-agree remediation after code-hv-sol-r1 DISAGREE; that is not a backdated S1–S9 HV pass. Per-phase opposing HV is still required.
+
 **Sibling plans:** [BRACKET](./PLAN-RIDEAUDIT-001-BRACKET.md) · [ANDROID](./PLAN-RIDEAUDIT-001-ANDROID.md) · [Portfolio index](./PLAN-RIDEAUDIT-001-implementation.md)

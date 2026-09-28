@@ -28,9 +28,11 @@ dotnet test tests/RideAudit.Client.Tests/RideAudit.Client.Tests.csproj
 
 ## Play Integrity
 
-`UnavailablePlayIntegrityClient` is the production default in this tree. It returns no token, so the gate fail-closes before key generation, sealing, or upload. There is no user-reachable switch that disables the gate.
+`AndroidProductionComposition` is the production APK composition root. It probes BLE and cameras, then wires Play, canonical admission, gRPC, and escrow. Missing hardware or configuration is recorded as `Unavailable*` and the capture shell fail-closes. The APK does not construct `CaptureShellView()` with a silent `UnavailableDiscoveryBus` success.
 
-`StubPlayIntegrityClient` and `FixturePlayIntegrityClient` exist for tests. Both are labeled in code. Neither calls the Google Play Integrity API, and neither is a Play Store receipt. A stub success is recorded as provider `stub-play-integrity` and is not treated as court-ready by the viewer unless a test explicitly opts into simulated attestation.
+`UnavailablePlayIntegrityClient` is the production Play default in this tree. It returns no token, so the gate fail-closes before key generation, sealing, or upload. There is no user-reachable switch that disables the gate.
+
+`StubPlayIntegrityClient` and `FixturePlayIntegrityClient` exist for tests. Both are labeled in code. Neither calls the Google Play Integrity API, and neither is a Play Store receipt. Fixture evidence uses provider `fixture-play-integrity` plus a stub notice and is rejected by the viewer's court-ready predicate. A stub success is recorded as provider `stub-play-integrity` and is not treated as court-ready unless a test explicitly opts into simulated attestation.
 
 ## What this build is not
 

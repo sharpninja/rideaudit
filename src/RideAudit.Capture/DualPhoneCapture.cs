@@ -39,6 +39,9 @@ public sealed class CaptureRequest
     public TimeSpan FrameInterval { get; init; } = TimeSpan.FromMilliseconds(33);
     public IAdmissionRequestFactory? RequestFactory { get; init; }
     public IDeviceEscrowDeposit? EscrowDeposit { get; init; }
+    public string? TenantId { get; init; }
+    public string? DriverId { get; init; }
+    public string? PolicyVersion { get; init; }
 }
 
 public sealed class CaptureResult
@@ -78,7 +81,7 @@ public sealed class DualPhoneCaptureSession
         _admission = admission;
         _sealer = new CollectionSealer(clock);
         _store = new DeviceBoundaryStore();
-        _defaultRequests = requests ?? PreflightAdmissionRequestFactory.Instance;
+        _defaultRequests = requests ?? CanonicalAdmissionRequestFactory.FromEnvironment();
     }
 
     public DeviceBoundaryStore Store => _store;

@@ -114,7 +114,10 @@ public sealed class PlayIntegrityGate
             token.Verdict,
             token.MeetsDeviceIntegrity,
             token.RecognizedApp,
-            token.StubNotice);
+            token.StubNotice)
+        {
+            RawTokenMaterial = token.TokenMaterial
+        };
 
         return PlayAuthorization.Accept(evidence);
     }

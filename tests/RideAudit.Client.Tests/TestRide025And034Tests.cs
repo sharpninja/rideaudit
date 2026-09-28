@@ -70,7 +70,8 @@ public class TestRide025SyncTests
         var composite = Fixtures.CaptureHappy().Capture.Composite;
         Assert.True(composite.ProducedOnDevice);
         Assert.False(composite.ServerPlaintextComposite);
-        Assert.StartsWith("RIDEAUDIT-COMPOSITE-v1", System.Text.Encoding.UTF8.GetString(composite.CanonicalBytes));
+        Assert.StartsWith("RIDEAUDIT-COMPOSITE-v2", System.Text.Encoding.ASCII.GetString(composite.CanonicalBytes));
+        Assert.True(RideAudit.Video.CompositeSourceContainer.TryParse(composite.CanonicalBytes, out _));
     }
 
     [Fact]
@@ -80,7 +81,7 @@ public class TestRide025SyncTests
     {
         var request = Fixtures.CaptureHappy().Capture.Submission.Request;
         var text = System.Text.Encoding.Latin1.GetString(request.SealedEnvelope.ToByteArray());
-        Assert.DoesNotContain("RIDEAUDIT-COMPOSITE-v1", text);
+        Assert.DoesNotContain("RIDEAUDIT-COMPOSITE-v2", text);
         Assert.Equal(ApiBoundary.SealedContentType, request.ContentType);
     }
 

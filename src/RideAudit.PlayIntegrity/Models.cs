@@ -47,8 +47,11 @@ public sealed record AttestationEvidence(
     bool RecognizedApp,
     string? StubNotice)
 {
+    public string? RawTokenMaterial { get; init; }
+
     public bool IsSimulated =>
-        string.Equals(Provider, PlayIntegrityProviders.Stub, StringComparison.Ordinal);
+        string.Equals(Provider, PlayIntegrityProviders.Stub, StringComparison.Ordinal)
+        || string.Equals(Provider, PlayIntegrityProviders.Fixture, StringComparison.Ordinal);
 }
 
 public sealed class PlayAuthorization
@@ -84,4 +87,14 @@ public static class PlayIntegrityProviders
 {
     public const string Real = "play_integrity";
     public const string Stub = "stub-play-integrity";
+    public const string Fixture = "fixture-play-integrity";
+
+    public static bool IsLabeledStandIn(string? provider) =>
+        string.Equals(provider, Stub, StringComparison.Ordinal)
+        || string.Equals(provider, Fixture, StringComparison.Ordinal);
+
+    public static bool IsCourtReadyReal(string? provider, string? stubNotice) =>
+        string.Equals(provider, Real, StringComparison.Ordinal)
+        && string.IsNullOrEmpty(stubNotice)
+        && !IsLabeledStandIn(provider);
 }

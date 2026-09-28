@@ -9,6 +9,7 @@
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
 **Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) — awaiting Payton AGREE before P1 app code. Child plans are scoped extracts and do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Those boxes remain unchecked as historical process state. Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
 
 > **HARD GATE (section 8):** No Avalonia/gRPC application implementation, skeletons, application test projects, or generated application bindings until P0 docs repair is complete, Astra returns READY/AGREE with accuracy/completeness/confidence ≥98 on the reviewed portfolio revision, and Payton explicitly agrees. No waivers.
@@ -1420,8 +1421,8 @@ The orchestration owner writes and commits review receipts; a read-only reviewer
 
 | Generator | Required HV |
 | --- | --- |
-| grok-4.6-xhigh | Codex gpt-6-sol xhigh |
-| gpt-6-sol xhigh | Grok grok-4.6-xhigh |
+| grok-4.6-xhigh | Codex / GPT Sol family xhigh (`gpt-5.6-sol`; family name `gpt-6-sol`) |
+| gpt-5.6-sol / gpt-6-sol xhigh | Grok grok-4.6-xhigh |
 
 A failed, unavailable, unauthenticated, or partial product HV blocks phase acceptance. Record the actual availability result; do not substitute a model or infer a pass. ChatGPT-authenticated Codex cannot use gpt-6-sol until API-key auth exists — record unavailable truthfully.
 
@@ -1489,6 +1490,8 @@ Before the gate, only documentation, requirement YAML, plans, process records, a
 - [ ] Astra READY + AGREE with accuracy/completeness/confidence ≥98 on this revision; pairs committed
 - [ ] Payton AGREE on the same revision
 - [ ] Only then may implementers begin P1 tests-first skeleton
+
+The boxes above remain **historically unchecked**. They are not backdated as complete. Payton 2026-09-28 authorized a post-HV **remediation loop** (iterate until opposing Sol HV AGREE). That authorization does not rewrite construction-gate history. Per-phase HV custody is still required; code-hv-sol-r1 is recorded DISAGREE and does not close P0–P11b.
 
 ## 10. Primary implementation ownership (parent phases); child homes in §0.2
 

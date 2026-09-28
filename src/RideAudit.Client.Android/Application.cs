@@ -15,6 +15,7 @@ public class Application : AvaloniaAndroidApplication<App>
         : base(javaReference, transfer)
     {
         App.Mode = ShellMode.Capture;
+        AndroidProductionComposition.Install(this);
     }
 
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
