@@ -34,7 +34,7 @@ dotnet test tests/RideAudit.Client.Tests/RideAudit.Client.Tests.csproj
 
 - Not published on Google Play. See `src/RideAudit.Licensing/Distribution/client-distribution-manifest.json`.
 - Not road-ready. Camera encode is a canonical on-device composite used to test the seal, quota, and custody contracts. It is not an H.264 production encoder.
-- Not a claim that a physical Bluetooth radio was exercised in the cloud. Pairing tests use an in-memory discovery bus with the same role rules.
+- Not a claim that a physical Bluetooth radio was exercised in the cloud. Pairing tests use an in-memory discovery bus with the same role rules. The Android host fail-closes through `AndroidCaptureHardware` when the radio or camera is missing. Windows lab adapters are in `RideAudit.Host.Windows`.
 
 Historical Kotlin and Gradle files are archived under `artifacts/android/legacy-kotlin/`.
 

@@ -25,6 +25,9 @@ public sealed class AdmissionServerOptions
     public bool UseFixturePlayIntegrity { get; init; }
     public bool EdgeTerminatesTls { get; init; }
     public string? CertificatePath { get; init; }
+    public string? OtsCalendarSetting { get; init; }
+    public string? L2CalendarSetting { get; init; }
+    public string? L2RpcSetting { get; init; }
     public string PolicyVersion { get; init; } = RideAuditPolicy.Version;
     public SslProtocols EnabledProtocols { get; init; } = SslProtocols.Tls12 | SslProtocols.Tls13;
     public int RateLimitPerMinute { get; init; } = 60;
@@ -33,12 +36,18 @@ public sealed class AdmissionServerOptions
     public static AdmissionServerOptions FromEnvironment()
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var ots = Environment.GetEnvironmentVariable("RIDEAUDIT_OTS_CALENDAR");
+        var l2 = Environment.GetEnvironmentVariable("RIDEAUDIT_L2_CALENDAR");
+        var l2Rpc = Environment.GetEnvironmentVariable("RIDEAUDIT_L2_RPC");
         return new AdmissionServerOptions
         {
             EnvironmentName = environment,
             AllowInsecureDevHttp = Flag("RIDEAUDIT_ALLOW_INSECURE_DEV_HTTP"),
-            UseFixtureCalendar = string.Equals(Environment.GetEnvironmentVariable("RIDEAUDIT_OTS_CALENDAR"), "documented-fixture", StringComparison.Ordinal),
-            UseFixtureL2 = string.Equals(Environment.GetEnvironmentVariable("RIDEAUDIT_L2_CALENDAR"), "documented-fixture", StringComparison.Ordinal),
+            OtsCalendarSetting = ots,
+            L2CalendarSetting = l2,
+            L2RpcSetting = l2Rpc,
+            UseFixtureCalendar = CalendarEndpoints.IsDocumentedFixture(ots),
+            UseFixtureL2 = CalendarEndpoints.IsDocumentedFixture(l2),
             UseFixturePlayIntegrity = string.Equals(Environment.GetEnvironmentVariable("RIDEAUDIT_PLAY_INTEGRITY"), "fixture", StringComparison.Ordinal),
             EdgeTerminatesTls = Flag("RIDEAUDIT_EDGE_TLS"),
             CertificatePath = Environment.GetEnvironmentVariable("RIDEAUDIT_TLS_CERT_PATH"),
@@ -84,6 +93,7 @@ public sealed class AdmissionComposition
     public required InMemoryLogSink Logs { get; init; }
     public required HsmKeyCustody Hsm { get; init; }
     public required DocumentedFixtureOtsCalendar? Calendar { get; init; }
+    public required IOtsCalendar? OtsCalendar { get; init; }
     public required DriverDirectory Identity { get; init; }
     public required AdmissionCoordinator Admission { get; init; }
     public required PlayIntegrityVerifier Play { get; init; }
@@ -98,6 +108,7 @@ public sealed class AdmissionComposition
     public required AlgorithmRegistry Algorithms { get; init; }
     public required CollectionBoundarySealer Sealer { get; init; }
     public required DocumentedFixtureL2Calendar? L2 { get; init; }
+    public required IEthL2Client? L2Client { get; init; }
     public required RoleDirectory Roles { get; init; }
     public required NormalizedStore Imports { get; init; }
     public required IngestPipeline Ingest { get; init; }
@@ -127,9 +138,11 @@ public static class AdmissionHost
             ? new FixturePlayIntegrityDecoder()
             : new FailClosedPlayIntegrityDecoder();
         var play = new PlayIntegrityVerifier(decoder, allowlist, clockService);
-        var calendar = options.UseFixtureCalendar ? new DocumentedFixtureOtsCalendar() : null;
-        var l2 = options.UseFixtureL2 ? new DocumentedFixtureL2Calendar() : null;
-        var ots = new BtcOtsAnchor(calendar);
+        var otsCalendar = ChainEndpointFactory.CreateOts(options);
+        var l2Client = ChainEndpointFactory.CreateL2(options);
+        var calendar = otsCalendar as DocumentedFixtureOtsCalendar;
+        var l2 = l2Client as DocumentedFixtureL2Calendar;
+        var ots = new BtcOtsAnchor(otsCalendar);
         var latency = new LatencyMonitor();
         var elapsed = timer ?? new StopwatchTimer();
         var anchoring = new AnchoringPolicy(latency, elapsed, TimeSpan.FromMinutes(2));
@@ -142,7 +155,7 @@ public static class AdmissionHost
         var alerts = new OperatorAlertSink();
         var archive = new AttestationArchive();
         var admission = new AdmissionCoordinator(
-            identity, play, ots, anchoring, hsm, journal, abuse, alerts, logs, redactor, access, clockService, archive, options.PolicyVersion, l2);
+            identity, play, ots, anchoring, hsm, journal, abuse, alerts, logs, redactor, access, clockService, archive, options.PolicyVersion, l2Client);
         var imports = new NormalizedStore();
         var keys = new ImportKeyRing();
         var roles = new RoleDirectory();
@@ -161,6 +174,7 @@ public static class AdmissionHost
             Logs = logs,
             Hsm = hsm,
             Calendar = calendar,
+            OtsCalendar = otsCalendar,
             Identity = identity,
             Admission = admission,
             Play = play,
@@ -175,6 +189,7 @@ public static class AdmissionHost
             Algorithms = algorithms,
             Sealer = sealer,
             L2 = l2,
+            L2Client = l2Client,
             Roles = roles,
             Imports = imports,
             Ingest = ingest,
@@ -192,7 +207,7 @@ public static class AdmissionHost
         {
             kestrel.ConfigureEndpointDefaults(endpoint =>
             {
-                endpoint.Protocols = HttpProtocols.Http2;
+                endpoint.Protocols = HttpProtocols.Http1AndHttp2;
             });
         });
         configure?.Invoke(builder);

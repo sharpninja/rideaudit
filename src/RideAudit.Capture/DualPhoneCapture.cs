@@ -37,6 +37,8 @@ public sealed class CaptureRequest
     public PerformanceThresholds Thresholds { get; init; } = new();
     public string SourceCommitNotice { get; init; } = "workspace";
     public TimeSpan FrameInterval { get; init; } = TimeSpan.FromMilliseconds(33);
+    public IAdmissionRequestFactory? RequestFactory { get; init; }
+    public IDeviceEscrowDeposit? EscrowDeposit { get; init; }
 }
 
 public sealed class CaptureResult
@@ -60,17 +62,23 @@ public sealed class PreparedSubmission
 
 public sealed class DualPhoneCaptureSession
 {
-    private readonly InMemoryDiscoveryBus _bus;
+    private readonly IDiscoveryBus _bus;
     private readonly ISealedAdmissionClient _admission;
     private readonly CollectionSealer _sealer;
     private readonly DeviceBoundaryStore _store;
+    private readonly IAdmissionRequestFactory _defaultRequests;
 
-    public DualPhoneCaptureSession(InMemoryDiscoveryBus bus, ISealedAdmissionClient admission, IClock clock)
+    public DualPhoneCaptureSession(
+        IDiscoveryBus bus,
+        ISealedAdmissionClient admission,
+        IClock clock,
+        IAdmissionRequestFactory? requests = null)
     {
         _bus = bus;
         _admission = admission;
         _sealer = new CollectionSealer(clock);
         _store = new DeviceBoundaryStore();
+        _defaultRequests = requests ?? PreflightAdmissionRequestFactory.Instance;
     }
 
     public DeviceBoundaryStore Store => _store;
@@ -201,6 +209,9 @@ public sealed class DualPhoneCaptureSession
         }
 
         _sealer.DiscardSessionKeys();
+        request.EscrowDeposit?.Deposit(sealedComposite);
+        if (sealedRaw is not null)
+            request.EscrowDeposit?.Deposit(sealedRaw);
         var submission = Submit(sealedComposite, request, driverAuth);
         Coordinator.Stop(PhoneRole.Driver, request.SessionId, request.Clock);
         return new CaptureResult
@@ -229,7 +240,8 @@ public sealed class DualPhoneCaptureSession
             throw new RideAuditFailClosedException("AUTH_FORBIDDEN", "FR-RIDE-035", "Only the driver phone may submit.");
         }
 
-        var proto = SubmissionMapper.ToRequest(record, request.VehicleId, authorization.Evidence);
+        var factory = request.RequestFactory ?? _defaultRequests;
+        var proto = factory.Create(record, request, authorization.Evidence);
         var response = _admission.SubmitSealed(proto);
         if (!string.IsNullOrEmpty(response.RejectCode))
         {

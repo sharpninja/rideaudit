@@ -1,25 +1,11 @@
-using System.Net;
-using System.Security.Cryptography;
 using System.Text;
-using Grpc.Core;
-using Grpc.Net.Client;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
 using RideAudit.Attest;
-using RideAudit.Client.Contracts;
 using RideAudit.Client.Seal;
 using RideAudit.Contracts;
-using RideAudit.PlayIntegrity;
 using RideAudit.Protos.Admission.V1;
 using RideAudit.Seal;
-using RideAudit.Server.Admission;
 using RideAudit.Server.Identity;
 using RideAudit.TestSupport;
-using ClientScope = RideAudit.Client.Seal.KeyScope;
 
 namespace RideAudit.Server.Admission.Tests;
 
@@ -34,14 +20,14 @@ public class RaesGrpcAdmissionTests
     {
         var world = ServerWorld.Create();
         var enrolled = world.Enroll();
-        var raes = SealRaes(world, enrolled.Driver.DriverId, enrolled.Session.SessionId);
+        var raes = RaesHelpers.SealRaes(enrolled.Driver.DriverId, enrolled.Session.SessionId);
         var nonce = "nonce-raes-grpc";
         var token = world.IssueToken(enrolled.Session.SessionId, nonce);
-        Escrow(world, enrolled.Driver.TenantId, raes);
+        RaesHelpers.Escrow(world, enrolled.Driver.TenantId, raes);
         var request = Request(world, enrolled, raes, token, nonce);
 
-        await using var host = await Start(world);
-        using var transport = Client(host, enrolled.Driver.Token);
+        await using var host = await RaesHelpers.Start(world);
+        using var transport = RaesHelpers.Client(host, enrolled.Driver.Token);
         var client = transport.Admission;
         var decision = client.SubmitSealed(request);
 
@@ -75,13 +61,13 @@ public class RaesGrpcAdmissionTests
     {
         var world = ServerWorld.Create();
         var enrolled = world.Enroll();
-        var raes = SealRaes(world, enrolled.Driver.DriverId, enrolled.Session.SessionId);
+        var raes = RaesHelpers.SealRaes(enrolled.Driver.DriverId, enrolled.Session.SessionId);
         var nonce = "nonce-raes-reject";
         var token = world.IssueToken(enrolled.Session.SessionId, nonce);
         var request = Request(world, enrolled, raes, token, nonce);
 
-        await using var host = await Start(world);
-        using var transport = Client(host, enrolled.Driver.Token);
+        await using var host = await RaesHelpers.Start(world);
+        using var transport = RaesHelpers.Client(host, enrolled.Driver.Token);
         var client = transport.Admission;
 
         var tampered = request.Clone();
@@ -114,75 +100,6 @@ public class RaesGrpcAdmissionTests
         Assert.Equal(ErrorCodes.EscrowUnavailable, missingEscrow.RejectCode);
         Assert.DoesNotContain(world.App.Journal.Snapshot(), record => record.State == CustodyState.Admitted);
         Assert.Equal(0, world.App.Hsm.WorkingCopyOpens);
-    }
-
-    private static AdmissionTransport Client(WebApplication host, string bearer)
-    {
-        var addresses = host.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>();
-        var address = addresses!.Addresses.Single(value => value.StartsWith("http://", StringComparison.Ordinal));
-        AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-        var channel = GrpcChannel.ForAddress(address);
-        var headers = new Metadata { { "authorization", "Bearer " + bearer } };
-        var admission = new GrpcSealedAdmissionClient(new RideAudit.Protos.Admission.V1.Admission.AdmissionClient(channel), headers);
-        return new AdmissionTransport(channel, admission);
-    }
-
-    private static async Task<WebApplication> Start(ServerWorld world)
-    {
-        var app = AdmissionHost.Build(world.Options, builder =>
-        {
-            builder.WebHost.UseSetting(WebHostDefaults.ServerUrlsKey, string.Empty);
-            builder.WebHost.ConfigureKestrel(kestrel =>
-            {
-                kestrel.Listen(IPAddress.Loopback, 0, listen => listen.Protocols = HttpProtocols.Http2);
-            });
-        }, world.App);
-        await app.StartAsync();
-        return app;
-    }
-
-    private static SealedRaes SealRaes(ServerWorld world, string collectorId, string sessionId)
-    {
-        var clock = new RideAudit.Client.Core.FixedClock(ServerWorld.Start);
-        var gate = new PlayIntegrityGate(
-            new FixturePlayIntegrityClient(),
-            RideAudit.PlayIntegrity.PackageAllowlist.CreateDevelopmentDefault(),
-            clock);
-        var authorization = gate.AuthorizeKeyGeneration(AttestationRequest.Create(collectorId));
-        var (publicKey, rsa) = EscrowKeyFactory.CreateEphemeral("escrow-raes");
-        var record = new CollectionSealer(clock).Seal(new RideAudit.Client.Seal.SealRequest
-        {
-            Plaintext = Encoding.UTF8.GetBytes("raes-grpc-fixture-sample"),
-            SessionId = sessionId,
-            RecordId = "rec-raes-grpc",
-            Scope = ClientScope.Session,
-            ScopeId = sessionId,
-            Authorization = authorization,
-            EscrowKey = publicKey,
-            CollectorIdentity = collectorId,
-            ProvenanceTag = RideAuditPolicy.ProvenanceTag,
-            Kind = EvidenceKind.SensorSample,
-            DeviceIds = ["device-raes"],
-            SourceCommitNotice = "fixture"
-        });
-        Assert.True(CollectionSealer.LooksSealed(record.Envelope));
-        return new SealedRaes(record, rsa);
-    }
-
-    private static void Escrow(ServerWorld world, string tenantId, SealedRaes raes)
-    {
-        var dek = EscrowKeyFactory.Unwrap(raes.PrivateKey, raes.Record.WrappedKey.WrappedKey);
-        world.App.Hsm.EscrowCollectionSecret(new EscrowSecret
-        {
-            KeyId = raes.Record.Receipt.KeyId,
-            TenantId = tenantId,
-            SealedRecordId = raes.Record.Id,
-            PrivateKeyPkcs8 = raes.PrivateKey.ExportPkcs8PrivateKey(),
-            Dek = dek,
-            CustodianIds = ["custodian-a", "custodian-b", "custodian-c"],
-            ThresholdM = 2,
-            TotalN = 3
-        });
     }
 
     private static SubmitSealedRequest Request(
@@ -236,21 +153,5 @@ public class RaesGrpcAdmissionTests
                 BoundSessionId = enrolled.Session.SessionId
             }
         };
-    }
-
-    private sealed record SealedRaes(SealedRecord Record, RSA PrivateKey);
-
-    private sealed class AdmissionTransport : IDisposable
-    {
-        public AdmissionTransport(GrpcChannel channel, GrpcSealedAdmissionClient admission)
-        {
-            Channel = channel;
-            Admission = admission;
-        }
-
-        public GrpcChannel Channel { get; }
-        public GrpcSealedAdmissionClient Admission { get; }
-
-        public void Dispose() => Channel.Dispose();
     }
 }

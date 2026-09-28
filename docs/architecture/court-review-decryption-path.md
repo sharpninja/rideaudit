@@ -24,7 +24,7 @@ Release is M-of-N dual control. One custodian is not enough when M is at least 2
 
 ## Expiring working copy
 
-After quorum, the HSM reconstructs the secret, checks its integrity hash, and places only the data-encryption key into an expiring authorized working copy (default 15 minutes). The working copy decrypts the sealed envelope. When the copy expires, further reads fail and the buffer is wiped. The sealed ciphertext, content hash, and receipt core are not rewritten.
+After quorum, the HSM reconstructs the secret, checks its integrity hash, and places only the data-encryption key into an expiring authorized working copy (default 15 minutes). The working copy decrypts `RIDESEAL1` or an already-escrowed device `RAES` envelope. When the copy expires, further reads fail and the buffer is wiped. The sealed ciphertext, content hash, and receipt core are not rewritten. Public ingest still does not decrypt.
 
 ## What the receipt proves
 

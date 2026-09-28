@@ -17,7 +17,7 @@ public enum FixtureCalendarMode
 /// Documented OpenTimestamps stand-in. It never contacts Bitcoin and never emits a live txid.
 /// See Fixtures/btc-ots-fixture.json.
 /// </summary>
-public sealed class DocumentedFixtureOtsCalendar
+public sealed class DocumentedFixtureOtsCalendar : IOtsCalendar
 {
     public const string FixtureId = "rideaudit-btc-ots-fixture-001";
     public const string ChainId = "fixture-btc-ots";
@@ -27,6 +27,8 @@ public sealed class DocumentedFixtureOtsCalendar
     public const string Disclaimer =
         "SYNTHETIC TEST FIXTURE. Not a live Bitcoin transaction. Not broadcast. Not a real txid. " +
         "block_height 9000000001 is intentionally outside Bitcoin height space.";
+
+    public string ProofSource => ProofSources.DocumentedFixture;
 
     public FixtureCalendarMode Mode { get; set; } = FixtureCalendarMode.UpgradeImmediately;
     public int SubmitCalls { get; private set; }
@@ -41,6 +43,24 @@ public sealed class DocumentedFixtureOtsCalendar
         if (Mode == FixtureCalendarMode.FailUpgrade)
             status = "failed";
         return (status, BuildProof(receiptCoreDigest, status));
+    }
+
+    OtsSubmitResult IOtsCalendar.Submit(byte[] receiptCoreDigest)
+    {
+        var (status, proof) = Submit(receiptCoreDigest);
+        if (status == "upgraded")
+        {
+            return new OtsSubmitResult(
+                status,
+                proof,
+                Disclaimer,
+                ChainId,
+                TransactionReference,
+                BlockHeight,
+                WriteTimeUnixMillis);
+        }
+
+        return new OtsSubmitResult(status, proof, Disclaimer);
     }
 
     public static byte[] BuildProof(byte[] digest, string status)
@@ -58,7 +78,7 @@ public sealed class UnconfiguredOtsCalendar
         {
             ReceiptCoreDigest = Google.Protobuf.ByteString.CopyFrom(request.ReceiptCoreDigest),
             ProfileId = ChainProfileIds.BtcOts,
-            ProofSource = "unconfigured",
+            ProofSource = ProofSources.Unconfigured,
             Status = "failed",
             Disclaimer = "No OpenTimestamps calendar is configured. Confirmation metadata is intentionally absent.",
             FailureCode = ErrorCodes.ChainFailed,
@@ -71,44 +91,59 @@ public sealed class UnconfiguredOtsCalendar
 
 public sealed class BtcOtsAnchor : IChainAnchor
 {
-    private readonly DocumentedFixtureOtsCalendar? _fixture;
+    private readonly IOtsCalendar? _calendar;
     private readonly UnconfiguredOtsCalendar _unconfigured = new();
 
-    public BtcOtsAnchor(DocumentedFixtureOtsCalendar? fixture) => _fixture = fixture;
+    public BtcOtsAnchor(IOtsCalendar? calendar) => _calendar = calendar;
 
     public string ProfileId => ChainProfileIds.BtcOts;
 
     public AnchorAttempt Anchor(AnchorRequest request)
     {
-        if (_fixture is null)
+        if (_calendar is null)
             return _unconfigured.Fail(request);
 
         try
         {
-            var (status, proof) = _fixture.Submit(request.ReceiptCoreDigest);
+            var result = ((IOtsCalendar)_calendar).Submit(request.ReceiptCoreDigest);
             var envelope = new AnchorProofEnvelope
             {
                 ReceiptCoreDigest = Google.Protobuf.ByteString.CopyFrom(request.ReceiptCoreDigest),
                 ProfileId = ChainProfileIds.BtcOts,
-                ProofSource = "documented-fixture",
-                Status = status,
-                ProofBytes = Google.Protobuf.ByteString.CopyFrom(proof),
-                Disclaimer = DocumentedFixtureOtsCalendar.Disclaimer,
-                FailureCode = status == "upgraded" ? "" : ErrorCodes.ChainUnconfirmed,
+                ProofSource = _calendar.ProofSource,
+                Status = result.Status,
+                ProofBytes = Google.Protobuf.ByteString.CopyFrom(result.ProofBytes),
+                Disclaimer = result.Disclaimer,
+                FailureCode = result.Status == "upgraded" ? "" : ErrorCodes.ChainUnconfirmed,
                 LiveBitcoinMetadata = false
             };
 
-            if (status == "upgraded")
+            if (result.Status == "upgraded")
             {
-                envelope.ChainId = DocumentedFixtureOtsCalendar.ChainId;
-                envelope.TransactionReference = DocumentedFixtureOtsCalendar.TransactionReference;
-                envelope.BlockHeight = DocumentedFixtureOtsCalendar.BlockHeight;
-                envelope.WriteTimeUnixMillis = DocumentedFixtureOtsCalendar.WriteTimeUnixMillis;
+                if (string.IsNullOrWhiteSpace(result.ChainId)
+                    || string.IsNullOrWhiteSpace(result.TransactionReference)
+                    || result.BlockHeight is null
+                    || result.WriteTimeUnixMillis is null)
+                {
+                    envelope.Status = "pending";
+                    envelope.FailureCode = ErrorCodes.ChainUnconfirmed;
+                    return new AnchorAttempt(false, CustodyState.Quarantined, envelope, ErrorCodes.ChainUnconfirmed,
+                        "Calendar claimed upgraded without chain metadata. No transaction id was invented.", TimeSpan.Zero);
+                }
+
+                envelope.ChainId = result.ChainId;
+                envelope.TransactionReference = result.TransactionReference;
+                envelope.BlockHeight = result.BlockHeight.Value;
+                envelope.WriteTimeUnixMillis = result.WriteTimeUnixMillis.Value;
+                var fixture = string.Equals(_calendar.ProofSource, ProofSources.DocumentedFixture, StringComparison.Ordinal);
                 return new AnchorAttempt(true, CustodyState.Confirmed, envelope, null,
-                    "Fixture OTS upgrade recorded. This is not a live Bitcoin transaction.", TimeSpan.Zero);
+                    fixture
+                        ? "Fixture OTS upgrade recorded. This is not a live Bitcoin transaction."
+                        : "Calendar returned upgraded metadata supplied by the calendar. live_bitcoin_metadata stays false.",
+                    TimeSpan.Zero);
             }
 
-            var code = status == "failed" ? ErrorCodes.ChainFailed : ErrorCodes.ChainUnconfirmed;
+            var code = result.Status == "failed" ? ErrorCodes.ChainFailed : ErrorCodes.ChainUnconfirmed;
             return new AnchorAttempt(false, CustodyState.Quarantined, envelope, code,
                 "OTS proof is not upgraded. Pending or failed proofs do not admit the record.", TimeSpan.Zero);
         }
@@ -118,9 +153,11 @@ public sealed class BtcOtsAnchor : IChainAnchor
             {
                 ReceiptCoreDigest = Google.Protobuf.ByteString.CopyFrom(request.ReceiptCoreDigest),
                 ProfileId = ChainProfileIds.BtcOts,
-                ProofSource = "documented-fixture",
+                ProofSource = _calendar.ProofSource,
                 Status = "failed",
-                Disclaimer = DocumentedFixtureOtsCalendar.Disclaimer,
+                Disclaimer = _calendar is DocumentedFixtureOtsCalendar
+                    ? DocumentedFixtureOtsCalendar.Disclaimer
+                    : ex.Message,
                 FailureCode = ex.Code,
                 LiveBitcoinMetadata = false
             };

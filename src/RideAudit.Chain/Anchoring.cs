@@ -156,9 +156,9 @@ public static class AnchorProofVerifier
         if (live)
             mismatches.Add("Live Bitcoin metadata was claimed without a verified OpenTimestamps upgrade.");
 
-        if (string.Equals(envelope.ProofSource, "documented-fixture", StringComparison.Ordinal))
+        if (string.Equals(envelope.ProofSource, ProofSources.DocumentedFixture, StringComparison.Ordinal))
             CheckFixture(envelope, mismatches, FixtureChainIds.BtcOts, "RIDEOTS-FIXTURE-1", digest, "Fixture transaction reference looks like a raw Bitcoin txid.");
-        else if (string.Equals(envelope.ProofSource, "documented-fixture-l2", StringComparison.Ordinal))
+        else if (string.Equals(envelope.ProofSource, ProofSources.DocumentedFixtureL2, StringComparison.Ordinal))
         {
             var expected = envelope.ProfileId switch
             {
@@ -171,8 +171,12 @@ public static class AnchorProofVerifier
             else
                 CheckFixture(envelope, mismatches, expected, "RIDEL2-FIXTURE-1", digest, "Fixture transaction reference looks like a raw chain transaction id.");
         }
-        else if (string.Equals(envelope.ProofSource, "documented-fixture-dual", StringComparison.Ordinal))
+        else if (string.Equals(envelope.ProofSource, ProofSources.DocumentedFixtureDual, StringComparison.Ordinal))
             CheckFixture(envelope, mismatches, FixtureChainIds.Dual, "RIDEDUAL-FIXTURE-1", digest, "Fixture transaction reference looks like a raw chain transaction id.");
+        else if (string.Equals(envelope.ProofSource, ProofSources.OpenTimestampsCalendar, StringComparison.Ordinal))
+            CheckLiveOts(envelope, mismatches, digest);
+        else if (string.Equals(envelope.ProofSource, ProofSources.EthL2Rpc, StringComparison.Ordinal))
+            CheckLiveL2(envelope, mismatches, digest);
         else if (!string.Equals(envelope.Status, "failed", StringComparison.Ordinal))
             mismatches.Add("Unsupported proof source.");
 
@@ -195,5 +199,35 @@ public static class AnchorProofVerifier
             mismatches.Add("Fixture proof bytes do not commit to the receipt digest.");
         if (string.IsNullOrWhiteSpace(envelope.Disclaimer))
             mismatches.Add("Fixture disclaimer is missing.");
+    }
+
+    private static void CheckLiveOts(AnchorProofEnvelope envelope, List<string> mismatches, byte[] digest)
+    {
+        var proof = envelope.ProofBytes.ToStringUtf8();
+        if (!proof.Contains(Ids.Hex(digest), StringComparison.Ordinal))
+            mismatches.Add("Calendar proof bytes do not commit to the receipt digest.");
+        if (string.IsNullOrWhiteSpace(envelope.Disclaimer))
+            mismatches.Add("Calendar disclaimer is missing.");
+        if (envelope.HasTransactionReference
+            && (envelope.TransactionReference.StartsWith("fixture:", StringComparison.Ordinal)
+                || string.IsNullOrWhiteSpace(envelope.TransactionReference)))
+            mismatches.Add("Live calendar transaction reference is missing or fixture-scoped.");
+        if (envelope.HasTransactionReference
+            && !System.Text.RegularExpressions.Regex.IsMatch(envelope.TransactionReference, "^[0-9a-fA-F]{64}$"))
+            mismatches.Add("Live calendar transaction reference is not a 64-hex Bitcoin txid supplied by an upgrade.");
+    }
+
+    private static void CheckLiveL2(AnchorProofEnvelope envelope, List<string> mismatches, byte[] digest)
+    {
+        var proof = envelope.ProofBytes.ToStringUtf8();
+        if (!proof.Contains(Ids.Hex(digest), StringComparison.Ordinal))
+            mismatches.Add("L2 proof bytes do not commit to the receipt digest.");
+        if (string.IsNullOrWhiteSpace(envelope.Disclaimer))
+            mismatches.Add("L2 disclaimer is missing.");
+        var tx = envelope.TransactionReference ?? "";
+        if (tx.StartsWith("fixture:", StringComparison.Ordinal))
+            mismatches.Add("Live L2 transaction reference is fixture-scoped.");
+        if (!System.Text.RegularExpressions.Regex.IsMatch(tx, "^0x[0-9a-fA-F]{64}$"))
+            mismatches.Add("Live L2 transaction reference is not a 0x-prefixed 64-hex hash supplied by the RPC.");
     }
 }

@@ -11,16 +11,35 @@ public enum L2FixtureMode
     FailSubmit
 }
 
+public sealed record L2CommitResult(
+    bool Confirmed,
+    string Status,
+    byte[] ProofBytes,
+    string Disclaimer,
+    string? FailureCode,
+    string? ChainId,
+    string? TransactionReference,
+    long? BlockHeight);
+
+public interface IEthL2Client
+{
+    string ProofSource { get; }
+
+    L2CommitResult Commit(string profileId, byte[] digest);
+}
+
 /// <summary>
 /// Documented Base/Polygon stand-in. It never contacts a live chain and never emits a real transaction id.
 /// </summary>
-public sealed class DocumentedFixtureL2Calendar
+public sealed class DocumentedFixtureL2Calendar : IEthL2Client
 {
     public const string Disclaimer =
         "SYNTHETIC TEST FIXTURE. Not a live Base, Polygon, or Bitcoin transaction. Not broadcast. " +
         "Transaction references are fixture-scoped. Block heights are intentionally outside production height space.";
 
     public const long WriteTimeUnixMillis = 1_759_010_000_000;
+
+    public string ProofSource => ProofSources.DocumentedFixtureL2;
 
     public L2FixtureMode Mode { get; set; } = L2FixtureMode.UpgradeImmediately;
     public int SubmitCalls { get; private set; }
@@ -39,6 +58,12 @@ public sealed class DocumentedFixtureL2Calendar
         if (Mode == L2FixtureMode.FailSubmit)
             throw new RideAuditException(ErrorCodes.ChainFailed, "Documented L2 fixture refused the digest submission.");
         return ("upgraded", BuildProof(digest, described.ChainId, described.TransactionReference), described.ChainId, described.TransactionReference, described.BlockHeight);
+    }
+
+    L2CommitResult IEthL2Client.Commit(string profileId, byte[] digest)
+    {
+        var (status, proof, chainId, tx, height) = Submit(profileId, digest);
+        return new L2CommitResult(true, status, proof, Disclaimer, null, chainId, tx, height);
     }
 
     public static byte[] BuildProof(byte[] digest, string chainId, string transactionReference)
@@ -65,37 +90,72 @@ public static class DualFixture
 /// </summary>
 public sealed class EthL2Anchor : IChainAnchor
 {
-    private readonly DocumentedFixtureL2Calendar? _fixture;
+    private readonly IEthL2Client? _client;
 
     public EthL2Anchor(string profileId)
-        : this(profileId, null)
+        : this(profileId, (IEthL2Client?)null)
     {
     }
 
     public EthL2Anchor(string profileId, DocumentedFixtureL2Calendar? fixture)
+        : this(profileId, (IEthL2Client?)fixture)
+    {
+    }
+
+    public EthL2Anchor(string profileId, IEthL2Client? client)
     {
         if (profileId is not (ChainProfileIds.EthL2Base or ChainProfileIds.EthL2Polygon))
             throw new ArgumentOutOfRangeException(nameof(profileId));
         ProfileId = profileId;
-        _fixture = fixture;
+        _client = client;
     }
 
     public string ProfileId { get; }
 
     public AnchorAttempt Anchor(AnchorRequest request)
     {
-        if (_fixture is null)
-            return FailClosed(request, "unconfigured", ErrorCodes.ChainProfileUnsupported, "Ethereum L2 profile is not backed by a live chain or a documented fixture. No transaction metadata was written.");
+        if (_client is null)
+            return FailClosed(request, ProofSources.Unconfigured, ErrorCodes.ChainProfileUnsupported, "Ethereum L2 profile is not backed by a live chain or a documented fixture. No transaction metadata was written.");
 
         try
         {
-            var (_, proof, chainId, tx, height) = _fixture.Submit(ProfileId, request.ReceiptCoreDigest);
-            var envelope = Upgraded(request, "documented-fixture-l2", ProfileId, chainId, tx, height, proof, DocumentedFixtureL2Calendar.Disclaimer);
-            return new AnchorAttempt(true, CustodyState.Confirmed, envelope, null, "Fixture L2 upgrade recorded. This is not a live chain transaction.", TimeSpan.Zero);
+            var result = _client.Commit(ProfileId, request.ReceiptCoreDigest);
+            if (!result.Confirmed
+                || result.Status != "upgraded"
+                || string.IsNullOrWhiteSpace(result.ChainId)
+                || string.IsNullOrWhiteSpace(result.TransactionReference)
+                || result.BlockHeight is null)
+            {
+                return FailClosed(
+                    request,
+                    _client.ProofSource,
+                    result.FailureCode ?? ErrorCodes.ChainUnconfirmed,
+                    result.Disclaimer);
+            }
+
+            var envelope = Upgraded(
+                request,
+                _client.ProofSource,
+                ProfileId,
+                result.ChainId,
+                result.TransactionReference,
+                result.BlockHeight.Value,
+                result.ProofBytes,
+                result.Disclaimer);
+            var fixture = string.Equals(_client.ProofSource, ProofSources.DocumentedFixtureL2, StringComparison.Ordinal);
+            return new AnchorAttempt(
+                true,
+                CustodyState.Confirmed,
+                envelope,
+                null,
+                fixture
+                    ? "Fixture L2 upgrade recorded. This is not a live chain transaction."
+                    : "L2 client returned transaction metadata supplied by the RPC. This is not a fabricated hash.",
+                TimeSpan.Zero);
         }
         catch (RideAuditException ex)
         {
-            return FailClosed(request, "documented-fixture-l2", ex.Code, ex.Message);
+            return FailClosed(request, _client.ProofSource, ex.Code, ex.Message);
         }
     }
 
@@ -162,7 +222,7 @@ public sealed class DualProfileAnchor : IChainAnchor
             {
                 ReceiptCoreDigest = Google.Protobuf.ByteString.CopyFrom(request.ReceiptCoreDigest),
                 ProfileId = ProfileId,
-                ProofSource = "dual-incomplete",
+                ProofSource = ProofSources.DualIncomplete,
                 Status = "failed",
                 Disclaimer = "Dual anchor did not confirm both legs. No transaction metadata was copied from a partial result.",
                 FailureCode = code,
@@ -172,9 +232,24 @@ public sealed class DualProfileAnchor : IChainAnchor
         }
 
         var proof = DualFixture.BuildProof(request.ReceiptCoreDigest, ots.Envelope.ProofBytes.ToByteArray(), l2.Envelope.ProofBytes.ToByteArray());
+        if (!IsDocumentedFixture(ots.Envelope.ProofSource) || !IsDocumentedFixture(l2.Envelope.ProofSource))
+        {
+            var envelope = new AnchorProofEnvelope
+            {
+                ReceiptCoreDigest = Google.Protobuf.ByteString.CopyFrom(request.ReceiptCoreDigest),
+                ProfileId = ProfileId,
+                ProofSource = ProofSources.DualIncomplete,
+                Status = "failed",
+                Disclaimer = "Live dual-anchor confirmation is not implemented. No transaction metadata was copied from either leg.",
+                FailureCode = ErrorCodes.ChainUnconfirmed,
+                LiveBitcoinMetadata = false
+            };
+            return new AnchorAttempt(false, CustodyState.Quarantined, envelope, ErrorCodes.ChainUnconfirmed, envelope.Disclaimer, TimeSpan.Zero);
+        }
+
         var upgraded = EthL2Anchor.Upgraded(
             request,
-            "documented-fixture-dual",
+            ProofSources.DocumentedFixtureDual,
             ProfileId,
             FixtureChainIds.Dual,
             DualFixture.TransactionReference,
@@ -183,4 +258,9 @@ public sealed class DualProfileAnchor : IChainAnchor
             DocumentedFixtureL2Calendar.Disclaimer);
         return new AnchorAttempt(true, CustodyState.Confirmed, upgraded, null, "Fixture dual anchor recorded. Neither leg is a live chain transaction.", TimeSpan.Zero);
     }
+
+    private static bool IsDocumentedFixture(string? proofSource) =>
+        string.Equals(proofSource, ProofSources.DocumentedFixture, StringComparison.Ordinal)
+        || string.Equals(proofSource, ProofSources.DocumentedFixtureL2, StringComparison.Ordinal)
+        || string.Equals(proofSource, ProofSources.DocumentedFixtureDual, StringComparison.Ordinal);
 }

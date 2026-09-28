@@ -11,6 +11,7 @@
     <PackageReference Include="Avalonia.Fonts.Inter" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Bt\RideAudit.Bt.csproj" />
     <ProjectReference Include="..\RideAudit.Capture\RideAudit.Capture.csproj" />
     <ProjectReference Include="..\RideAudit.Licensing\RideAudit.Licensing.csproj" />
     <ProjectReference Include="..\RideAudit.Viewer\RideAudit.Viewer.csproj" />

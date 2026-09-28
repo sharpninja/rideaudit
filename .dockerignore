@@ -1,0 +1,13 @@
+.git
+.github
+**/.vs
+**/bin
+**/obj
+**/*.user
+docs
+artifacts
+tests
+.version
+*.md
+!LICENSE
+!NOTICE

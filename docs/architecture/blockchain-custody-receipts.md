@@ -22,9 +22,15 @@ Court and opposing counsel need independent verification. A private or permissio
 ## Configuration knobs
 
 - `chain_id` / profile: `btc-ots` | `eth-l2-base` | `eth-l2-polygon` | `dual-btc-ots+l2`
+- `RIDEAUDIT_OTS_CALENDAR`: unset (fail-closed) | `documented-fixture` | `https://…` public calendar
+- `RIDEAUDIT_L2_CALENDAR` / `RIDEAUDIT_L2_RPC`: unset (fail-closed) | `documented-fixture` | `https://…` JSON-RPC
 - Confirmation policy: OTS upgrade complete vs L2 N-block confirmations
 - Fee sponsor: calendar/server aggregation vs per-driver gas wallet
 - Offline policy: local pending receipt, not admitted until configured confirmation succeeds
+
+A live `https://` OpenTimestamps calendar POSTs the 32-byte receipt digest and stores the calendar body as pending proof. Pending proofs do not admit the record and do not write `transaction_reference` or `block_height`. This tree does not parse Bitcoin header linkage, so `live_bitcoin_metadata` stays false.
+
+A live L2 RPC can probe `eth_blockNumber`. Commit without a signer fail-closes and refuses to invent a hash. Production still refuses `documented-fixture`.
 
 ## Implemented fixture profiles
 

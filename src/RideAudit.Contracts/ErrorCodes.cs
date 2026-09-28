@@ -36,6 +36,9 @@ public static class ErrorCodes
     public const string PartnershipDisabled = "PARTNERSHIP_DISABLED";
     public const string LegalHoldActive = "LEGAL_HOLD_ACTIVE";
     public const string ImportRejected = "IMPORT_REJECTED";
+    public const string BluetoothDisabled = "BT_DISABLED";
+    public const string CameraUnavailable = "CAMERA_UNAVAILABLE";
+    public const string AdmissionUnavailable = "ADMISSION_UNAVAILABLE";
 }
 
 public class RideAuditException : Exception
