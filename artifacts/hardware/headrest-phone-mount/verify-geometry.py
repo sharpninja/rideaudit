@@ -250,11 +250,14 @@ def main() -> int:
             expect(abs(c["slot_span"] - (c["screw_major"] + 2.0)) < 0.05, "arm slot is not major diameter plus 2 mm")
             expect(abs(c["screw_x_left"] + c["half"]) < 0.05, "left screw is off the arm centerline")
             expect(abs(c["screw_x_right"] - c["half"]) < 0.05, "right screw is off the arm centerline")
-            expect(abs(c["bore_id"] - 14.5) < 0.05, "post bore is not 14.5 mm")
+            expect(abs(c["bore_id"] - (c["post_od"] + c["post_clearance"])) < 0.05, "bore is not post_od plus clearance")
+            expect(c["post_od"] + 0.001 >= c["post_od_min"] and c["post_od"] - 0.001 <= c["post_od_max"], "post_od is outside 10..14 mm")
+            expect(c["post_clearance"] + 0.001 >= 0.2 and c["post_clearance"] - 0.001 <= 0.5, "clearance is outside 0.2..0.5 mm")
+            expect(abs(c["post_od"] - 14.0) < 0.05, "default post is not the 14 mm maximum")
+            expect(abs(c["bore_id"] - 14.5) < 0.05, "default bore is not 14.5 mm")
             expect(abs(c["block_od"] - 25.5) < 0.05, "post block is not 25.5 mm outside")
             expect(abs(c["block_t"] - 10.0) < 0.05, "post block is not 10 mm thick")
-            expect(abs(c["block_wall"] - 5.5) < 0.1, "collar wall is not 5.5 mm")
-            expect(c["bore_id"] > c["post_diameter_max"], "bore does not clear the largest sourced post")
+            expect(c["block_wall"] + 0.01 >= 5, "collar wall is under 5 mm")
             expect(c["arm_thick"] + 0.01 >= 12, "arm is too thin")
             expect((c["arm_width"] - c["slot_span"]) / 2 >= 10, "arm rails are too narrow")
             expect(c["screw_major"] + 0.01 >= 8, "thumbscrew is not the thicker M8 shank")
@@ -574,7 +577,7 @@ def write_report(checks: dict[str, float], stats: dict, notes: list[str]) -> Non
         "| --- | --- |",
         f"| Post spacing | {c['post_spacing_min']:.0f} – {c['post_spacing_max']:.0f} mm center-to-center; preview {c['post_spacing']:.0f} mm |",
         f"| Post block | one collar, bore {c['bore_id']:.1f} mm, outside {c['block_od']:.1f} mm, {c['block_t']:.0f} mm thick, wall {c['block_wall']:.1f} mm |",
-        f"| Bore vs largest sourced post | {c['post_diameter_max']:.0f} mm post, {c['post_clearance']:.1f} mm diametral clearance |",
+        f"| Default post | {c['post_od']:.1f} mm OD, clearance {c['post_clearance']:.1f} mm, bore {c['bore_id']:.1f} mm |",
         f"| Arm length | {c['arm_length']:.0f} mm from the post axis, horizontal (rise {c['arm_rise']:.0f}) |",
         f"| Arm section | {c['arm_width']:.0f} × {c['arm_thick']:.0f} mm |",
         f"| Arm slot, along the arm | {c['slot_len']:.0f} mm long, {c['slot_span']:.1f} mm wide ({c['slot_side_gap']:.2f} mm each side of the crest), from {c['slot_y0']:.0f} to {c['slot_y1']:.0f} mm forward of the pad |",

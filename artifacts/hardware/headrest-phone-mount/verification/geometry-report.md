@@ -9,9 +9,9 @@ License: GPL-2.0
 
 | Check | Value |
 | --- | --- |
-| Post spacing | 110 – 170 mm center-to-center; preview 140 mm |
+| Post spacing | 120 – 170 mm center-to-center; preview 150 mm |
 | Post block | one collar, bore 14.5 mm, outside 25.5 mm, 10 mm thick, wall 5.5 mm |
-| Bore vs largest sourced post | 14 mm post, 0.5 mm diametral clearance |
+| Default post | 14.0 mm OD, clearance 0.5 mm, bore 14.5 mm |
 | Arm length | 200 mm from the post axis, horizontal (rise 0) |
 | Arm section | 56 × 12 mm |
 | Arm slot, along the arm | 171 mm long, 10.0 mm wide (1.00 mm each side of the crest), from 34 to 205 mm forward of the pad |
@@ -32,9 +32,9 @@ License: GPL-2.0
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 20786 | 469467 | 242.0 × 222.2 × 126.3 |
+| `headrest-phone-mount.stl` | 20784 | 469469 | 242.0 × 222.2 × 126.3 |
 | `post-block.stl` | 880 | 115869 | 56.0 × 212.8 × 22.0 |
-| `phone-cradle.stl` | 698 | 231191 | 242.0 × 120.2 × 33.5 |
+| `phone-cradle.stl` | 696 | 231193 | 242.0 × 120.2 × 33.5 |
 | `fit-coupon.stl` | 768 | 3428 | 25.5 × 25.5 × 10.0 |
 | `thumbscrew.stl` | 7456 | 3276 | 32.0 × 22.0 × 36.5 |
 
@@ -43,7 +43,7 @@ License: GPL-2.0
 - OpenSCAD assertions accepted the default parameters.
 - The two arms do not intersect each other.
 - The arms pass under the receiver roof and do not intersect the cradle.
-- Set post_spacing to the measured centers (110–170 mm) and re-export. Each arm then has one tap hole on its centerline.
+- Set post_spacing to the measured centers (120–170 mm) and re-export. Each arm then has one tap hole on its centerline.
 - The arm slot is 10.0 mm wide, 1.00 mm clear of the M8 crest on each side.
 - Each post block is one collar, bore 14.5 mm, outside 25.5 mm, 10 mm thick.
 - Root gussets rise 10 mm above the arm on the collar and taper off before the slot. Side fillets close the step from the collar out to the arm width.

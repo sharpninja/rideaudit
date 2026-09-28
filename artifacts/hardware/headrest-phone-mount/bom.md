@@ -10,8 +10,8 @@ One shared landscape cradle. Two identical post blocks. No rail, no cradle clip,
 
 | Part | STL | Qty | Notes |
 | --- | --- | --- | --- |
-| Fit coupon | `exports/fit-coupon.stl` | 1 | Print before the blocks. Round bore, same diameter as the blocks. |
-| Post block | `exports/post-block.stl` | 2 | 56.0 × 212.8 × 22.0 mm print. One 14.5 / 25.5 × 10 mm collar, 56 × 12 mm arm, root gussets. |
+| Fit coupon | `exports/fit-coupon.stl` | 1 | Print before the blocks. Same bore as the blocks. Reprint when `post_od` or `post_clearance` changes. Default file is 14.5 / 25.5 × 10 mm. |
+| Post block | `exports/post-block.stl` | 2 | 56.0 × 212.8 × 22.0 mm print. One round collar, default bore 14.5 mm (14 mm post + 0.5 mm clearance), outside 25.5 mm, 10 mm thick, 56 × 12 mm arm, root gussets. |
 | Phone cradle | `exports/phone-cradle.stl` | 1 | 242.0 × 120.2 × 33.5 mm. Rear entry, one M8 tap hole per arm on the arm centerline. |
 | Thumbscrew | `exports/thumbscrew.stl` | 2 | 32.0 × 22.0 × 36.5 mm. Modeled M8×1.25 thumbscrew with an external thread, used in the assembly preview. |
 

@@ -18,8 +18,9 @@
 // Source of truth. STL files under exports/ are generated; do not hand-edit them.
 //
 // Two post blocks, one shared vertical cradle.
-// Each post passes through its block. The block is one round collar: bore
-// 14.5 mm, outside 25.5 mm, 10 mm thick. Its rear is tangent to the headrest
+// Each post passes through its block. The block is one round collar, 25.5 mm
+// outside and 10 mm thick. The bore is post_od plus 0.2–0.5 mm. The default
+// is a 14 mm post, so the preview bore is 14.5 mm. Its rear is tangent to the headrest
 // (Y = 0). Each collar carries a ~200 mm arm in a horizontal plane (constant Z).
 // Gussets at the collar thicken the root so the 10 mm collar can carry the arm.
 // Both arms slide into the cradle from the rear (from the posts, toward +Y).
@@ -39,11 +40,14 @@
 // Print frames are applied by the orient modules.
 
 /* [Headrest posts] */
-post_spacing_min = 110;  // mm, narrowest centers the receiver still accepts
-post_spacing_max = 170;  // mm, widest centers the receiver still accepts
-post_spacing     = 140;  // mm, block centers in the assembly preview
-// One collar. Bore and outside diameter are this same cylinder, not two parts.
-bore_id  = 14.5;  // mm, inner diameter. Clears a 14 mm post by 0.5 mm
+post_spacing_min = 120;  // mm, narrow end of the usual 120–170 mm center range
+post_spacing_max = 170;  // mm, wide end of that range
+post_spacing     = 150;  // mm, a common center distance (also 130 and 160)
+// Measured post diameter. Presets: 10, 12, 12.7, 13.8, 14. Any value in 10..14.
+post_od = 14; // [10:0.1:14]
+// Diametral clearance. Bore = post_od + post_clearance.
+post_clearance = 0.5; // [0.2:0.05:0.5]
+// One collar. Outside diameter stays put; only the bore follows the post.
 block_od = 25.5;  // mm, outer diameter of that collar
 block_t  = 10;    // mm, axial thickness of the collar
 
@@ -101,13 +105,12 @@ $fn = 32;
 
 /* ----------------------- derived ----------------------- */
 
+post_od_min = 10;
+post_od_max = 14;
+bore_id = post_od + post_clearance;
 bore_d = bore_id;
 block_r = block_od / 2;
 block_wall = (block_od - bore_id) / 2;
-// Largest post the 14.5 mm bore is cut to clear. Smaller posts are looser;
-// the radial pinch screw takes up that slack. See dimensions.md for sources.
-post_diameter_max = 14;
-post_clearance = bore_id - post_diameter_max;
 half = post_spacing / 2;
 // Rear of the collar is tangent to the pad.
 bore_cy = block_r;
@@ -181,11 +184,12 @@ assert(phone_thickness_max >= 6 && phone_thickness_max <= 18, "phone thickness o
 assert(camera_clearance >= 12, "camera_clearance too small to uncover a lens");
 assert(2 * camera_clearance + 12 <= pocket_x, "camera windows do not fit across the back plate");
 assert(camera_clearance + 6 <= pocket_z, "camera window does not fit the short side");
-assert(abs(bore_id - 14.5) < 0.01, "post bore is not 14.5 mm");
+assert(post_od + 0.001 >= post_od_min && post_od - 0.001 <= post_od_max, "post_od is outside 10..14 mm");
+assert(post_clearance + 0.001 >= 0.2 && post_clearance - 0.001 <= 0.5, "clearance is outside 0.2..0.5 mm");
+assert(abs(bore_id - (post_od + post_clearance)) < 0.01, "bore is not post_od plus clearance");
 assert(abs(block_od - 25.5) < 0.01, "post block is not 25.5 mm outside");
 assert(abs(block_t - 10) < 0.01, "post block is not 10 mm thick");
-assert(abs(block_wall - 5.5) < 0.05, "collar wall is not 5.5 mm");
-assert(post_clearance + 0.01 >= 0.4, "14.5 mm bore does not clear a 14 mm post");
+assert(block_wall + 0.01 >= 5, "collar wall is under 5 mm");
 assert(bore_cy - bore_d / 2 + 0.01 >= block_wall - 0.05, "bore breaks the rear wall");
 assert(arm_length + 0.01 >= 190 && arm_length <= 260, "arm length is outside the 200 mm class");
 assert(slot_y0 > block_depth + 4, "longitudinal slot cuts the post block");
@@ -223,8 +227,10 @@ assert(gusset_h + 0.01 >= 8, "root gusset is too short");
 echo(str("CHECK post_spacing_min=", post_spacing_min));
 echo(str("CHECK post_spacing_max=", post_spacing_max));
 echo(str("CHECK post_spacing=", post_spacing));
-echo(str("CHECK post_diameter=", post_diameter_max));
-echo(str("CHECK post_diameter_max=", post_diameter_max));
+echo(str("CHECK post_od=", post_od));
+echo(str("CHECK post_od_min=", post_od_min));
+echo(str("CHECK post_od_max=", post_od_max));
+echo(str("CHECK post_diameter=", post_od));
 echo(str("CHECK post_clearance=", post_clearance));
 echo(str("CHECK bore_d=", bore_d));
 echo(str("CHECK bore_id=", bore_id));

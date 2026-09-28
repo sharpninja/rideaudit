@@ -12,10 +12,12 @@ The mount is two identical post blocks and one cradle. Each post goes through on
 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `post_spacing_min` | 110 | Narrowest post center-to-center the receiver still accepts |
-| `post_spacing_max` | 170 | Widest post center-to-center the receiver still accepts |
-| `post_spacing` | 140 | Block positions in the assembly preview. Re-export for the measured spacing |
-| `bore_id` | 14.5 | Inner diameter of the collar. Clears a 14 mm post by 0.5 mm |
+| `post_spacing_min` | 120 | Narrow end of the usual 120–170 mm center range |
+| `post_spacing_max` | 170 | Wide end of that range |
+| `post_spacing` | 150 | Preview center distance. 130 and 160 mm are also common. Re-export for the measured spacing |
+| `post_od` | 14 | Measured post diameter, 10–14 mm. Presets: 10, 12, 12.7, 13.8, 14 |
+| `post_clearance` | 0.5 | Diametral clearance, 0.2–0.5 mm |
+| `bore_id` | 14.5 | Derived: `post_od + post_clearance`. Default is 14 + 0.5 |
 | `block_od` | 25.5 | Outer diameter of the same collar |
 | `block_t` | 10 | Axial thickness of that collar |
 | `arm_length` | 200 | Post axis to arm tip, measured forward along the horizontal arm |
@@ -74,36 +76,65 @@ The channel height is fixed by the cheeks, so the screw does not close the 0.40 
 
 ## How to measure
 
-1. **Post spacing.** Center-to-center of the two vertical posts. Set `post_spacing` and re-export. The cradle is cut for that spacing. Cradle depth is the slide along the longitudinal slot.
-2. **Post diameter.** The printed bore is 14.5 mm on both the block and the fit coupon. It is not a per-car parameter. See the source table below.
+1. **Post spacing.** Center-to-center of the two vertical posts. The CAD range is 120–170 mm. Published centers are often 130, 150, or 160 mm. Set `post_spacing` and re-export. The cradle is cut for that spacing. Cradle depth is the slide along the longitudinal slot.
+2. **Post diameter.** Measure the post and set `post_od` (10–14 mm) and `post_clearance` (0.2–0.5 mm). The bore is `post_od + post_clearance` on both the block and the fit coupon. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. Reprint the coupon when either parameter changes. Many 2013 and later generations are absent from the charts below; measure those posts and set `post_od`.
 3. **Phone, landscape.** Long edge → `phone_length_*`. Short edge, the vertical one → `phone_width_*`. Thickness including the case → `phone_thickness_max`.
 4. **Camera.** The windows are `camera_clearance` squares in both upper corners and pass through the back plate.
 5. **Airbag and headrest.** The fixture bears on the posts and on the headrest face at the rear of each collar. Keep the 222.2 mm forward reach and the 114.0 mm height off airbag covers, the driver, the headliner, and the headrest height lock.
 
 ## Fit coupon
 
-`exports/fit-coupon.stl` is the same 14.5 / 25.5 × 10 mm collar, without the arm. Slide it onto the post:
+`exports/fit-coupon.stl` is the collar without the arm. The default file is a 14.5 / 25.5 × 10 mm collar (14 mm post, 0.5 mm clearance). Reprint it after any change to `post_od` or `post_clearance`. Slide it onto the post:
 
-- On a 14 mm post it should start by hand and then hold.
-- The pinch screw, not the coupon, is what locks rotation on the real block.
-- If it will not start, the post is larger than 14 mm. Do not open the bore in this package; this collar is sized for that maximum.
-- If it rattles, the post is smaller than 14 mm. Tighten the radial pinch screw on the block. The bore stays 14.5 mm.
+- On a post that matches `post_od` it should start by hand and then hold.
+- The pinch screw is what locks rotation on the real block.
+- If it will not start, the post is larger than `post_od`, or the clearance is tighter than the post allows. The design maximum is 14 mm. A larger post does not enter this collar.
+- If it rattles, set `post_od` to the measured diameter (clearance stays inside 0.2–0.5 mm), reprint the coupon and the blocks, and tighten the radial pinch screw.
 
-Do not print the 213 mm arms until the coupon fits.
+Print the arms only after the coupon fits.
 
-## Factory post diameters
+## Headrest post diameters
 
-The bore is locked at 14.5 mm so the largest post in the chart below (14 mm) has 0.5 mm of diametral clearance. These figures are make-level, not measurements of a named compact SUV. No model-by-model caliper survey was found for Equinox, Escape, Tucson, CR-V, RAV4, or Rogue. Measure the post before printing.
+The documented common range across Chevrolet, Ford, Hyundai, Honda, Toyota, and Nissan compact SUVs is about 10–14 mm. The sizes that appear most often in Rosen fitment for about 2005–2012 are 10, 12, 12.7, and 14 mm. The design maximum is 14 mm. The collar stays 25.5 mm outside and 10 mm thick; only the bore follows the post.
+
+`post_od` is a customizer spinbox from 10 to 14 mm in 0.1 mm steps, so a measured size that is not one of the presets still works. Presets: **10, 12, 12.7, 13.8, 14**. `post_clearance` runs from 0.2 to 0.5 mm. Bore = `post_od + post_clearance`. The shipped preview uses the maximum: 14 mm post, 0.5 mm clearance, 14.5 mm bore. A smaller preset changes the bore only. The arm and the gussets stay on the 25.5 mm collar.
+
+Center spacing in the same fitment notes is often 120–170 mm, commonly 130, 150, or 160 mm. The CAD range matches that span. The preview is 150 mm.
+
+### Model examples
+
+Rosen AV7500 headrest-availability sheet, dated 12.01.11.
+
+| Vehicle | Years | Post OD |
+| --- | --- | --- |
+| Chevy Equinox | 2006–2008 | 10 mm |
+| Chevy Equinox | 2010–2012 | 14 mm |
+| Chevy Trailblazer | 2005–2009 | 10 mm |
+| Ford Escape | 2008–2009 | 10 mm |
+| Ford Escape Hybrid | 2009–2011 | 12.7 mm |
+| Ford Escape | 2011–2012 | 12.7 mm |
+| Hyundai Santa Fe | 2010–2012 | 10 mm |
+| Hyundai Tucson | 2011–2012 | 12.7 mm |
+| Honda CR-V | 2007–2011 | 12.7 mm |
+| Honda Pilot | 2006–2008 | 10 mm |
+| Honda Pilot | 2009–2012 | 12.7 mm |
+| Toyota RAV4 | 2006–2012 | 12 mm |
+| Toyota, some platforms | — | 14 mm |
+| Nissan Rogue | 2008–2012 | 12.7 mm |
+
+### Make-level chart
+
+Philips JENHR1D vehicle preparation lists factory posts by make. Use it beside the Rosen model rows. Where the two sources overlap they agree on 10, 12, 12.7, and 14 mm.
 
 | Make | Factory post diameters | Source |
 | --- | --- | --- |
 | Chevrolet / GM | 10, 11, 12, and 14 mm | Philips JENHR1D vehicle-preparation chart |
 | Ford / Lincoln | 10, 12, and 12.7 mm | same chart |
 | Honda / Acura | 10 and 12.7 mm | same chart |
-| Toyota / Lexus | 12 and 13.88 mm | same chart |
+| Hyundai | Santa Fe 2010–2012 is 10 mm; Tucson 2011–2012 is 12.7 mm | Rosen AV7500, 12.01.11 (Hyundai is absent from the Philips make chart) |
+| Toyota / Lexus | 12 and 13.88 mm | Philips JENHR1D vehicle-preparation chart |
 | Nissan / Infiniti | 12.7 mm | same chart |
-| Hyundai | not published in that chart | A Tucson-forum note guessed a guide hole near 1/2 in (12.7 mm). That is not a calipered post |
 
-The Philips chart is reproduced in the JENHR1D user manual (vehicle preparation). The same manual's adapter kit also stocks 12, 12.5, 12.7, 13.8, 14, and 16 mm tubes. 16 mm is not assigned to these makes. A 16 mm post will not enter the 14.5 mm bore.
+The Philips adapter kit also stocks tubes at 12, 12.5, 12.7, 13.8, 14, and 16 mm. Preset 13.8 mm is that adapter tube. The Toyota/Lexus line on the same chart is 13.88 mm. Those are two published figures; measure the post before choosing one. A 16 mm tube is larger than the 14 mm design maximum and does not enter a bore of at most 14.5 mm.
 
-Sources: [Philips JENHR1D vehicle preparation](https://manualsdump.com/en/manuals/philips-jenhr1d/212963/7). Hyundai guide-hole guess: [Tucson forum, rear middle headrest](https://www.tucson-forum.com/threads/rear-middle-headrest.271/).
+Sources: [Rosen AV7500 headrest availability with post dimensions, 12.01.11](https://pdf.ampire.de/rosen_av7500_headrest.pdf). [Philips JENHR1D vehicle preparation](https://manualsdump.com/en/manuals/philips-jenhr1d/212963/7).
