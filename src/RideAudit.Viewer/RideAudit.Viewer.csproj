@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>RideAudit.Viewer</RootNamespace>
+    <Description>Fail-closed desktop court viewer logic. GPL-2.0-or-later. Decrypt only after verification and escrow release.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Client.Seal\RideAudit.Client.Seal.csproj" />
+    <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
+    <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Description>Avalonia UI 12 desktop court and counsel viewer for Windows, Linux, and macOS. GPL-2.0-or-later.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Shared.Ui\RideAudit.Shared.Ui.csproj" />
+  </ItemGroup>
+</Project>

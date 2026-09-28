@@ -1,0 +1,23 @@
+{
+  "schema": "rideaudit-client-distribution-v1",
+  "license": "GPL-2.0-or-later",
+  "sourceRepository": {
+    "url": "https://github.com/sharpninja/rideaudit",
+    "publicSourcePresent": true,
+    "note": "Source repository URL recorded for FR-RIDE-031 scaffolding. This file is not a release tag."
+  },
+  "playStore": {
+    "published": false,
+    "receiptPath": null,
+    "listingUrl": null,
+    "note": "No Google Play publication was performed. This manifest is not a Play Store receipt."
+  },
+  "desktopBuilds": {
+    "windows": "not-produced",
+    "linux": "not-produced-as-signed-release",
+    "macos": "not-produced",
+    "reproducibleSignedClaim": false,
+    "note": "Signed reproducible desktop builds were not produced in this cloud run."
+  },
+  "roadReady": false
+}

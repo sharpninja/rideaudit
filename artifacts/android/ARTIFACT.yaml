@@ -1,13 +1,19 @@
 id: ART-RIDE-ANDROID-001
 kind: android-client
-version: "0.1.0"
+version: "0.2.0"
 title: RideAudit Android client (dual-phone, seal-at-collect)
 author: Sharp Ninja
-license: GPL-2.0
+license: GPL-2.0-or-later
 path: artifacts/android/
-status: skeleton
+status: avalonia-client
 targetStack: Avalonia UI 12
-implementationStatus: historical-kotlin-scaffold
+implementationStatus: avalonia-ui-12
+implementationPath: src/RideAudit.Client.Android/
+sharedUiPath: src/RideAudit.Shared.Ui/
+desktopViewerPath: src/RideAudit.Client.Desktop/
+legacyKotlinPath: artifacts/android/legacy-kotlin/
+playStorePublished: false
+roadReady: false
 relatedFrIds:
   - FR-RIDE-015  # Seal and encrypt at collection
   - FR-RIDE-016  # Per-session or per-sample keys
@@ -36,10 +42,13 @@ modules:
   - identity
 notes: >
   Target UI stack is Avalonia UI 12 for Android, shared with the desktop app.
-  The Kotlin and Gradle files in this directory are historical and superseded
-  placeholders, not the target implementation. Minimal project skeleton only.
-  Play Store publishing is not claimed as complete. Dual-phone model: Bluetooth
+  Application code lives under src/RideAudit.Client.Android, src/RideAudit.Client.Desktop,
+  and src/RideAudit.Shared.Ui. Kotlin and Gradle files are archived under
+  artifacts/android/legacy-kotlin and are not the target implementation.
+  Play Store publishing is not claimed. No Play receipt is in this tree.
+  Play Integrity in cloud builds is fail-closed unless a test stub is injected;
+  the stub is not a Google Play Integrity token. Dual-phone model: Bluetooth
   discovery creates a driver-rider pairing. Driver phone coordinates session
   clock, admit/start/stop, seal admission, and submission. Passenger phone
   handles video sync, stream compositing, and realtime telematics
-  (spider-graph overlay). No Lyft private APIs.
+  (spider-graph overlay). No Lyft private APIs. Not road-ready.

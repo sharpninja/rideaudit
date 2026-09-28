@@ -6,12 +6,14 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>latest</LangVersion>
     <InvariantGlobalization>false</InvariantGlobalization>
+    <Deterministic>true</Deterministic>
     <Product>RideAudit</Product>
     <Company>RideAudit contributors</Company>
     <Copyright>Copyright (C) 2026 RideAudit contributors</Copyright>
     <Version>0.2.0</Version>
     <Authors>Sharp Ninja</Authors>
     <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/sharpninja/rideaudit</RepositoryUrl>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>

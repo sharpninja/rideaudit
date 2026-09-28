@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.Client.Seal</RootNamespace>
+    <Description>Device-boundary seal-at-collect for Avalonia clients. GPL-2.0-or-later. Distinct from the server RideAudit.Seal envelope.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.Client.Core\RideAudit.Client.Core.csproj" />
+    <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
+  </ItemGroup>
+</Project>

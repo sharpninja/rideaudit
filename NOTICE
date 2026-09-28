@@ -19,10 +19,17 @@ SPDX-License-Identifier: GPL-2.0-only
 Source commit: the git revision that contains this tree. Do not invent a
 commit id in documentation.
 
+The Avalonia UI framework is an upstream dependency licensed by its
+authors under the MIT license. In-scope RideAudit application UI code
+is GPL-2.0-or-later and is not relicensed as MIT or Apache-2.0.
+
 Sealed evidence payloads, Play Integrity tokens, bearer tokens, recovery
 codes, and escrow shares are not open-source releases. GPL-2.0 applies to
 the software, schemas, and verification tooling. Evidence remains subject
 to consent, privacy controls, access policy, and legal holds (FR-RIDE-030).
+
+Google Play publication is not claimed by this notice. No Play Store
+receipt is included.
 
 The interim OpenAPI document at artifacts/server-api/openapi.yaml is a
 non-authoritative companion. Authoritative wire contracts are the .proto

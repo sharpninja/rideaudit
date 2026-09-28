@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RideAudit.Bt/RideAudit.Bt.csproj" />
+    <Project Path="src/RideAudit.Capture/RideAudit.Capture.csproj" />
+    <Project Path="src/RideAudit.Client.Android/RideAudit.Client.Android.csproj" />
+    <Project Path="src/RideAudit.Client.Contracts/RideAudit.Client.Contracts.csproj" />
+    <Project Path="src/RideAudit.Client.Core/RideAudit.Client.Core.csproj" />
+    <Project Path="src/RideAudit.Client.Desktop/RideAudit.Client.Desktop.csproj" />
+    <Project Path="src/RideAudit.Licensing/RideAudit.Licensing.csproj" />
+    <Project Path="src/RideAudit.PlayIntegrity/RideAudit.PlayIntegrity.csproj" />
+    <Project Path="src/RideAudit.Client.Seal/RideAudit.Client.Seal.csproj" />
+    <Project Path="src/RideAudit.Shared.Ui/RideAudit.Shared.Ui.csproj" />
+    <Project Path="src/RideAudit.Video/RideAudit.Video.csproj" />
+    <Project Path="src/RideAudit.Viewer/RideAudit.Viewer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/RideAudit.Client.Tests/RideAudit.Client.Tests.csproj" />
+  </Folder>
+</Solution>

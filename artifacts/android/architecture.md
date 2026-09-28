@@ -5,7 +5,7 @@
 **Status:** Target architecture. Kotlin and Gradle files in this artifact are historical and superseded placeholders. This document does not define a Kotlin implementation.
 **License:** GPL-2.0
 
-The Android client target uses **Avalonia UI 12**, shared with the desktop application. The existing source skeleton remains in place only for historical reference and is not rewritten by this documentation update.
+The Android client uses **Avalonia UI 12**, shared with the desktop application. Historical Kotlin sources are archived under `legacy-kotlin/` and are not the implementation.
 
 ## Dual-phone roles (Bluetooth pairing)
 

@@ -12,7 +12,7 @@ License: GPL-2.0
 | ART-RIDE-UX-001 | ux-wireframes-storyboards (mobile capture) | [docs/ux/](../ux/) |
 | ART-RIDE-UX-REVIEW-001 | ux-wireframes-storyboards (desktop review) | [docs/ux/review-app/](../ux/review-app/) |
 
-Stack decision: Avalonia UI 12 for Android and desktop apps; backend gRPC on .NET 10 containers. The Android artifact retains historical Kotlin and Gradle placeholders only. The server API artifact retains OpenAPI as a non-authoritative companion. Authoritative contracts are `src/RideAudit.Protos/`. See [docs/architecture/stack.md](../architecture/stack.md). BDPv4 stack FRs: FR-RIDE-056..062 (`docs/Project/Additive-Avalonia-Grpc-Stack-Batch.yaml`).
+Stack decision: Avalonia UI 12 for Android and desktop apps; backend gRPC on .NET 10 containers. The Android artifact points at `src/RideAudit.Client.Android/` and archives historical Kotlin under `artifacts/android/legacy-kotlin/`. The server API artifact retains OpenAPI as a non-authoritative companion. Authoritative contracts are `src/RideAudit.Protos/`. See [docs/architecture/stack.md](../architecture/stack.md). BDPv4 stack FRs: FR-RIDE-056..062 (`docs/Project/Additive-Avalonia-Grpc-Stack-Batch.yaml`).
 
 Each package contains an `ARTIFACT.yaml` with related FR-RIDE ids and GPL-2.0 notices.
 

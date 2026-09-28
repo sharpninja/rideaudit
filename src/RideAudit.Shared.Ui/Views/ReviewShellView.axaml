@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="RideAudit.Shared.Ui.Views.ReviewShellView">
+  <StackPanel Spacing="10">
+    <TextBlock x:Name="ScreenId" Text="WF-R-01" />
+    <TextBlock x:Name="CaseText" Text="Open an admitted sealed bundle. No decrypt yet." />
+    <TextBlock x:Name="BundleText" Text="Sealed records only" />
+    <ItemsControl x:Name="ChecksList" />
+    <TextBlock x:Name="QuorumText" Text="Escrow quorum not attached" />
+    <TextBlock x:Name="TimelineText" Text="Timeline locked" />
+    <TextBlock x:Name="GapText" Text="Missing GPS or OBD tracks stay labeled absent." />
+    <Button x:Name="DecryptButton" Content="Decrypt working copy" IsEnabled="False" />
+    <Button x:Name="PlaybackButton" Content="Play synchronized timeline" IsEnabled="False" />
+    <TextBlock x:Name="FailClosedText" IsVisible="False" />
+  </StackPanel>
+</UserControl>
