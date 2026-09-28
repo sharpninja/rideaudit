@@ -12,13 +12,17 @@ public partial class MainView : UserControl
         InitializeComponent();
         LicenseNotice.Text = UiLicense.Notice;
         FrameworkNotice.Text = UiLicense.Framework;
-        ApplyMode(ShellMode.Capture);
     }
 
     public void ApplyMode(ShellMode mode)
     {
-        Body.Content = mode == ShellMode.Capture
-            ? new CaptureShellView()
-            : new ReviewShellView();
+        if (mode != ShellMode.Capture)
+        {
+            Body.Content = new ReviewShellView();
+            return;
+        }
+
+        Body.Content = App.CaptureRuntime?.CreateShell()
+            ?? CaptureShellView.CreateUncomposedRefuse();
     }
 }

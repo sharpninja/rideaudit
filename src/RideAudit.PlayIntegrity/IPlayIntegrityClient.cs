@@ -118,16 +118,18 @@ public sealed class StubPlayIntegrityClient : IPlayIntegrityClient
 }
 
 /// <summary>
-/// Deterministic fixture for tests of court-ready field layout. It does not contact Google
-/// and its token prefix is not a Play Integrity JWT.
+/// Deterministic fixture for tests of receipt field layout. It does not contact Google,
+/// its token prefix is not a Play Integrity JWT, and it is never court-ready.
 /// </summary>
 public sealed class FixturePlayIntegrityClient : IPlayIntegrityClient
 {
     public const string TokenPrefix = "fixture-not-live-play:";
+    public const string Notice =
+        "Fixture attestation. This is not a Google Play Integrity token and is not court-ready.";
 
     public PlayTokenResult RequestToken(string nonce, IClock clock) =>
         new(
-            PlayIntegrityProviders.Real,
+            PlayIntegrityProviders.Fixture,
             TokenPrefix + Guid.NewGuid().ToString("N"),
             nonce,
             clock.UtcNow,
@@ -136,7 +138,7 @@ public sealed class FixturePlayIntegrityClient : IPlayIntegrityClient
             "MEETS_DEVICE_INTEGRITY",
             MeetsDeviceIntegrity: true,
             RecognizedApp: true,
-            StubNotice: null);
+            StubNotice: Notice);
 }
 
 /// <summary>

@@ -1,17 +1,15 @@
 # RideAudit admission (counsel RPCs on the same host).
 # Bind loopback only. Does not replace Octopus/SQL/Caddy on PAYTON-OMARCHY.
-# Images may be produced by remote-build.sh (SDK) or remote-runtime-build.sh
-# (LEGION2 linux-x64 publish). Production refuses documented-fixture calendars
-# and fixture Play Integrity. Not a CD green.
+# Production cutover MUST use this file with --no-build --pull never so compose
+# cannot silently rebuild a different local artifact. Rebuilds use
+# compose.build.yaml, then the recorded digest in RECORDED-IMAGE-DIGEST must
+# be updated. Not a CD green. Not GHCR.
 
 name: rideaudit-omarchy
 
 services:
   admission:
-    image: rideaudit-admission:local
-    build:
-      context: ../..
-      dockerfile: deploy/containers/admission/Dockerfile
+    image: rideaudit-admission:local@sha256:031a4a6e21cc0424a6276a59b9d38cabe15f7c5670468d3a99e4dcb8aad9fee5
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:8080
@@ -26,10 +24,7 @@ services:
     restart: unless-stopped
 
   counsel:
-    image: rideaudit-counsel:local
-    build:
-      context: ../..
-      dockerfile: deploy/containers/counsel/Dockerfile
+    image: rideaudit-counsel:local@sha256:031a4a6e21cc0424a6276a59b9d38cabe15f7c5670468d3a99e4dcb8aad9fee5
     profiles: ["counsel-split"]
     environment:
       ASPNETCORE_ENVIRONMENT: Production

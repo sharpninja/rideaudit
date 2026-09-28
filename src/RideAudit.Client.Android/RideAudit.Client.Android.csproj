@@ -22,5 +22,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RideAudit.Shared.Ui\RideAudit.Shared.Ui.csproj" />
+    <ProjectReference Include="..\RideAudit.Capture\RideAudit.Capture.csproj" />
+    <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
+    <ProjectReference Include="..\RideAudit.Client.Contracts\RideAudit.Client.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Video\RideAudit.Video.csproj" />
+    <ProjectReference Include="..\RideAudit.Bt\RideAudit.Bt.csproj" />
   </ItemGroup>
 </Project>

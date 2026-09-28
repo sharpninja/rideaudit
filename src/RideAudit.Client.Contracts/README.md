@@ -6,7 +6,7 @@ Generated types live in `RideAudit.Protos` (`RideAudit.Protos.Admission.V1`, `Ri
 
 `InterimInProcessAdmissionClient` checks sealed content type, the device RAES magic, receipt core, vehicle, session, and attestation, then returns `admitted=false` with custody state `local-sealed-pending`. That is not server admission and not an OpenTimestamps confirmation.
 
-`GrpcSealedAdmissionClient` calls the generated `Admission.AdmissionClient`. It forwards the caller's `SubmitSealedRequest` and maps an `RpcException` to `admitted=false`. It does not create a `fixture.v1.` token, a Play Integrity JWT, or an anchor. `SubmissionMapper` remains the preflight builder (`admitted=false`). `ServerAdmissionRequestFactory` is the fixture admission builder used when capture is wired to `AdmissionHost`.
+`GrpcSealedAdmissionClient` calls the generated `Admission.AdmissionClient`. It forwards the caller's `SubmitSealedRequest` and maps an `RpcException` to `admitted=false`. It does not create a `fixture.v1.` token, a Play Integrity JWT, or an anchor. `CanonicalAdmissionRequestFactory` is the production client contract (tenant, driver, policy, raw token, `ReceiptCoreCodec`). `SubmissionMapper` / `PreflightAdmissionRequestFactory` remain the preflight builder (`admitted=false`) for tests that do not submit to the server. `ServerAdmissionRequestFactory` is the explicit fixture.v1. inject used only when capture is wired to a fixture `AdmissionHost`.
 
 The attestation token sent on `AttestationSubmission.token` is the SHA-256 hex retained on the device receipt. Raw Play tokens are not stored or logged. Fixture and stub providers are not Google Play Integrity JWTs. This client does not emit server `fixture.v1.` tokens and does not claim a live Play or Bitcoin receipt.
 

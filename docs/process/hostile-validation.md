@@ -6,7 +6,7 @@
 
 ## 1. Permitted code-generation models
 
-Code generation may use **Grok `grok-4.6-xhigh`** or **GPT `gpt-6-sol` at `xhigh`**. The generator identity, provider, model, and reasoning setting must be recorded with the generated work. No other model is an approved generator unless this rule is amended in the repository.
+Code generation may use **Grok `grok-4.6-xhigh`** or **GPT Sol family at `xhigh`** (`gpt-5.6-sol`; family name `gpt-6-sol`). The generator identity, provider, model, and reasoning setting must be recorded with the generated work. No other model is an approved generator unless this rule is amended in the repository.
 
 ## 2. Mandatory opposing-model hostile validation (HV)
 
@@ -14,14 +14,18 @@ Generated code **MUST** receive hostile validation from the opposing agent and m
 
 | Generator | Required hostile validator |
 |---|---|
-| Grok `grok-4.6-xhigh` | Codex / GPT `gpt-6-sol` at `xhigh` |
-| GPT `gpt-6-sol` at `xhigh` | Grok `grok-4.6-xhigh` |
+| Grok `grok-4.6-xhigh` | Codex / GPT Sol family at `xhigh` (`gpt-5.6-sol`; family name `gpt-6-sol`) |
+| GPT Sol family at `xhigh` (`gpt-5.6-sol` / `gpt-6-sol`) | Grok `grok-4.6-xhigh` |
+
+### Amendment 2026-09-28 — Sol-family validator alias
+
+The product matrix historically named `gpt-6-sol` at `xhigh` as the opposing validator to Grok generation. The currently available Cursor/OpenAI Sol-family model id is **`gpt-5.6-sol`** at reasoning **`xhigh`**. Treat `gpt-5.6-sol` (xhigh) as the approved opposing validator. `gpt-6-sol` remains the family name; `gpt-5.6-sol` is the dated concrete alias. A completed `gpt-5.6-sol` xhigh opposing run is formally eligible for the product HV gate. Eligibility is not a pass; AGREE at threshold 98 is still required.
 
 Self-review by the generating agent is not opposing-model HV and does not satisfy this rule. The validator must attack correctness, security, fail-closed behavior, data custody, requirements traceability, and other risks appropriate to the generated work. A failed, partial, unavailable, or unauthenticated validation is not a pass.
 
 ### Authentication limitation
 
-Docs-only HV through ChatGPT-authenticated Codex **cannot use `gpt-6-sol` until API-key authentication is available**. Do not claim, summarize, or record a completed `gpt-6-sol` HV run when that authentication requirement is not met. An unavailable run may be recorded as unavailable or failed, but it must never be represented as a completed validation.
+Docs-only HV through ChatGPT-authenticated Codex **cannot use the Sol family (`gpt-6-sol` / `gpt-5.6-sol`) until API-key authentication is available**. Do not claim, summarize, or record a completed Sol-family HV run when that authentication requirement is not met. An unavailable run may be recorded as unavailable or failed, but it must never be represented as a completed validation. Cursor Cloud / API-key Sol runs (`gpt-5.6-sol` xhigh) are in-scope under the 2026-09-28 amendment.
 
 ## 3. Immutable request/response retention
 

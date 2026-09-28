@@ -90,7 +90,11 @@ public static class Fixtures
             RawPayload = raw,
             SourceCommitNotice = "test-commit",
         };
-        var session = new DualPhoneCaptureSession(new InMemoryDiscoveryBus(), new InterimInProcessAdmissionClient(), clock);
+        var session = new DualPhoneCaptureSession(
+            new InMemoryDiscoveryBus(),
+            new InterimInProcessAdmissionClient(),
+            clock,
+            PreflightAdmissionRequestFactory.Instance);
         var capture = session.Run(request);
         var headers = new MemoryBitcoinHeaders();
         var proof = OtsProofBuilder.Build(capture.SealedComposite.Receipt, "0000block", "sibling", headers);
@@ -123,6 +127,12 @@ public static class Fixtures
             Samples = samples,
         };
     }
+
+    public static SealedFixture CaptureSimulated(bool sealRaw = false, bool rawConsent = false, byte[]? raw = null) =>
+        CaptureHappy(new StubPlayIntegrityClient(StubPlayMode.SimulatedSuccess), sealRaw, rawConsent, raw);
+
+    public static CourtViewer ViewerForSimulated(SealedFixture fixture) =>
+        ViewerFor(fixture, allowSimulated: true);
 
     public static CourtViewer ViewerFor(SealedFixture fixture, bool allowSimulated = false)
     {

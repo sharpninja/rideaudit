@@ -3,6 +3,7 @@
 
 using RideAudit.Client.Core;
 using RideAudit.Client.Seal;
+using RideAudit.Video;
 
 namespace RideAudit.Viewer;
 
@@ -176,6 +177,28 @@ public sealed class CourtViewer
                 Hashes.Zero(plaintext);
                 var failed = Finish(session, checks, failClosed: true, "Working copy hash mismatch.");
                 return Block(session, failed, ReviewPhase.FailClosed, "Working copy hash mismatch.");
+            }
+
+            if (record.Sealed.Receipt.Composite)
+            {
+                var meta = record.Sealed.Receipt.CompositeMetadata;
+                var bind = CompositeSourceContainer.VerifyBindings(
+                    plaintext,
+                    meta?.SourceStreamIds ?? [],
+                    meta?.SourceContentHashes ?? []);
+                checks.Add(new VerificationCheck
+                {
+                    RecordId = record.Sealed.Id,
+                    Name = "source_payload_binding",
+                    Status = bind.Ok ? "pass" : "fail",
+                    Detail = bind.Detail,
+                });
+                if (!bind.Ok)
+                {
+                    Hashes.Zero(plaintext);
+                    var failed = Finish(session, checks, failClosed: true, bind.Detail);
+                    return Block(session, failed, ReviewPhase.FailClosed, bind.Detail);
+                }
             }
 
             var copy = new ExpiringWorkingCopy

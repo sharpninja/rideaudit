@@ -17,8 +17,8 @@ public class TestRide027PlaybackTests
     [Trait("AC", "AC-RIDE-047-001")]
     public void Playback_requires_hash_receipt_links_clock_overlay_and_attestation()
     {
-        var fixture = Fixtures.CaptureHappy();
-        var outcome = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var fixture = Fixtures.CaptureSimulated();
+        var outcome = Fixtures.ViewerForSimulated(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
         Assert.Equal(ReviewPhase.Playback, outcome.Phase);
         Assert.Contains(outcome.Report.Checks, check => check.Name == "payload_hash" && check.Passed);
         Assert.Contains(outcome.Report.Checks, check => check.Name == "ots_receipt" && check.Passed);
@@ -26,6 +26,7 @@ public class TestRide027PlaybackTests
         Assert.Contains(outcome.Report.Checks, check => check.Name == "clock_offsets" && check.Passed);
         Assert.Contains(outcome.Report.Checks, check => check.Name == "overlay_timeline" && check.Passed);
         Assert.Contains(outcome.Report.Checks, check => check.Name == "play_attestation" && check.Passed);
+        Assert.Contains(outcome.Report.Checks, check => check.Name == "source_payload_binding" && check.Passed);
         Assert.NotEmpty(outcome.WorkingCopies);
     }
 
@@ -34,20 +35,20 @@ public class TestRide027PlaybackTests
     [Trait("AC", "AC-RIDE-047-002")]
     public void Inconsistent_components_are_reported_and_working_copy_expires()
     {
-        var fixture = Fixtures.CaptureHappy();
+        var fixture = Fixtures.CaptureSimulated();
         var record = fixture.Bundle.Records[0];
         var brokenMeta = record.Sealed.Receipt.CompositeMetadata! with { OverlayManifestVersion = "" };
         var brokenReceipt = CopyReceipt(record.Sealed.Receipt, brokenMeta);
         var broken = Replace(record, brokenReceipt, record.Sealed.Envelope, record.Ots);
         var bundle = CopyBundle(fixture.Bundle, broken);
-        var outcome = Fixtures.ViewerFor(fixture).Review(bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var outcome = Fixtures.ViewerForSimulated(fixture).Review(bundle, "counsel", Fixtures.Release(fixture.Clock));
         Assert.False(outcome.DisplayAllowed);
         Assert.Contains(outcome.Report.Checks, check => check.Name == "overlay_timeline" && !check.Passed);
         Assert.Empty(outcome.WorkingCopies);
 
-        var good = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var good = Fixtures.ViewerForSimulated(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
         fixture.Clock.UtcNow = good.WorkingCopies[0].ExpiresAt;
-        Assert.False(Fixtures.ViewerFor(fixture).CanPlay(good.WorkingCopies[0]));
+        Assert.False(Fixtures.ViewerForSimulated(fixture).CanPlay(good.WorkingCopies[0]));
     }
 
     [Fact]
@@ -69,11 +70,11 @@ public class TestRide027PlaybackTests
     [Trait("AC", "AC-RIDE-221-002")]
     public void Counsel_can_reproduce_the_hash_check()
     {
-        var fixture = Fixtures.CaptureHappy();
+        var fixture = Fixtures.CaptureSimulated();
         var envelope = fixture.Bundle.Records[0].Sealed.Envelope;
         var recomputed = Hashes.Sha256Hex(envelope);
         Assert.Equal(fixture.Bundle.Records[0].Sealed.Receipt.ContentHash, recomputed);
-        var outcome = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var outcome = Fixtures.ViewerForSimulated(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
         Assert.True(outcome.Report.Checks.Single(check => check.Name == "payload_hash").Passed);
     }
 
@@ -168,9 +169,9 @@ public class TestRide028ViewerTests
     [Trait("AC", "AC-RIDE-049-002")]
     public void Decrypt_uses_escrow_release()
     {
-        var fixture = Fixtures.CaptureHappy();
+        var fixture = Fixtures.CaptureSimulated();
         var escrow = new QuorumEscrow(fixture.EscrowPrivate, fixture.Clock);
-        var viewer = new CourtViewer(new VerificationGate(fixture.Allowlist, fixture.Headers), escrow, fixture.Clock);
+        var viewer = new CourtViewer(new VerificationGate(fixture.Allowlist, fixture.Headers, allowSimulatedAttestation: true), escrow, fixture.Clock);
         var blocked = viewer.Review(fixture.Bundle, "counsel", null);
         Assert.False(blocked.DecryptAllowed);
         Assert.Equal(0, escrow.ReleaseAttempts);
@@ -214,8 +215,8 @@ public class TestRide028ViewerTests
     [Trait("AC", "AC-RIDE-051-001")]
     public void Timeline_shows_available_tracks_and_labels_gaps()
     {
-        var fixture = Fixtures.CaptureHappy();
-        var outcome = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var fixture = Fixtures.CaptureSimulated();
+        var outcome = Fixtures.ViewerForSimulated(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
         var timeline = outcome.Timelines[0];
         Assert.True(timeline.Composite.Present);
         Assert.True(timeline.Spider.Present);
@@ -233,8 +234,8 @@ public class TestRide028ViewerTests
     [Trait("AC", "AC-RIDE-051-002")]
     public void Timeline_does_not_require_the_collection_device()
     {
-        var fixture = Fixtures.CaptureHappy();
-        var outcome = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var fixture = Fixtures.CaptureSimulated();
+        var outcome = Fixtures.ViewerForSimulated(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
         Assert.False(outcome.Timelines[0].RequiresCollectionDevice);
     }
 
@@ -294,7 +295,7 @@ public class TestRide028ViewerTests
     [Fact]
     public void Sibling_failure_does_not_mark_the_good_record_passed_as_custody()
     {
-        var good = Fixtures.CaptureHappy();
+        var good = Fixtures.CaptureSimulated();
         var badBundle = TamperEnvelope(good);
         var mixed = new RideBundle
         {
@@ -303,7 +304,7 @@ public class TestRide028ViewerTests
             VehicleId = good.Bundle.VehicleId,
             Records = [good.Bundle.Records[0], badBundle.Records[0]],
         };
-        var outcome = Fixtures.ViewerFor(good).Review(mixed, "counsel", Fixtures.Release(good.Clock));
+        var outcome = Fixtures.ViewerForSimulated(good).Review(mixed, "counsel", Fixtures.Release(good.Clock));
         Assert.False(outcome.DecryptAllowed);
         Assert.Contains(outcome.Report.Checks, check => check.RecordId == good.Bundle.Records[0].Sealed.Id && check.Name == "payload_hash" && check.Passed);
         Assert.Contains(outcome.Report.Checks, check => check.RecordId == badBundle.Records[0].Sealed.Id && check.Name == "payload_hash" && !check.Passed);
@@ -312,8 +313,8 @@ public class TestRide028ViewerTests
     [Fact]
     public void Disclosure_pack_excludes_plaintext()
     {
-        var fixture = Fixtures.CaptureHappy();
-        var viewer = Fixtures.ViewerFor(fixture);
+        var fixture = Fixtures.CaptureSimulated();
+        var viewer = Fixtures.ViewerForSimulated(fixture);
         var outcome = viewer.Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
         var pack = viewer.Export(fixture.Bundle, outcome);
         Assert.False(pack.ContainsPlaintext);
@@ -323,8 +324,8 @@ public class TestRide028ViewerTests
 
     private static ReviewOutcome ReviewHappy()
     {
-        var fixture = Fixtures.CaptureHappy();
-        return Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var fixture = Fixtures.CaptureSimulated();
+        return Fixtures.ViewerForSimulated(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
     }
 
     private static RideBundle TamperEnvelope(SealedFixture fixture)

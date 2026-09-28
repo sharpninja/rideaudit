@@ -13,11 +13,16 @@ public partial class CaptureShellView : UserControl
     private string? _role;
 
     public CaptureShellView()
-        : this(new UnavailableDiscoveryBus())
+        : this(new UnavailableDiscoveryBus(), productionEntry: false)
     {
     }
 
     public CaptureShellView(IDiscoveryBus bus)
+        : this(bus, productionEntry: false)
+    {
+    }
+
+    public CaptureShellView(IDiscoveryBus bus, bool productionEntry)
     {
         _bus = bus;
         InitializeComponent();
@@ -26,6 +31,19 @@ public partial class CaptureShellView : UserControl
         DiscoverButton.Click += OnDiscover;
         StartButton.Click += OnStart;
         StopButton.Click += OnStop;
+        if (productionEntry && !_bus.RadioAvailable)
+        {
+            ShowFailClosed(
+                "BT_DISABLED: Production capture composition has no radio. This is not a silent pairing success.");
+        }
+    }
+
+    public static CaptureShellView CreateUncomposedRefuse()
+    {
+        var view = new CaptureShellView(new UnavailableDiscoveryBus(), productionEntry: true);
+        view.ShowFailClosed(
+            "PRODUCTION_UNAVAILABLE: Capture composition was not installed. The APK will not default to a silent UnavailableDiscoveryBus success.");
+        return view;
     }
 
     public void SelectDriver() => OnDriver(null, new RoutedEventArgs());

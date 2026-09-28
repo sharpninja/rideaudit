@@ -35,8 +35,9 @@ public class TestRide019PlayTests
         Assert.False(string.IsNullOrWhiteSpace(receipt.AttestationTokenHash));
         Assert.False(string.IsNullOrWhiteSpace(receipt.AttestationReference));
         Assert.Equal(receipt.AttestationTokenHash, receipt.AttestationReference);
-        Assert.Equal(PlayIntegrityProviders.Real, receipt.AttestationProvider);
-        Assert.True(string.IsNullOrEmpty(receipt.StubNotice));
+        Assert.Equal(PlayIntegrityProviders.Fixture, receipt.AttestationProvider);
+        Assert.False(string.IsNullOrEmpty(receipt.StubNotice));
+        Assert.Contains("not court-ready", receipt.StubNotice, StringComparison.OrdinalIgnoreCase);
     }
 
     [Theory]

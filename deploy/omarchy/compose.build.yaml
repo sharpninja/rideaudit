@@ -1,0 +1,18 @@
+# Explicit rebuild only. Never used by Confirm-Cutover.ps1.
+# After a rebuild, record the new image id in RECORDED-IMAGE-DIGEST and
+# pin it in compose.yaml. Not a CD green. Not GHCR.
+
+name: rideaudit-omarchy-build
+
+services:
+  admission:
+    image: rideaudit-admission:local
+    build:
+      context: ../..
+      dockerfile: deploy/containers/admission/Dockerfile
+
+  counsel:
+    image: rideaudit-counsel:local
+    build:
+      context: ../..
+      dockerfile: deploy/containers/counsel/Dockerfile
