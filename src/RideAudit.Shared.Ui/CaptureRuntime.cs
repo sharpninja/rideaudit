@@ -82,8 +82,9 @@ public sealed class CaptureRuntime
         var view = new CaptureShellView(this);
         if (!Graph.ProductionReady)
         {
+            var reasons = Graph.UnavailableSeams.Concat(Graph.FixtureSeams);
             view.ShowUnavailableBanner(
-                "PRODUCTION_UNAVAILABLE: " + string.Join(" | ", Graph.UnavailableSeams));
+                "PRODUCTION_UNAVAILABLE: " + string.Join(" | ", reasons));
         }
 
         return view;
@@ -230,6 +231,19 @@ public sealed class CaptureRuntime
                 throw new RideAuditFailClosedException(decision.RejectCode, "FR-RIDE-035", decision.Message);
             }
 
+            var admittedCustody = CustodyStateNames.ToWire(CustodyState.Admitted);
+            if (!decision.Admitted
+                || !decision.CollectionComplete
+                || !decision.CiphertextStored
+                || !string.Equals(decision.CustodyState, admittedCustody, StringComparison.Ordinal))
+            {
+                throw new RideAuditFailClosedException(
+                    ErrorCodes.AdmissionPending,
+                    "FR-RIDE-035",
+                    "Admission is pending or incomplete. Runtime success requires Admitted, CollectionComplete, CiphertextStored, and admitted custody. "
+                    + (string.IsNullOrWhiteSpace(decision.Message) ? "RejectCode was empty." : decision.Message));
+            }
+
             return Remember(new CapturePathResult
             {
                 Ok = true,
@@ -237,9 +251,7 @@ public sealed class CaptureRuntime
                 Attempted = _attempted.ToArray(),
                 Request = request,
                 Decision = decision,
-                Message = decision.Admitted
-                    ? "Sealed submission admitted."
-                    : decision.Message
+                Message = "Sealed submission admitted."
             });
         }
         catch (RideAuditFailClosedException ex)

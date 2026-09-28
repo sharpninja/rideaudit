@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using System.Security.Cryptography;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using RideAudit.Bt;
@@ -13,6 +14,7 @@ using RideAudit.Contracts;
 using RideAudit.PlayIntegrity;
 using RideAudit.Shared.Ui;
 using RideAudit.Shared.Ui.Views;
+using RideAudit.TestSupport;
 using RideAudit.Video;
 using RideAudit.Viewer;
 using Xunit;
@@ -191,6 +193,7 @@ public class PathTo98RemediationTests
             "radio missing",
             "camera missing");
         Assert.False(graph.ProductionReady);
+        Assert.Empty(graph.FixtureSeams);
         Assert.Contains(graph.UnavailableSeams, item => item.Contains("UnavailableDiscovery", StringComparison.Ordinal));
         Assert.Contains(graph.UnavailableSeams, item => item.Contains("UnavailableCamera", StringComparison.Ordinal));
         Assert.Contains(graph.UnavailableSeams, item => item.Contains("UnavailablePlayIntegrity", StringComparison.Ordinal));
@@ -208,43 +211,49 @@ public class PathTo98RemediationTests
     [Trait("AC", "AC-RIDE-041-001")]
     [Trait("AC", "AC-RIDE-056-001")]
     [Trait("AC", "AC-RIDE-PLAY-001-001")]
-    public void Capture_shell_start_stop_invokes_camera_play_seal_escrow_and_admission()
+    public async Task Capture_shell_start_stop_admits_through_authenticated_grpc()
     {
-        var clock = new FixedClock(new DateTimeOffset(2026, 9, 28, 12, 0, 0, TimeSpan.Zero));
+        var world = ServerWorld.Create();
+        var enrolled = world.Enroll();
+        var clock = new FixedClock(ServerWorld.Start);
         var frames = new[] { TimeSpan.Zero, TimeSpan.FromMilliseconds(33), TimeSpan.FromMilliseconds(66) };
         var stream = Stream("driver-stream", "device-driver", frames, "runtime-driver");
-        var admission = new RecordingAdmissionClient();
-        var escrow = new RecordingEscrowDeposit();
-        var (publicKey, _) = EscrowKeyFactory.CreateEphemeral("escrow-runtime");
+        var (publicKey, privateKey) = EscrowKeyFactory.CreateEphemeral("escrow-runtime");
         var factory = new CanonicalAdmissionRequestFactory(new CanonicalAdmissionIdentity
         {
-            TenantId = "tenant-runtime",
-            DriverId = "driver-runtime",
-            PolicyVersion = RideAuditPolicy.Version
+            TenantId = enrolled.Driver.TenantId,
+            DriverId = enrolled.Driver.DriverId,
+            PolicyVersion = world.Options.PolicyVersion
         });
+        await using var host = await AdmissionTestHost.Start(world);
+        using var transport = AdmissionTestHost.Client(host, enrolled.Driver.Token);
+        var admission = new RecordingAdmissionClient(transport.Admission);
+        var escrow = new HsmRaesDeposit(world, enrolled.Driver.TenantId, privateKey);
         var graph = ProductionCaptureGraph.Wire(
             new InMemoryDiscoveryBus(),
             new FixtureCameraSource(stream),
-            new FixturePlayIntegrityClient(),
+            new IssuedFixturePlayClient(world, enrolled.Session.SessionId),
             factory,
             admission,
             escrow,
             "in-memory",
             "fixture-camera");
-        Assert.True(graph.ProductionReady);
+        Assert.False(graph.ProductionReady);
+        Assert.Contains(graph.FixtureSeams, item => item.Contains("FIXTURE", StringComparison.Ordinal));
         var runtime = new CaptureRuntime
         {
             Graph = graph,
             Clock = clock,
+            Allowlist = new PackageAllowlist(1, [new AllowlistEntry(ServerWorld.PackageName, ServerWorld.CertDigest)]),
             EscrowPublicKey = publicKey,
             Identity = new CaptureSessionIdentity
             {
-                TenantId = "tenant-runtime",
-                DriverId = "driver-runtime",
-                VehicleId = "vehicle-runtime",
-                SessionId = "session-runtime",
-                CollectorId = "driver-runtime",
-                PolicyVersion = RideAuditPolicy.Version
+                TenantId = enrolled.Driver.TenantId,
+                DriverId = enrolled.Driver.DriverId,
+                VehicleId = enrolled.Vehicle.VehicleId,
+                SessionId = enrolled.Session.SessionId,
+                CollectorId = enrolled.Driver.DriverId,
+                PolicyVersion = world.Options.PolicyVersion
             }
         };
         var view = runtime.CreateShell();
@@ -262,9 +271,80 @@ public class PathTo98RemediationTests
         Assert.Contains("admission", runtime.LastResult.Attempted);
         Assert.Equal(1, admission.Submits);
         Assert.Equal(1, escrow.Deposits);
-        Assert.Equal("tenant-runtime", admission.LastRequest!.ReceiptCore.TenantId);
-        Assert.StartsWith(FixturePlayIntegrityClient.TokenPrefix, admission.LastRequest.Attestation.Token, StringComparison.Ordinal);
+        Assert.NotNull(runtime.LastResult.Decision);
+        Assert.True(runtime.LastResult.Decision!.Admitted);
+        Assert.True(runtime.LastResult.Decision.CollectionComplete);
+        Assert.True(runtime.LastResult.Decision.CiphertextStored);
+        Assert.Equal(CustodyStateNames.ToWire(CustodyState.Admitted), runtime.LastResult.Decision.CustodyState);
+        Assert.Equal("", runtime.LastResult.Decision.RejectCode);
+        Assert.Equal(enrolled.Driver.TenantId, admission.LastRequest!.ReceiptCore.TenantId);
+        Assert.StartsWith("fixture.v1.", admission.LastRequest.Attestation.Token, StringComparison.Ordinal);
+        Assert.DoesNotContain("InterimInProcessAdmissionClient", admission.InnerTypeName, StringComparison.Ordinal);
+        Assert.Equal(typeof(RideAudit.Client.Contracts.GrpcSealedAdmissionClient).FullName, admission.InnerTypeName);
         Assert.Contains("Seal-at-collect completed", view.FindControl<TextBlock>("SealStatus")!.Text);
+        Assert.Contains("Sealed submission admitted", view.FindControl<TextBlock>("SubmitStatus")!.Text);
+    }
+
+    [AvaloniaFact]
+    [Trait("FR", "FR-RIDE-035")]
+    [Trait("AC", "AC-RIDE-035-001")]
+    public void Capture_runtime_fail_closes_when_interim_admission_is_pending()
+    {
+        var clock = new FixedClock(new DateTimeOffset(2026, 9, 28, 12, 0, 0, TimeSpan.Zero));
+        var frames = new[] { TimeSpan.Zero, TimeSpan.FromMilliseconds(33), TimeSpan.FromMilliseconds(66) };
+        var stream = Stream("driver-stream", "device-driver", frames, "runtime-interim");
+        var admission = new RecordingAdmissionClient(new InterimInProcessAdmissionClient());
+        var escrow = new RecordingEscrowDeposit();
+        var (publicKey, _) = EscrowKeyFactory.CreateEphemeral("escrow-interim");
+        var factory = new CanonicalAdmissionRequestFactory(new CanonicalAdmissionIdentity
+        {
+            TenantId = "tenant-interim",
+            DriverId = "driver-interim",
+            PolicyVersion = RideAuditPolicy.Version
+        });
+        var graph = ProductionCaptureGraph.Wire(
+            new InMemoryDiscoveryBus(),
+            new FixtureCameraSource(stream),
+            new FixturePlayIntegrityClient(),
+            factory,
+            admission,
+            escrow,
+            "in-memory",
+            "fixture-camera");
+        Assert.False(graph.ProductionReady);
+        Assert.Contains(graph.FixtureSeams, item => item.Contains("InterimInProcessAdmissionClient", StringComparison.Ordinal));
+        var runtime = new CaptureRuntime
+        {
+            Graph = graph,
+            Clock = clock,
+            EscrowPublicKey = publicKey,
+            Identity = new CaptureSessionIdentity
+            {
+                TenantId = "tenant-interim",
+                DriverId = "driver-interim",
+                VehicleId = "vehicle-interim",
+                SessionId = "session-interim",
+                CollectorId = "driver-interim",
+                PolicyVersion = RideAuditPolicy.Version
+            }
+        };
+        var view = runtime.CreateShell();
+        var window = new Window { Width = 400, Height = 800, Content = view };
+        window.Show();
+        view.SelectDriver();
+        view.StartSession();
+        Assert.True(runtime.LastResult!.Ok);
+        view.StopSession();
+        Assert.False(runtime.LastResult.Ok);
+        Assert.Equal(ErrorCodes.AdmissionPending, runtime.LastResult.Code);
+        Assert.Contains("admission", runtime.LastResult.Attempted);
+        Assert.Equal(1, admission.Submits);
+        Assert.False(admission.LastDecision!.Admitted);
+        Assert.False(admission.LastDecision.CollectionComplete);
+        Assert.False(admission.LastDecision.CiphertextStored);
+        Assert.Equal("", admission.LastDecision.RejectCode);
+        Assert.Contains("ADMISSION_PENDING", view.FindControl<TextBlock>("FailClosedText")!.Text);
+        Assert.DoesNotContain("Seal-at-collect completed", view.FindControl<TextBlock>("SealStatus")!.Text ?? "");
     }
 
     [AvaloniaFact]
@@ -307,6 +387,9 @@ public class PathTo98RemediationTests
         Assert.Contains("ProductionCaptureGraph.FromEnvironment", composition);
         Assert.Contains("UnavailableDiscoveryBus", composition);
         Assert.Contains("MissingRuntimePermissions", composition);
+        var graphSource = File.ReadAllText(Path.Combine(Repo.Root(), "src/RideAudit.Capture/ProductionCaptureGraph.cs"));
+        Assert.Contains("FixtureSeams", graphSource);
+        Assert.Contains("&& FixtureSeams.Count == 0", graphSource);
         var hardware = File.ReadAllText(Path.Combine(Repo.Root(), "src/RideAudit.Client.Android/AndroidCaptureHardware.cs"));
         Assert.Contains("MissingRuntimePermissions", hardware);
         Assert.Contains("Manifest.Permission.Camera", hardware);
@@ -360,19 +443,28 @@ public class PathTo98RemediationTests
 
     private sealed class RecordingAdmissionClient : ISealedAdmissionClient
     {
+        private readonly ISealedAdmissionClient _inner;
+
+        public RecordingAdmissionClient(ISealedAdmissionClient inner) => _inner = inner;
+
         public int Submits { get; private set; }
 
+        public string InnerTypeName => _inner.GetType().FullName ?? _inner.GetType().Name;
+
         public RideAudit.Protos.Admission.V1.SubmitSealedRequest? LastRequest { get; private set; }
+
+        public RideAudit.Protos.Admission.V1.AdmissionDecision? LastDecision { get; private set; }
 
         public RideAudit.Protos.Admission.V1.AdmissionDecision SubmitSealed(RideAudit.Protos.Admission.V1.SubmitSealedRequest request)
         {
             Submits++;
             LastRequest = request;
-            return new InterimInProcessAdmissionClient().SubmitSealed(request);
+            LastDecision = _inner.SubmitSealed(request);
+            return LastDecision;
         }
 
         public RideAudit.Protos.Admission.V1.AdmissionDecision GetAdmissionStatus(RideAudit.Protos.Admission.V1.GetAdmissionStatusRequest request) =>
-            new InterimInProcessAdmissionClient().GetAdmissionStatus(request);
+            _inner.GetAdmissionStatus(request);
     }
 
     private sealed class RecordingEscrowDeposit : IDeviceEscrowDeposit
@@ -382,6 +474,68 @@ public class PathTo98RemediationTests
         public void Deposit(SealedRecord record)
         {
             ArgumentNullException.ThrowIfNull(record);
+            Deposits++;
+        }
+    }
+
+    private sealed class IssuedFixturePlayClient : IPlayIntegrityClient
+    {
+        private readonly ServerWorld _world;
+        private readonly string _sessionId;
+
+        public IssuedFixturePlayClient(ServerWorld world, string sessionId)
+        {
+            _world = world;
+            _sessionId = sessionId;
+        }
+
+        public PlayTokenResult RequestToken(string nonce, RideAudit.Client.Core.IClock clock)
+        {
+            var token = _world.IssueToken(_sessionId, nonce);
+            return new PlayTokenResult(
+                RideAuditPolicy.PlayProvider,
+                token,
+                nonce,
+                clock.UtcNow,
+                ServerWorld.PackageName,
+                ServerWorld.CertDigest,
+                RideAuditPolicy.MeetsDeviceIntegrity,
+                true,
+                true,
+                "Documented fixture.v1. token for in-process AdmissionGrpcService. Not a live Play Integrity JWT.");
+        }
+    }
+
+    private sealed class HsmRaesDeposit : IDeviceEscrowDeposit
+    {
+        private readonly ServerWorld _world;
+        private readonly string _tenantId;
+        private readonly RSA _privateKey;
+
+        public HsmRaesDeposit(ServerWorld world, string tenantId, RSA privateKey)
+        {
+            _world = world;
+            _tenantId = tenantId;
+            _privateKey = privateKey;
+        }
+
+        public int Deposits { get; private set; }
+
+        public void Deposit(SealedRecord record)
+        {
+            ArgumentNullException.ThrowIfNull(record);
+            var dek = EscrowKeyFactory.Unwrap(_privateKey, record.WrappedKey.WrappedKey);
+            _world.App.Hsm.EscrowCollectionSecret(new EscrowSecret
+            {
+                KeyId = record.Receipt.KeyId,
+                TenantId = _tenantId,
+                SealedRecordId = record.Id,
+                PrivateKeyPkcs8 = _privateKey.ExportPkcs8PrivateKey(),
+                Dek = dek,
+                CustodianIds = ["custodian-a", "custodian-b", "custodian-c"],
+                ThresholdM = 2,
+                TotalN = 3
+            });
             Deposits++;
         }
     }

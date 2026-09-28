@@ -36,7 +36,13 @@ public sealed class ProductionCaptureGraph
     public required string CameraDetail { get; init; }
     public required IReadOnlyList<string> UnavailableSeams { get; init; }
 
-    public bool ProductionReady => UnavailableSeams.Count == 0;
+    public required IReadOnlyList<string> FixtureSeams { get; init; }
+
+    /// <summary>
+    /// True only when no Unavailable* hardware/config gap and no fixture/in-memory
+    /// seam is present. Fixture-executable graphs are not production-ready.
+    /// </summary>
+    public bool ProductionReady => UnavailableSeams.Count == 0 && FixtureSeams.Count == 0;
 
     public static ProductionCaptureGraph Wire(
         IDiscoveryBus discovery,
@@ -70,7 +76,8 @@ public sealed class ProductionCaptureGraph
             EscrowDeposit = escrow,
             DiscoveryDetail = discoveryDetail,
             CameraDetail = cameraDetail,
-            UnavailableSeams = unavailable
+            UnavailableSeams = unavailable,
+            FixtureSeams = LabelFixtureSeams(discovery, camera, play, admission, escrow)
         };
     }
 
@@ -113,7 +120,8 @@ public sealed class ProductionCaptureGraph
                 EscrowDeposit = graph.EscrowDeposit,
                 DiscoveryDetail = graph.DiscoveryDetail,
                 CameraDetail = graph.CameraDetail,
-                UnavailableSeams = graph.UnavailableSeams.Append("CanonicalAdmission: " + ex.Message).ToList()
+                UnavailableSeams = graph.UnavailableSeams.Append("CanonicalAdmission: " + ex.Message).ToList(),
+                FixtureSeams = graph.FixtureSeams
             };
         }
     }
@@ -133,7 +141,40 @@ public sealed class ProductionCaptureGraph
             EscrowDeposit = EscrowDeposit,
             DiscoveryDetail = DiscoveryDetail,
             CameraDetail = CameraDetail,
-            UnavailableSeams = UnavailableSeams.Concat(extras).ToList()
+            UnavailableSeams = UnavailableSeams.Concat(extras).ToList(),
+            FixtureSeams = FixtureSeams
         };
+    }
+
+    private static IReadOnlyList<string> LabelFixtureSeams(
+        IDiscoveryBus discovery,
+        ICameraSource camera,
+        IPlayIntegrityClient play,
+        ISealedAdmissionClient? admission,
+        IDeviceEscrowDeposit? escrow)
+    {
+        var fixtures = new List<string>();
+        if (discovery is InMemoryDiscoveryBus || LooksLikeFixtureType(discovery))
+            fixtures.Add("FIXTURE: InMemoryDiscoveryBus / in-memory discovery is not a live Bluetooth radio.");
+        if (camera is FixtureCameraSource || LooksLikeFixtureType(camera))
+            fixtures.Add("FIXTURE: FixtureCameraSource is not a live camera.");
+        if (play is FixturePlayIntegrityClient || LooksLikeFixtureType(play))
+            fixtures.Add("FIXTURE: Play Integrity client is a labeled fixture, not live Play.");
+        if (admission is InterimInProcessAdmissionClient || LooksLikeFixtureType(admission))
+            fixtures.Add("FIXTURE: InterimInProcessAdmissionClient is a client preflight, not server admission.");
+        if (escrow is not null && escrow is not UnavailableDeviceEscrowDeposit)
+            fixtures.Add("FIXTURE: in-process escrow deposit is not hardware HSM.");
+        return fixtures;
+    }
+
+    private static bool LooksLikeFixtureType(object? seam)
+    {
+        if (seam is null)
+            return false;
+        var name = seam.GetType().Name;
+        return name.Contains("Fixture", StringComparison.Ordinal)
+            || name.Contains("InMemory", StringComparison.Ordinal)
+            || name.Contains("Recording", StringComparison.Ordinal)
+            || name.Contains("Interim", StringComparison.Ordinal);
     }
 }
