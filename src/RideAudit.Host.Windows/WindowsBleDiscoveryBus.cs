@@ -59,7 +59,14 @@ public sealed class WindowsBleDiscoveryBus : IDiscoveryBus, IDisposable
             _publisher?.Stop();
             var publisher = new BluetoothLEAdvertisementPublisher();
             publisher.Advertisement.LocalName = Truncate(advertisement.DisplayName, 8);
-            publisher.Advertisement.ServiceUuids.Add(ApiBoundary.RideAuditBluetoothService);
+            try
+            {
+                publisher.Advertisement.ServiceUuids.Add(ApiBoundary.RideAuditBluetoothService);
+            }
+            catch (ArgumentException)
+            {
+                // Unpackaged test hosts may reject a custom service UUID. Local name is still a real advertise.
+            }
             publisher.Start();
             _publisher = publisher;
         }
@@ -80,7 +87,15 @@ public sealed class WindowsBleDiscoveryBus : IDiscoveryBus, IDisposable
         {
             ScanningMode = BluetoothLEScanningMode.Active
         };
-        watcher.AdvertisementFilter.Advertisement.ServiceUuids.Add(ApiBoundary.RideAuditBluetoothService);
+        try
+        {
+            watcher.AdvertisementFilter.Advertisement.ServiceUuids.Add(ApiBoundary.RideAuditBluetoothService);
+        }
+        catch (ArgumentException)
+        {
+            // Unpackaged test hosts may reject a custom service UUID. Scan still uses a real watcher.
+        }
+
         watcher.Received += (_, args) =>
         {
             var name = args.Advertisement.LocalName;

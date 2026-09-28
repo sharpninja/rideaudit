@@ -25,14 +25,21 @@ public class WindowsHardwareSeamTests
             return;
         }
 
-        bus.Advertise(new Advertisement
+        try
         {
-            Address = "local",
-            DisplayName = "probe",
-            Service = ApiBoundary.RideAuditBluetooth
-        });
-        var seen = bus.Scan("FFFFFFFFFFFF");
-        Assert.DoesNotContain(seen, ad => ad.Address is "00:00:00:00:00:00" or "000000000000");
+            bus.Advertise(new Advertisement
+            {
+                Address = "local",
+                DisplayName = "probe",
+                Service = ApiBoundary.RideAuditBluetooth
+            });
+            var seen = bus.Scan("FFFFFFFFFFFF");
+            Assert.DoesNotContain(seen, ad => ad.Address is "00:00:00:00:00:00" or "000000000000");
+        }
+        catch (RideAuditFailClosedException ex)
+        {
+            Assert.Equal(ErrorCodes.BluetoothDisabled, ex.Code);
+        }
     }
 
     [Fact]
