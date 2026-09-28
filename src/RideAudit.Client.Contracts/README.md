@@ -1,19 +1,15 @@
 # RideAudit.Client.Contracts
 
-Interim gRPC client stubs for the Avalonia clients.
+Client admission abstraction over the authoritative protos in `src/RideAudit.Protos/`.
 
-`src/RideAudit.Protos/` is not on `origin/master`. This project compiles `interim/rideaudit/v1/custody.proto` with `Grpc.Tools` (`GrpcServices=Client`) into namespace `RideAudit.V1`.
+Generated types live in `RideAudit.Protos` (`RideAudit.Protos.Admission.V1`, `RideAudit.Protos.Custody.V1`). This project does not compile a second proto. UI projects depend on `ISealedAdmissionClient`, not on a generated gRPC channel.
 
-The checked-in OpenAPI companion under `artifacts/server-api/` is non-authoritative. When the documents disagree, client code binds to this proto.
+`InterimInProcessAdmissionClient` checks sealed content type, the device RAES magic, receipt core, vehicle, session, and attestation, then returns `admitted=false` with custody state `local-sealed-pending`. That is not server admission and not an OpenTimestamps confirmation.
 
-## Swap to shared protos later
+The attestation token sent on `AttestationSubmission.token` is the SHA-256 hex retained on the device receipt. Raw Play tokens are not stored or logged. Fixture and stub providers are not Google Play Integrity JWTs. This client does not emit server `fixture.v1.` tokens and does not claim a live Play or Bitcoin receipt.
 
-1. Point the `Protobuf` item at the shared `src/RideAudit.Protos/` file that keeps package `rideaudit.v1`, `csharp_namespace = RideAudit.V1`, and the same field numbers.
-2. Keep `ISealedAdmissionClient`. UI projects do not reference generated client classes directly.
-3. Add a gRPC adapter beside `InterimInProcessAdmissionClient` when a real server endpoint exists.
-
-`InterimInProcessAdmissionClient` is a client-side preflight. It does not admit evidence and it does not decrypt.
+The checked-in OpenAPI companion under `artifacts/server-api/` is non-authoritative. When the documents disagree, conformance binds to `src/RideAudit.Protos/`.
 
 See [SWAP.md](SWAP.md).
 
-License: GPL-2.0-or-later. See the repository `LICENSE`.
+License: GPL-2.0-only for the shared package expression; client source headers remain GPL-2.0-or-later. See the repository `LICENSE` and `NOTICE`.

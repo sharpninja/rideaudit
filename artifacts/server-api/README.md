@@ -3,10 +3,13 @@
 **Author:** Sharp Ninja
 **Artifact ID:** ART-RIDE-API-001
 **Kind:** grpc-api
-**Version:** 0.1.0
-**License:** GPL-2.0
+**Version:** 0.2.0
+**License:** GPL-2.0-only
 
-> **Target stack:** gRPC on .NET 10 containers. The checked-in `openapi.yaml` is an interim human-readable companion and is not the target wire contract.
+> **Authoritative contract:** `src/RideAudit.Protos/` (proto3, contract version 0.2.0).  
+> **OpenAPI role:** non-authoritative companion (`openapi.yaml`). FR-RIDE-062. When this companion and the protos disagree, conformance binds to grpc-protobuf.
+
+> **Target stack:** gRPC on .NET 10 containers. The checked-in `openapi.yaml` is an interim human-readable companion and is not the wire contract.
 
 ## Purpose
 
@@ -14,8 +17,8 @@ Target API for the RideAudit public sealed-submission service. It runs as gRPC s
 
 ## Contract documentation
 
-- **Target contract:** gRPC services on .NET 10 containers
-- [openapi.yaml](openapi.yaml) - interim OpenAPI 3.0+ human-readable companion for the public surface
+- **Authoritative contract:** [src/RideAudit.Protos/](../../src/RideAudit.Protos/) — gRPC protobuf on .NET 10 containers
+- [openapi.yaml](openapi.yaml) - non-authoritative OpenAPI 3.0+ human-readable companion for reviewers
 - [error-codes.md](error-codes.md)
 - [security.md](security.md)
 - [ARTIFACT.yaml](ARTIFACT.yaml)

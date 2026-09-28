@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2026 RideAudit contributors
+// CONTRACT_AUTHORITY: grpc-protobuf
+// COMPANION_NOTICE: artifacts/server-api/openapi.yaml is a non-authoritative companion.
+// Contract-Version: 0.2.0
+// FR-RIDE-060, FR-RIDE-062, TR-RIDE-GPL-005, TR-RIDE-SERVER-010
+syntax = "proto3";
+
+package rideaudit.common.v1;
+
+option csharp_namespace = "RideAudit.Protos.Common.V1";
+
+// Custody lifecycle. Confirmation updates must not rewrite sealed ciphertext
+// or a previously committed receipt core. Pending is not admitted.
+enum CustodyState {
+  CUSTODY_STATE_UNSPECIFIED = 0;
+  CUSTODY_STATE_LOCAL_SEALED_PENDING = 1;
+  CUSTODY_STATE_CONFIRMED = 2;
+  CUSTODY_STATE_REJECTED = 3;
+  CUSTODY_STATE_QUARANTINED = 4;
+  CUSTODY_STATE_ADMITTED = 5;
+}
+
+// Profile ids are configuration, not a hard-coded mainnet brand.
+// btc-ots is the primary path. Other profiles are selectable and, until
+// implemented, fail closed without fabricated transaction metadata.
+enum ChainProfile {
+  CHAIN_PROFILE_UNSPECIFIED = 0;
+  CHAIN_PROFILE_BTC_OTS = 1;
+  CHAIN_PROFILE_ETH_L2_BASE = 2;
+  CHAIN_PROFILE_ETH_L2_POLYGON = 3;
+  CHAIN_PROFILE_DUAL_BTC_OTS_L2 = 4;
+}

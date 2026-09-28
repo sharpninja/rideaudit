@@ -8,7 +8,7 @@
     <Project Path="src/RideAudit.Client.Desktop/RideAudit.Client.Desktop.csproj" />
     <Project Path="src/RideAudit.Licensing/RideAudit.Licensing.csproj" />
     <Project Path="src/RideAudit.PlayIntegrity/RideAudit.PlayIntegrity.csproj" />
-    <Project Path="src/RideAudit.Seal/RideAudit.Seal.csproj" />
+    <Project Path="src/RideAudit.Client.Seal/RideAudit.Client.Seal.csproj" />
     <Project Path="src/RideAudit.Shared.Ui/RideAudit.Shared.Ui.csproj" />
     <Project Path="src/RideAudit.Video/RideAudit.Video.csproj" />
     <Project Path="src/RideAudit.Viewer/RideAudit.Viewer.csproj" />

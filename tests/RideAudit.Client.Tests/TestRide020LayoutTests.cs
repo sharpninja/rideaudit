@@ -20,7 +20,7 @@ public class TestRide020LayoutTests
         Assert.Contains("GNU GENERAL PUBLIC LICENSE", license);
         Assert.Contains("Version 2, June 1991", license);
         var props = File.ReadAllText(Path.Combine(Repo.Root(), "Directory.Build.props"));
-        Assert.Contains("GPL-2.0-or-later", props);
+        Assert.Contains("GPL-2.0-only", props);
         Assert.DoesNotContain("Apache-2.0", props);
         Assert.DoesNotContain(">MIT<", props);
     }
@@ -33,7 +33,7 @@ public class TestRide020LayoutTests
         var root = Repo.Root();
         Assert.True(File.Exists(Path.Combine(root, "NOTICE")));
         Assert.Contains("GPL-2.0-or-later", File.ReadAllText(Path.Combine(root, "NOTICE")));
-        Assert.Contains("SPDX-License-Identifier: GPL-2.0-or-later", File.ReadAllText(Path.Combine(root, "src", "RideAudit.Seal", "CollectionSealer.cs")));
+        Assert.Contains("SPDX-License-Identifier: GPL-2.0-or-later", File.ReadAllText(Path.Combine(root, "src", "RideAudit.Client.Seal", "CollectionSealer.cs")));
     }
 
     [Fact]

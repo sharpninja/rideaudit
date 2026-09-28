@@ -1,26 +1,36 @@
-RideAudit application software
+RideAudit
 Copyright (C) 2026 RideAudit contributors
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program; if not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
+
+SPDX-License-Identifier: GPL-2.0-only
+
+Source commit: the git revision that contains this tree. Do not invent a
+commit id in documentation.
 
 The Avalonia UI framework is an upstream dependency licensed by its
 authors under the MIT license. In-scope RideAudit application UI code
 is GPL-2.0-or-later and is not relicensed as MIT or Apache-2.0.
 
-Sealed evidence payloads are not made public by this license. Access
-remains subject to consent, privacy controls, and court-authorized
-escrow release.
+Sealed evidence payloads, Play Integrity tokens, bearer tokens, recovery
+codes, and escrow shares are not open-source releases. GPL-2.0 applies to
+the software, schemas, and verification tooling. Evidence remains subject
+to consent, privacy controls, access policy, and legal holds (FR-RIDE-030).
 
 Google Play publication is not claimed by this notice. No Play Store
 receipt is included.
+
+The interim OpenAPI document at artifacts/server-api/openapi.yaml is a
+non-authoritative companion. Authoritative wire contracts are the .proto
+files under src/RideAudit.Protos/ (FR-RIDE-060, FR-RIDE-062).

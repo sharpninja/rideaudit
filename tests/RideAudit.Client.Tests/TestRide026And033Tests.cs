@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using RideAudit.Bt;
 using RideAudit.Client.Core;
 using RideAudit.Client.Tests.Support;
-using RideAudit.Seal;
+using RideAudit.Client.Seal;
 using RideAudit.Video;
 using Xunit;
 
@@ -78,10 +79,20 @@ public class TestRide026CompositeSealTests
     [Trait("AC", "AC-RIDE-046-002")]
     public void Submission_does_not_ask_the_server_to_reencode_plaintext()
     {
-        var request = Fixtures.CaptureHappy().Capture.Submission.Request;
-        Assert.Equal("driver", request.SubmitterRole);
+        var capture = Fixtures.CaptureHappy().Capture;
+        var submitted = capture.Submission;
+        var request = submitted.Request;
+        Assert.Equal(PhoneRole.Driver, capture.Pairing.Driver.IntendedRole);
+        Assert.Equal(request.SessionId, request.ReceiptCore.SessionId);
+        Assert.Equal(request.VehicleId, request.ReceiptCore.VehicleId);
+        Assert.Equal(64, request.Attestation.Token.Length);
+        Assert.DoesNotContain(".", request.Attestation.Token);
+        Assert.False(submitted.Response.Admitted);
+        Assert.False(submitted.Response.Anchor.LiveBitcoinMetadata);
+        Assert.False(submitted.Response.Anchor.HasTransactionReference);
+        Assert.False(submitted.Response.Anchor.HasBlockHeight);
         Assert.DoesNotContain("reencode", request.ContentType);
-        Assert.True(request.Ciphertext.Length > 33);
+        Assert.True(request.SealedEnvelope.Length > 33);
     }
 
     [Fact]
@@ -104,7 +115,7 @@ public class TestRide026CompositeSealTests
     [Trait("AC", "AC-RIDE-048-002")]
     public void Prepared_submission_has_no_plaintext_marker()
     {
-        var bytes = Fixtures.CaptureHappy().Capture.Submission.Request.Ciphertext.ToByteArray();
+        var bytes = Fixtures.CaptureHappy().Capture.Submission.Request.SealedEnvelope.ToByteArray();
         Assert.False(Bytes.Contains(bytes, System.Text.Encoding.ASCII.GetBytes(Fixtures.Marker)));
     }
 }

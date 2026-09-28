@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using Google.Protobuf;
 using RideAudit.Bt;
 using RideAudit.Client.Contracts;
 using RideAudit.Client.Core;
+using RideAudit.Client.Seal;
 using RideAudit.PlayIntegrity;
-using RideAudit.Seal;
-using RideAudit.V1;
+using RideAudit.Protos.Admission.V1;
+using RideAudit.Protos.Custody.V1;
 using RideAudit.Video;
 
 namespace RideAudit.Capture;
@@ -53,7 +55,7 @@ public sealed class CaptureResult
 public sealed class PreparedSubmission
 {
     public required SubmitSealedRequest Request { get; init; }
-    public required SubmitSealedResponse Response { get; init; }
+    public required AdmissionDecision Response { get; init; }
 }
 
 public sealed class DualPhoneCaptureSession
@@ -222,11 +224,16 @@ public sealed class DualPhoneCaptureSession
             throw new RideAuditFailClosedException("ATTESTATION_FAILED", "FR-RIDE-026", "Cannot submit without attestation.");
         }
 
-        var proto = SubmissionMapper.ToRequest(record, request.VehicleId, "driver", authorization.Evidence);
-        var response = _admission.SubmitSealed(proto);
-        if (!string.IsNullOrEmpty(response.ErrorCode))
+        if (request.Driver.IntendedRole != PhoneRole.Driver)
         {
-            throw new RideAuditFailClosedException(response.ErrorCode, "FR-RIDE-035", response.Message);
+            throw new RideAuditFailClosedException("AUTH_FORBIDDEN", "FR-RIDE-035", "Only the driver phone may submit.");
+        }
+
+        var proto = SubmissionMapper.ToRequest(record, request.VehicleId, authorization.Evidence);
+        var response = _admission.SubmitSealed(proto);
+        if (!string.IsNullOrEmpty(response.RejectCode))
+        {
+            throw new RideAuditFailClosedException(response.RejectCode, "FR-RIDE-035", response.Message);
         }
 
         return new PreparedSubmission { Request = proto, Response = response };
@@ -238,75 +245,73 @@ public static class SubmissionMapper
     public static SubmitSealedRequest ToRequest(
         SealedRecord record,
         string vehicleId,
-        string role,
         AttestationEvidence evidence)
     {
         var receipt = record.Receipt;
-        var message = new RideAudit.V1.CustodyReceipt
+        var core = new ReceiptCore
         {
+            SchemaVersion = RideAudit.Contracts.RideAuditPolicy.SchemaVersion,
+            ReceiptId = receipt.SealedRecordId,
+            PolicyVersion = receipt.AdmissionPolicyId,
+            ContentHash = HexToBytes(receipt.ContentHash),
+            AlgorithmId = receipt.Algorithm,
+            KeyId = receipt.KeyId,
+            PublicKeyMaterial = ByteString.CopyFromUtf8(receipt.PublicKeyPem),
+            KeyScope = receipt.KeyScope,
+            ScopeBinding = receipt.ScopeId,
+            CollectorId = receipt.CollectorIdentity,
+            DriverId = receipt.CollectorIdentity,
+            VehicleId = vehicleId,
             SessionId = receipt.SessionId,
-            SealedRecordId = receipt.SealedRecordId,
-            ContentHash = receipt.ContentHash,
-            PlaintextContentHash = receipt.PlaintextContentHash,
-            SealedAt = receipt.SealedAt.ToString("O"),
-            AttestationTokenHash = receipt.AttestationTokenHash,
-            KeyScheme = receipt.KeyScheme,
-            Composite = receipt.Composite,
-            BlockchainTxHint = receipt.BlockchainTxHint,
-            ChainId = receipt.ChainId,
+            TenantId = "",
+            CollectionUnixMillis = receipt.SealedAt.ToUnixTimeMilliseconds(),
+            ProvenanceTag = receipt.ProvenanceTag,
+            AttestationEvidenceHash = HexToBytes(receipt.AttestationTokenHash),
             PackageIdentity = receipt.PackageIdentity,
             SigningCertDigest = receipt.SigningCertDigest,
-            AttestationReference = receipt.AttestationReference,
-            KeyId = receipt.KeyId,
-            PublicKeyPem = receipt.PublicKeyPem,
-            CollectorIdentity = receipt.CollectorIdentity,
-            ProvenanceTag = receipt.ProvenanceTag,
-            Algorithm = receipt.Algorithm,
-            AlgorithmVersion = receipt.AlgorithmVersion,
-            KeyScope = receipt.KeyScope,
-            ScopeId = receipt.ScopeId,
-            KeyBindingDigest = receipt.KeyBindingDigest,
             Nonce = receipt.Nonce,
-            AdmissionPolicyId = receipt.AdmissionPolicyId,
-            ChainWriteStatus = receipt.ChainWriteStatus,
-            AttestationProvider = receipt.AttestationProvider,
-            LicenseId = receipt.License.LicenseId,
-            SourceCommitNotice = receipt.License.SourceCommitNotice,
-            Codec = receipt.CompositeMetadata?.Codec ?? "",
-            Compression = receipt.CompositeMetadata?.Compression ?? "",
-            OverlayManifestVersion = receipt.CompositeMetadata?.OverlayManifestVersion ?? "",
-            SyncClockOffset = receipt.CompositeMetadata?.SyncClockOffset ?? "",
-            DroppedFrameCount = receipt.CompositeMetadata?.DroppedFrameCount ?? 0,
-            LinkedCompositeId = receipt.LinkedCompositeId ?? "",
-            StubNotice = receipt.StubNotice ?? "",
+            SealedRecordId = receipt.SealedRecordId,
         };
-        message.DeviceIds.AddRange(receipt.DeviceIds);
-        if (receipt.CompositeMetadata is not null)
-        {
-            message.SourceStreamIds.AddRange(receipt.CompositeMetadata.SourceStreamIds);
-        }
 
         return new SubmitSealedRequest
         {
             SessionId = receipt.SessionId,
             VehicleId = vehicleId,
-            Receipt = message,
-            Attestation = new AppAttestation
+            IdempotencyKey = receipt.SealedRecordId,
+            ContentType = ApiBoundary.SealedContentType,
+            SealedEnvelope = ByteString.CopyFrom(record.Envelope),
+            ReceiptCore = core,
+            Attestation = new AttestationSubmission
             {
                 Provider = evidence.Provider,
-                TokenHash = evidence.TokenHash,
+                // SHA-256 hex retained on the device. Not a raw Play JWT and not a server fixture.v1 token.
+                Token = evidence.TokenHash,
                 Nonce = evidence.Nonce,
-                ObtainedAt = evidence.ObtainedAt.ToString("O"),
-                ClientClaimedVerdictOk = evidence.MeetsDeviceIntegrity && evidence.RecognizedApp,
-                PackageIdentity = evidence.PackageIdentity,
-                SigningCertDigest = evidence.SigningCertDigest,
-                Verdict = evidence.Verdict,
-                StubNotice = evidence.StubNotice ?? "",
+                ObtainedUnixMillis = evidence.ObtainedAt.ToUnixTimeMilliseconds(),
+                PackageName = evidence.PackageIdentity,
+                CertDigest = evidence.SigningCertDigest,
+                BoundKeyId = receipt.KeyId,
+                BoundSessionId = receipt.SessionId,
             },
-            SealedBlobRef = "local:" + record.Id,
-            ContentType = ApiBoundary.SealedContentType,
-            Ciphertext = Google.Protobuf.ByteString.CopyFrom(record.Envelope),
-            SubmitterRole = role,
         };
+    }
+
+    private static ByteString HexToBytes(string hex)
+    {
+        if (string.IsNullOrEmpty(hex) || hex.Length % 2 != 0)
+        {
+            throw new RideAuditFailClosedException(
+                "RECEIPT_INVALID",
+                "FR-RIDE-017",
+                "Receipt hash is not hex.");
+        }
+
+        var bytes = new byte[hex.Length / 2];
+        for (var i = 0; i < bytes.Length; i++)
+        {
+            bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+        }
+
+        return ByteString.CopyFrom(bytes);
     }
 }

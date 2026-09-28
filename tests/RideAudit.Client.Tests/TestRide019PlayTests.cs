@@ -4,7 +4,7 @@
 using RideAudit.Client.Core;
 using RideAudit.Client.Tests.Support;
 using RideAudit.PlayIntegrity;
-using RideAudit.Seal;
+using RideAudit.Client.Seal;
 using Xunit;
 
 namespace RideAudit.Client.Tests;

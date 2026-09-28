@@ -2,114 +2,136 @@
 // Copyright (C) 2026 RideAudit contributors
 
 using RideAudit.Client.Core;
-using RideAudit.V1;
+using RideAudit.Contracts;
+using RideAudit.Protos.Admission.V1;
+using RideAudit.Protos.Custody.V1;
 
 namespace RideAudit.Client.Contracts;
 
 public static class ContractProvenance
 {
-    public const string Source = "interim-companion";
-    public const string SwapTarget = "src/RideAudit.Protos";
+    public const string Source = "src/RideAudit.Protos";
+    public const string ContractVersion = ContractAuthority.ContractVersion;
+    public const string SwapTarget = ContractAuthority.AuthoritativePath;
     public const string OpenApiAuthority = "non-authoritative";
 }
 
 public interface ISealedAdmissionClient
 {
-    SubmitSealedResponse SubmitSealed(SubmitSealedRequest request);
+    AdmissionDecision SubmitSealed(SubmitSealedRequest request);
 
-    AdmissionStatusResponse GetAdmissionStatus(AdmissionStatusRequest request);
+    AdmissionDecision GetAdmissionStatus(GetAdmissionStatusRequest request);
 }
 
 /// <summary>
-/// In-process client preflight. This is not the server admission service.
+/// In-process client preflight over authoritative admission messages.
+/// This is not the server admission service and it does not confirm an anchor.
 /// </summary>
 public sealed class InterimInProcessAdmissionClient : ISealedAdmissionClient
 {
-    private readonly Dictionary<string, AdmissionStatusResponse> _status = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, AdmissionDecision> _status = new(StringComparer.Ordinal);
 
-    public SubmitSealedResponse SubmitSealed(SubmitSealedRequest request)
+    public AdmissionDecision SubmitSealed(SubmitSealedRequest request)
     {
-        if (request.Receipt is null || string.IsNullOrWhiteSpace(request.Receipt.ContentHash))
+        if (request.ReceiptCore is null || request.ReceiptCore.ContentHash.IsEmpty)
         {
-            return Reject("RECEIPT_MISSING", "Custody receipt is missing.");
+            return Reject(ErrorCodes.ReceiptMissing, "Custody receipt core is missing.");
         }
 
-        if (!string.Equals(request.ContentType, ApiBoundary.SealedContentType, StringComparison.Ordinal))
+        if (!string.Equals(request.ContentType, RideAuditPolicy.SealedContentType, StringComparison.Ordinal))
         {
-            return Reject("PLAINTEXT_REJECTED", "Content type is not a sealed envelope.");
+            return Reject(ErrorCodes.PlaintextRejected, "Content type is not a sealed envelope.");
         }
 
-        if (request.Ciphertext.IsEmpty || request.Ciphertext[0] != (byte)'R')
+        if (!LooksLikeDeviceEnvelope(request.SealedEnvelope))
         {
-            return Reject("PLAINTEXT_REJECTED", "Ciphertext is missing the sealed envelope magic.");
-        }
-
-        if (!string.Equals(request.SubmitterRole, "driver", StringComparison.OrdinalIgnoreCase))
-        {
-            return Reject("AUTH_FORBIDDEN", "Only the driver phone may submit.");
+            return Reject(ErrorCodes.PlaintextRejected, "Sealed envelope is missing the device RAES magic.");
         }
 
         if (string.IsNullOrWhiteSpace(request.VehicleId))
         {
-            return Reject("VEHICLE_UNREGISTERED", "Vehicle id is required.");
+            return Reject(ErrorCodes.VehicleUnregistered, "Vehicle id is required.");
         }
 
-        if (request.Attestation is null || string.IsNullOrWhiteSpace(request.Attestation.TokenHash))
+        if (request.Attestation is null || string.IsNullOrWhiteSpace(request.Attestation.Token))
         {
-            return Reject("ATTESTATION_FAILED", "Attestation is missing.");
+            return Reject(ErrorCodes.AttestationFailed, "Attestation is missing.");
         }
 
         if (string.IsNullOrWhiteSpace(request.SessionId))
         {
-            return Reject("SESSION_INVALID", "Session id is required.");
+            return Reject(ErrorCodes.SessionInvalid, "Session id is required.");
         }
 
         var id = "sub-" + Guid.NewGuid().ToString("N");
-        var status = new AdmissionStatusResponse
+        var decision = new AdmissionDecision
         {
             SubmissionId = id,
-            Decision = "pending_server_admission",
-            ReceiptPresent = true,
-            PlayIntegrityOk = request.Attestation.ClientClaimedVerdictOk,
-            VehicleRegistered = true,
-            PlaintextRejected = true,
+            CustodyState = CustodyStateNames.ToWire(CustodyState.LocalSealedPending),
+            Admitted = false,
+            CollectionComplete = false,
             RejectCode = "",
-        };
-        _status[id] = status;
-        return new SubmitSealedResponse
-        {
-            SubmissionId = id,
-            Status = "pending_server_admission",
-            ErrorCode = "",
             Message = "Client preflight accepted a sealed envelope. Server admission is not performed here.",
+            CiphertextStored = false,
+            Anchor = PendingAnchor(),
         };
+        decision.Checks.Add("client-preflight");
+        decision.Checks.Add("not-server-admission");
+        _status[id] = decision;
+        return decision;
     }
 
-    public AdmissionStatusResponse GetAdmissionStatus(AdmissionStatusRequest request)
+    public AdmissionDecision GetAdmissionStatus(GetAdmissionStatusRequest request)
     {
         if (_status.TryGetValue(request.SubmissionId, out var status))
         {
             return status;
         }
 
-        return new AdmissionStatusResponse
+        return new AdmissionDecision
         {
             SubmissionId = request.SubmissionId,
-            Decision = "rejected",
-            ReceiptPresent = false,
-            PlayIntegrityOk = false,
-            VehicleRegistered = false,
-            PlaintextRejected = true,
-            RejectCode = "SUBMISSION_NOT_FOUND",
+            CustodyState = CustodyStateNames.ToWire(CustodyState.Rejected),
+            Admitted = false,
+            CollectionComplete = false,
+            RejectCode = ErrorCodes.SubmissionNotFound,
+            Message = "Submission was not found.",
+            CiphertextStored = false,
+            Anchor = PendingAnchor(),
         };
     }
 
-    private static SubmitSealedResponse Reject(string code, string message) =>
+    private static AdmissionDecision Reject(string code, string message) =>
         new()
         {
             SubmissionId = "",
-            Status = "rejected",
-            ErrorCode = code,
+            CustodyState = CustodyStateNames.ToWire(CustodyState.Rejected),
+            Admitted = false,
+            CollectionComplete = false,
+            RejectCode = code,
             Message = message,
+            CiphertextStored = false,
+            Anchor = PendingAnchor(),
+        };
+
+    private static bool LooksLikeDeviceEnvelope(Google.Protobuf.ByteString bytes) =>
+        bytes.Length > 33 &&
+        bytes[0] == (byte)'R' &&
+        bytes[1] == (byte)'A' &&
+        bytes[2] == (byte)'E' &&
+        bytes[3] == (byte)'S';
+
+    /// <summary>
+    /// Pending is not confirmation. No Bitcoin transaction metadata is invented here.
+    /// </summary>
+    private static AnchorProofEnvelope PendingAnchor() =>
+        new()
+        {
+            ProfileId = ChainProfileIds.BtcOts,
+            ProofSource = "client-preflight",
+            Status = "pending",
+            Disclaimer = "Pending anchor is not confirmation. This client did not verify a Bitcoin header or an OpenTimestamps upgrade.",
+            LiveBitcoinMetadata = false,
+            FailureCode = "",
         };
 }

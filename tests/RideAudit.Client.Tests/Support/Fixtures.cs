@@ -7,7 +7,7 @@ using RideAudit.Capture;
 using RideAudit.Client.Contracts;
 using RideAudit.Client.Core;
 using RideAudit.PlayIntegrity;
-using RideAudit.Seal;
+using RideAudit.Client.Seal;
 using RideAudit.Video;
 using RideAudit.Viewer;
 

@@ -13,3 +13,6 @@ __pycache__/
 mcp.db
 *.db-journal
 
+
+TestResults/
+.dotnet/

@@ -7,8 +7,10 @@
   <ItemGroup>
     <ProjectReference Include="..\RideAudit.Bt\RideAudit.Bt.csproj" />
     <ProjectReference Include="..\RideAudit.Client.Contracts\RideAudit.Client.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Contracts\RideAudit.Contracts.csproj" />
+    <ProjectReference Include="..\RideAudit.Protos\RideAudit.Protos.csproj" />
     <ProjectReference Include="..\RideAudit.PlayIntegrity\RideAudit.PlayIntegrity.csproj" />
-    <ProjectReference Include="..\RideAudit.Seal\RideAudit.Seal.csproj" />
+    <ProjectReference Include="..\RideAudit.Client.Seal\RideAudit.Client.Seal.csproj" />
     <ProjectReference Include="..\RideAudit.Video\RideAudit.Video.csproj" />
   </ItemGroup>
 </Project>

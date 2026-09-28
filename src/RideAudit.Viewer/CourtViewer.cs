@@ -2,7 +2,7 @@
 // Copyright (C) 2026 RideAudit contributors
 
 using RideAudit.Client.Core;
-using RideAudit.Seal;
+using RideAudit.Client.Seal;
 
 namespace RideAudit.Viewer;
 

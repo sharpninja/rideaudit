@@ -4,7 +4,7 @@
 using System.Security.Cryptography;
 using RideAudit.Client.Core;
 using RideAudit.PlayIntegrity;
-using RideAudit.Seal;
+using RideAudit.Client.Seal;
 
 namespace RideAudit.Viewer;
 

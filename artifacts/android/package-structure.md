@@ -8,10 +8,10 @@ src/RideAudit.Client.Desktop/     # Desktop court viewer host
 src/RideAudit.Shared.Ui/          # Shared Avalonia views
 src/RideAudit.Bt/                 # Bluetooth roles
 src/RideAudit.Video/              # Composite and quotas
-src/RideAudit.Seal/               # Seal-at-collect
+src/RideAudit.Client.Seal/        # Device seal-at-collect (not server RideAudit.Seal)
 src/RideAudit.PlayIntegrity/      # Fail-closed attestation gate
 src/RideAudit.Viewer/             # ViewerSession and VerificationReport
-src/RideAudit.Client.Contracts/   # Interim gRPC stubs
+src/RideAudit.Client.Contracts/   # ISealedAdmissionClient over src/RideAudit.Protos
 ```
 
 Historical Kotlin package (archived, not the target):

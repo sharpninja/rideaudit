@@ -3,7 +3,7 @@
 
 using RideAudit.Client.Core;
 using RideAudit.Client.Tests.Support;
-using RideAudit.Seal;
+using RideAudit.Client.Seal;
 using RideAudit.Viewer;
 using Xunit;
 

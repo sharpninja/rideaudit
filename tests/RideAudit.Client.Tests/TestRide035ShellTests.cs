@@ -98,14 +98,24 @@ public class TestRide035ShellTests
     }
 
     [Fact]
-    public void Interim_grpc_client_stub_is_generated_and_isolated()
+    public void Clients_bind_to_authoritative_protos()
     {
-        var generated = typeof(InterimInProcessAdmissionClient).Assembly.GetType("RideAudit.V1.SealedAdmission+SealedAdmissionClient");
+        var contracts = typeof(InterimInProcessAdmissionClient).Assembly;
+        Assert.Null(contracts.GetType("RideAudit.V1.SealedAdmission+SealedAdmissionClient"));
+        var protosName = contracts.GetReferencedAssemblies().Single(name => name.Name == "RideAudit.Protos");
+        var protos = System.Reflection.Assembly.Load(protosName);
+        var generated = protos.GetType("RideAudit.Protos.Admission.V1.Admission+AdmissionClient");
         Assert.NotNull(generated);
-        Assert.Equal("interim-companion", ContractProvenance.Source);
+        Assert.Equal("src/RideAudit.Protos", ContractProvenance.Source);
+        Assert.Equal("0.2.0", ContractProvenance.ContractVersion);
         Assert.Equal("src/RideAudit.Protos", ContractProvenance.SwapTarget);
         Assert.Equal("non-authoritative", ContractProvenance.OpenApiAuthority);
-        Assert.False(Directory.Exists(Path.Combine(Repo.Root(), "src", "RideAudit.Protos")));
+        var root = Repo.Root();
+        Assert.True(File.Exists(Path.Combine(root, "src/RideAudit.Protos/Protos/rideaudit/admission/v1/admission.proto")));
+        Assert.False(File.Exists(Path.Combine(root, "src/RideAudit.Client.Contracts/interim/rideaudit/v1/custody.proto")));
+        var csproj = File.ReadAllText(Path.Combine(root, "src/RideAudit.Client.Contracts/RideAudit.Client.Contracts.csproj"));
+        Assert.Contains("RideAudit.Protos.csproj", csproj);
+        Assert.DoesNotContain("custody.proto", csproj);
     }
 
     [Fact]

@@ -79,7 +79,7 @@ public class TestRide025SyncTests
     public void Public_submission_is_not_a_plaintext_composite()
     {
         var request = Fixtures.CaptureHappy().Capture.Submission.Request;
-        var text = System.Text.Encoding.Latin1.GetString(request.Ciphertext.ToByteArray());
+        var text = System.Text.Encoding.Latin1.GetString(request.SealedEnvelope.ToByteArray());
         Assert.DoesNotContain("RIDEAUDIT-COMPOSITE-v1", text);
         Assert.Equal(ApiBoundary.SealedContentType, request.ContentType);
     }

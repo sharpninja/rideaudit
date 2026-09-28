@@ -26,6 +26,18 @@ Court and opposing counsel need independent verification. A private or permissio
 - Fee sponsor: calendar/server aggregation vs per-driver gas wallet
 - Offline policy: local pending receipt, not admitted until configured confirmation succeeds
 
+## Implemented fixture profiles
+
+Live Bitcoin, Base, and Polygon calendars are not configured in this tree. Admission fails closed for an unconfigured profile and writes no transaction id.
+
+Development can opt in to documented fixtures:
+
+- `btc-ots` with `RIDEAUDIT_OTS_CALENDAR=documented-fixture` records chain id `fixture-btc-ots` and a `fixture:` reference. `live_bitcoin_metadata` stays false.
+- `eth-l2-base` and `eth-l2-polygon` with `RIDEAUDIT_L2_CALENDAR=documented-fixture` record `fixture-eth-l2-base` or `fixture-eth-l2-polygon` and a `fixture:not-an-ethereum-txid:` reference. See `src/RideAudit.Chain.EthL2/Fixtures/eth-l2-fixture.json`.
+- `dual-btc-ots+l2` admits only when both fixture legs upgrade. The receipt transaction reference is `fixture:not-a-live-txid:rideaudit-dual-btc-ots-l2-fixture-001`. A failed leg copies no transaction metadata from the other leg.
+
+Production refuses both fixture flags. These values are not live chain transactions.
+
 ## Open questions (from requirements)
 
 - Production fee sponsorship and congestion policy

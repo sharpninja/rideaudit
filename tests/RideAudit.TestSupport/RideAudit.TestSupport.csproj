@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RideAudit.TestSupport</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\RideAudit.Server.Admission\RideAudit.Server.Admission.csproj" />
+  </ItemGroup>
+</Project>

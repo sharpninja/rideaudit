@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RideAudit.TestSupport\RideAudit.TestSupport.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Anal\RideAudit.Anal.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Ingest\RideAudit.Ingest.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Privacy\RideAudit.Privacy.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Sec\RideAudit.Sec.csproj" />
+    <ProjectReference Include="..\..\src\RideAudit.Server.Counsel\RideAudit.Server.Counsel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>
