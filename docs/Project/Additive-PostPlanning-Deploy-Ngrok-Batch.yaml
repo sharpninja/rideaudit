@@ -183,7 +183,7 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28.
+    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28."
     acceptanceCriteria:
       - id: AC-TEST-038-001
         text: Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP.
@@ -202,7 +202,7 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Covers FR-RIDE-064. Method: external probe against the live tunnel. Operator 2026-09-28.
+    notes: "Covers FR-RIDE-064. Method: external probe against the live tunnel. Operator 2026-09-28."
     acceptanceCriteria:
       - id: AC-TEST-039-001
         text: The live ngrok URL returns the expected admission health or documented companion front-door response.
@@ -221,7 +221,7 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Covers FR-RIDE-063 and FR-RIDE-064. Method: git content scan. Operator 2026-09-28.
+    notes: "Covers FR-RIDE-063 and FR-RIDE-064. Method: git content scan. Operator 2026-09-28."
     acceptanceCriteria:
       - id: AC-TEST-040-001
         text: No ngrok auth token or Octopus API key is present in committed files.

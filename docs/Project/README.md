@@ -37,7 +37,7 @@ Repo root currently has `MCP_TRUSTED.yaml` for workspace `F:\GitHub\rideaudit`. 
 
 ## Use case diagrams
 
-UML use case diagrams for all 31 UC-RIDE-* records under the single records key in Use-Cases-Batch.yaml, including the base, Bluetooth, and Avalonia/gRPC use cases: [docs/ux/use-cases/README.md](../ux/use-cases/README.md).
+UML use case diagrams for UC-RIDE-001..031 under the single records key in Use-Cases-Batch.yaml: [docs/ux/use-cases/README.md](../ux/use-cases/README.md). UC-RIDE-032..033 live in the post-planning additive batch and do not have UML diagrams yet.
 
 Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-app/flows/` are workflows. They are not per-use-case UML diagrams.
 
