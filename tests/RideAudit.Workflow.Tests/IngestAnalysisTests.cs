@@ -19,7 +19,11 @@ public class TestRide001Through006And011And030
     [Fact]
     [Trait("TEST", "TEST-RIDE-001")]
     [Trait("FR", "FR-RIDE-001")]
-    [Trait("AC", "AC-RIDE-001-001")]
+        [Trait("AC", "AC-RIDE-001-001")]
+        [Trait("AC", "AC-RIDE-INGEST-001-001")]
+        [Trait("AC", "AC-RIDE-INGEST-001-002")]
+        [Trait("AC", "AC-RIDE-INGEST-006-001")]
+        [Trait("AC", "AC-RIDE-STORE-001-001")]
     public void Privacy_export_parses_dictionary_and_marks_unknown_files_unverified()
     {
         var world = ServerWorld.Create();
@@ -39,7 +43,9 @@ public class TestRide001Through006And011And030
     [Trait("TEST", "TEST-RIDE-002")]
     [Trait("FR", "FR-RIDE-002")]
     [Trait("FR", "FR-RIDE-206")]
-    [Trait("AC", "AC-RIDE-206-001")]
+        [Trait("AC", "AC-RIDE-206-001")]
+        [Trait("AC", "AC-RIDE-INGEST-002-001")]
+        [Trait("AC", "AC-RIDE-INGEST-002-002")]
     public void Smooth_cruiser_scores_come_only_from_export_fields_or_manual_entry()
     {
         var world = ServerWorld.Create();

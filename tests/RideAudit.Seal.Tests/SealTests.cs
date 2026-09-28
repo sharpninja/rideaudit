@@ -13,7 +13,10 @@ public class TestRide013Seal
     [Fact]
     [Trait("TEST", "TEST-RIDE-013")]
     [Trait("FR", "FR-RIDE-015")]
-    [Trait("AC", "AC-RIDE-015-001")]
+        [Trait("AC", "AC-RIDE-015-001")]
+        [Trait("AC", "AC-RIDE-SEAL-001-001")]
+        [Trait("AC", "AC-RIDE-SEAL-001-002")]
+        [Trait("AC", "AC-RIDE-SEAL-003-001")]
     public void Seal_completes_before_durable_store_and_records_algorithm_and_hash()
     {
         var world = ServerWorld.Create();
@@ -54,7 +57,9 @@ public class TestRide013Seal
     [Trait("TEST", "TEST-RIDE-013")]
     [Trait("FR", "FR-RIDE-016")]
     [Trait("AC", "AC-RIDE-016-001")]
-    [Trait("AC", "AC-RIDE-016-002")]
+        [Trait("AC", "AC-RIDE-016-002")]
+        [Trait("AC", "AC-RIDE-SEAL-002-001")]
+        [Trait("AC", "AC-RIDE-SEAL-002-002")]
     public void Keys_are_session_scoped_and_shared_all_record_keys_are_rejected()
     {
         var world = ServerWorld.Create();
@@ -80,7 +85,10 @@ public class TestRide019SealGate
     [Trait("TEST", "TEST-RIDE-019")]
     [Trait("FR", "FR-RIDE-026")]
     [Trait("AC", "AC-RIDE-026-001")]
-    [Trait("AC", "AC-RIDE-026-002")]
+        [Trait("AC", "AC-RIDE-026-002")]
+        [Trait("AC", "AC-RIDE-PLAY-001-001")]
+        [Trait("AC", "AC-RIDE-PLAY-001-002")]
+        [Trait("AC", "AC-RIDE-PLAY-003-001")]
     public void Failed_sideloaded_or_unlisted_attestation_rejects_before_key_generation()
     {
         var world = ServerWorld.Create();
@@ -108,7 +116,8 @@ public class TestRide032Agility
     [Trait("TEST", "TEST-RIDE-032")]
     [Trait("FR", "FR-RIDE-211")]
     [Trait("AC", "AC-RIDE-211-001")]
-    [Trait("AC", "AC-RIDE-211-002")]
+        [Trait("AC", "AC-RIDE-211-002")]
+        [Trait("AC", "AC-RIDE-SEAL-003-002")]
     public void Rotation_stamps_new_records_and_does_not_rewrite_ciphertext()
     {
         var world = ServerWorld.Create();

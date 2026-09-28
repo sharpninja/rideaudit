@@ -18,7 +18,10 @@ public class TestRide014CustodyReceipt
     [Trait("FR", "FR-RIDE-017")]
     [Trait("FR", "FR-RIDE-018")]
     [Trait("AC", "AC-RIDE-017-001")]
-    [Trait("AC", "AC-RIDE-018-002")]
+        [Trait("AC", "AC-RIDE-018-002")]
+        [Trait("AC", "AC-RIDE-CHAIN-001-001")]
+        [Trait("AC", "AC-RIDE-CHAIN-002-001")]
+        [Trait("AC", "AC-RIDE-CHAIN-004-001")]
     public void Confirmed_fixture_receipt_records_hash_key_collector_and_anchor_metadata()
     {
         var world = ServerWorld.Create();
@@ -170,7 +173,9 @@ public class TestRide015ChainFailure
     [Trait("FR", "FR-RIDE-019")]
     [Trait("AC", "AC-RIDE-019-001")]
     [Trait("AC", "AC-RIDE-019-002")]
-    [Trait("AC", "AC-RIDE-019-003")]
+        [Trait("AC", "AC-RIDE-019-003")]
+        [Trait("AC", "AC-RIDE-CHAIN-003-001")]
+        [Trait("AC", "AC-RIDE-CHAIN-003-002")]
     public void Chain_failure_quarantines_without_rewriting_ciphertext_and_retry_can_confirm()
     {
         var world = ServerWorld.Create();

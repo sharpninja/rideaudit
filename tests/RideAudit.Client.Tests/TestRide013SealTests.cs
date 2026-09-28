@@ -86,7 +86,8 @@ public class TestRide013SealTests
     }
 
     [Fact]
-    [Trait("TR", "TR-RIDE-STORE-001")]
+        [Trait("TR", "TR-RIDE-STORE-001")]
+        [Trait("AC", "AC-RIDE-STORE-001-002")]
     public void Store_rejects_plaintext_and_unsealed_handoff()
     {
         var store = new DeviceBoundaryStore();
@@ -105,7 +106,9 @@ public class TestRide013SealTests
     }
 
     [Fact]
-    [Trait("TR", "TR-RIDE-STORE-002")]
+        [Trait("TR", "TR-RIDE-STORE-002")]
+        [Trait("AC", "AC-RIDE-STORE-002-001")]
+        [Trait("AC", "AC-RIDE-STORE-002-002")]
     public void Corrections_create_a_new_version_and_keep_the_original()
     {
         var store = new DeviceBoundaryStore();

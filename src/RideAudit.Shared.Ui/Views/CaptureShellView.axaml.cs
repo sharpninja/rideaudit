@@ -10,6 +10,7 @@ namespace RideAudit.Shared.Ui.Views;
 public partial class CaptureShellView : UserControl
 {
     private readonly IDiscoveryBus _bus;
+    private readonly RideAudit.Shared.Ui.CaptureRuntime? _runtime;
     private string? _role;
 
     public CaptureShellView()
@@ -20,6 +21,12 @@ public partial class CaptureShellView : UserControl
     public CaptureShellView(IDiscoveryBus bus)
         : this(bus, productionEntry: false)
     {
+    }
+
+    public CaptureShellView(RideAudit.Shared.Ui.CaptureRuntime runtime)
+        : this(runtime.Graph.Discovery, productionEntry: false)
+    {
+        _runtime = runtime;
     }
 
     public CaptureShellView(IDiscoveryBus bus, bool productionEntry)
@@ -65,6 +72,12 @@ public partial class CaptureShellView : UserControl
         StopButton.IsEnabled = false;
     }
 
+    public void ShowUnavailableBanner(string message)
+    {
+        FailClosedText.IsVisible = true;
+        FailClosedText.Text = message;
+    }
+
     private void OnDriver(object? sender, RoutedEventArgs e)
     {
         _role = "driver";
@@ -106,6 +119,23 @@ public partial class CaptureShellView : UserControl
             return;
         }
 
+        if (_runtime is not null)
+        {
+            var result = _runtime.Start(_role);
+            if (!result.Ok)
+            {
+                ShowFailClosed(result.Display);
+                return;
+            }
+
+            ScreenId.Text = "WF-04";
+            ClockText.Text = "Driver session clock master";
+            StartButton.IsEnabled = false;
+            StopButton.IsEnabled = true;
+            SealStatus.Text = "Camera and Play gate armed. Seal waits for stop.";
+            return;
+        }
+
         ScreenId.Text = "WF-04";
         ClockText.Text = "Driver session clock master";
         StartButton.IsEnabled = false;
@@ -118,6 +148,22 @@ public partial class CaptureShellView : UserControl
         if (_role != "driver")
         {
             ShowFailClosed("Only the driver phone may stop the session.");
+            return;
+        }
+
+        if (_runtime is not null)
+        {
+            var result = _runtime.StopAndSubmit();
+            ScreenId.Text = "WF-06";
+            StopButton.IsEnabled = false;
+            if (!result.Ok)
+            {
+                ShowFailClosed(result.Display);
+                return;
+            }
+
+            SealStatus.Text = "Seal-at-collect completed";
+            SubmitStatus.Text = result.Message ?? "Driver coordinated sealed submission";
             return;
         }
 

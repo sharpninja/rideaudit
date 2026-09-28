@@ -25,7 +25,10 @@ public class TestRide021Identity
     [Trait("TEST", "TEST-RIDE-021")]
     [Trait("FR", "FR-RIDE-032")]
     [Trait("AC", "AC-RIDE-032-001")]
-    [Trait("AC", "AC-RIDE-032-003")]
+        [Trait("AC", "AC-RIDE-032-003")]
+        [Trait("AC", "AC-RIDE-SERVER-001-001")]
+        [Trait("AC", "AC-RIDE-SERVER-001-002")]
+        [Trait("AC", "AC-RIDE-PRIV-001-001")]
     public void Driver_registration_requires_consent_and_recovery_rotates_the_token()
     {
         var world = ServerWorld.Create();
@@ -46,7 +49,9 @@ public class TestRide021Identity
     [Trait("FR", "FR-RIDE-033")]
     [Trait("FR", "FR-RIDE-034")]
     [Trait("AC", "AC-RIDE-033-002")]
-    [Trait("AC", "AC-RIDE-034-002")]
+        [Trait("AC", "AC-RIDE-034-002")]
+        [Trait("AC", "AC-RIDE-SERVER-002-001")]
+        [Trait("AC", "AC-RIDE-SERVER-002-002")]
     public void Vehicle_history_is_kept_and_a_missing_profile_blocks_the_session()
     {
         var world = ServerWorld.Create();
@@ -68,7 +73,10 @@ public class TestRide022SealedAdmission
     [Fact]
     [Trait("TEST", "TEST-RIDE-022")]
     [Trait("FR", "FR-RIDE-035")]
-    [Trait("AC", "AC-RIDE-035-001")]
+        [Trait("AC", "AC-RIDE-035-001")]
+        [Trait("AC", "AC-RIDE-SERVER-003-001")]
+        [Trait("AC", "AC-RIDE-SERVER-003-002")]
+        [Trait("AC", "AC-RIDE-SERVER-004-002")]
     public void Plaintext_and_unauthorized_vehicle_are_rejected_without_storing_a_body()
     {
         var world = ServerWorld.Create();
@@ -120,7 +128,8 @@ public class TestRide022SealedAdmission
     [Trait("FR", "FR-RIDE-036")]
     [Trait("FR", "FR-RIDE-061")]
     [Trait("AC", "AC-RIDE-036-001")]
-    [Trait("AC", "AC-RIDE-036-002")]
+        [Trait("AC", "AC-RIDE-036-002")]
+        [Trait("AC", "AC-RIDE-SERVER-004-001")]
     public void Happy_path_checks_receipt_hash_chain_attestation_and_a_mutated_receipt_is_not_admitted()
     {
         var world = ServerWorld.Create();
@@ -196,7 +205,9 @@ public class TestRide024AbuseAndTenant
     [Trait("FR", "FR-RIDE-039")]
     [Trait("FR", "FR-RIDE-218")]
     [Trait("AC", "AC-RIDE-039-001")]
-    [Trait("AC", "AC-RIDE-218-002")]
+        [Trait("AC", "AC-RIDE-218-002")]
+        [Trait("AC", "AC-RIDE-SERVER-005-001")]
+        [Trait("AC", "AC-RIDE-SERVER-005-002")]
     public void Rate_limit_replay_and_backpressure_never_admit()
     {
         var world = ServerWorld.Create();
@@ -236,7 +247,9 @@ public class TestRide024AbuseAndTenant
     [Fact]
     [Trait("TEST", "TEST-RIDE-024")]
     [Trait("FR", "FR-RIDE-040")]
-    [Trait("AC", "AC-RIDE-040-001")]
+        [Trait("AC", "AC-RIDE-040-001")]
+        [Trait("AC", "AC-RIDE-SERVER-006-001")]
+        [Trait("AC", "AC-RIDE-SEC-003-001")]
     public void Cross_tenant_status_reads_are_isolated()
     {
         var world = ServerWorld.Create();
@@ -288,7 +301,8 @@ public class TestRide029Security
     [Trait("TEST", "TEST-RIDE-029")]
     [Trait("FR", "FR-RIDE-201")]
     [Trait("AC", "AC-RIDE-201-001")]
-    [Trait("AC", "AC-RIDE-201-002")]
+        [Trait("AC", "AC-RIDE-201-002")]
+        [Trait("AC", "AC-RIDE-SEC-001-002")]
     public void Tls_policy_vault_and_log_redaction_hold()
     {
         #pragma warning disable SYSLIB0039

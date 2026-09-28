@@ -7,7 +7,7 @@
 
 ## What this is
 
-Payton authorized a post-review remediation loop after **code-hv-sol-r1** (`gpt-5.6-sol` xhigh) returned **NOT-READY / DISAGREE@99**. Custody of that review was squash-merged to master as `dadde67` (PR #8).
+Payton authorized a post-review remediation loop after **code-hv-sol-r1** (`gpt-5.6-sol` xhigh) returned **NOT-READY / DISAGREE@99**. Custody of that review was squash-merged to master as `dadde67` (PR #8). After rem r1, **code-hv-sol-r2** (`gpt-5.6-sol` xhigh) returned **NOT-READY / DISAGREE@99**; that pair was squash-merged as `bf8f6ac` (PR #10). The iterate-until-agree order remains in force for rem r2. CODE-HV READY for this loop is defined in [code-hv-ready-remediation-loop-20260928.md](../../process/code-hv-ready-remediation-loop-20260928.md).
 
 This authorization covers closing fixable defects (D01–D04) and materially addressing path-to-98 items that can be closed without inventing Play Store, live HSM, dual-phone, GHCR, CD greens, or chain txids.
 
@@ -19,4 +19,4 @@ This authorization covers closing fixable defects (D01–D04) and materially add
 
 ## Per-phase HV custody still required
 
-Each construction phase still requires opposing-model HV receipts under `docs/receipts/hv/` and canonical pairs under `docs/reviews/hv-pairs/` before that phase may be claimed complete. code-hv-sol-r1 remains DISAGREE. A later eligible `gpt-5.6-sol` xhigh run may close the formal model-name gate under the 2026-09-28 validator-matrix amendment; it still has to AGREE at 98.
+Each construction phase still requires opposing-model HV receipts under `docs/receipts/hv/` and canonical pairs under `docs/reviews/hv-pairs/` before that phase may be claimed complete. code-hv-sol-r1 and code-hv-sol-r2 remain DISAGREE. A later eligible `gpt-5.6-sol` xhigh run may close the formal model-name gate under the 2026-09-28 validator-matrix amendment; it still has to AGREE at 98. Rem-phase custody for rem r2 is [20260928T220500Z-code-hv-sol-r2-remediation-phase-custody.md](../hv/20260928T220500Z-code-hv-sol-r2-remediation-phase-custody.md). Live tracks stay deferred.

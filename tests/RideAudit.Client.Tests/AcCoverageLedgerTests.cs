@@ -56,7 +56,7 @@ public class AcCoverageLedgerTests
         var covered = rows.Count(row => row.Item3 == "covered");
         var deferred = rows.Count(row => row.Item3 == "deferred");
         var missing = rows.Count(row => row.Item3 == "missing");
-        Assert.True(covered >= 107, "Coverage ledger regressed below the pre-remediation named-AC count.");
+        Assert.True(covered >= 111, "Coverage ledger regressed below the rem-r1 named-AC count.");
 
         var output = new StringBuilder();
         output.AppendLine("# RideAudit AC coverage ledger");
@@ -109,6 +109,10 @@ public class AcCoverageLedgerTests
             return "Deferred: hardware mount road-fit is operator checklist work.";
         if (record.Id.StartsWith("AC-RIDE-INGEST-004", StringComparison.Ordinal))
             return "Deferred: Concierge OAuth live partnership is not enabled.";
+        if (record.Id is "AC-RIDE-CHAIN-001-002")
+            return "Deferred B07: public OTS confirmation / live txid is not claimed; fixture anchors stay labeled.";
+        if (record.Id.StartsWith("AC-RIDE-STORE-003", StringComparison.Ordinal))
+            return "Deferred B08: jurisdiction retention timers and legal-hold deletion are not a lab loopback receipt.";
         return null;
     }
 

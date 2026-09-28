@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using Android;
 using Android.Bluetooth;
 using Android.Content;
 using Android.Hardware.Camera2;
+using Android.OS;
 using RideAudit.Client.Core;
 using RideAudit.Contracts;
+using Permission = Android.Content.PM.Permission;
 
 namespace RideAudit.Client.Android;
 
@@ -46,5 +49,29 @@ public static class AndroidCaptureHardware
                 "FR-RIDE-041",
                 "Android CameraManager reported no cameras.");
         }
+    }
+
+    /// <summary>
+    /// Runtime permission probe. Missing CAMERA/BT permissions fail-closed.
+    /// This does not invent a grant and does not start a Play/HSM path.
+    /// </summary>
+    public static IReadOnlyList<string> MissingRuntimePermissions(Context context)
+    {
+        var required = new List<string> { Manifest.Permission.Camera };
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
+        {
+            required.Add(Manifest.Permission.BluetoothConnect);
+            required.Add(Manifest.Permission.BluetoothScan);
+            required.Add(Manifest.Permission.BluetoothAdvertise);
+        }
+        else
+        {
+            required.Add(Manifest.Permission.Bluetooth);
+            required.Add(Manifest.Permission.BluetoothAdmin);
+        }
+
+        return required
+            .Where(permission => context.CheckSelfPermission(permission) != Permission.Granted)
+            .ToArray();
     }
 }

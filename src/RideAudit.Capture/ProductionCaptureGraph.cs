@@ -117,4 +117,23 @@ public sealed class ProductionCaptureGraph
             };
         }
     }
+
+    public ProductionCaptureGraph WithExtraUnavailable(params string[] extras)
+    {
+        if (extras.Length == 0)
+            return this;
+
+        return new ProductionCaptureGraph
+        {
+            Discovery = Discovery,
+            Camera = Camera,
+            Play = Play,
+            Requests = Requests,
+            Admission = Admission,
+            EscrowDeposit = EscrowDeposit,
+            DiscoveryDetail = DiscoveryDetail,
+            CameraDetail = CameraDetail,
+            UnavailableSeams = UnavailableSeams.Concat(extras).ToList()
+        };
+    }
 }

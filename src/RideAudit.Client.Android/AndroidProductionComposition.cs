@@ -30,6 +30,12 @@ public static class AndroidProductionComposition
                 frames,
                 discovery.ProbeDetail,
                 camera.ProbeDetail);
+            var missingPermissions = AndroidCaptureHardware.MissingRuntimePermissions(context);
+            if (missingPermissions.Count > 0)
+            {
+                graph = graph.WithExtraUnavailable(
+                    "UnavailablePermissions: " + string.Join(",", missingPermissions));
+            }
             var runtime = new CaptureRuntime { Graph = graph };
             App.CaptureRuntime = runtime;
             App.Mode = ShellMode.Capture;
