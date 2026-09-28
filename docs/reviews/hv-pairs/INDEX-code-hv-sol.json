@@ -81,16 +81,56 @@
         "mcp_session_log": "unknown/unavailable because mcpserver-box discovery failed and no Cursor session-log contract was present",
         "validator_eligibility": "gpt-5.6-sol xhigh formally eligible under the retained 2026-09-28 Sol-family amendment"
       }
+    },
+    {
+      "round": "code-hv-sol-r3",
+      "utc": "20260928T223011Z",
+      "pair": "docs/reviews/hv-pairs/20260928T223011Z-code-hv-sol-r3.json",
+      "request_jsonl": "docs\\receipts\\hv\\20260928T223011Z-code-hv-sol-r3.request.jsonl",
+      "response_jsonl": "docs\\receipts\\hv\\20260928T223011Z-code-hv-sol-r3.response.jsonl",
+      "verdict_md": "docs\\receipts\\hv\\20260928T223011Z-code-hv-sol-r3.verdict.md",
+      "status": "completed",
+      "note": "DISAGREE confidence 99 NOT-READY accuracy 99 completeness 99",
+      "generator": {
+        "agent": "Grok",
+        "provider": "xai",
+        "model": "grok-4.6-xhigh",
+        "reasoning_effort": "xhigh"
+      },
+      "validator": {
+        "agent": "CursorCloudAgent",
+        "provider": "openai",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "xhigh"
+      },
+      "custody": {
+        "pair_commit": "2756a367790bc977ee5deda98c04e40e9d45ca33",
+        "request_jsonl_commit": "a78fc4497d4952c20ebf8f5b5d45b53e4504e927",
+        "response_jsonl_commit": "7ca1f31fd4dc4418b001092569c64ad829fbf923",
+        "verdict_commit": "5ee2a5deef78b09994cfa081a9afb86f2e5c515c"
+      },
+      "evidence": {
+        "tests": "180 passed, 0 failed, 0 skipped; D01 stress 40/40; B03 focused 3/3; path-to-98 focused 9/9",
+        "android_release_build": "succeeded, 0 warnings, 0 errors",
+        "requirements": "404 AC IDs; 170 named in test source; 36 deferred with reasons; 198 missing",
+        "hostile_counts": {
+          "pass": 8,
+          "fail": 1,
+          "unknown": 0
+        },
+        "blocking_finding": "B02 pending non-server preflight is classified as successful runtime/UI completion",
+        "validator_eligibility": "gpt-5.6-sol xhigh formally eligible under the retained 2026-09-28 Sol-family amendment"
+      }
     }
   ],
   "final_verdict": {
-    "round": "r2",
+    "round": "r3",
     "overallVerdict": "DISAGREE",
     "verdict": "NOT-READY",
     "confidence": 99,
     "accuracy": 99,
-    "completeness": 98,
-    "utc": "20260928T214239Z"
+    "completeness": 99,
+    "utc": "20260928T223011Z"
   },
-  "updated_at": "2026-09-28T21:59:13.421Z"
+  "updated_at": "2026-09-28T22:38:45.4478934Z"
 }

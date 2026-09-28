@@ -39,6 +39,7 @@ public static class ErrorCodes
     public const string BluetoothDisabled = "BT_DISABLED";
     public const string CameraUnavailable = "CAMERA_UNAVAILABLE";
     public const string AdmissionUnavailable = "ADMISSION_UNAVAILABLE";
+    public const string AdmissionPending = "ADMISSION_PENDING";
 }
 
 public class RideAuditException : Exception

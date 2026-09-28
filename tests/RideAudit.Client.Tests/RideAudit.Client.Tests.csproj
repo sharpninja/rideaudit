@@ -17,9 +17,13 @@
     <PackageReference Include="Avalonia.Headless.XUnit" />
   </ItemGroup>
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\RideAudit.Capture\RideAudit.Capture.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Client.Contracts\RideAudit.Client.Contracts.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Licensing\RideAudit.Licensing.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Shared.Ui\RideAudit.Shared.Ui.csproj" />
+    <ProjectReference Include="..\RideAudit.TestSupport\RideAudit.TestSupport.csproj" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,11 @@
     <RootNamespace>RideAudit.TestSupport</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Grpc.Net.Client" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\RideAudit.Client.Contracts\RideAudit.Client.Contracts.csproj" />
     <ProjectReference Include="..\..\src\RideAudit.Server.Admission\RideAudit.Server.Admission.csproj" />
   </ItemGroup>
 </Project>
