@@ -34,7 +34,7 @@ docker build -f deploy/containers/admission/Dockerfile -t rideaudit-admission:lo
 
 The image sets `ASPNETCORE_ENVIRONMENT=Production` and `RIDEAUDIT_EDGE_TLS=true`. The edge must terminate TLS 1.2 or newer. The process refuses to start in Production if fixture calendars (OTS or L2) or fixture Play Integrity decoders are enabled, and it refuses Production HTTP without either a certificate path or the edge-TLS acknowledgement.
 
-PAYTON-LEGION2 Docker Desktop returns HTTP 500, so images are built on PAYTON-OMARCHY. See [../../omarchy/README.md](../../omarchy/README.md). A lab image `rideaudit-admission:local` was tagged on Omarchy from commit `dcb31bf` and was not started. That is not a CD green.
+PAYTON-LEGION2 Docker Desktop returns HTTP 500. The preferred path is `dotnet publish` linux-x64 on LEGION2 and `deploy/omarchy/Dockerfile.runtime` on PAYTON-OMARCHY. See [../../omarchy/README.md](../../omarchy/README.md). A lab runtime image was tagged and not started. That is not a CD green.
 
 ## Counsel, ingest, and privacy
 

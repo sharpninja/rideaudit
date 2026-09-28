@@ -23,11 +23,12 @@ This is not a Play Store receipt, not a live Bitcoin/OTS/L2 admission receipt, n
 
 - LEGION2 Docker client 29.8.0. Contexts `desktop-linux` and `default` both return HTTP 500 on the named pipes. `com.docker.service` is STOPPED (`WIN32_EXIT_CODE 1077`). `docker-desktop` WSL is Running but the engine API is not usable. No image was built on LEGION2.
 - PAYTON-OMARCHY (`192.168.0.149`) SSH BatchMode works. Engine 29.7.2, Compose 5.5.1, `dotnet` 10.0.111, 381G free. Existing Octopus/SQL/Caddy containers were left running.
-- Deploy scripts: `deploy/omarchy/`. `scp` is unusable because Omarchy’s login shell is pwsh and prints profile banners (`Received message too long`). Sync uses stdin into `exec /usr/bin/bash --noprofile --norc`. Checkout on Omarchy: `dcb31bf` at `/home/sharpninja/github/rideaudit`.
-- Omarchy built images from that checkout. **Not composed. Not a CD green.**
-  - `rideaudit-admission:local` `sha256:df492589f5b3138342a756d1e1eef1eca4e2359f1b04b7f3e2e2e876ece97222`
-  - `rideaudit-counsel:local` `sha256:d6eca0dc9cf4992cbba0585f8d71688c643fb5430c87e8146a45b84507550332`
-- Coordinator cutover after merge is `docker compose -f deploy/omarchy/compose.yaml up -d` on loopback `:18080`. This agent did not start that stack. Existing Octopus/SQL/Caddy containers were left running.
+- Deploy scripts: `deploy/omarchy/`. `scp` is unusable because Omarchy’s login shell is pwsh and prints profile banners (`Received message too long`). Sync uses stdin into `exec /usr/bin/bash --noprofile --norc`. Checkout on Omarchy: `f51f454` at `/home/sharpninja/github/rideaudit`.
+- Preferred path exercised: `dotnet publish` linux-x64 on LEGION2 (`artifacts/omarchy-publish/admission`, not committed) → `Sync-Publish.ps1` → `remote-runtime-build.sh` on Omarchy. **Not composed. Not a CD green.**
+  - `rideaudit-admission:local` `sha256:3735900ad179a5f4a91c6f261c5379996abd483309eba41e059e3acb91d320e7` (runtime image from LEGION2 publish)
+  - `rideaudit-counsel:local` is the same tag (counsel is a role flag)
+- Earlier SDK rebuild from `dcb31bf` produced `sha256:df492589f5b313…ece97222` / `sha256:d6eca0dc9cf4…07550332` and was then retagged by the runtime build.
+- `Confirm-Cutover.ps1` dry-ran only. Coordinator after merge may pass `-ConfirmCutover`. Existing Octopus/SQL/Caddy containers were left running. No GHCR push exists in this tree.
 
 ## Chain probe
 

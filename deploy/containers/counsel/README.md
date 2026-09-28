@@ -31,7 +31,7 @@ Privacy-export ingest accepts a driver-provided ZIP (`DataDictionary.csv`, `trip
 docker build -f deploy/containers/counsel/Dockerfile -t rideaudit-counsel:local .
 ```
 
-The image sets Production and `RIDEAUDIT_EDGE_TLS=true`. PAYTON-LEGION2 Docker Desktop returns HTTP 500. A lab image `rideaudit-counsel:local` was tagged on PAYTON-OMARCHY from commit `dcb31bf` and was not started. See [../../omarchy/README.md](../../omarchy/README.md). That is not a CD green.
+The image sets Production and `RIDEAUDIT_EDGE_TLS=true`. Counsel is the same host as admission with `RIDEAUDIT_SERVICE_ROLE=counsel`. PAYTON-LEGION2 Docker Desktop returns HTTP 500. The preferred path is a LEGION2 linux-x64 publish plus [../../omarchy/Dockerfile.runtime](../../omarchy/Dockerfile.runtime). A lab image was tagged and not started. That is not a CD green.
 
 ## Distribution
 
