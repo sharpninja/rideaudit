@@ -62,6 +62,7 @@ public sealed class AndroidRemoteControlHost : IDisposable
             options.AllowRemoteActions = true;
             options.AllowRemoteFrames = true;
             options.AllowRemoteInput = true;
+            options.AllowedMutableProperties.Add("CheckBox.IsChecked");
         });
         services.AddSingleton<IRemoteControlRootProvider>(new ShellRootProvider());
         services.AddLogging();

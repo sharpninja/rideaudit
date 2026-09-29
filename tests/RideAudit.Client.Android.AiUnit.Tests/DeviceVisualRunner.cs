@@ -77,7 +77,9 @@ public static class DeviceVisualRunner
                     {
                         var reason = step.ScreenId.StartsWith("WF-R-", StringComparison.Ordinal)
                             ? "review screen is not hosted on the Android capture client"
-                            : "cannot be driven from " + current + " to " + step.ScreenId + " without leaving the session";
+                            : step.AlternateBranch
+                                ? "alternate branch from " + current + " to " + step.ScreenId + " is not taken on this session"
+                                : "cannot be driven from " + current + " to " + step.ScreenId + " without leaving the session";
                         failures.Add(frameId + " " + reason + ".");
                         AppendLog(new
                         {

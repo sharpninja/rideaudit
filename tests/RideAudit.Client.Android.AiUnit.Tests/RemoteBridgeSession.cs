@@ -65,7 +65,27 @@ public sealed class RemoteBridgeSession : IDisposable
             throw new InvalidOperationException("RemoteControl tree has no node named " + name + ".");
         }
 
-        var result = Send(BridgeMethod.InvokeClick, new InvokeClickRequest { NodeId = node.Id }, CommandResult.Parser);
+        CommandResult result;
+        if (node.TypeName.Contains("CheckBox", StringComparison.Ordinal) || name == "ConfirmCheck")
+        {
+            result = Send(
+                BridgeMethod.SetProperty,
+                new SetPropertyRequest
+                {
+                    NodeId = node.Id,
+                    PropertyName = "IsChecked",
+                    Value = "true",
+                },
+                CommandResult.Parser);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException("RemoteControl could not check " + name + ": " + Redact(result.Message));
+            }
+
+            return;
+        }
+
+        result = Send(BridgeMethod.InvokeClick, new InvokeClickRequest { NodeId = node.Id }, CommandResult.Parser);
         if (!result.Succeeded)
         {
             throw new InvalidOperationException("RemoteControl click " + name + " failed: " + Redact(result.Message));
