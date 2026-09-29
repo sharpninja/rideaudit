@@ -59,8 +59,8 @@ SignTool is not on PATH. The script used:
 
 Override with `RIDEAUDIT_WIN_SIGNTOOL` if that kit build is absent. `RIDEAUDIT_WIN_SIGN_THUMBPRINT`, when set, must match the lab certificate. The script refuses these unrelated thumbprints:
 
-- `CN=McpServerManager Dev` `FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4` — were not used
-- `CN=ClaudeMigrator` `50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919` — were not used
+- `CN=McpServerManager Dev` `FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4`: were not used
+- `CN=ClaudeMigrator` `50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919`: were not used
 
 ## Publish result
 

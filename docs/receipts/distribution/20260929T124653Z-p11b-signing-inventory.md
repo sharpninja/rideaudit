@@ -126,7 +126,7 @@ No `APPLE_*` / `CSC_*` this increment.
 
 **Do not claim P11b closed. Do not buy from this agent turn. Do not use unrelated certs.**
 
-## Addendum (20260929T125539Z) — operator chose lab self-sign
+## Addendum (20260929T125539Z): operator chose lab self-sign
 
 Payton Byrd, after this inventory: self-sign for now. Real certs later.
 

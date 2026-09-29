@@ -1,9 +1,9 @@
 # Explicit AC deferrals. One id, a tab, then the BDPv4 reason. Not test source.
-AC-RIDE-222-001	Deferred BDPv4: signed reproducible Win/Linux/macOS builds need a RideAudit Authenticode identity and Apple codesign. signtool.exe is installed, but no RideAudit code-signing certificate was used. Unsigned RID publish is not this AC.
+AC-RIDE-222-001	Deferred BDPv4: signed reproducible Win/Linux/macOS builds still need a publicly trusted RideAudit Authenticode identity and Apple codesign. A lab self-signed win-x64 certificate (CN=RideAudit Lab Self-Signed, thumbprint 98B8942B143D2D788F635530531C1B2DF0EC3C79) was used on PAYTON-LEGION2. That signature is not Public Trust and is not this AC.
 AC-RIDE-GPL-003-001	Deferred BDPv4: Google Play listing is not claimed. A source repository URL is not a Play publication receipt.
-AC-RIDE-GPL-003-002	Deferred BDPv4: reproducible signing metadata needs a RideAudit code-signing certificate. Unrelated private-key certs on this machine were not used as a release signature.
+AC-RIDE-GPL-003-002	Deferred BDPv4: reproducible signing metadata needs a publicly trusted RideAudit code-signing certificate. The lab self-signed win-x64 certificate is not that identity. Unrelated private-key certs on this machine were not used as a release signature.
 AC-RIDE-031-001	Deferred BDPv4: Google Play availability is not claimed. A public source repository is not a Play listing.
-AC-RIDE-031-002	Deferred BDPv4: reproducible signing metadata needs a RideAudit code-signing certificate. Unsigned RID publish is not this AC.
+AC-RIDE-031-002	Deferred BDPv4: reproducible signing metadata needs a publicly trusted RideAudit code-signing certificate. The lab self-signed win-x64 certificate is not that identity. A lab signature is not this AC.
 AC-UC-025-001	Deferred BDPv4: Avalonia Android primary screens running requires a device or emulator session. A project reference is not that runtime proof.
 AC-RIDE-004-002	Deferred BDPv4: Concierge polling limited to organizational rides is a live partnership path. The in-tree gate does not perform that poll.
 AC-RIDE-205-001	Deferred BDPv4: UI pagination or downsampling of large GPS tracks is not proven. An index window is not that UI.

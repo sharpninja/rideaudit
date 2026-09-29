@@ -1,7 +1,7 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.7 — Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust, section 9 Class C boxes, and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
+**Revision:** r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust, section 9 Class C boxes, and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
@@ -1373,8 +1373,8 @@ Phase numbering does not authorize bypassing a dependency.
 
 **Lab signing checklist (r3.7).** This checklist is not the P11b exit. Operator direction: self-sign for now. Real certs later. Windows only.
 
-- [x] Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 (`CN=RideAudit Lab Self-Signed` in `CurrentUser\My`). signtool sees a signature. Signed but not Public Trust. SmartScreen will warn. Receipt: `docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`.
-- [x] linux-x64 framework-dependent publish from the same lab script, unsigned. Authenticode does not apply.
+- [ ] Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 (`CN=RideAudit Lab Self-Signed` in `CurrentUser\My`). signtool sees a signature. Signed but not Public Trust. SmartScreen will warn. Receipt: `docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`. Evidence is on file. This box stays open until a hostile AGREE.
+- [ ] linux-x64 framework-dependent publish from the same lab script, unsigned. Authenticode does not apply. Evidence is on file. This box stays open until a hostile AGREE.
 - [ ] Commercial OV/IV Authenticode + cloud HSM. Deferred. Real certs later. Nothing purchased.
 - [ ] Public Trust and a SmartScreen-clean reputation.
 - [ ] Section 9 Class C boxes (Astra/Payton plan acceptance). Not closed.
@@ -1585,7 +1585,7 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | Physical dual-phone Bluetooth media / production H.264 | C | Fail closed. Source container stays non-H.264. |
 | Lyft Concierge / partnership ingest | C | Stay disabled. |
 | Edge TLS via Caddy (distinct from ngrok HTTPS) | C | Omarchy/DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. ngrok HTTPS is the tunnel, not that AC. |
-| Lab self-signed Authenticode win-x64 on PAYTON-LEGION2 | A lab slice | Closed for the lab path only. Subject `CN=RideAudit Lab Self-Signed`, thumbprint `98B8942B143D2D788F635530531C1B2DF0EC3C79`, store `CurrentUser\My`, key NonExportable. Receipt `docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`. signtool sees the signature and a DigiCert timestamp. `signtool verify /pa` exit 1 (untrusted root). Signed but not Public Trust. SmartScreen will warn. Not Class C. Not a reproducible public signed release. |
+| Lab self-signed Authenticode win-x64 on PAYTON-LEGION2 | A lab slice | Evidence is on file. The checklist box stays open until a hostile AGREE. Subject `CN=RideAudit Lab Self-Signed`, thumbprint `98B8942B143D2D788F635530531C1B2DF0EC3C79`, store `CurrentUser\My`, key NonExportable. Receipt `docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`. signtool sees the signature and a DigiCert timestamp. `signtool verify /pa` exit 1 (untrusted root). Signed but not Public Trust. SmartScreen will warn. Not Class C. Not a reproducible public signed release. |
 | Commercial OV/IV Authenticode + cloud HSM | C deferred | Operator: self-sign for now; real certs later. Inventory `docs/receipts/distribution/20260929T124653Z-p11b-signing-inventory.md`. Nothing purchased. |
 | Signed reproducible desktop Win/Linux/macOS and full P11b suite | A remaining | Not closed. The unsigned receipt `docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md` stays historical (`Status=NotSigned` at that time). linux-x64 in the lab script is unsigned. macOS was not published on r3.7. Section 9 Class C boxes stay unchecked. Public Trust is not closed. P11b exit stays open. |
 | AC ledger rows still `missing` after the 424-id recount | A remaining | Name-or-defer recount is 401 covered / 23 deferred / 0 missing / 424 (`docs/receipts/ac-coverage/20260928-ledger.md`). Before: 190 covered / 36 deferred / 198 missing. Deferred wins over a test-source name when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live third-party work. A neighboring YAML requirement does not defer the AC. A covered row is a test-source name, not whole-AC closure. P11b still owns that closure. This row is not marked done. |
