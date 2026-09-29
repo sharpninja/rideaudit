@@ -198,8 +198,7 @@ public sealed class AdbDeviceSession
                 return;
             case "WF-06":
                 Navigate("WF-04");
-                TapResource("StartButton", 4);
-                TapResource("StopButton", 4);
+                TapResource("SealLinkButton", 4);
                 return;
             case "WF-07":
                 Navigate("WF-06");

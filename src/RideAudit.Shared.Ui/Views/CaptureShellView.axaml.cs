@@ -13,6 +13,8 @@ public partial class CaptureShellView : UserControl
     private readonly RideAudit.Shared.Ui.CaptureRuntime? _runtime;
     private string? _role;
 
+    public event EventHandler? AboutRequested;
+
     public CaptureShellView()
         : this(new UnavailableDiscoveryBus(), productionEntry: false)
     {
@@ -46,6 +48,10 @@ public partial class CaptureShellView : UserControl
         StartButton.Click += OnStart;
         StopButton.Click += OnStop;
         SubmitButton.Click += OnSubmit;
+        SubmitPackagesButton.Click += OnSubmit;
+        SealLinkButton.Click += OnSealLink;
+        BackDashboardButton.Click += OnBackDashboard;
+        ScreenAboutButton.Click += OnAbout;
         ReturnButton.Click += OnReturn;
         PaintRole();
         Show("WF-01");
@@ -100,9 +106,9 @@ public partial class CaptureShellView : UserControl
         _role = "driver";
         DriverButton.Classes.Add("selected");
         PassengerButton.Classes.Remove("selected");
-        LocalRoleLine.Text = "Role: DRIVER (coordinator)";
-        PeerRoleLine.Text = "Role: PASSENGER (compositor)";
-        AdvertiseStatus.Text = "Advertising as: RideAudit-Driver";
+        LocalRoleLine.Text = "Driver, coordinator";
+        PeerRoleLine.Text = "Passenger, compositor";
+        AdvertiseStatus.Text = "RideAudit-Driver";
         PaintRole();
         if (ScreenId.Text != "WF-01")
         {
@@ -115,9 +121,9 @@ public partial class CaptureShellView : UserControl
         _role = "passenger";
         PassengerButton.Classes.Add("selected");
         DriverButton.Classes.Remove("selected");
-        LocalRoleLine.Text = "Role: PASSENGER (compositor)";
-        PeerRoleLine.Text = "Role: DRIVER (coordinator)";
-        AdvertiseStatus.Text = "Scanning as: RideAudit-Passenger";
+        LocalRoleLine.Text = "Passenger, compositor";
+        PeerRoleLine.Text = "Driver, coordinator";
+        AdvertiseStatus.Text = "RideAudit-Passenger";
         SpiderGraph.Text = "Spider graph armed for telematics overlay";
         PaintRole();
         if (ScreenId.Text != "WF-01")
@@ -244,11 +250,17 @@ public partial class CaptureShellView : UserControl
     private void OnSubmit(object? sender, RoutedEventArgs e)
     {
         Show("WF-07");
-        if (string.IsNullOrWhiteSpace(SubmitStatus.Text) || SubmitStatus.Text == "No submission")
+        if (string.IsNullOrWhiteSpace(SubmitStatus.Text) || SubmitStatus.Text is "No submission" or "(none)")
         {
-            SubmitStatus.Text = "Last result: not admitted. Submission id: --";
+            SubmitStatus.Text = "(none)";
         }
     }
+
+    private void OnSealLink(object? sender, RoutedEventArgs e) => Show("WF-06");
+
+    private void OnBackDashboard(object? sender, RoutedEventArgs e) => Show("WF-04");
+
+    private void OnAbout(object? sender, RoutedEventArgs e) => AboutRequested?.Invoke(this, EventArgs.Empty);
 
     private void OnReturn(object? sender, RoutedEventArgs e) => Show("WF-01");
 

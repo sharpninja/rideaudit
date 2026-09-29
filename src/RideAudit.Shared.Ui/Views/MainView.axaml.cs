@@ -27,6 +27,11 @@ public partial class MainView : UserControl
                 ?? CaptureShellView.CreateUncomposedRefuse();
         }
 
+        if (_shell is CaptureShellView capture)
+        {
+            capture.AboutRequested += (_, _) => OpenAbout();
+        }
+
         ShowShell();
     }
 

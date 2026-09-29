@@ -27,6 +27,8 @@ public class WireframeIcon : Canvas
         IsHitTestVisible = false;
         KindProperty.Changed.AddClassHandler<WireframeIcon>((icon, _) => icon.Rebuild());
         MarkBrushProperty.Changed.AddClassHandler<WireframeIcon>((icon, _) => icon.Rebuild());
+        WidthProperty.Changed.AddClassHandler<WireframeIcon>((icon, _) => icon.Rebuild());
+        HeightProperty.Changed.AddClassHandler<WireframeIcon>((icon, _) => icon.Rebuild());
     }
 
     public string Kind
@@ -51,9 +53,15 @@ public class WireframeIcon : Canvas
     {
         Children.Clear();
         var brush = MarkBrush ?? new SolidColorBrush(Color.Parse("#1A2433"));
+        var art = new Canvas
+        {
+            Width = 24,
+            Height = 24,
+            IsHitTestVisible = false,
+        };
         foreach (var mark in Marks(Kind))
         {
-            Children.Add(new ShapePath
+            art.Children.Add(new ShapePath
             {
                 Data = StreamGeometry.Parse(mark.Data),
                 Stroke = mark.Filled ? null : brush,
@@ -61,8 +69,20 @@ public class WireframeIcon : Canvas
                 StrokeThickness = mark.Filled ? 0 : 1.75,
                 StrokeLineCap = PenLineCap.Round,
                 StrokeJoin = PenLineJoin.Round,
+                IsHitTestVisible = false,
             });
         }
+
+        var boxWidth = double.IsNaN(Width) || Width <= 0 ? 22 : Width;
+        var boxHeight = double.IsNaN(Height) || Height <= 0 ? 22 : Height;
+        Children.Add(new Viewbox
+        {
+            Width = boxWidth,
+            Height = boxHeight,
+            Stretch = Stretch.Uniform,
+            Child = art,
+            IsHitTestVisible = false,
+        });
     }
 
     private readonly record struct Mark(string Data, bool Filled);
