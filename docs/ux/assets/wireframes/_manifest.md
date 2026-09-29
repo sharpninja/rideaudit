@@ -19,3 +19,69 @@ Asset root: F:\GitHub\RideAudit\docs\ux\assets\wireframes
 - `WF-R-06-synchronized-playback.svg`
 - `WF-R-07-provenance-custody-ots.svg`
 - `WF-R-08-export-opposing-counsel.svg`
+
+## Storyboards
+
+Storyboard sequences for AssetReview. Grouped from docs/ux/assets/wireframes/README.md Storyboard index
+(and matching docs/ux/storyboards / docs/ux/review-app/storyboards Screens lines).
+Syntax: a "## Storyboards" section; each "### <id> <Human name>" heading lists ordered frame paths as
+backtick-wrapped relative SVG/PNG entries (same path form as single-asset lines above). AssetReview main
+does not yet parse storyboard headings (no README/PR syntax found); current ExtractManifestAssetPaths still
+picks up backtick image paths for single-asset review. When storyboard UI lands, prefer this heading +
+ordered-list form.
+
+### SB-01 Pairing
+- `WF-01-splash-role-select.svg`
+- `WF-02-bt-discover.svg`
+- `WF-03-pairing-confirm.svg`
+- `WF-08-fail-closed-errors.svg`
+
+### SB-02 Driver coordinate
+- `WF-04-driver-dashboard.svg`
+- `WF-06-seal-progress.svg`
+- `WF-07-submit-status.svg`
+- `WF-08-fail-closed-errors.svg`
+
+### SB-03 Passenger composite
+- `WF-05-passenger-capture-spider.svg`
+- `WF-08-fail-closed-errors.svg`
+
+### SB-04 Seal and receipt
+- `WF-06-seal-progress.svg`
+- `WF-08-fail-closed-errors.svg`
+
+### SB-05 Submit admission
+- `WF-07-submit-status.svg`
+- `WF-08-fail-closed-errors.svg`
+
+### SB-06 Counsel viewer overview
+- `WF-R-01-splash-case-open.svg`
+- `WF-R-02-bundle-contents.svg`
+- `WF-R-03-verification-report.svg`
+- `WF-R-06-synchronized-playback.svg`
+- `WF-R-07-provenance-custody-ots.svg`
+- `WF-R-08-export-opposing-counsel.svg`
+
+### SB-R-01 Open bundle
+- `WF-R-01-splash-case-open.svg`
+- `WF-R-02-bundle-contents.svg`
+
+### SB-R-02 Verification gate
+- `WF-R-03-verification-report.svg`
+- `WF-R-04-fail-closed-blocking.svg`
+- `WF-R-07-provenance-custody-ots.svg`
+
+### SB-R-03 Escrow release
+- `WF-R-05-escrow-release-quorum.svg`
+
+### SB-R-04 Timeline playback
+- `WF-R-06-synchronized-playback.svg`
+
+### SB-R-05 Multi-driver counsel bundle
+- `WF-R-02-bundle-contents.svg`
+- `WF-R-03-verification-report.svg`
+- `WF-R-04-fail-closed-blocking.svg`
+
+### SB-R-06 Export disclosure
+- `WF-R-07-provenance-custody-ots.svg`
+- `WF-R-08-export-opposing-counsel.svg`
