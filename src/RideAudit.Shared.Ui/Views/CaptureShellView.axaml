@@ -136,10 +136,18 @@
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
   </UserControl.Styles>
-  <ScrollViewer>
+  <DockPanel>
+    <TextBlock x:Name="ScreenId"
+               DockPanel.Dock="Top"
+               Text="WF-01"
+               Height="16"
+               Margin="16,4,16,0"
+               Foreground="#F4F7FA"
+               Background="#F4F7FA"
+               IsHitTestVisible="False"
+               FontSize="16" />
+    <ScrollViewer>
     <Grid Margin="16,8,16,16">
-      <TextBlock x:Name="ScreenId" Text="WF-01" Width="0" Height="0" Opacity="0" IsHitTestVisible="False" />
-
       <StackPanel x:Name="RolePage" Spacing="8">
         <TextBlock x:Name="EdgeTlsText" TextWrapping="Wrap" IsVisible="False" Foreground="#173E66" />
         <Border Width="64" Height="64" CornerRadius="32" Background="#173E66" HorizontalAlignment="Center" Margin="0,16,0,4">
@@ -776,5 +784,6 @@
         </Button>
       </StackPanel>
     </Grid>
-  </ScrollViewer>
+    </ScrollViewer>
+  </DockPanel>
 </UserControl>
