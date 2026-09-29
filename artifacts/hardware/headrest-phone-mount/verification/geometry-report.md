@@ -21,20 +21,21 @@ License: GPL-2.0
 | Roof holes | 2, one on each arm centerline, tap drill 6.8 mm |
 | Clamp stack | bottom plate 6 mm + arm 12 mm = 18 mm; slide take-up 0.40 mm |
 | Thumbscrews | 2 modeled, head Ø 22 mm, shank 30.5 mm under the face |
-| Phone pocket (L × short side × thickness) | 173.6 × 85.8 × 12.5 mm |
-| Phone envelope | length 140–172 mm, short side 70–85 mm, thickness ≤ 12 mm |
-| Camera window | 18 mm square, both upper corners, through the back plate |
-| Phone front from the headrest face | 222.2 mm |
-| Cradle top above the block bottom | 114.0 mm |
+| Phone pocket (L × short side × thickness) | 155.9 × 67.5 × 16.2 mm |
+| Phone | closed Galaxy Z Fold 4, landscape, 155.1 × 67.1 × 15.8 mm hinge (thin edge 14.2 mm) |
+| Cameras | primary cluster faces forward, out of the opening. Back plate is solid. USB-end hook 12 mm at +X. Camera end stays open |
+| Roof | 19.00 mm, forward reach 18.55 mm so the wedge is 45 degrees or shallower |
+| Phone front from the headrest face | 225.3 mm |
+| Cradle top above the block bottom | 98.7 mm |
 | Cradles | 1 shared landscape holder |
 
 ## Print meshes
 
 | STL | Triangles | Volume mm³ | Size X×Y×Z mm |
 | --- | --- | --- | --- |
-| `headrest-phone-mount.stl` | 20984 | 488200 | 242.0 × 222.2 × 126.3 |
+| `headrest-phone-mount.stl` | 20932 | 493277 | 242.0 × 225.3 × 111.0 |
 | `post-block.stl` | 980 | 125235 | 56.0 × 212.8 × 33.0 |
-| `phone-cradle.stl` | 696 | 231193 | 242.0 × 120.2 × 33.5 |
+| `phone-cradle.stl` | 644 | 236270 | 242.0 × 104.9 × 36.5 |
 | `fit-coupon.stl` | 768 | 11363 | 25.5 × 25.5 × 33.0 |
 | `thumbscrew.stl` | 7456 | 3276 | 32.0 × 22.0 × 36.5 |
 
@@ -55,11 +56,15 @@ License: GPL-2.0
 - air  max-phone center is in the pocket
 - air  max-phone upper corner is not blocked
 - solid  back plate is present behind the phone
-- air  camera window is open
-- air  opposite camera window is open
-- solid  back plate remains between the camera windows
-- solid  front retention lip is present
-- air  front of the cradle stays open above the lip
+- solid  back plate is solid at the camera end
+- solid  back plate is solid at the USB end
+- solid  back plate is solid behind the cover screen
+- air  camera-end forward face is open
+- air  camera-end upper forward face is open
+- air  center forward face is open
+- solid  USB-end hook stops forward slip
+- air  forward face beside the USB hook stays open
+- solid  pocket floor supports the phone
 - air  left thumbscrew hole is open in the roof
 - air  right thumbscrew hole is open in the roof
 - solid  roof stays solid between the two arm holes
