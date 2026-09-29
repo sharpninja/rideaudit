@@ -8,6 +8,7 @@
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <Description>Avalonia UI 12 Android dual-phone capture client. GPL-2.0-or-later. Not a Play Store release.</Description>
   </PropertyGroup>
@@ -19,6 +20,13 @@
   <ItemGroup>
     <PackageReference Include="Avalonia.Android" />
     <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <PackageReference Include="SharpNinja.Avalonia.RemoteControl.Runtime" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <Compile Remove="AndroidRemoteControlHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RideAudit.Shared.Ui\RideAudit.Shared.Ui.csproj" />

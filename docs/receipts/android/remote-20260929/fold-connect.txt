@@ -1,0 +1,9 @@
+﻿ADB forward ready.
+Serial: RFCW7078MVZ
+Endpoint: http://127.0.0.1:47100/
+Protocol: 1.0
+Audit identity: remote-client
+Frame streaming: supported
+Remote input: supported
+Connection profile saved for desktop client.
+

@@ -6,6 +6,21 @@ Avalonia UI 12 dual-phone capture client (FR-RIDE-056).
 - Passenger phone: video sync, compositing, spider-graph telematics overlay.
 - Pairing is RideAudit Bluetooth device pairing. There is no Lyft private API.
 
+## Debug visual tree
+
+Debug builds reference `SharpNinja.Avalonia.RemoteControl.Runtime` 0.7.4 and listen on device loopback port 47100. Release builds do not. The bearer token is random per process and is written only to the package-private marker `files/avalonia-remote-control.json`. This is not a Play publication.
+
+Desktop side, after `dotnet tool install --global SharpNinja.Avalonia.RemoteControl.Tool --version 0.7.4`:
+
+```powershell
+avalonia-remote adb connect --serial <device-serial> --package org.rideaudit.app --keep-forward
+avalonia-remote
+```
+
+Use a second `--host-port` when two phones are forwarded at once. The transport is `arc-protobuf-v1`. Cleanup with `avalonia-remote adb cleanup --serial <device-serial> --host-port <port>`.
+
+On PAYTON-LEGION2 the USB Fold forward completed GetCapabilities (frames and input supported). The motorola edge 2024 wireless forward reached the device port and did not complete GetCapabilities. That lab note is `docs/receipts/android/20260929T164101Z-android-remote-control.md`.
+
 ## Build
 
 The Android head targets `net10.0-android` and needs the .NET Android workload. On PAYTON-LEGION2 (2026-09-28) the workload, Android SDK platform 36, build-tools 36.0.0, and Microsoft OpenJDK 17 were present. `dotnet build -c Release` produced an APK. `adb devices` listed no device, so the APK was not installed. That is not a Play Store receipt.

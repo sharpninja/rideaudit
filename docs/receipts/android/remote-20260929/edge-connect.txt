@@ -1,0 +1,10 @@
+﻿avalonia-remote.exe : Bridge connection for GetCapabilities closed before a complete response was received. If this is 
+an ADB connection, launch the Android app, wait for the Avalonia.RemoteControl bridge to start, and remove stale 
+forwards if needed.
+At C:\Users\kingd\AppData\Local\Temp\ps-script-b5abedee-2b87-4bcc-a6f6-a1fca0501a71.ps1:202 char:12
++ $edgeOut = & avalonia-remote adb connect --serial $edge --package org ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Bridge connecti...ards if needed.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+

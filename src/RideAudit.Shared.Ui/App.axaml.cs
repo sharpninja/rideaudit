@@ -2,6 +2,7 @@
 // Copyright (C) 2026 RideAudit contributors
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using RideAudit.Shared.Ui.Views;
@@ -14,6 +15,8 @@ public partial class App : Application
 
     public static CaptureRuntime? CaptureRuntime { get; set; }
 
+    public static Control? ShellRoot { get; private set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -22,6 +25,7 @@ public partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         var view = new MainView();
+        ShellRoot = view;
         view.ApplyMode(Mode);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
