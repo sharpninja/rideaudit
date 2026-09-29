@@ -1146,18 +1146,21 @@ records:
 
   - kind: fr
     id: FR-RIDE-074
-    title: About view holds UI copyright
+    title: About view holds copyright and third-party attributions
     description: >
-      The RideAudit UI shows its copyright on a dedicated About view. The bottom
-      panel includes an About control that opens that view. Copyright does not
-      remain on the previous chrome location, the top title bar. GPL licensing
-      of the code stays FR-RIDE-029. GPL notices on shared artifacts stay
-      FR-RIDE-030. Source-file copyright headers stay in place.
+      The RideAudit UI shows its copyright and its third-party attributions
+      (licenses and credits) on a dedicated About view. Copyright alone does
+      not satisfy this requirement. The bottom panel includes an About control
+      that opens that view. Copyright does not remain on the previous chrome
+      location, the top title bar. GPL licensing of the code stays FR-RIDE-029.
+      GPL notices on shared artifacts stay FR-RIDE-030. Source-file copyright
+      headers stay in place.
     priority: medium
     area: RIDE
     status: pending
     notes: >
-      Operator delta 2026-09-29. Draft until a separate Payton AGREE.
+      Operator delta 2026-09-29, plus the same-day addon that About includes
+      third-party attributions. Draft until a separate Payton AGREE.
       Not part of the 2026-09-29 capture AGREE. Cross-links FR-RIDE-029 and
       FR-RIDE-030. Does not satisfy those FRs. Does not satisfy AC-UC-025-001.
       The Avalonia UI 12 framework label is not this copyright notice.
@@ -1174,24 +1177,31 @@ records:
       - id: AC-RIDE-074-004
         text: Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
         isSatisfied: false
+      - id: AC-RIDE-074-005
+        text: The About view includes third-party attributions, meaning licenses and credits. An About view that shows copyright only does not satisfy this AC.
+        isSatisfied: false
 
   - kind: usecase
     localId: UC-RIDE-044
-    title: Driver opens About and reads the copyright
+    title: Driver opens About and reads copyright and attributions
     actors:
       - Driver
     briefDescription: >
-      Driver uses the About control in the bottom panel, reads the copyright on
-      the About view, and does not see that copyright on the top title bar.
+      Driver uses the About control in the bottom panel, reads the copyright
+      and the third-party attributions (licenses and credits) on the About view,
+      and does not see that copyright on the top title bar.
       approval: pending separate Payton AGREE. Draft.
     basicFlow: |
       1. Driver is on a RideAudit screen that has the bottom panel.
       2. Driver activates the About control in the bottom panel.
-      3. The About view opens and shows the UI copyright.
+      3. The About view opens and shows the UI copyright and the third-party attributions.
       4. Driver confirms the top title bar does not show that copyright.
     acceptanceCriteria:
       - id: AC-UC-044-001
-        text: The bottom-panel About control opens an About view that shows the UI copyright, and the top title bar does not show that copyright.
+        text: The bottom-panel About control opens an About view that shows the UI copyright and third-party attributions (licenses and credits), and the top title bar does not show that copyright.
+        isSatisfied: false
+      - id: AC-UC-044-002
+        text: An About view that shows copyright and omits third-party attributions does not satisfy this use case.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-074
@@ -1203,12 +1213,13 @@ records:
 
   - kind: tr
     id: TR-RIDE-VIEW-007
-    title: About view and bottom-panel copyright placement
+    title: About view with copyright and third-party attributions
     description: >
       Add a dedicated About view to the shared Avalonia UI. Put an About control
-      in the bottom panel that opens it. Show the UI copyright on that view.
-      Remove the copyright notice from the top title bar. Leave source-file
-      copyright headers and artifact GPL notices in place.
+      in the bottom panel that opens it. Show the UI copyright and the
+      third-party attributions (licenses and credits) on that view. Copyright
+      alone is not enough. Remove the copyright notice from the top title bar.
+      Leave source-file copyright headers and artifact GPL notices in place.
     priority: medium
     area: RIDE
     subarea: VIEW
@@ -1217,6 +1228,7 @@ records:
       Implements FR-RIDE-074. Operator delta 2026-09-29. Draft until a separate
       Payton AGREE. The current top-bar LicenseNotice is the previous chrome
       location. The Avalonia UI 12 framework label is not the copyright notice.
+      Third-party attributions are licenses and credits shown on About.
     acceptanceCriteria:
       - id: AC-RIDE-VIEW-007-001
         text: The shared UI has an About view whose content includes the UI copyright.
@@ -1227,13 +1239,17 @@ records:
       - id: AC-RIDE-VIEW-007-003
         text: The top title bar does not render the copyright notice.
         isSatisfied: false
+      - id: AC-RIDE-VIEW-007-004
+        text: The About view includes third-party attributions (licenses and credits). Copyright without those attributions does not satisfy this AC.
+        isSatisfied: false
 
   - kind: test
     id: TEST-RIDE-055
-    title: Copyright is on About and not on the top title bar
+    title: About shows copyright and attributions, not top-bar copyright
     description: >
       Verify the bottom panel About control opens the About view, the About view
-      shows the UI copyright, and the top title bar does not show that copyright.
+      shows the UI copyright and third-party attributions (licenses and credits),
+      and the top title bar does not show that copyright. Copyright alone fails.
     priority: medium
     area: RIDE
     status: pending
@@ -1249,6 +1265,9 @@ records:
         isSatisfied: false
       - id: AC-TEST-055-003
         text: The top title bar does not show the copyright notice. A copyright string left on that chrome fails.
+        isSatisfied: false
+      - id: AC-TEST-055-004
+        text: The About view includes third-party attributions (licenses and credits). An About view that shows copyright only fails.
         isSatisfied: false
 
 mappings:
