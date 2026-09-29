@@ -20,7 +20,19 @@ Storyboards: one theory case per `docs/ux/**/storyboards/SB-*.md` and `SB-R-*.md
 
 If RemoteControl does not attach, the storyboard fails closed and no frame is compared. An alternate fail-closed branch, a review screen (`WF-R-*`), or any other step that cannot be reached without leaving the session fails that step and is not screenshot-compared. The harness does not press Return to jump back. Hidden pages are not treated as overlapping controls. `ConfirmCheck` is set with RemoteControl `SetProperty` `IsChecked=true`. A click on that checkbox did not leave it checked, and pairing confirm then fail-closed.
 
-Usability uses the RemoteControl tree on driven frames: a visible button overlap, or a visible text block shorter than 10px with more than 12 characters, fails the frame. The codex-subscription call runs for wireframe `WF-01` and for a driven frame that is already inside the pixel ratio. It does not run on an undriven storyboard step. A timeout is a fail-closed result.
+Usability runs on every wireframe screenshot and every driven storyboard frame, in addition to the pixel compare. A pixel match does not pass a frame that has a usability defect. Each frame records pass, fail, fail-closed, or not-detectable for:
+
+- `clipped-text`: font taller than the box, or single-line text wider than the arranged width
+- `truncated-text`: `TextTrimming` other than None
+- `text-overflow`: text bounds outside the parent
+- `overlapping-controls`: visible buttons, checks, or text that overlap and are not nested
+- `empty-icon`: a square 24 to 80px slot with no mark inside
+- `missing-icons`: baseline SVG has icon groups and the live tree has no Path, Image, or Icon node
+- `low-contrast`: screenshot sample inside text bounds, 4.5:1 below 18px and 3:1 at 18px or larger, when light and dark pixels separate
+- `broken-layout`: screen id differs from the frame, or a button sits outside the tree bounds
+- `aiunit-frontier`: codex-subscription compares the baseline and screenshot and must report no usability defects. A timeout is fail-closed
+
+Undriven storyboard steps record those checks as `not-run`. They are not a usability pass. Wireframe cases attach RemoteControl after the single-screen navigation so the tree checks can run. If that attach fails, the tree checks fail closed.
 
 ## Threshold
 
@@ -31,7 +43,7 @@ Usability uses the RemoteControl tree on driven frames: a visible button overlap
 - The frame fails when the differing-pixel ratio is above `VisualThreshold.MaxDifferingPixelRatio` (0.08).
 - The diff PNG paints mismatched pixels red. Paths are under `artifacts/aiunit-device/<id>/`.
 
-The codex-subscription perceptual call runs for wireframe `WF-01` and for a driven frame that is already inside the pixel ratio. A usability defect from that call fails the test even if the pixel ratio passed. A missing client fails closed. It is not a skip.
+The codex-subscription call runs for every compared wireframe and every driven storyboard frame. It is the `aiunit-frontier` check. A usability defect from that call fails the test even when the pixel ratio is inside 0.08. A missing client fails closed. It is not a skip.
 
 Review wireframes (`WF-R-*`) are desktop review screens. The Android capture client does not open them. A wireframe case still captures the device and fails closed when `ScreenId` does not match. Review storyboards (`SB-R-*`, and `SB-06`) fail closed because those steps cannot be driven. They are not compared as capture-shell screenshots.
 

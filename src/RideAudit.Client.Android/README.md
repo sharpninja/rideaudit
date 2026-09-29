@@ -31,7 +31,7 @@ On PAYTON-LEGION2, with adb and a phone attached:
 dotnet test tests/RideAudit.Client.Android.AiUnit.Tests/RideAudit.Client.Android.AiUnit.Tests.csproj
 ```
 
-The suite prefers USB serial `RFCW7078MVZ`. If that phone is absent it uses the motorola edge 2024 wireless serial. A missing device fails the device tests. It does not skip them. Wireframe cases are one screen each. Storyboard cases attach the debug RemoteControl bridge and drive each beat in order. A static screenshot is not storyboard coverage. See that test project's README for the pixel threshold and the diff artifact path.
+The suite prefers USB serial `RFCW7078MVZ`. If that phone is absent it uses the motorola edge 2024 wireless serial. A missing device fails the device tests. It does not skip them. Wireframe cases are one screen each and still attach RemoteControl for usability. Storyboard cases drive each beat in order. A static screenshot is not storyboard coverage. A pixel match does not pass when a usability check fails. See that test project's README for the checks and the pixel threshold.
 
 ## Build
 

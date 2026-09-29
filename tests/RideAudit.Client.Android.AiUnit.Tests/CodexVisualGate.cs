@@ -34,7 +34,7 @@ public static class CodexVisualGate
         }
 
         var request = new FrontierRequest(
-            "You compare a RideAudit wireframe baseline with a device screenshot. Return only JSON with keys screenId, match, usabilityDefects, summary. match is false when text is clipped, controls overlap, or the screen is not the named wireframe. A pixel-similar image with a usability defect is not a match.",
+            "You compare a RideAudit wireframe baseline with a device screenshot. Return only JSON with keys screenId, match, usabilityDefects, summary. usabilityDefects lists cut-off or clipped text, truncated text, missing or empty icons, overlapping controls, text outside its bounds, low-contrast labels, and layout that breaks the named screen. match is false when any of those defects is present. A pixel-similar image with a usability defect is not a match.",
             "screenId: " + screenId + ". First image attachment is the wireframe baseline. Second image attachment is the device screenshot.",
             Attachments:
             [

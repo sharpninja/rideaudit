@@ -92,38 +92,7 @@ public sealed class RemoteBridgeSession : IDisposable
         }
     }
 
-    public IReadOnlyList<string> UsabilityDefects()
-    {
-        var snapshot = Snapshot();
-        var byId = snapshot.Nodes.ToDictionary(node => node.Id, node => node);
-        var visible = snapshot.Nodes.Where(node =>
-            EffectivelyVisible(node, byId)
-            && node.AbsoluteBounds.Width > 1
-            && node.AbsoluteBounds.Height > 1).ToList();
-        var defects = new List<string>();
-        var buttons = visible.Where(node => node.TypeName.Contains("Button", StringComparison.Ordinal)).ToList();
-        for (var i = 0; i < buttons.Count; i++)
-        {
-            for (var j = i + 1; j < buttons.Count; j++)
-            {
-                if (Overlaps(buttons[i].AbsoluteBounds, buttons[j].AbsoluteBounds))
-                {
-                    defects.Add("overlapping buttons " + buttons[i].Name + " and " + buttons[j].Name);
-                }
-            }
-        }
-
-        foreach (var node in visible.Where(item => item.TypeName.Contains("TextBlock", StringComparison.Ordinal)))
-        {
-            var text = node.Properties.FirstOrDefault(property => property.Name == "Text")?.Value ?? string.Empty;
-            if (text.Length > 12 && node.AbsoluteBounds.Height < 10)
-            {
-                defects.Add("clipped text on " + node.Name);
-            }
-        }
-
-        return defects;
-    }
+    public TreeSnapshot CaptureTree() => Snapshot();
 
     public void Dispose()
     {
@@ -168,30 +137,4 @@ public sealed class RemoteBridgeSession : IDisposable
         return text.Replace(token, "REDACTED", StringComparison.Ordinal);
     }
 
-    private static bool EffectivelyVisible(TreeNode node, IReadOnlyDictionary<string, TreeNode> byId)
-    {
-        var current = node;
-        var guard = 0;
-        while (current is not null && guard++ < 32)
-        {
-            if (!current.IsVisible)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(current.ParentId) || !byId.TryGetValue(current.ParentId, out current))
-            {
-                return true;
-            }
-        }
-
-        return true;
-    }
-
-    private static bool Overlaps(Rect left, Rect right)
-    {
-        var x = Math.Min(left.X + left.Width, right.X + right.Width) - Math.Max(left.X, right.X);
-        var y = Math.Min(left.Y + left.Height, right.Y + right.Height) - Math.Max(left.Y, right.Y);
-        return x > 8 && y > 8;
-    }
 }

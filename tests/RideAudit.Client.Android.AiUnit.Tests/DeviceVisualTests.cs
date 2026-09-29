@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using Avalonia.RemoteControl.Protocol.V1;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -43,6 +44,128 @@ public sealed class VisualCatalogTests
         Assert.NotEmpty(reviewSteps);
         Assert.All(reviewSteps, step => Assert.StartsWith("WF-R-", step.ScreenId, StringComparison.Ordinal));
         Assert.Null(StoryboardSequence.Clicks("WF-01", reviewSteps[0], "driver"));
+    }
+}
+
+public sealed class UsabilityInspectorTests
+{
+    [Fact]
+    public void Empty_icon_slot_and_missing_baseline_icons_fail()
+    {
+        var nodes = new List<TreeNode>
+        {
+            new()
+            {
+                Id = "root",
+                TypeName = "Panel",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { Width = 400, Height = 800 },
+            },
+            new()
+            {
+                Id = "mark",
+                ParentId = "root",
+                TypeName = "Border",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 160, Y = 40, Width = 64, Height = 64 },
+            },
+            new()
+            {
+                Id = "title",
+                ParentId = "root",
+                TypeName = "TextBlock",
+                Name = "TitleText",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 20, Y = 120, Width = 200, Height = 28 },
+                Properties = { new PropertyValue { Name = "Text", Value = "RideAudit" }, new PropertyValue { Name = "FontSize", Value = "28" } },
+            },
+        };
+
+        var checks = UsabilityInspector.InspectTree(nodes, "WF-01", "WF-01", baselineIconGroups: 8);
+        Assert.Equal("fail", checks.Single(check => check.Id == "empty-icon").Status);
+        Assert.Equal("fail", checks.Single(check => check.Id == "missing-icons").Status);
+        Assert.Equal("pass", checks.Single(check => check.Id == "broken-layout").Status);
+    }
+
+    [Fact]
+    public void Clipped_text_and_overlap_fail_even_when_screen_id_matches()
+    {
+        var nodes = new List<TreeNode>
+        {
+            new()
+            {
+                Id = "a",
+                TypeName = "Button",
+                Name = "DriverButton",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 10, Y = 10, Width = 100, Height = 40 },
+            },
+            new()
+            {
+                Id = "b",
+                TypeName = "Button",
+                Name = "PassengerButton",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 40, Y = 20, Width = 100, Height = 40 },
+            },
+            new()
+            {
+                Id = "t",
+                TypeName = "TextBlock",
+                Name = "ClockText",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 10, Y = 80, Width = 40, Height = 8 },
+                Properties =
+                {
+                    new PropertyValue { Name = "Text", Value = "Driver session clock master" },
+                    new PropertyValue { Name = "FontSize", Value = "16" },
+                },
+            },
+        };
+
+        var checks = UsabilityInspector.InspectTree(nodes, "WF-04", "WF-04", baselineIconGroups: 0);
+        Assert.Equal("fail", checks.Single(check => check.Id == "clipped-text").Status);
+        Assert.Equal("fail", checks.Single(check => check.Id == "overlapping-controls").Status);
+        Assert.Equal("not-detectable", checks.Single(check => check.Id == "missing-icons").Status);
+    }
+
+    [Fact]
+    public void Low_contrast_sample_fails_and_a_dark_on_white_sample_passes()
+    {
+        var node = new TreeNode
+        {
+            Id = "t",
+            TypeName = "TextBlock",
+            Name = "TitleText",
+            IsVisible = true,
+            AbsoluteBounds = new Rect { Width = 20, Height = 10 },
+            Properties = { new PropertyValue { Name = "Text", Value = "RideAudit" }, new PropertyValue { Name = "FontSize", Value = "16" } },
+        };
+        using var weak = new SkiaSharp.SKBitmap(20, 10);
+        weak.Erase(new SkiaSharp.SKColor(180, 180, 180));
+        for (var y = 0; y < 5; y++)
+        {
+            for (var x = 0; x < 20; x++)
+            {
+                weak.SetPixel(x, y, new SkiaSharp.SKColor(170, 170, 170));
+            }
+        }
+
+        var weakCheck = UsabilityInspector.InspectContrast(weak, [node], Path.GetTempPath(), "weak");
+        Assert.Equal("fail", weakCheck.Status);
+
+        using var strong = new SkiaSharp.SKBitmap(20, 10);
+        strong.Erase(SkiaSharp.SKColors.White);
+        for (var y = 0; y < 5; y++)
+        {
+            for (var x = 0; x < 20; x++)
+            {
+                strong.SetPixel(x, y, SkiaSharp.SKColors.Black);
+            }
+        }
+
+        var strongCheck = UsabilityInspector.InspectContrast(strong, [node], Path.GetTempPath(), "strong");
+        Assert.Equal("pass", strongCheck.Status);
     }
 }
 

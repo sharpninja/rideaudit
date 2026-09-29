@@ -18,7 +18,7 @@ public static class DeviceVisualRunner
             throw new Xunit.Sdk.XunitException(id + " has no SVG baseline link in " + markdownPath);
         }
 
-        AssertFrames(asset.Id, asset.Kind, asset.FrameSvgPaths.Take(1).ToList(), invokePerceptual: id == "WF-01");
+        AssertFrames(asset.Id, asset.Kind, asset.FrameSvgPaths.Take(1).ToList());
     }
 
     public static void AssertStoryboard(string id, string markdownPath)
@@ -96,6 +96,7 @@ public static class DeviceVisualRunner
                             reason,
                             session.Serial,
                             session.Model,
+                            usability = UsabilityInspector.NotDriven(),
                         });
                         continue;
                     }
@@ -118,12 +119,9 @@ public static class DeviceVisualRunner
                         var png = session.Screencap();
                         var directory = Path.Combine(VisualAssetCatalog.RepoRoot(), "artifacts", "aiunit-device", assetId);
                         var pixel = BaselineComparer.Compare(png, step.SvgPath, directory, frameId);
-                        var usability = remote.UsabilityDefects();
-                        PerceptualResult? perceptual = null;
-                        if (pixel.WithinThreshold)
-                        {
-                            perceptual = CodexVisualGate.Compare(step.ScreenId, pixel.ActualPath, pixel.BaselinePath);
-                        }
+                        var usability = TreeChecks(remote, png, directory, frameId, step.ScreenId, actualScreen, step.SvgPath);
+                        var frontier = FrontierCheck(step.ScreenId, pixel.ActualPath, pixel.BaselinePath);
+                        usability.Add(frontier);
 
                         var screenOk = string.Equals(actualScreen, step.ScreenId, StringComparison.Ordinal);
                         AppendLog(new
@@ -147,8 +145,8 @@ public static class DeviceVisualRunner
                             pixel.BaselinePath,
                             pixel.DiffPath,
                             pixel.WithinThreshold,
-                            perceptual = perceptual?.Status,
-                            perceptualDetail = perceptual?.Detail,
+                            perceptual = frontier.Status,
+                            perceptualDetail = frontier.Detail,
                             usability,
                             threshold = VisualThreshold.MaxDifferingPixelRatio,
                             channelDelta = VisualThreshold.ChannelDelta,
@@ -166,15 +164,7 @@ public static class DeviceVisualRunner
                                 + ". Diff: " + pixel.DiffPath);
                         }
 
-                        if (usability.Count > 0)
-                        {
-                            failures.Add(frameId + " usability fail-closed: " + string.Join("; ", usability));
-                        }
-
-                        if (perceptual is not null && perceptual.Status != "pass")
-                        {
-                            failures.Add(frameId + " perceptual gate " + perceptual.Status + ": " + perceptual.Detail);
-                        }
+                        AddUsabilityFailures(failures, frameId, usability);
                     }
                     catch (Exception ex)
                     {
@@ -219,7 +209,7 @@ public static class DeviceVisualRunner
         }
     }
 
-    private static void AssertFrames(string assetId, string kind, IReadOnlyList<string> frames, bool invokePerceptual)
+    private static void AssertFrames(string assetId, string kind, IReadOnlyList<string> frames)
     {
         CodexVisualGate.RequireCodexSubscriptionProfile();
         ResetLogOnce();
@@ -246,56 +236,71 @@ public static class DeviceVisualRunner
                 try
                 {
                     session.Navigate(screenId);
-
-                    var xml = session.DumpUi();
-                    var actualScreen = session.ScreenId(xml);
-                    var png = session.Screencap();
-                    var directory = Path.Combine(VisualAssetCatalog.RepoRoot(), "artifacts", "aiunit-device", assetId);
-                    var pixel = BaselineComparer.Compare(png, svg, directory, frameId);
-                    PerceptualResult? perceptual = null;
-                    if (invokePerceptual || pixel.WithinThreshold)
+                    Thread.Sleep(1500);
+                    RemoteBridgeSession? remote = null;
+                    try
                     {
-                        perceptual = CodexVisualGate.Compare(screenId, pixel.ActualPath, pixel.BaselinePath);
+                        try
+                        {
+                            remote = RemoteBridgeSession.Connect(session);
+                        }
+                        catch (Exception attachEx)
+                        {
+                            failures.Add(frameId + " RemoteControl did not attach for usability: " + RedactException(attachEx));
+                        }
+
+                        var xml = session.DumpUi();
+                        var actualScreen = session.ScreenId(xml);
+                        var png = session.Screencap();
+                        var directory = Path.Combine(VisualAssetCatalog.RepoRoot(), "artifacts", "aiunit-device", assetId);
+                        var pixel = BaselineComparer.Compare(png, svg, directory, frameId);
+                        var usability = remote is null
+                            ? UsabilityInspector.RemoteUnavailable().ToList()
+                            : TreeChecks(remote, png, directory, frameId, screenId, actualScreen, svg);
+                        var frontier = FrontierCheck(screenId, pixel.ActualPath, pixel.BaselinePath);
+                        usability.Add(frontier);
+
+                        var screenOk = string.Equals(actualScreen, screenId, StringComparison.Ordinal);
+                        AppendLog(new
+                        {
+                            assetId,
+                            kind,
+                            frameId,
+                            screenId,
+                            actualScreen,
+                            session.Serial,
+                            session.Model,
+                            pixel.DifferingPixelRatio,
+                            pixel.Width,
+                            pixel.Height,
+                            pixel.ActualPath,
+                            pixel.BaselinePath,
+                            pixel.DiffPath,
+                            pixel.WithinThreshold,
+                            perceptual = frontier.Status,
+                            perceptualDetail = frontier.Detail,
+                            usability,
+                            threshold = VisualThreshold.MaxDifferingPixelRatio,
+                            channelDelta = VisualThreshold.ChannelDelta,
+                        });
+
+                        if (!screenOk)
+                        {
+                            failures.Add(frameId + " screen was '" + (actualScreen ?? "(missing)") + "', expected " + screenId + ".");
+                        }
+
+                        if (!pixel.WithinThreshold)
+                        {
+                            failures.Add(frameId + " differing pixel ratio " + pixel.DifferingPixelRatio.ToString("0.0000")
+                                + " exceeds " + VisualThreshold.MaxDifferingPixelRatio.ToString("0.00")
+                                + ". Diff: " + pixel.DiffPath);
+                        }
+
+                        AddUsabilityFailures(failures, frameId, usability);
                     }
-
-                    var screenOk = string.Equals(actualScreen, screenId, StringComparison.Ordinal);
-                    AppendLog(new
+                    finally
                     {
-                        assetId,
-                        kind,
-                        frameId,
-                        screenId,
-                        actualScreen,
-                        session.Serial,
-                        session.Model,
-                        pixel.DifferingPixelRatio,
-                        pixel.Width,
-                        pixel.Height,
-                        pixel.ActualPath,
-                        pixel.BaselinePath,
-                        pixel.DiffPath,
-                        pixel.WithinThreshold,
-                        perceptual = perceptual?.Status,
-                        perceptualDetail = perceptual?.Detail,
-                        threshold = VisualThreshold.MaxDifferingPixelRatio,
-                        channelDelta = VisualThreshold.ChannelDelta,
-                    });
-
-                    if (!screenOk)
-                    {
-                        failures.Add(frameId + " screen was '" + (actualScreen ?? "(missing)") + "', expected " + screenId + ".");
-                    }
-
-                    if (!pixel.WithinThreshold)
-                    {
-                        failures.Add(frameId + " differing pixel ratio " + pixel.DifferingPixelRatio.ToString("0.0000")
-                            + " exceeds " + VisualThreshold.MaxDifferingPixelRatio.ToString("0.00")
-                            + ". Diff: " + pixel.DiffPath);
-                    }
-
-                    if (perceptual is not null && perceptual.Status != "pass")
-                    {
-                        failures.Add(frameId + " perceptual gate " + perceptual.Status + ": " + perceptual.Detail);
+                        remote?.Dispose();
                     }
                 }
                 catch (Exception ex)
@@ -315,6 +320,45 @@ public static class DeviceVisualRunner
         if (failures.Count > 0)
         {
             throw new Xunit.Sdk.XunitException(string.Join(Environment.NewLine, failures));
+        }
+    }
+
+    private static List<UsabilityCheck> TreeChecks(
+        RemoteBridgeSession remote,
+        byte[] png,
+        string directory,
+        string frameId,
+        string expectedScreen,
+        string? actualScreen,
+        string svgPath)
+    {
+        var tree = remote.CaptureTree().Nodes.ToList();
+        var checks = UsabilityInspector.InspectTree(
+                tree,
+                expectedScreen,
+                actualScreen,
+                UsabilityInspector.CountBaselineIconGroups(svgPath))
+            .Where(check => check.Id != "low-contrast")
+            .ToList();
+        checks.Add(UsabilityInspector.InspectContrastPng(png, tree, directory, frameId));
+        return checks;
+    }
+
+    private static UsabilityCheck FrontierCheck(string screenId, string actualPath, string baselinePath)
+    {
+        var perceptual = CodexVisualGate.Compare(screenId, actualPath, baselinePath);
+        var status = perceptual.Status == "pass" ? "pass" : "fail-closed";
+        return new UsabilityCheck("aiunit-frontier", status, perceptual.Detail, "codex-subscription image attachments");
+    }
+
+    private static void AddUsabilityFailures(List<string> failures, string frameId, IReadOnlyList<UsabilityCheck> checks)
+    {
+        foreach (var check in checks)
+        {
+            if (check.Status is "fail" or "fail-closed")
+            {
+                failures.Add(frameId + " usability " + check.Id + " " + check.Status + ": " + check.Detail + " Evidence: " + check.Evidence);
+            }
         }
     }
 
