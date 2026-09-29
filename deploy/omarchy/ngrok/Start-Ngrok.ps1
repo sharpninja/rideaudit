@@ -7,7 +7,8 @@ param(
     [string]$SshHost = "PAYTON-OMARCHY",
     [string]$CredsPath = "",
     [string]$Addr = "127.0.0.1:18080",
-    [switch]$KeepOnFailure
+    [switch]$KeepOnFailure,
+    [switch]$KeepConflictingLocal
 )
 
 $ErrorActionPreference = "Stop"
@@ -74,6 +75,79 @@ function Invoke-FailClosedStop {
     throw "ngrok fail-closed: $Reason. No public URL is advertised."
 }
 
+function Invoke-OmarchyBashAllowFail {
+    param([string]$Command)
+    $sshExe = Get-OmarchySshExe
+    $out = & $sshExe -o BatchMode=yes -o ConnectTimeout=15 $SshHost "exec /usr/bin/bash --noprofile --norc -c '$Command'"
+    return [pscustomobject]@{
+        ExitCode = $LASTEXITCODE
+        Text = ($(if ($null -eq $out) { "" } else { $out | Out-String })).Trim()
+    }
+}
+
+function Stop-ConflictingLocalNgrok {
+    $api = $null
+    try {
+        $api = Invoke-RestMethod -Uri "http://127.0.0.1:4040/api/tunnels" -TimeoutSec 3
+    }
+    catch {
+        return
+    }
+    $conflicts = @()
+    foreach ($t in @($api.tunnels)) {
+        $addr = [string]$t.config.addr
+        $pub = [string]$t.public_url
+        if ($addr -and $addr -notmatch '18080') {
+            $conflicts += [pscustomobject]@{ Addr = $addr; Public = $pub }
+        }
+    }
+    if ($conflicts.Count -eq 0) { return }
+    foreach ($c in $conflicts) {
+        Write-Host ("CONFLICTING_LOCAL_NGROK addr={0} public={1}" -f $c.Addr, $c.Public)
+    }
+    if ($KeepConflictingLocal) {
+        throw "Local ngrok already holds the reserved domain for a non-admission address. Fail closed; not pooling mixed backends."
+    }
+    Write-Host "Stopping conflicting local ngrok so Omarchy can terminate the RideAudit admission tunnel."
+    foreach ($t in @($api.tunnels)) {
+        $name = [string]$t.name
+        if (-not $name) { continue }
+        try {
+            Invoke-RestMethod -Method Delete -Uri ("http://127.0.0.1:4040/api/tunnels/{0}" -f [uri]::EscapeDataString($name)) -TimeoutSec 5 | Out-Null
+            Write-Host ("LOCAL_TUNNEL_DELETED={0}" -f $name)
+        }
+        catch {
+            Write-Host ("LOCAL_TUNNEL_DELETE_FAILED={0}" -f $name)
+        }
+    }
+    $proc = Get-Process -Name ngrok -ErrorAction SilentlyContinue
+    if ($proc) {
+        try {
+            $proc | Stop-Process -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Host "Stop-Process access denied; trying taskkill."
+            foreach ($p in @($proc)) {
+                & taskkill.exe /F /PID $p.Id | Out-Null
+            }
+        }
+    }
+    Start-Sleep -Seconds 4
+    $still = $false
+    try {
+        $again = Invoke-RestMethod -Uri "http://127.0.0.1:4040/api/tunnels" -TimeoutSec 3
+        foreach ($t in @($again.tunnels)) {
+            if ([string]$t.config.addr -notmatch '18080') { $still = $true }
+        }
+    }
+    catch {
+        $still = $false
+    }
+    if ($still) {
+        throw "Could not displace the local ngrok that holds the reserved domain. Fail closed; not advertising a Swagger URL as admission."
+    }
+}
+
 function Get-PublicProbe {
     param([string]$Url)
     $headers = @{ "ngrok-skip-browser-warning" = "1" }
@@ -94,6 +168,7 @@ function Get-PublicProbe {
 }
 
 Test-NgrokCredsFile -Path $CredsPath
+Stop-ConflictingLocalNgrok
 
 Write-Host "Preflight: admission loopback on $SshHost $Addr"
 $admission = Get-RemoteText -Command "code=`$(curl -s -o /tmp/rideaudit-ngrok-admission-body.txt -w %{http_code} --max-time 10 http://$Addr/); echo ADMISSION_HTTP=`$code"
@@ -113,7 +188,15 @@ Copy-OmarchyUnixFile -LocalPath (Join-Path $here "rideaudit-ngrok.service") -Rem
 Invoke-OmarchyBash -SshHost $SshHost -Command "chmod +x /tmp/rideaudit-ngrok/remote-install.sh /tmp/rideaudit-ngrok/remote-start.sh /tmp/rideaudit-ngrok/remote-stop.sh"
 
 Write-Host "Copying ngrok config to non-git path ~/.config/ngrok/ngrok.yml"
-Copy-OmarchyStdinFile -SshHost $SshHost -LocalPath $CredsPath -RemotePath "/home/sharpninja/.config/ngrok/ngrok.yml"
+$credsTmp = Join-Path ([System.IO.Path]::GetTempPath()) ("rideaudit-ngrok-creds-" + [guid]::NewGuid().ToString("N"))
+$credsText = [System.IO.File]::ReadAllText($CredsPath).Replace("`r`n", "`n").Replace("`r", "`n")
+[System.IO.File]::WriteAllText($credsTmp, $credsText, (New-Object System.Text.UTF8Encoding $false))
+try {
+    Copy-OmarchyStdinFile -SshHost $SshHost -LocalPath $credsTmp -RemotePath "/home/sharpninja/.config/ngrok/ngrok.yml"
+}
+finally {
+    Remove-Item -LiteralPath $credsTmp -Force -ErrorAction SilentlyContinue
+}
 Invoke-OmarchyBash -SshHost $SshHost -Command "chmod 600 `$HOME/.config/ngrok/ngrok.yml && test -s `$HOME/.config/ngrok/ngrok.yml && echo CONFIG_PRESENT=1"
 
 Write-Host "Installing or reusing ngrok on $SshHost"
@@ -134,14 +217,12 @@ if ($install -match "NGROK_NEED_TARBALL=1" -or $install -notmatch "NGROK_BIN=") 
 }
 
 Write-Host "Starting tunnel to $Addr"
-$start = ""
-try {
-    $start = Get-RemoteText -Command "RIDEAUDIT_NGROK_ADDR=$Addr RIDEAUDIT_NGROK_CONFIG=`$HOME/.config/ngrok/ngrok.yml bash /tmp/rideaudit-ngrok/remote-start.sh"
-}
-catch {
+$started = Invoke-OmarchyBashAllowFail -Command "RIDEAUDIT_NGROK_ADDR=$Addr RIDEAUDIT_NGROK_CONFIG=`$HOME/.config/ngrok/ngrok.yml bash /tmp/rideaudit-ngrok/remote-start.sh"
+$start = $started.Text
+Write-Host $start
+if ($started.ExitCode -ne 0 -and $start -notmatch "FAIL_CLOSED=") {
     Invoke-FailClosedStop -Reason "remote_start_failed"
 }
-Write-Host $start
 if ($start -notmatch "ADMISSION_HTTP=200") {
     Invoke-FailClosedStop -Reason "admission_loopback_not_http_200"
 }

@@ -49,6 +49,7 @@ public class NgrokDeploySecretsTests
         Assert.Contains("PAYTON-OMARCHY", readme, StringComparison.Ordinal);
         Assert.Contains("PAYTON-DESKTOP", readme, StringComparison.Ordinal);
         Assert.Contains("127.0.0.1:18080", readme, StringComparison.Ordinal);
+        Assert.Contains("KeepConflictingLocal", readme, StringComparison.Ordinal);
         Assert.DoesNotContain("ghcr.io", readme, StringComparison.OrdinalIgnoreCase);
     }
 

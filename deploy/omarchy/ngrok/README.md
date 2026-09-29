@@ -71,3 +71,5 @@ This wrapper starts `ngrok http 127.0.0.1:18080` first. gRPC clients that requir
 ## Fail closed
 
 If admission is down, ngrok is missing, the token file is missing, the agent API has no public URL, or the LEGION2 probe fails, Start-Ngrok stops the tunnel (unless `-KeepOnFailure`) and throws. Docs and receipts must not list a dead URL as live.
+
+A free ngrok account typically has one reserved `*.ngrok-free.dev` hostname. If PAYTON-LEGION2 already has `ngrok` publishing a different local port (for example MCP Swagger on `:7147`), Start-Ngrok stops that local agent so Omarchy can terminate the admission tunnel. Pass `-KeepConflictingLocal` to refuse instead of displacing. Do not enable ngrok pooling across mixed backends. MCP on `http://PAYTON-LEGION2:7147` stays on the LAN.

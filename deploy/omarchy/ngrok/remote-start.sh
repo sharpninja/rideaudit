@@ -154,6 +154,9 @@ done
 
 if [ -z "$url" ]; then
   echo "FAIL_CLOSED=no_public_url"
+  if [ -f "$LOG_FILE" ]; then
+    grep -Eiv 'authtoken|api_key|authorization' "$LOG_FILE" | grep -E 'eror|crit|ERR_NGROK|failed to start' | tail -n 8 || true
+  fi
   exit 1
 fi
 
