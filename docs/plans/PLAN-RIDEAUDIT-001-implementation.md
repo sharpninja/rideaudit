@@ -1,7 +1,7 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust, section 9 Class C boxes, and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
+**Revision:** r3.8: A live OpenTimestamps calendar submit on PAYTON-LEGION2 is receipted as pending only (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`). No Bitcoin txid. Confirmation stays open. r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust, section 9 Class C boxes, and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
@@ -1568,7 +1568,7 @@ Before the gate, only documentation, requirement YAML, plans, process records, a
 
 The boxes above remain **historically unchecked**. They are class C (Astra/Payton agreement). They are not backdated as complete. Payton 2026-09-28 authorized a post-HV **remediation loop** (iterate until opposing Sol HV AGREE). That authorization does not rewrite construction-gate history. code-hv-sol-r4 later returned READY/AGREE on product head `4f0e741` for the narrow CODE-HV gate only. That AGREE does not check these boxes and does not close P0–P11b. Rem-phase checklist: [code-hv-sol-r2-remediation-phase-checklist.md](../receipts/remediation/code-hv-sol-r2-remediation-phase-checklist.md).
 
-## 11. Closeout inventory (2026-09-29, r3.7 lab signing note; r3.6 ledger still applies)
+## 11. Closeout inventory (2026-09-29, r3.8 live OTS pending note; r3.7 lab signing note; r3.6 ledger still applies)
 
 Classes: **A** implementable in this tree without a third party; **B** ops/config (ngrok, Octopus, docs); **C** blocked on a third party or on a named human/model agreement.
 
@@ -1581,7 +1581,8 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | Bracket optional Astra/child HV | C | Stay unchecked. Not run. Not a product-HV pass. |
 | Bracket HW1 on-vehicle print | C | Stay unchecked. Needs a physical vehicle and the operator checklist. CAD measurement is not a road release. |
 | Play Store publication (FR-RIDE-031 live store) | C | Fail closed. Not claimed. |
-| Hardware HSM, live OTS confirmation/txid, live L2 signer | C | Fail closed. Fixtures stay labeled. |
+| Hardware HSM, live L2 signer | C | Fail closed. Not claimed. |
+| Live OTS confirmation/txid | C | Not closed. A live pending calendar submit is receipted (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`, SHA-256 `a0652ab08af36fe082729db4586c7e76cbbc3caca085d92987d6ae5f9660c80c`). Pools `a.pool` and `b.pool` plus alice and bob returned HTTP 200 pending proofs. After 60 seconds, requery was still pending and GET was HTTP 404 with `Pending confirmation in Bitcoin blockchain`. No txid. Upgrade deferred (hours). Not admission. `live_bitcoin_metadata` stays false. Fixtures stay labeled. |
 | Physical dual-phone Bluetooth media / production H.264 | C | Fail closed. Source container stays non-H.264. |
 | Lyft Concierge / partnership ingest | C | Stay disabled. |
 | Edge TLS via Caddy (distinct from ngrok HTTPS) | C | Omarchy/DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. ngrok HTTPS is the tunnel, not that AC. |

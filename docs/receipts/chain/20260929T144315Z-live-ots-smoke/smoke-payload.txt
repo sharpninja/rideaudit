@@ -1,0 +1,8 @@
+RideAudit live OpenTimestamps smoke payload
+Label: LIVE-OTS-SMOKE
+Host class: PAYTON-LEGION2 lab
+This file is the preimage for a public calendar digest submit.
+It is not a custody receipt.
+It is not a documented fixture calendar.
+It is not a Bitcoin transaction.
+Git base: a5a649179a7e9ab6d098ec4517720c3d35a39001
