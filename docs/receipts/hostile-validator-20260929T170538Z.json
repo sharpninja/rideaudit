@@ -1,0 +1,159 @@
+{
+  "TimestampUtc": "2026-09-29T17:05:38Z",
+  "ValidatorIdentity": "GrokSubagentHostile",
+  "Workspace": "F:\\GitHub\\rideaudit-ui-font",
+  "Branch": "cursor/dual-phone-fold-moto-8aa2",
+  "Commit": "d6bb62275a8ef66539a9e5b0b2dd18912e8a3f0b",
+  "OverallVerdict": "AGREE",
+  "Accuracy": 99,
+  "Completeness": 98,
+  "AddProfile": {
+    "Executed": "yes",
+    "ProfileFileCountRead": 19,
+    "ExcludedSkillPort": "add-profile.grok.md"
+  },
+  "WorkClass": "Mixed",
+  "Class1": "Debug RemoteControl package wiring in the Android client. Completion against an AC was not claimed.",
+  "Class2": "User-directed lab probe on Fold USB and Edge wireless.",
+  "FailList": [],
+  "UnknownList": [],
+  "PassCount": 22,
+  "FailCount": 0,
+  "UnknownCount": 0,
+  "Claims": [
+    {
+      "Id": "A1",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Debug wiring 0.7.4 and 10.0.8 only for Debug, Compile Remove, DEBUG host start, ShellRoot."
+    },
+    {
+      "Id": "A2",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Release build 0 warnings 0 errors, APK 47523889 bytes and claimed SHA256, zero RemoteControl zip names, not installed."
+    },
+    {
+      "Id": "A3",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Debug APK 79070201 bytes and claimed SHA256, RemoteControl and DependencyInjection assemblies on arm64-v8a and x86_64."
+    },
+    {
+      "Id": "A4",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Both phones versionName 0.1.0 versionCode 1 DEBUGGABLE, Fold RFCW7078MVZ SM_F936U, Edge ZD222QH58Q motorola_edge_2024."
+    },
+    {
+      "Id": "A5",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Fold USB connect exit 0, frame streaming and remote input supported, capabilities from pid 12390."
+    },
+    {
+      "Id": "A6",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Edge host-port 47101 exit 1, GetCapabilities closed early, nc Timeout, NC:True is not device success, no Edge visual tree claimed."
+    },
+    {
+      "Id": "A7",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Markers use REDACTED, token length 64, devicePort 47100, bridgeProtocol arc-protobuf-v1, no raw token in committed receipt files."
+    },
+    {
+      "Id": "A8",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Post-restart pids Fold 13054 and Edge 25720 listen on 47100 with token length 64. Live re-check still matches. Receipt uses past tense."
+    },
+    {
+      "Id": "A9",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "adb forward list empty at 2026-09-29T16:41:01Z. Live list also empty."
+    },
+    {
+      "Id": "A10",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "App.axaml not changed in d6bb622. Body 28 and title 36 remain. No font recapture."
+    },
+    {
+      "Id": "A11",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "AC-UC-025-001 not marked satisfied. No plan checkbox. Not a Play publication claim."
+    },
+    {
+      "Id": "A12",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Android README documents the desktop connect command, the receipt, and the Edge wireless failure."
+    },
+    {
+      "Id": "B1",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Byrd v4 phase-order not scored. No phase or AC completion claimed."
+    },
+    {
+      "Id": "B2",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Receipts re-read and live state re-queried. Release warning count re-run."
+    },
+    {
+      "Id": "B3",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "No direct TODO, session, or requirements store edit in d6bb622."
+    },
+    {
+      "Id": "B4",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "This slice and this review used PowerShell. Python was not invoked."
+    },
+    {
+      "Id": "B5",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Hashes, exits, devices, and non-claims match artifacts."
+    },
+    {
+      "Id": "B6",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "New commit files have zero U+2014 and zero U+2013."
+    },
+    {
+      "Id": "B7",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Commit numstat shows zero deletions."
+    },
+    {
+      "Id": "C1",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Text": "AC-UC-025-001, AC-RIDE-056-001, AC-RIDE-056-002, FR-RIDE-067, and storyboard RemoteControl criteria were not claimed and were not marked satisfied."
+    },
+    {
+      "Id": "D1",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "No plan checkbox flipped in d6bb622."
+    },
+    {
+      "Id": "D2",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "No plan step was claimed complete. Unrelated plan DoD is not required."
+    }
+  ],
+  "ReceiptMarkdown": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hostile-validator-20260929T170538Z.md",
+  "Note": "This AGREE does not authorize a goal, TODO, requirement, or plan done-state change. Request jsonl, response jsonl, and the MCP session-log body were outside the write limit of this brief."
+}
