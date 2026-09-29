@@ -142,6 +142,21 @@ public class TestRide035ShellTests
     }
 
     [AvaloniaFact]
+    public void Shared_ui_primary_text_uses_the_large_app_default()
+    {
+        var shell = new CaptureShellView();
+        var window = new Window { Width = 480, Height = 1200, Content = shell };
+        window.Show();
+        Assert.Equal(28, shell.FindControl<TextBlock>("ScreenId")!.FontSize);
+        Assert.Equal(28, shell.FindControl<Button>("DriverButton")!.FontSize);
+
+        var main = new MainView();
+        Assert.Equal(36, main.FindControl<TextBlock>("TitleText")!.FontSize);
+        Assert.Equal(28, main.FindControl<TextBlock>("LicenseNotice")!.FontSize);
+        Assert.Equal("Avalonia UI 12", main.FindControl<TextBlock>("FrameworkNotice")!.Text);
+    }
+
+    [AvaloniaFact]
     public void Capture_shell_roles_fail_closed_for_passenger_start()
     {
         var view = new CaptureShellView();

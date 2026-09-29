@@ -1,7 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="RideAudit.Shared.Ui.Views.CaptureShellView">
-  <StackPanel Spacing="12">
+             x:Class="RideAudit.Shared.Ui.Views.CaptureShellView"
+             FontSize="{StaticResource RideAuditBodyFontSize}">
+  <ScrollViewer>
+  <StackPanel Spacing="16">
     <TextBlock x:Name="ScreenId" Text="WF-01" />
     <TextBlock Text="Select your role for session" />
     <Button x:Name="DriverButton" Content="DRIVER  Session coordinator" />
@@ -16,4 +18,5 @@
     <TextBlock x:Name="FailClosedText" IsVisible="False" />
     <TextBlock x:Name="SubmitStatus" Text="No submission" />
   </StackPanel>
+  </ScrollViewer>
 </UserControl>
