@@ -1144,6 +1144,113 @@ records:
         text: Evidence shows SharpNinja.aiUnit is configured with the codex-subscription profile for the Android visual and usability run. A different profile fails.
         isSatisfied: false
 
+  - kind: fr
+    id: FR-RIDE-074
+    title: About view holds UI copyright
+    description: >
+      The RideAudit UI shows its copyright on a dedicated About view. The bottom
+      panel includes an About control that opens that view. Copyright does not
+      remain on the previous chrome location, the top title bar. GPL licensing
+      of the code stays FR-RIDE-029. GPL notices on shared artifacts stay
+      FR-RIDE-030. Source-file copyright headers stay in place.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Operator delta 2026-09-29. Draft until a separate Payton AGREE.
+      Not part of the 2026-09-29 capture AGREE. Cross-links FR-RIDE-029 and
+      FR-RIDE-030. Does not satisfy those FRs. Does not satisfy AC-UC-025-001.
+      The Avalonia UI 12 framework label is not this copyright notice.
+    acceptanceCriteria:
+      - id: AC-RIDE-074-001
+        text: A dedicated About view shows the RideAudit UI copyright.
+        isSatisfied: false
+      - id: AC-RIDE-074-002
+        text: The bottom panel includes an About control that opens the About view.
+        isSatisfied: false
+      - id: AC-RIDE-074-003
+        text: The previous chrome location, the top title bar, does not show the copyright notice.
+        isSatisfied: false
+      - id: AC-RIDE-074-004
+        text: Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-044
+    title: Driver opens About and reads the copyright
+    actors:
+      - Driver
+    briefDescription: >
+      Driver uses the About control in the bottom panel, reads the copyright on
+      the About view, and does not see that copyright on the top title bar.
+      approval: pending separate Payton AGREE. Draft.
+    basicFlow: |
+      1. Driver is on a RideAudit screen that has the bottom panel.
+      2. Driver activates the About control in the bottom panel.
+      3. The About view opens and shows the UI copyright.
+      4. Driver confirms the top title bar does not show that copyright.
+    acceptanceCriteria:
+      - id: AC-UC-044-001
+        text: The bottom-panel About control opens an About view that shows the UI copyright, and the top title bar does not show that copyright.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-074
+        linkType: Realizes
+      - frId: FR-RIDE-029
+        linkType: Relates
+      - frId: FR-RIDE-030
+        linkType: Relates
+
+  - kind: tr
+    id: TR-RIDE-VIEW-007
+    title: About view and bottom-panel copyright placement
+    description: >
+      Add a dedicated About view to the shared Avalonia UI. Put an About control
+      in the bottom panel that opens it. Show the UI copyright on that view.
+      Remove the copyright notice from the top title bar. Leave source-file
+      copyright headers and artifact GPL notices in place.
+    priority: medium
+    area: RIDE
+    subarea: VIEW
+    status: pending
+    notes: >
+      Implements FR-RIDE-074. Operator delta 2026-09-29. Draft until a separate
+      Payton AGREE. The current top-bar LicenseNotice is the previous chrome
+      location. The Avalonia UI 12 framework label is not the copyright notice.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIEW-007-001
+        text: The shared UI has an About view whose content includes the UI copyright.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-007-002
+        text: A bottom-panel About control navigates to that About view.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-007-003
+        text: The top title bar does not render the copyright notice.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-055
+    title: Copyright is on About and not on the top title bar
+    description: >
+      Verify the bottom panel About control opens the About view, the About view
+      shows the UI copyright, and the top title bar does not show that copyright.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-074. Operator delta 2026-09-29. Draft until a separate
+      Payton AGREE. Does not satisfy FR-RIDE-029 or FR-RIDE-030.
+    acceptanceCriteria:
+      - id: AC-TEST-055-001
+        text: Activating the bottom-panel About control opens the About view.
+        isSatisfied: false
+      - id: AC-TEST-055-002
+        text: The About view shows the RideAudit UI copyright.
+        isSatisfied: false
+      - id: AC-TEST-055-003
+        text: The top title bar does not show the copyright notice. A copyright string left on that chrome fails.
+        isSatisfied: false
+
 mappings:
   - frId: FR-RIDE-065
     trIds: [TR-RIDE-EDGE-002]
@@ -1177,6 +1284,10 @@ mappings:
     trIds: [TR-RIDE-VIDEO-017]
     testIds: [TEST-RIDE-053, TEST-RIDE-054]
     useCaseLocalIds: [UC-RIDE-043]
+  - frId: FR-RIDE-074
+    trIds: [TR-RIDE-VIEW-007]
+    testIds: [TEST-RIDE-055]
+    useCaseLocalIds: [UC-RIDE-044]
   - frId: FR-RIDE-222
     trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
     testIds: [TEST-RIDE-028, TEST-RIDE-041]

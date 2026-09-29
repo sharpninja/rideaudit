@@ -493,7 +493,7 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Original FR-30. Update 2026-09-29 full history: headrest mount scad, README, BOM, and ARTIFACT carry GPL notices (HW-AC-MOUNT-003 and HW-AC-MOUNT-004). approval: Payton AGREE 2026-09-29."
+    notes: "Original FR-30. Update 2026-09-29 full history: headrest mount scad, README, BOM, and ARTIFACT carry GPL notices (HW-AC-MOUNT-003 and HW-AC-MOUNT-004). approval: Payton AGREE 2026-09-29. UI copyright placement is FR-RIDE-074, which stays Draft until a separate AGREE. This pointer does not withdraw the AGREE on this row."
     acceptanceCriteria:
       - id: AC-RIDE-030-001
         text: "Shared software/schema/receipt/attestation/verification artifacts carry GPL2 and commit notice."
