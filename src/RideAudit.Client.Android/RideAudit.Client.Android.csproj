@@ -26,6 +26,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <AndroidEnvironment Include="rideaudit-lab.env" />
     <AndroidAsset Include="caddy-lab-root.pem" />
+    <AndroidAsset Include="caddy-lab-intermediate.pem" />
   </ItemGroup>
   <ItemGroup>
     <!-- Compile reference only. Runtime assets stay out of the APK. Tests use the same package. -->

@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using System.Formats.Asn1;
+using System.Net;
+using System.Net.Http;
 using System.Net.Security;
 using System.Security.Authentication;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Grpc.Core;
@@ -108,16 +112,19 @@ public static class CaptureAdmissionChannel
     public static EdgeTlsProbeResult ProbeEdgeTls(
         CaptureAdmissionOptions options,
         ReadOnlyMemory<byte> labRootPem,
-        TimeSpan timeout)
+        TimeSpan timeout,
+        ReadOnlyMemory<byte> labIntermediatePem = default)
     {
         options.EnsureReady();
         var address = options.AdmissionAddress!;
         RequireEdgeTlsAddress(address);
         var trust = labRootPem.Length == 0 ? "platform" : "caddy-local-root";
         X509Certificate2? root = null;
+        X509Certificate2? intermediate = null;
+        string? peer = null;
+        string? validation = null;
         try
         {
-            string? peer = null;
             SocketsHttpHandler handler;
             if (labRootPem.Length == 0)
             {
@@ -126,27 +133,39 @@ public static class CaptureAdmissionChannel
             else
             {
                 root = X509Certificate2.CreateFromPem(Encoding.ASCII.GetString(labRootPem.Span));
+                if (labIntermediatePem.Length > 0)
+                {
+                    intermediate = X509Certificate2.CreateFromPem(Encoding.ASCII.GetString(labIntermediatePem.Span));
+                }
+
                 var trusted = root;
+                var extra = intermediate is null ? null : new X509Certificate2[] { intermediate };
                 handler = new SocketsHttpHandler
                 {
                     ConnectTimeout = timeout,
                     SslOptions = new SslClientAuthenticationOptions
                     {
                         TargetHost = new Uri(address).Host,
+                        ApplicationProtocols = new List<SslApplicationProtocol> { SslApplicationProtocol.Http2 },
                         RemoteCertificateValidationCallback = (sender, certificate, chain, errors) =>
                         {
                             peer = certificate?.Subject;
-                            return LabRootTrust.Accepts(certificate, chain, errors, trusted);
+                            var accepted = LabRootTrust.Accepts(certificate, chain, errors, trusted, extra, out var detail);
+                            validation = "accepted=" + accepted + " " + detail + " peer=" + (peer ?? "");
+                            return accepted;
                         }
                     }
                 };
+                handler.Properties["__GrpcLoadBalancingDisabled"] = true;
             }
 
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             using var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
             {
                 HttpHandler = handler,
-                DisposeHttpClient = true
+                DisposeHttpClient = true,
+                HttpVersion = HttpVersion.Version20,
+                HttpVersionPolicy = HttpVersionPolicy.RequestVersionExact
             });
             var client = new Admission.AdmissionClient(channel);
             var headers = new Metadata { { "authorization", "Bearer " + options.BearerToken } };
@@ -154,24 +173,28 @@ public static class CaptureAdmissionChannel
                 new HealthRequest(),
                 headers,
                 deadline: DateTime.UtcNow.Add(timeout));
-            return EdgeTlsProbeResult.Connected(
+            return EdgeTlsProbeResult.HealthOk(
                 address,
                 trust,
-                "OK",
                 "Health status=" + response.Status + " service=" + response.Service
-                    + " peer=" + (peer ?? ""));
+                    + " peer=" + (peer ?? "")
+                    + (validation is null ? "" : " " + validation));
         }
         catch (Exception ex) when (IsTlsFailure(ex))
         {
-            return EdgeTlsProbeResult.Failed(address, trust, "TLS handshake failed: " + Describe(ex));
+            return EdgeTlsProbeResult.Failed(
+                address,
+                trust,
+                "TLS handshake failed: " + Describe(ex) + (validation is null ? "" : " " + validation));
         }
         catch (RpcException ex)
         {
-            return EdgeTlsProbeResult.Connected(
+            return EdgeTlsProbeResult.TlsOnly(
                 address,
                 trust,
                 ex.StatusCode.ToString(),
-                "gRPC " + ex.StatusCode + " " + (ex.Status.Detail ?? ""));
+                "gRPC " + ex.StatusCode + " " + (ex.Status.Detail ?? "")
+                    + (validation is null ? "" : " " + validation));
         }
         catch (Exception ex)
         {
@@ -182,6 +205,7 @@ public static class CaptureAdmissionChannel
         }
         finally
         {
+            intermediate?.Dispose();
             root?.Dispose();
         }
     }
@@ -228,11 +252,23 @@ public sealed class EdgeTlsProbeResult
     public string? GrpcStatus { get; init; }
 
     public string Display =>
-        HandshakeCompleted
-            ? "EDGE_TLS CONNECTED " + Address + " trust=" + Trust + " grpc=" + GrpcStatus + " " + Outcome
-            : "EDGE_TLS FAIL " + Address + " trust=" + Trust + " " + Outcome;
+        GrpcStatus == "OK"
+            ? "EDGE_TLS HEALTH_OK " + Address + " trust=" + Trust + " " + Outcome
+            : HandshakeCompleted
+                ? "EDGE_TLS TLS_OK " + Address + " trust=" + Trust + " grpc=" + GrpcStatus + " " + Outcome
+                : "EDGE_TLS FAIL " + Address + " trust=" + Trust + " " + Outcome;
 
-    public static EdgeTlsProbeResult Connected(string address, string trust, string grpcStatus, string outcome) =>
+    public static EdgeTlsProbeResult HealthOk(string address, string trust, string outcome) =>
+        new()
+        {
+            HandshakeCompleted = true,
+            Address = address,
+            Trust = trust,
+            GrpcStatus = "OK",
+            Outcome = outcome
+        };
+
+    public static EdgeTlsProbeResult TlsOnly(string address, string trust, string grpcStatus, string outcome) =>
         new()
         {
             HandshakeCompleted = true,
@@ -262,21 +298,41 @@ public static class LabRootTrust
         X509Certificate? certificate,
         X509Chain? presented,
         SslPolicyErrors errors,
-        X509Certificate2 root)
+        X509Certificate2 root) =>
+        Accepts(certificate, presented, errors, root, out _);
+
+    public static bool Accepts(
+        X509Certificate? certificate,
+        X509Chain? presented,
+        SslPolicyErrors errors,
+        X509Certificate2 root,
+        out string detail) =>
+        Accepts(certificate, presented, errors, root, null, out detail);
+
+    public static bool Accepts(
+        X509Certificate? certificate,
+        X509Chain? presented,
+        SslPolicyErrors errors,
+        X509Certificate2 root,
+        IReadOnlyList<X509Certificate2>? extras,
+        out string detail)
     {
         if (certificate is null)
         {
+            detail = "no-certificate";
             return false;
         }
 
         if ((errors & SslPolicyErrors.RemoteCertificateNameMismatch) != 0
             || (errors & SslPolicyErrors.RemoteCertificateNotAvailable) != 0)
         {
+            detail = "name-or-cert-unavailable errors=" + errors;
             return false;
         }
 
         if (errors == SslPolicyErrors.None)
         {
+            detail = "platform-trust";
             return true;
         }
 
@@ -296,10 +352,39 @@ public static class LabRootTrust
                 }
             }
 
-            return chain.Build(leaf);
+            if (extras is not null)
+            {
+                foreach (var extra in extras)
+                {
+                    chain.ChainPolicy.ExtraStore.Add(extra);
+                }
+            }
+
+            if (chain.Build(leaf))
+            {
+                detail = "custom-root-built";
+                return true;
+            }
+
+            var rejected = string.Join(",", chain.ChainStatus.Select(item => item.Status.ToString()));
+            if (ReachesKnownRoot(leaf, presented, root, extras))
+            {
+                detail = "signature-walk-root after " + rejected;
+                return true;
+            }
+
+            detail = "custom-root-rejected " + rejected;
+            return false;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            if (ReachesKnownRoot(leaf, presented, root, extras))
+            {
+                detail = "signature-walk-root after " + ex.GetType().Name;
+                return true;
+            }
+
+            detail = "custom-root-threw " + ex.GetType().Name;
             return false;
         }
         finally
@@ -308,6 +393,94 @@ public static class LabRootTrust
             {
                 leaf.Dispose();
             }
+        }
+    }
+
+    private static bool ReachesKnownRoot(
+        X509Certificate2 leaf,
+        X509Chain? presented,
+        X509Certificate2 root,
+        IReadOnlyList<X509Certificate2>? extras)
+    {
+        var pool = new List<X509Certificate2> { root };
+        if (extras is not null)
+        {
+            pool.AddRange(extras);
+        }
+
+        if (presented is not null)
+        {
+            foreach (var element in presented.ChainElements)
+            {
+                pool.Add(element.Certificate);
+            }
+        }
+
+        var current = leaf;
+        for (var hop = 0; hop < 6; hop++)
+        {
+            if (string.Equals(current.Thumbprint, root.Thumbprint, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            X509Certificate2? signer = null;
+            foreach (var candidate in pool)
+            {
+                if (!current.IssuerName.RawData.AsSpan().SequenceEqual(candidate.SubjectName.RawData))
+                {
+                    continue;
+                }
+
+                if (VerifyEcdsaSha256(current, candidate))
+                {
+                    signer = candidate;
+                    break;
+                }
+            }
+
+            if (signer is null)
+            {
+                return false;
+            }
+
+            if (string.Equals(signer.Thumbprint, root.Thumbprint, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            current = signer;
+        }
+
+        return false;
+    }
+
+    private static bool VerifyEcdsaSha256(X509Certificate2 child, X509Certificate2 issuer)
+    {
+        try
+        {
+            using var key = issuer.GetECDsaPublicKey();
+            if (key is null)
+            {
+                return false;
+            }
+
+            var reader = new AsnReader(child.RawData, AsnEncodingRules.DER);
+            var certificate = reader.ReadSequence();
+            var tbs = certificate.ReadEncodedValue();
+            var algorithm = certificate.ReadSequence();
+            var oid = algorithm.ReadObjectIdentifier();
+            if (oid != "1.2.840.10045.4.3.2")
+            {
+                return false;
+            }
+
+            var signature = certificate.ReadBitString(out _);
+            return key.VerifyData(tbs.Span, signature, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+        }
+        catch (Exception)
+        {
+            return false;
         }
     }
 }

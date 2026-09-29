@@ -1,0 +1,12 @@
+﻿Serving...
+adb.exe : All files should be loaded. Notifying the device.
+At F:\GitHub\rideaudit-ui-font\artifacts\caddy-phone-probe.ps1:21 char:12
++ $install = & $adb -s $fold install -r $apk 2>&1 | Out-String
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (All files shoul...ing the device.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Performing Incremental Install
+Success
+Install command complete in 6271 ms
+

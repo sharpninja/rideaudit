@@ -130,7 +130,7 @@ public class CaptureGrpcAdmissionTests
     [Fact]
     public void Lab_root_trust_rejects_unrelated_and_name_mismatch()
     {
-        using var root = LoadCaddyRoot();
+        using var root = LoadPem("caddy-lab-root.pem");
         using var unrelated = CreateSelfSigned("unrelated.example");
         Assert.False(LabRootTrust.Accepts(
             unrelated,
@@ -147,14 +147,23 @@ public class CaptureGrpcAdmissionTests
             presented: null,
             SslPolicyErrors.RemoteCertificateChainErrors,
             root));
+        using var intermediate = LoadPem("caddy-lab-intermediate.pem");
+        Assert.True(LabRootTrust.Accepts(
+            intermediate,
+            presented: null,
+            SslPolicyErrors.RemoteCertificateChainErrors,
+            root,
+            new[] { intermediate },
+            out var detail));
+        Assert.Contains("root", detail, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static X509Certificate2 LoadCaddyRoot()
+    private static X509Certificate2 LoadPem(string fileName)
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir is not null)
         {
-            var candidate = Path.Combine(dir.FullName, "src", "RideAudit.Client.Android", "caddy-lab-root.pem");
+            var candidate = Path.Combine(dir.FullName, "src", "RideAudit.Client.Android", fileName);
             if (File.Exists(candidate))
             {
                 return X509Certificate2.CreateFromPem(File.ReadAllText(candidate));
@@ -163,7 +172,7 @@ public class CaptureGrpcAdmissionTests
             dir = dir.Parent;
         }
 
-        throw new FileNotFoundException("caddy-lab-root.pem");
+        throw new FileNotFoundException(fileName);
     }
 
     private static X509Certificate2 CreateSelfSigned(string commonName)

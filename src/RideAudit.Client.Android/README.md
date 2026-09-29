@@ -8,7 +8,7 @@ Avalonia UI 12 dual-phone capture client (FR-RIDE-056).
 
 ## Debug lab TLS
 
-Debug builds bake `rideaudit-lab.env` and `caddy-lab-root.pem`. The admission address is `https://192.168.0.149:28443`. The capture client has no counsel endpoint, so port 28444 is not called. At startup the app calls admission `Health` through `CaptureAdmissionChannel`. Trust is the Caddy local root in that PEM. A chain that does not build to that root fails the handshake. The bearer `lab-caddy-probe` only satisfies the client guard. `Health` does not authenticate it. Release builds omit the env file and the PEM. This is not a public-trust certificate and it does not close the Caddy edge.
+Debug builds bake `rideaudit-lab.env` and `caddy-lab-root.pem`. The admission address is `https://192.168.0.149:28443`. The capture client has no counsel endpoint, so port 28444 is not called. At startup the app calls admission `Health` through `CaptureAdmissionChannel`. Trust is the Caddy local root in that PEM, plus the Caddy intermediate when the platform chain stops early. A certificate that does not verify to that root fails the handshake. An unrelated certificate is rejected. The bearer `lab-caddy-probe` only satisfies the client guard. `Health` does not authenticate it. Release builds omit the env file and the PEM. This is not a public-trust certificate and it does not close the Caddy edge.
 
 ## Debug visual tree
 

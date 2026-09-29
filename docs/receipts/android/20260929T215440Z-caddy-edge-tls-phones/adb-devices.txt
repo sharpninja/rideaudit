@@ -1,0 +1,4 @@
+﻿List of devices attached
+RFCW7078MVZ            device product:q4qsqw model:SM_F936U device:q4q transport_id:7
+
+

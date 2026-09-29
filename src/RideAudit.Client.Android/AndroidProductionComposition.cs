@@ -68,7 +68,8 @@ public static class AndroidProductionComposition
     {
         var address = Environment.GetEnvironmentVariable("RIDEAUDIT_ADMISSION_ADDRESS") ?? "";
         Log.Info(TlsLogTag, "probe start address=" + address + " counsel=not-configured");
-        var pem = ReadLabRoot(context);
+        var pem = ReadAsset(context, "caddy-lab-root.pem");
+        var intermediate = ReadAsset(context, "caddy-lab-intermediate.pem");
         _ = Task.Run(() =>
         {
             string line;
@@ -77,7 +78,8 @@ public static class AndroidProductionComposition
                 var result = CaptureAdmissionChannel.ProbeEdgeTls(
                     CaptureAdmissionOptions.FromEnvironment(),
                     pem,
-                    TimeSpan.FromSeconds(12));
+                    TimeSpan.FromSeconds(12),
+                    intermediate);
                 line = result.Display;
             }
             catch (Exception ex)
@@ -91,14 +93,14 @@ public static class AndroidProductionComposition
         });
     }
 
-    private static byte[] ReadLabRoot(Context context)
+    private static byte[] ReadAsset(Context context, string name)
     {
         try
         {
-            using var stream = context.Assets?.Open("caddy-lab-root.pem");
+            using var stream = context.Assets?.Open(name);
             if (stream is null)
             {
-                Log.Info(TlsLogTag, "lab root asset missing; platform trust only");
+                Log.Info(TlsLogTag, "lab asset missing: " + name);
                 return [];
             }
 
@@ -108,7 +110,7 @@ public static class AndroidProductionComposition
         }
         catch (Exception ex)
         {
-            Log.Info(TlsLogTag, "lab root asset unreadable: " + ex.GetType().Name);
+            Log.Info(TlsLogTag, "lab asset unreadable: " + name + " " + ex.GetType().Name);
             return [];
         }
     }
