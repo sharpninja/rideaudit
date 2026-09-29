@@ -59,7 +59,7 @@ Print the steps (safe):
 pwsh -NoProfile -File deploy/omarchy/Confirm-Cutover.ps1
 ```
 
-After merge, the coordinator may pass `-ConfirmCutover` to run compose on loopback `:18080`. Leave calendars unset to fail closed. Production refuses `documented-fixture` and `RIDEAUDIT_PLAY_INTEGRITY=fixture`. Do not `docker compose down` Octopus/SQL/Caddy. Put TLS 1.2+ on the existing Caddy edge if this host should be reachable beyond loopback.
+After merge, the coordinator may pass `-ConfirmCutover` to run compose on loopback `:18080`. Leave calendars unset to fail closed. Production refuses `documented-fixture` and `RIDEAUDIT_PLAY_INTEGRITY=fixture`. Do not `docker compose down` Octopus, SQL, or the Octopus API Caddy on `:8445`. Lab HTTPS in front of the Octopus RideAudit containers is `deploy/caddy/` (`https://192.168.0.149:28443` and `:28444`, Caddy internal CA). That is not ngrok and not a public certificate.
 
 This agent does not pass `-ConfirmCutover`.
 
