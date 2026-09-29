@@ -19,9 +19,21 @@ Do not invent Lyft private APIs. Capture pairing is RideAudit device pairing onl
 | Layer | Stack | Notes |
 | --- | --- | --- |
 | Service API | **gRPC on .NET 10** | Sealed-only admission and counsel/review support services. |
-| Deployment | **Containers** | Backend services ship as container images. |
+| Deployment | **Containers via Octopus Deploy** | Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. |
 
 Public sealed submit remains ciphertext-only at ingest. No decrypt at public-server ingest.
+
+## Continuous delivery (operator 2026-09-28)
+
+This is the binding CD path. It supersedes GHCR, GitHub Actions container-registry, and any plan text that treated Octopus license exhaustion as deferral or out of scope.
+
+1. **Use Octopus Deploy.** Octopus builds RideAudit admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to **PAYTON-DESKTOP** (FR-RIDE-063).
+2. **License exhaustion is not a deferral.** If the default Octopus container is out of licenses, create a new Octopus container on PAYTON-DESKTOP and continue from that instance (AC-RIDE-063-002, TR-RIDE-DEPLOY-002).
+3. **Do not use GHCR.** Receipts must never claim a GHCR green. GitHub Actions container registry is not the distribution path.
+4. **Interim hosting.** Omarchy loopback plus ngrok remains the documented interim admission front door (FR-RIDE-064). The target CD host for Octopus-built images is PAYTON-DESKTOP.
+5. **Honesty.** This architecture page does not invent a live Octopus green. Existing Omarchy Octopus/SQL/Caddy containers and lab compose cutovers are not RideAudit Octopus CD complete.
+
+Authoritative requirements: `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`. Plan citation: PLAN-RIDEAUDIT-001 r3.4 §4.6.
 
 ## Custody and verification (cross-cutting)
 
@@ -50,4 +62,9 @@ Additive batch: `docs/Project/Additive-Avalonia-Grpc-Stack-Batch.yaml` (Author: 
 | Fail-closed admission over gRPC | FR-RIDE-061 | TR-RIDE-SERVER-009 | TEST-RIDE-036 | UC-RIDE-030 |
 | OpenAPI companion non-authoritative | FR-RIDE-062 | TR-RIDE-SERVER-010 | TEST-RIDE-037 | UC-RIDE-031 |
 
-Mappings live in `docs/Project/Requirements-Mappings-Batch.yaml`.
+Mappings live in `docs/Project/Requirements-Mappings-Batch.yaml`. Post-planning CD and ingress: FR-RIDE-063 / FR-RIDE-064 in `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`.
+
+| Topic | FR | TR | TEST | UC |
+| --- | --- | --- | --- | --- |
+| Octopus Deploy CD to PAYTON-DESKTOP | FR-RIDE-063 | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 |
+| ngrok ingress (Omarchy interim; PAYTON-DESKTOP target) | FR-RIDE-064 | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 |

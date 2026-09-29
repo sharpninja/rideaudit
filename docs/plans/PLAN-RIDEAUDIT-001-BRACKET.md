@@ -1,7 +1,8 @@
 # PLAN-RIDEAUDIT-001-BRACKET — Headrest phone-mount (hardware)
 
 **Plan ID:** PLAN-RIDEAUDIT-001-BRACKET  
-**Revision:** r1 (scoped extract from PLAN-RIDEAUDIT-001 r3.2)  
+**Revision:** r1.1 — server CD is Octopus to PAYTON-DESKTOP (FR-RIDE-063); no GHCR  
+
 **Kind:** Mechanical / OpenSCAD / STL physical mount  
 **Artifact:** [ART-RIDE-MOUNT-001](../../artifacts/hardware/headrest-phone-mount/) (`artifacts/hardware/headrest-phone-mount/`)  
 **Parent portfolio:** [PLAN-RIDEAUDIT-001-implementation.md](./PLAN-RIDEAUDIT-001-implementation.md)  
@@ -38,6 +39,7 @@ RideAudit dual-phone capture needs a **physical dual-cradle headrest mount** tha
 - Server/custody/API implementation (see [PLAN-RIDEAUDIT-001-SERVER](./PLAN-RIDEAUDIT-001-SERVER.md)).
 - Claiming FR-RIDE-041 **software** ownership (Android plan is primary for capture software).
 - Crash certification or OEM accessory claims.
+- Server container CD. That path is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063), not GHCR. See the Server plan.
 
 ### 1.4 Baseline
 

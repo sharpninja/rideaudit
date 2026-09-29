@@ -1,7 +1,7 @@
 # PLAN-RIDEAUDIT-001-SERVER — gRPC .NET 10 backend, custody, APIs
 
 **Plan ID:** PLAN-RIDEAUDIT-001-SERVER  
-**Revision:** r1 (scoped extract from PLAN-RIDEAUDIT-001 r3.2)  
+**Revision:** r1.1 — cite FR-RIDE-063 Octopus CD to PAYTON-DESKTOP; no GHCR  
 **Kind:** Backend — gRPC on .NET 10 containers, custody anchoring, sealed admission, ingest, escrow, counsel APIs  
 **Artifact:** [ART-RIDE-API-001](../../artifacts/server-api/)  
 **Parent portfolio:** [PLAN-RIDEAUDIT-001-implementation.md](./PLAN-RIDEAUDIT-001-implementation.md)  
@@ -31,6 +31,7 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 2. Fail-closed sealed admission; no decrypt at public ingest.
 3. OTS custody anchoring (+ optional L2 dual-anchor profiles).
 4. BDPv4 FR → UC → AC → TR → TEST for every server-owned FR.
+5. Container CD via Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). No GHCR.
 
 ### 1.3 Non-goals
 
@@ -38,6 +39,9 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 - Headrest mount (Bracket plan).
 - Treating interim OpenAPI as wire truth.
 - Private/permissioned chain as sole custody ledger.
+- GHCR or GitHub Actions container registry as the image distribution path.
+- Treating Octopus license exhaustion as deferral or out of scope.
+- Inventing a live Octopus green without a named instance/container and PAYTON-DESKTOP receipt.
 
 ---
 
@@ -101,16 +105,18 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | FR-RIDE-216 | critical | Escrow resilience | TR-RIDE-ESCROW-001 | TEST-RIDE-017 | UC-RIDE-011 | AC-RIDE-216-001, AC-RIDE-216-002 | P5 |
 | FR-RIDE-217 | critical | GPL-2.0 governance NFR | TR-RIDE-GPL-001 | TEST-RIDE-020 | UC-RIDE-013 | AC-RIDE-217-001, AC-RIDE-217-002 | P11b |
 | FR-RIDE-218 | critical | Public-server admission capacity | TR-RIDE-SERVER-005 | TEST-RIDE-024 | UC-RIDE-015 | AC-RIDE-218-001, AC-RIDE-218-002 | P2 |
+| FR-RIDE-063 | high | Octopus Deploy CD to PAYTON-DESKTOP | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 | AC-RIDE-063-001, AC-RIDE-063-002, AC-RIDE-063-003 | P11b |
+| FR-RIDE-064 | high | ngrok ingress for RideAudit service | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 | AC-RIDE-064-001, AC-RIDE-064-002, AC-RIDE-064-003 | P11b |
 
 ### 2.1 Linked record sets
 
 | Kind | Count | IDs |
 | --- | ---: | --- |
-| FR | 56 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-014, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-201, FR-RIDE-202, FR-RIDE-203, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, FR-RIDE-208, FR-RIDE-209, FR-RIDE-210, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
-| UC | 23 | UC-RIDE-001, UC-RIDE-002, UC-RIDE-003, UC-RIDE-004, UC-RIDE-005, UC-RIDE-006, UC-RIDE-007, UC-RIDE-008, UC-RIDE-009, UC-RIDE-010, UC-RIDE-011, UC-RIDE-012, UC-RIDE-013, UC-RIDE-014, UC-RIDE-015, UC-RIDE-016, UC-RIDE-019, UC-RIDE-020, UC-RIDE-021, UC-RIDE-028, UC-RIDE-029, UC-RIDE-030, UC-RIDE-031 |
-| TR | 44 | TR-RIDE-ANAL-001, TR-RIDE-CHAIN-001, TR-RIDE-ESCROW-001, TR-RIDE-GPL-001, TR-RIDE-INGEST-001, TR-RIDE-PERF-001, TR-RIDE-PLAY-001, TR-RIDE-PRIV-001, TR-RIDE-SEC-001, TR-RIDE-SERVER-001, TR-RIDE-STORE-001, TR-RIDE-ANAL-002, TR-RIDE-CHAIN-002, TR-RIDE-ESCROW-002, TR-RIDE-GPL-002, TR-RIDE-INGEST-002, TR-RIDE-PERF-002, TR-RIDE-PRIV-002, TR-RIDE-SEC-002, TR-RIDE-SERVER-002, TR-RIDE-STORE-002, TR-RIDE-ANAL-003, TR-RIDE-CHAIN-003, TR-RIDE-ESCROW-003, TR-RIDE-INGEST-003, TR-RIDE-PLAY-003, TR-RIDE-PRIV-003, TR-RIDE-SEAL-003, TR-RIDE-SEC-003, TR-RIDE-SERVER-003, TR-RIDE-STORE-003, TR-RIDE-ANAL-004, TR-RIDE-CHAIN-004, TR-RIDE-INGEST-004, TR-RIDE-SERVER-004, TR-RIDE-GPL-005, TR-RIDE-INGEST-005, TR-RIDE-SERVER-005, TR-RIDE-INGEST-006, TR-RIDE-SERVER-006, TR-RIDE-SERVER-007, TR-RIDE-SERVER-008, TR-RIDE-SERVER-009, TR-RIDE-SERVER-010 |
-| TEST | 29 | TEST-RIDE-001, TEST-RIDE-002, TEST-RIDE-003, TEST-RIDE-004, TEST-RIDE-005, TEST-RIDE-006, TEST-RIDE-007, TEST-RIDE-008, TEST-RIDE-009, TEST-RIDE-010, TEST-RIDE-011, TEST-RIDE-012, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-016, TEST-RIDE-017, TEST-RIDE-018, TEST-RIDE-019, TEST-RIDE-020, TEST-RIDE-021, TEST-RIDE-022, TEST-RIDE-023, TEST-RIDE-024, TEST-RIDE-029, TEST-RIDE-030, TEST-RIDE-031, TEST-RIDE-032, TEST-RIDE-036, TEST-RIDE-037 |
-| FR-owned ACs | 124 | (see matrix; full ledger parent §2.7) |
+| FR | 58 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-014, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-063, FR-RIDE-064, FR-RIDE-201, FR-RIDE-202, FR-RIDE-203, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, FR-RIDE-208, FR-RIDE-209, FR-RIDE-210, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
+| UC | 25 | UC-RIDE-001, UC-RIDE-002, UC-RIDE-003, UC-RIDE-004, UC-RIDE-005, UC-RIDE-006, UC-RIDE-007, UC-RIDE-008, UC-RIDE-009, UC-RIDE-010, UC-RIDE-011, UC-RIDE-012, UC-RIDE-013, UC-RIDE-014, UC-RIDE-015, UC-RIDE-016, UC-RIDE-019, UC-RIDE-020, UC-RIDE-021, UC-RIDE-028, UC-RIDE-029, UC-RIDE-030, UC-RIDE-031, UC-RIDE-032, UC-RIDE-033 |
+| TR | 47 | TR-RIDE-ANAL-001, TR-RIDE-CHAIN-001, TR-RIDE-ESCROW-001, TR-RIDE-GPL-001, TR-RIDE-INGEST-001, TR-RIDE-PERF-001, TR-RIDE-PLAY-001, TR-RIDE-PRIV-001, TR-RIDE-SEC-001, TR-RIDE-SERVER-001, TR-RIDE-STORE-001, TR-RIDE-ANAL-002, TR-RIDE-CHAIN-002, TR-RIDE-ESCROW-002, TR-RIDE-GPL-002, TR-RIDE-INGEST-002, TR-RIDE-PERF-002, TR-RIDE-PRIV-002, TR-RIDE-SEC-002, TR-RIDE-SERVER-002, TR-RIDE-STORE-002, TR-RIDE-ANAL-003, TR-RIDE-CHAIN-003, TR-RIDE-ESCROW-003, TR-RIDE-INGEST-003, TR-RIDE-PLAY-003, TR-RIDE-PRIV-003, TR-RIDE-SEAL-003, TR-RIDE-SEC-003, TR-RIDE-SERVER-003, TR-RIDE-STORE-003, TR-RIDE-ANAL-004, TR-RIDE-CHAIN-004, TR-RIDE-INGEST-004, TR-RIDE-SERVER-004, TR-RIDE-GPL-005, TR-RIDE-INGEST-005, TR-RIDE-SERVER-005, TR-RIDE-INGEST-006, TR-RIDE-SERVER-006, TR-RIDE-SERVER-007, TR-RIDE-SERVER-008, TR-RIDE-SERVER-009, TR-RIDE-SERVER-010, TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002, TR-RIDE-EDGE-001 |
+| TEST | 32 | TEST-RIDE-001, TEST-RIDE-002, TEST-RIDE-003, TEST-RIDE-004, TEST-RIDE-005, TEST-RIDE-006, TEST-RIDE-007, TEST-RIDE-008, TEST-RIDE-009, TEST-RIDE-010, TEST-RIDE-011, TEST-RIDE-012, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-016, TEST-RIDE-017, TEST-RIDE-018, TEST-RIDE-019, TEST-RIDE-020, TEST-RIDE-021, TEST-RIDE-022, TEST-RIDE-023, TEST-RIDE-024, TEST-RIDE-029, TEST-RIDE-030, TEST-RIDE-031, TEST-RIDE-032, TEST-RIDE-036, TEST-RIDE-037, TEST-RIDE-038, TEST-RIDE-039, TEST-RIDE-040 |
+| FR-owned ACs | 130 | (see matrix; planning ledger parent §2.7; post-planning ACs parent §2.8) |
 
 **Cross-plan:** Client seal-at-collect (FR-015/016) and Play device binding (FR-025/027/215) live in Android; this plan owns store/admission/chain/escrow and **FR-026 reject-at-admission**. FR-029/030 notices apply to server packages. Desktop counsel UX is Android A4; counsel **service** containers are this plan (P8/S5).
 
@@ -201,14 +207,14 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | Depends | S3; Android A3 for end-to-end profile proof |
 | Exit | Each supported profile Failed 0 Skipped 0 |
 
-### S9 — Integrated acceptance + distribution (parent P11b server portion)
+### S9 — Integrated acceptance + Octopus CD (parent P11b server portion)
 
 | Field | Value |
 | --- | --- |
-| FR IDs | FR-RIDE-217 (+ server contribution to FR-031 portfolio gate) |
-| TEST | TEST-RIDE-020 |
+| FR IDs | FR-RIDE-217, FR-RIDE-063, FR-RIDE-064 (+ server contribution to FR-031 portfolio gate) |
+| TEST | TEST-RIDE-020, TEST-RIDE-038, TEST-RIDE-039, TEST-RIDE-040 |
 | Depends | S1–S8 + Android A3/A4 + Bracket HW2 as applicable |
-| Exit | Full suite Failed 0 Skipped 0; Dev/Staging/Prod CD receipts |
+| Exit | Full suite Failed 0 Skipped 0; Octopus built and deployed images to PAYTON-DESKTOP with a receipt that names the instance or container and target and does not claim GHCR (FR-RIDE-063). If the default Octopus container is out of licenses, a new Octopus container on PAYTON-DESKTOP is the fallback, not GHCR. Omarchy plus ngrok remains interim admission hosting (FR-RIDE-064). This exit does not invent a live Octopus green. |
 
 **Authoritative dependencies** (from parent): P1→P0+gate; P2→P1; P3→P1; P4 client on Android; P5→P3+P4; P8→P2+P5+P7; P9→P2..P5; P10→P2+P8+P9; P11a→P3+P6; P11b→all.
 
@@ -224,6 +230,8 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | Chain writer | OTS primary; optional L2 | FR-RIDE-018, 212 |
 
 Custody contracts: parent §4.5 (immutable receipt-core, OTS semantics, fail-closed states) remain binding before S1 implementation — see portfolio index §4.5.
+
+Container CD: parent §4.6. Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. Cite FR-RIDE-063. Do not weaken it.
 
 ---
 

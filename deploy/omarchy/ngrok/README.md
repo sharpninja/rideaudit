@@ -4,6 +4,8 @@ GPL-2.0-only. Implements FR-RIDE-064 / UC-RIDE-033 / TR-RIDE-EDGE-001.
 
 This is an operator tunnel. It is not Octopus CD, not GHCR, not Play Store, and not a Caddy TLS cutover.
 
+Product CD remains FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. This wrapper is interim admission hosting (FR-RIDE-064) until that Octopus path is live.
+
 ## Current vs target
 
 | Role | Host | Binding | Status |

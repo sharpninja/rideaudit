@@ -1,16 +1,20 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.3 — portfolio/index after split into three child implementation plans  
+**Revision:** r3.4 — post-planning CD direction: Octopus Deploy to PAYTON-DESKTOP; no GHCR  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
 **Process:** Byrd Dev Process v4 (BDPv4)  
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) — awaiting Payton AGREE before P1 app code. Child plans are scoped extracts and do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. This r3.4 docs revision records operator CD direction after that AGREE. It does **not** invent a new Astra AGREE, a live Octopus green, or a Payton section-8 check. Child plans are scoped extracts and do **not** inherit Astra AGREE until separately reviewed if process requires.  
 **Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Those boxes remain unchecked as historical process state. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
+
+> **Operator CD direction (2026-09-28, binding):** Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
+>
+> That direction is FR-RIDE-063. Plans must cite it and must not weaken it. GitHub Actions container registry and GHCR are not the distribution path. Octopus license exhaustion is not deferral and not out of scope: provision a new Octopus container on PAYTON-DESKTOP. Omarchy loopback plus ngrok remains interim admission hosting (FR-RIDE-064) until Octopus CD lands images on PAYTON-DESKTOP. This plan does not invent a live Octopus green. Authoritative batch: [Additive-PostPlanning-Deploy-Ngrok-Batch.yaml](../Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml).
 
 > **HARD GATE (section 8):** No Avalonia/gRPC application implementation, skeletons, application test projects, or generated application bindings until P0 docs repair is complete, Astra returns READY/AGREE with accuracy/completeness/confidence ≥98 on the reviewed portfolio revision, and Payton explicitly agrees. No waivers.
 
@@ -32,9 +36,9 @@
 | --- | ---: | --- |
 | BRACKET | 3 | FR-RIDE-029, FR-RIDE-030, FR-RIDE-041 |
 | ANDROID | 31 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-025, FR-RIDE-026, FR-RIDE-027, FR-RIDE-029, FR-RIDE-030, FR-RIDE-031, FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045, FR-RIDE-046, FR-RIDE-047, FR-RIDE-048, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-053, FR-RIDE-054, FR-RIDE-055, FR-RIDE-056, FR-RIDE-057, FR-RIDE-058, FR-RIDE-215, FR-RIDE-219, FR-RIDE-220, FR-RIDE-221, FR-RIDE-222 |
-| SERVER | 56 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-014, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-201, FR-RIDE-202, FR-RIDE-203, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, FR-RIDE-208, FR-RIDE-209, FR-RIDE-210, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
+| SERVER | 58 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-014, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-063, FR-RIDE-064, FR-RIDE-201, FR-RIDE-202, FR-RIDE-203, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, FR-RIDE-208, FR-RIDE-209, FR-RIDE-210, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
 
-Union covers all **84** parent FRs (shared FR-029/030/026 appear in more than one child with role notes). Detailed FR→UC→AC→TEST rows live in each child; the complete 404-row AC ledger remains in **§2.7** below (authoritative inventory).
+Union covers all **86** parent FRs after the 2026-09-28 post-planning additive (shared FR-029/030/026 appear in more than one child with role notes). The Astra R7 parent body covered **84** FRs. FR-RIDE-063 and FR-RIDE-064 are additive and do not rewrite that AGREE. Detailed FR→UC→AC→TEST rows live in each child; the pre-additive 404-row AC ledger remains in **§2.7**; post-planning ACs are in **§2.8**.
 
 ### 0.2 Parent phase → child mapping
 
@@ -52,7 +56,7 @@ Union covers all **84** parent FRs (shared FR-029/030/026 appear in more than on
 | P9 ingest | SERVER (S6) |
 | P10 privacy/RBAC | SERVER (S7) |
 | P11a alternate chain | SERVER (S8) |
-| P11b integrated release | Portfolio + all children |
+| P11b integrated release | Portfolio + all children. Server CD portion is FR-RIDE-063 (Octopus to PAYTON-DESKTOP, no GHCR) plus FR-RIDE-064 (ngrok; Omarchy interim) |
 | HW0–HW2 mount | BRACKET |
 
 ---
@@ -71,6 +75,7 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 4. Opposing-model HV with durable receipts under `docs/receipts/hv/` **and** canonical pairs under `docs/reviews/hv-pairs/`.
 5. Keep implementers from writing app code until Astra + Payton AGREE on the reviewed portfolio revision.
 6. **Portfolio split:** execution detail for Bracket / Android clients / Server lives in the three child plans above.
+7. **Container CD:** Octopus Deploy builds images and deploys them to PAYTON-DESKTOP (FR-RIDE-063). No GHCR. License exhaustion on the default Octopus container means create a new Octopus container on PAYTON-DESKTOP. Omarchy plus ngrok is interim admission hosting (FR-RIDE-064).
 
 ### 1.3 Non-goals
 
@@ -78,6 +83,9 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 - McpServer wiki triage / plugin handoff.
 - Inventing Lyft private APIs.
 - Claiming Play Store publication complete without receipts.
+- Using GHCR or a GitHub Actions container registry as the image distribution path.
+- Treating Octopus license exhaustion as deferral or out of scope.
+- Inventing a live Octopus green without a receipt that names the Octopus instance or container and PAYTON-DESKTOP.
 - Committing secrets, `AGENTS-README-FIRST.yaml`, or `mcp.db`.
 - Treating interim OpenAPI as authoritative wire contract.
 - Private/permissioned chain as sole custody ledger.
@@ -89,8 +97,8 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 | Area | State |
 | --- | --- |
 | App source (`src/`) | Absent |
-| Requirements YAML | FR 84, TR 64, TEST 37, mappings 84/84 |
-| UC YAML | **31 unique UC-RIDE-001..031** under one `records:` key |
+| Requirements YAML | Planning batches: FR 84, TR 64, TEST 37, mappings 84/84. Post-planning additive: FR-RIDE-063..064, TR-RIDE-DEPLOY-001..002, TR-RIDE-EDGE-001, TEST-RIDE-038..040, UC-RIDE-032..033 (see Additive-PostPlanning-Deploy-Ngrok-Batch.yaml) |
+| UC YAML | **31 unique UC-RIDE-001..031** under one `records:` key in Use-Cases-Batch.yaml; UC-RIDE-032..033 live in the post-planning additive batch |
 | UC markdown | UC-RIDE-001..031 under `docs/ux/use-cases/` |
 | Stack / custody / BT | Recorded under `docs/architecture/` |
 | Artifacts | ART-RIDE-ANDROID-001, ART-RIDE-API-001, ART-RIDE-MOUNT-001, ART-RIDE-UX-001, ART-RIDE-UX-REVIEW-001 |
@@ -110,22 +118,22 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 
 ### 2.1 Counts
 
-| Kind | Count | Notes |
-| --- | ---: | --- |
-| FR | 84 | Functional + additive BT + additive Avalonia/gRPC |
-| TR | 64 | Technical + additives |
-| TEST | 37 | Testing + additives |
-| UC (YAML) | 31 | Single `records:` key; UC-RIDE-001..031 |
-| Mappings | 84 | One row per FR |
-| FR-owned ACs | 183 | |
-| TR-owned ACs | 106 | |
-| TEST-owned ACs | 66 | |
-| UC-owned ACs | 49 | |
-| **Total ACs** | **404** | Complete inventory; section 2.3 is FR-owned only |
+| Kind | Planning (Astra R7 / §2.7) | After post-planning additive (§2.8) | Notes |
+| --- | ---: | ---: | --- |
+| FR | 84 | 86 | + FR-RIDE-063, FR-RIDE-064 |
+| TR | 64 | 67 | + TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002, TR-RIDE-EDGE-001 |
+| TEST | 37 | 40 | + TEST-RIDE-038, TEST-RIDE-039, TEST-RIDE-040 |
+| UC (YAML) | 31 | 33 | UC-RIDE-001..031 in Use-Cases-Batch.yaml; UC-RIDE-032..033 in the post-planning additive |
+| Mappings | 84 | 86 | One row per FR; additive mappings in Additive-PostPlanning-Deploy-Ngrok-Mappings.yaml |
+| FR-owned ACs | 183 | 189 | + AC-RIDE-063-001..003, AC-RIDE-064-001..003 |
+| TR-owned ACs | 106 | 112 | + DEPLOY/EDGE ACs |
+| TEST-owned ACs | 66 | 72 | + TEST-038..040 ACs |
+| UC-owned ACs | 49 | 51 | + AC-UC-032-001, AC-UC-033-001 |
+| **Total ACs** | **404** | **424** | §2.7 remains the 404-row planning ledger. §2.8 adds the 20 post-planning ACs. Section 2.3 lists FR-owned ACs including the additive FRs. |
 
 ### 2.2 Coverage integrity
 
-The source contains 84 FRs, 64 TRs, 37 TESTs, 84 FR mapping rows, and **31 distinct UC records**. Every mapped TR, TEST, and UC ID exists in the source text.
+The planning source contains 84 FRs, 64 TRs, 37 TESTs, 84 FR mapping rows, and **31 distinct UC records** under Use-Cases-Batch.yaml. Every mapped TR, TEST, and UC ID in that planning set exists in the source text. The 2026-09-28 post-planning batch adds FR-RIDE-063..064 and related TR/TEST/UC records without rewriting the P0 31-UC / 84-mapping exit text.
 
 **Historical parser issue (corrected):** `Use-Cases-Batch.yaml` previously repeated the top-level `records:` key at lines 2, 564, and 606. Strict `ConvertFrom-Yaml` rejected it with `Duplicate key records`. A parser result containing only UC-RIDE-025..031 was **not** evidence that earlier records were absent — UC-RIDE-001..024 were **present in source; blocked by duplicate records keys**.
 
@@ -221,6 +229,8 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-053 | high | Bluetooth driver-rider phone pairing | TR-RIDE-VIDEO-010 | TEST-RIDE-034 | UC-RIDE-022 | AC-RIDE-053-001, AC-RIDE-053-002 | P6 |
 | FR-RIDE-054 | high | Driver phone session coordination | TR-RIDE-VIDEO-011 | TEST-RIDE-034 | UC-RIDE-023 | AC-RIDE-054-001, AC-RIDE-054-002 | P6 |
 | FR-RIDE-055 | high | Passenger phone video sync join and telematics overlay | TR-RIDE-VIDEO-011 | TEST-RIDE-034 | UC-RIDE-024 | AC-RIDE-055-001, AC-RIDE-055-002 | P6 |
+| FR-RIDE-063 | high | Octopus Deploy CD to PAYTON-DESKTOP | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 | AC-RIDE-063-001, AC-RIDE-063-002, AC-RIDE-063-003 | P11b |
+| FR-RIDE-064 | high | ngrok ingress for RideAudit service | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 | AC-RIDE-064-001, AC-RIDE-064-002, AC-RIDE-064-003 | P11b |
 
 ### 2.4 TR inventory
 
@@ -290,6 +300,9 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TR-RIDE-SERVER-010 | SERVER | OpenAPI companion non-authoritative | (inherits mapped FR ACs; additive without independent AC array) | FR-RIDE-062 |
 | TR-RIDE-VIDEO-010 | VIDEO | Bluetooth pairing and role protocol | (inherits mapped FR ACs; additive without independent AC array) | FR-RIDE-053 |
 | TR-RIDE-VIDEO-011 | VIDEO | Driver coordinator and passenger compositor split | (inherits mapped FR ACs; additive without independent AC array) | FR-RIDE-054, FR-RIDE-055 |
+| TR-RIDE-DEPLOY-001 | DEPLOY | Octopus project and image build process | AC-RIDE-DEPLOY-001-001, AC-RIDE-DEPLOY-001-002 | FR-RIDE-063 |
+| TR-RIDE-DEPLOY-002 | DEPLOY | Octopus agent and license fallback on PAYTON-DESKTOP | AC-RIDE-DEPLOY-002-001, AC-RIDE-DEPLOY-002-002 | FR-RIDE-063 |
+| TR-RIDE-EDGE-001 | EDGE | ngrok tunnel config and host service wrapper | AC-RIDE-EDGE-001-001, AC-RIDE-EDGE-001-002 | FR-RIDE-064 |
 
 ### 2.5 TEST inventory
 
@@ -332,6 +345,9 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-036 | gRPC .NET 10 sealed fail-closed admission | (inherits mapped FR ACs) | FR-RIDE-059, FR-RIDE-061 |
 | TEST-RIDE-037 | Proto GPL authority over OpenAPI companion | (inherits mapped FR ACs) | FR-RIDE-060, FR-RIDE-062 |
 | TEST-RIDE-034 | Bluetooth pairing and role split | (inherits mapped FR ACs) | FR-RIDE-053, FR-RIDE-054, FR-RIDE-055 |
+| TEST-RIDE-038 | Octopus release receipt without GHCR | AC-TEST-038-001, AC-TEST-038-002 | FR-RIDE-063 |
+| TEST-RIDE-039 | ngrok URL reaches admission health | AC-TEST-039-001, AC-TEST-039-002 | FR-RIDE-064 |
+| TEST-RIDE-040 | Deploy secrets absent from git | AC-TEST-040-001, AC-TEST-040-002 | FR-RIDE-063, FR-RIDE-064 |
 
 ### 2.6 UC inventory
 
@@ -368,6 +384,8 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | UC-RIDE-029 | Consume published GPL-2.0 gRPC protos | yes | AC-UC-029-001 | FR-RIDE-060 |  |
 | UC-RIDE-030 | Fail-closed gRPC admission | yes | AC-UC-030-001 | FR-RIDE-061 |  |
 | UC-RIDE-031 | Prefer gRPC over interim OpenAPI companion | yes | AC-UC-031-001 | FR-RIDE-062 |  |
+| UC-RIDE-032 | Operator releases RideAudit via Octopus to PAYTON-DESKTOP | yes (additive batch) | AC-UC-032-001 | FR-RIDE-063 |  |
+| UC-RIDE-033 | Operator configures ngrok and probes admission health | yes (additive batch) | AC-UC-033-001 | FR-RIDE-064 |  |
 
 ### 2.7 Complete acceptance-criteria closure
 
@@ -375,7 +393,7 @@ P0 must materialize a 404-row acceptance ledger with these columns: AC ID | Owni
 
 Before each construction increment, record its exact AC IDs, the behavior exercised for each ID, external mocks, required real adapters, and evidence paths. Broad TEST/UC ACs can have several evidence contributions under the same existing AC ID; these contributions do not create new AC IDs. P11b reconciles every contribution and rejects incomplete whole-AC coverage.
 
-The source inventory contains **404** existing acceptance criteria: 183 FR-owned, 106 TR-owned, 66 TEST-owned, and 49 UC-owned. Section 2.3 lists FR-owned ACs only.
+The planning inventory contains **404** acceptance criteria: 183 FR-owned, 106 TR-owned, 66 TEST-owned, and 49 UC-owned. Section 2.3 now also lists post-planning FR-RIDE-063 and FR-RIDE-064. Those additive ACs are inventoried in **§2.8** and are not back-filled into the 404-row §2.7.4 table.
 
 For each FR, required acceptance closure is the **union** of its own `acceptanceCriteria` and the `acceptanceCriteria` belonging to every TR, TEST, and UC referenced by its mapping row. Shared ACs retain all relationships without duplicate definitions.
 
@@ -1031,8 +1049,40 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-UC-030-001 | UC-RIDE-030 | FR-RIDE-061 | P2 | P11b | TEST-RIDE-036 |
 | AC-UC-031-001 | UC-RIDE-031 | FR-RIDE-062 | P1 | P11b | TEST-RIDE-037 |
 
-Ledger row count: **404** (must equal source AC inventory).
+Ledger row count: **404** (must equal the pre-additive planning AC inventory).
 
+### 2.8 Post-planning Octopus + ngrok AC ledger (2026-09-28)
+
+Operator direction is binding and is not weakened here: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
+
+FR-RIDE-063 owns that CD path. License exhaustion is a provision step, not a deferral. GitHub Container Registry is not an allowed fallback. Omarchy loopback plus ngrok is interim admission hosting (FR-RIDE-064) until Octopus-built images run on PAYTON-DESKTOP. These rows are planned work. They are not a live Octopus green.
+
+Source: `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`.
+
+| AC ID | Owning record ID | Related FR IDs | Primary implementation phases | Acceptance phase | Planned TEST IDs |
+| --- | --- | --- | --- | --- | --- |
+| AC-RIDE-063-001 | FR-RIDE-063 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-063-002 | FR-RIDE-063 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-063-003 | FR-RIDE-063 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-064-001 | FR-RIDE-064 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039 |
+| AC-RIDE-064-002 | FR-RIDE-064 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039, TEST-RIDE-040 |
+| AC-RIDE-064-003 | FR-RIDE-064 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039 |
+| AC-RIDE-DEPLOY-001-001 | TR-RIDE-DEPLOY-001 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-DEPLOY-001-002 | TR-RIDE-DEPLOY-001 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-DEPLOY-002-001 | TR-RIDE-DEPLOY-002 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-DEPLOY-002-002 | TR-RIDE-DEPLOY-002 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-RIDE-EDGE-001-001 | TR-RIDE-EDGE-001 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039, TEST-RIDE-040 |
+| AC-RIDE-EDGE-001-002 | TR-RIDE-EDGE-001 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039 |
+| AC-TEST-038-001 | TEST-RIDE-038 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-TEST-038-002 | TEST-RIDE-038 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-TEST-039-001 | TEST-RIDE-039 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039 |
+| AC-TEST-039-002 | TEST-RIDE-039 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039 |
+| AC-TEST-040-001 | TEST-RIDE-040 | FR-RIDE-063, FR-RIDE-064 | P11b | P11b | TEST-RIDE-040 |
+| AC-TEST-040-002 | TEST-RIDE-040 | FR-RIDE-063, FR-RIDE-064 | P11b | P11b | TEST-RIDE-040 |
+| AC-UC-032-001 | UC-RIDE-032 | FR-RIDE-063 | P11b | P11b | TEST-RIDE-038 |
+| AC-UC-033-001 | UC-RIDE-033 | FR-RIDE-064 | P11b | P11b | TEST-RIDE-039 |
+
+Post-planning ledger row count: **20**. Combined planned AC inventory: **424**.
 
 ---
 
@@ -1301,25 +1351,25 @@ Phase numbering does not authorize bypassing a dependency.
 
 ### P11b — Mandatory integrated acceptance and distribution
 
-**Goal:** GPL distribution, Play+source publication receipts, complete integrated suite, Dev/Staging/Prod CD
+**Goal:** GPL distribution, Play+source publication receipts, complete integrated suite, Octopus Deploy of containers to PAYTON-DESKTOP (FR-RIDE-063). No GHCR.
 
 | Field | Value |
 | --- | --- |
-| FR IDs (implementation ownership) | FR-RIDE-031, FR-RIDE-217 |
-| UC IDs | UC-RIDE-013, UC-RIDE-014 |
-| TR IDs | TR-RIDE-GPL-003, TR-RIDE-GPL-001 |
-| TEST IDs | TEST-RIDE-020 |
-| FR-owned AC IDs | AC-RIDE-031-001, AC-RIDE-031-002, AC-RIDE-217-001, AC-RIDE-217-002 |
-| AC closure | Union of FR-owned ACs above plus TR/TEST/UC-owned ACs for mapped records (see §2.7); partition per phase ac_scope |
-| Files / projects | packaging/; deploy/cicd/; docs/reviews/hv-pairs/ |
+| FR IDs (implementation ownership) | FR-RIDE-031, FR-RIDE-217, FR-RIDE-063, FR-RIDE-064 |
+| UC IDs | UC-RIDE-013, UC-RIDE-014, UC-RIDE-032, UC-RIDE-033 |
+| TR IDs | TR-RIDE-GPL-003, TR-RIDE-GPL-001, TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002, TR-RIDE-EDGE-001 |
+| TEST IDs | TEST-RIDE-020, TEST-RIDE-038, TEST-RIDE-039, TEST-RIDE-040 |
+| FR-owned AC IDs | AC-RIDE-031-001, AC-RIDE-031-002, AC-RIDE-217-001, AC-RIDE-217-002, AC-RIDE-063-001, AC-RIDE-063-002, AC-RIDE-063-003, AC-RIDE-064-001, AC-RIDE-064-002, AC-RIDE-064-003 |
+| AC closure | Union of FR-owned ACs above plus TR/TEST/UC-owned ACs for mapped records (see §2.7 and §2.8); partition per phase ac_scope |
+| Files / projects | packaging/; deploy/containers/; deploy/omarchy/; docs/receipts/distribution/; docs/reviews/hv-pairs/ |
 | Dependencies | P0-P10 complete + P11a alternate-provider conformance (L2 prod activation not required) |
 | AC / evidence scope | Full integrated acceptance + distribution |
-| Exit criteria | Complete mapped acceptance suite Failed 0 Skipped 0; real Android-to-gRPC-to-custody-to-escrow-to-desktop flows; cross-tenant rejection; retention/legal-hold; signed/reproducible desktop builds Win/Linux/macOS; successful automated Development/Staging/Production delivery with retained deployment and verification receipts; opposing-model AGREE; Play+source receipts for FR-031 |
+| Exit criteria | Complete mapped acceptance suite Failed 0 Skipped 0; real Android-to-gRPC-to-custody-to-escrow-to-desktop flows; cross-tenant rejection; retention/legal-hold; signed/reproducible desktop builds Win/Linux/macOS; Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP with a receipt that names the Octopus instance or container and the target machine and does not claim GHCR; ngrok docs distinguish Omarchy interim from PAYTON-DESKTOP target; opposing-model AGREE; Play+source receipts for FR-031 |
 | HV gate | Opposing-model AGREE; retain `docs/receipts/hv/*` JSONL **and** `docs/reviews/hv-pairs/*` canonical pair; commit immediately |
 
 **BDPv4 notes:** Full suite green; no skips
 
-**P11b mandatory release gate:** P11b cannot close until automated CI/CD has built, tested, and deployed the release through Development, Staging, and Production. Retain pipeline-run references, source commit, artifact/container digests, environment configuration versions, deployment results, and post-deployment verification results for each environment. Production promotion requires successful staging integrated acceptance and the section 7.3 backup-restore, compatibility, and pending-operation replay rehearsal. Failed deployment or verification blocks release completion. Desktop release evidence must cover signed and reproducible builds on Windows, Linux, and macOS. Play and public-source publication require actual receipts.
+**P11b mandatory release gate:** P11b cannot close until Octopus Deploy has built RideAudit containers and deployed them to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. GitHub Actions container registry is not the distribution path. Retain the Octopus release or dry-run receipt, source commit, image digests, the Octopus instance or container name, the PAYTON-DESKTOP target, and post-deploy verification. Failed Octopus deploy or verification blocks release completion. Omarchy loopback plus ngrok remains interim admission hosting until that Octopus path is live; an Omarchy compose cutover is not an Octopus green. Desktop release evidence must cover signed and reproducible builds on Windows, Linux, and macOS. Play and public-source publication require actual receipts. This revision does not invent a live Octopus green.
 
 
 ---
@@ -1373,6 +1423,20 @@ P0 must approve and document:
 7. Required hostile cases assigned to TEST-RIDE-013/014/015/017/019/022/028/032 and their AC closure: receipt-field mutation, proof/record substitution, pending proof, failed confirmation, retries after restart, stale/mismatched attestation, unavailable escrow, unauthorized driver/vehicle, independent viewer verification.
 
 P0 cannot close with these contract decisions unresolved in the plan/docs.
+
+### 4.6 Continuous delivery (Octopus to PAYTON-DESKTOP)
+
+Operator direction (exact): Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
+
+| Rule | Binding record |
+| --- | --- |
+| Octopus builds admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to PAYTON-DESKTOP | FR-RIDE-063, TR-RIDE-DEPLOY-001, UC-RIDE-032, TEST-RIDE-038 |
+| License exhaustion on the default Octopus container means provision a new Octopus container on PAYTON-DESKTOP and continue from that instance | FR-RIDE-063 AC-RIDE-063-002, TR-RIDE-DEPLOY-002 |
+| GHCR and GitHub Actions container registry are not the distribution path. Receipts must never claim a GHCR green | FR-RIDE-063 AC-RIDE-063-003 |
+| Omarchy loopback plus ngrok is interim public admission hosting. Target CD host for Octopus-built images is PAYTON-DESKTOP | FR-RIDE-064 |
+| Existing Omarchy Octopus/SQL/Caddy containers and lab loopback cutover receipts are not a RideAudit Octopus CD green | FR-RIDE-063 notes |
+
+See `docs/architecture/stack.md` and `docs/receipts/distribution/cd-receipts.md`.
 
 ---
 
@@ -1444,6 +1508,7 @@ A failed, unavailable, unauthenticated, or partial product HV blocks phase accep
 | R8 | MCP_UNTRUSTED | File-based BDPv4 until healthy |
 | R9 | Broad TEST IDs spanning phases | Explicit AC partitions (§3) |
 | R10 | Escrow key loss | FR-RIDE-216; HSM/KMS |
+| R11 | GHCR or GitHub Actions registry assumed as CD | Superseded by FR-RIDE-063. Octopus to PAYTON-DESKTOP. License exhaustion creates a new Octopus container on PAYTON-DESKTOP. |
 
 ### 7.2 Open questions (decision deadlines)
 
@@ -1583,12 +1648,14 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-053 | P6 |
 | FR-RIDE-054 | P6 |
 | FR-RIDE-055 | P6 |
+| FR-RIDE-063 | P11b |
+| FR-RIDE-064 | P11b |
 
 Unassigned FR count: 0 — (none)
 
 ---
 
-**End of PLAN-RIDEAUDIT-001 revision r3.3 (portfolio index + child split)**
+**End of PLAN-RIDEAUDIT-001 revision r3.4 (portfolio index + Octopus CD direction)**
 
 Child plans: PLAN-RIDEAUDIT-001-BRACKET · PLAN-RIDEAUDIT-001-ANDROID · PLAN-RIDEAUDIT-001-SERVER
 
