@@ -37,12 +37,17 @@ public partial class CaptureShellView : UserControl
         PassengerButton.Click += OnPassenger;
         ContinueButton.Click += OnContinue;
         DiscoverButton.Click += OnDiscover;
+        DiscoverBackButton.Click += OnDiscoverBack;
+        CancelDiscoverButton.Click += OnDiscoverBack;
         PeerButton.Click += OnPeer;
+        PairBackButton.Click += OnPairBack;
+        RejectPairButton.Click += OnPairBack;
         ConfirmPairButton.Click += OnConfirmPair;
         StartButton.Click += OnStart;
         StopButton.Click += OnStop;
         SubmitButton.Click += OnSubmit;
         ReturnButton.Click += OnReturn;
+        PaintRole();
         Show("WF-01");
         if (productionEntry && !_bus.RadioAvailable)
         {
@@ -98,6 +103,7 @@ public partial class CaptureShellView : UserControl
         LocalRoleLine.Text = "Role: DRIVER (coordinator)";
         PeerRoleLine.Text = "Role: PASSENGER (compositor)";
         AdvertiseStatus.Text = "Advertising as: RideAudit-Driver";
+        PaintRole();
         if (ScreenId.Text != "WF-01")
         {
             Show("WF-01");
@@ -113,6 +119,7 @@ public partial class CaptureShellView : UserControl
         PeerRoleLine.Text = "Role: DRIVER (coordinator)";
         AdvertiseStatus.Text = "Scanning as: RideAudit-Passenger";
         SpiderGraph.Text = "Spider graph armed for telematics overlay";
+        PaintRole();
         if (ScreenId.Text != "WF-01")
         {
             Show("WF-01");
@@ -120,6 +127,10 @@ public partial class CaptureShellView : UserControl
     }
 
     private void OnContinue(object? sender, RoutedEventArgs e) => OnDiscover(sender, e);
+
+    private void OnDiscoverBack(object? sender, RoutedEventArgs e) => Show("WF-01");
+
+    private void OnPairBack(object? sender, RoutedEventArgs e) => Show("WF-02");
 
     private void OnDiscover(object? sender, RoutedEventArgs e)
     {
@@ -240,6 +251,18 @@ public partial class CaptureShellView : UserControl
     }
 
     private void OnReturn(object? sender, RoutedEventArgs e) => Show("WF-01");
+
+    private void PaintRole()
+    {
+        var label = _role switch
+        {
+            "driver" => "Driver",
+            "passenger" => "Passenger",
+            _ => "Role",
+        };
+        DiscoverRole.Text = label;
+        PairRole.Text = label;
+    }
 
     private void Show(string screenId)
     {
