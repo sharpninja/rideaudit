@@ -221,7 +221,7 @@ public class TestRide028ViewerTests
         Assert.DoesNotContain("SIGNING_THUMBPRINT=FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4", receipt);
         Assert.DoesNotContain("SIGNING_THUMBPRINT=50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919", receipt);
         var plan = File.ReadAllText(Path.Combine(Repo.Root(), "docs", "plans", "PLAN-RIDEAUDIT-001-implementation.md"));
-        Assert.Contains("- [ ] Lab self-signed Authenticode", plan);
+        Assert.Contains("- [x] Lab self-signed Authenticode", plan);
         Assert.Contains("- [ ] Commercial OV/IV Authenticode + cloud HSM", plan);
         Assert.Contains("- [ ] Section 9 Class C boxes", plan);
         Assert.Contains("- [ ] P0 documentation repair complete", plan);
