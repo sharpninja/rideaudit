@@ -22,6 +22,27 @@ public sealed class VisualCatalogTests
         Assert.Contains(storyboards, asset => asset.Id == "SB-R-06");
         Assert.All(wireframes, asset => Assert.NotEmpty(asset.FrameSvgPaths));
         Assert.All(storyboards, asset => Assert.NotEmpty(asset.FrameSvgPaths));
+
+        var pairing = storyboards.Single(asset => asset.Id == "SB-01");
+        var pairingSteps = VisualAssetCatalog.ParseSteps(pairing.MarkdownPath);
+        Assert.Equal(new[] { "WF-01", "WF-02", "WF-08", "WF-03", "WF-08", "WF-04" }, pairingSteps.Select(step => step.ScreenId).ToArray());
+        Assert.Equal(new[] { 1, 2, 2, 3, 3, 4 }, pairingSteps.Select(step => step.Beat).ToArray());
+        Assert.Equal(2, pairingSteps.Count(step => step.AlternateBranch));
+        Assert.True(pairingSteps.Count > pairing.FrameSvgPaths.Count);
+        Assert.Equal(new[] { "DriverButton" }, StoryboardSequence.Clicks("WF-01", pairingSteps[0], "driver"));
+        Assert.Null(StoryboardSequence.Clicks("WF-02", pairingSteps[2], "driver"));
+        Assert.Equal(new[] { "PeerButton" }, StoryboardSequence.Clicks("WF-02", pairingSteps[3], "driver"));
+
+        var driver = storyboards.Single(asset => asset.Id == "SB-02");
+        var driverSteps = VisualAssetCatalog.ParseSteps(driver.MarkdownPath);
+        Assert.Equal(4, driverSteps.Count(step => step.ScreenId == "WF-04"));
+        Assert.Equal(new[] { "StartButton" }, StoryboardSequence.Clicks("WF-04", driverSteps[3], "driver"));
+
+        var review = storyboards.Single(asset => asset.Id == "SB-R-01");
+        var reviewSteps = VisualAssetCatalog.ParseSteps(review.MarkdownPath);
+        Assert.NotEmpty(reviewSteps);
+        Assert.All(reviewSteps, step => Assert.StartsWith("WF-R-", step.ScreenId, StringComparison.Ordinal));
+        Assert.Null(StoryboardSequence.Clicks("WF-01", reviewSteps[0], "driver"));
     }
 }
 

@@ -16,9 +16,11 @@ The runner calls `adb devices -l` and prefers USB serial `RFCW7078MVZ` (SM-F936U
 
 Wireframes: one theory case per `docs/ux/**/wireframes/WF-*.md` and `WF-R-*.md`. The case opens the capture client, navigates when the capture shell has that screen, captures `screencap`, and compares it to the SVG linked from the markdown.
 
-Storyboards: one theory case per `docs/ux/**/storyboards/SB-*.md` and `SB-R-*.md`. The case restarts the capture app once, connects to the debug RemoteControl bridge on `127.0.0.1:47100`, and clicks named controls in order. Each frame is a screenshot and a compare. Review frames (`WF-R-*`) stay on the capture client and fail closed. Hidden pages are not treated as overlapping controls.
+Storyboards: one theory case per `docs/ux/**/storyboards/SB-*.md` and `SB-R-*.md`. Each case restarts the capture app once and attaches `SharpNinja.Avalonia.RemoteControl` on `127.0.0.1:47100`. It then drives the beats in markdown order on that same session. Consecutive duplicate SVG links inside one beat collapse to one step. A later repeat of the same screen stays a separate step. After each driven step the harness screenshots and compares that frame. A single static screenshot is not storyboard coverage. The 2026-09-29T19:00:09Z run jumped by screen id, dropped repeated frames, and compared review baselines to the capture shell. That run is not storyboard coverage.
 
-Usability uses the RemoteControl tree: a visible button overlap, or a visible text block shorter than 10px with more than 12 characters, fails the frame. The codex-subscription call still runs for `WF-01` and for the first capture frame of each storyboard. A timeout is a fail-closed result.
+If RemoteControl does not attach, the storyboard fails closed and no frame is compared. An alternate fail-closed branch, a review screen (`WF-R-*`), or any other step that cannot be reached without leaving the session fails that step and is not screenshot-compared. The harness does not press Return to jump back. Hidden pages are not treated as overlapping controls.
+
+Usability uses the RemoteControl tree on driven frames: a visible button overlap, or a visible text block shorter than 10px with more than 12 characters, fails the frame. The codex-subscription call runs for wireframe `WF-01` and for a driven frame that is already inside the pixel ratio. It does not run on an undriven storyboard step. A timeout is a fail-closed result.
 
 ## Threshold
 
@@ -29,8 +31,8 @@ Usability uses the RemoteControl tree: a visible button overlap, or a visible te
 - The frame fails when the differing-pixel ratio is above `VisualThreshold.MaxDifferingPixelRatio` (0.08).
 - The diff PNG paints mismatched pixels red. Paths are under `artifacts/aiunit-device/<id>/`.
 
-The codex-subscription perceptual call runs for wireframe `WF-01` and for any frame that is already inside the pixel ratio. A usability defect from that call fails the test even if the pixel ratio passed. A missing client fails closed. It is not a skip.
+The codex-subscription perceptual call runs for wireframe `WF-01` and for a driven frame that is already inside the pixel ratio. A usability defect from that call fails the test even if the pixel ratio passed. A missing client fails closed. It is not a skip.
 
-Review wireframes and storyboards (`WF-R-*`, `SB-R-*`) are desktop review screens. The Android capture client does not open them. Those cases still capture the device and fail closed when `ScreenId` does not match.
+Review wireframes (`WF-R-*`) are desktop review screens. The Android capture client does not open them. A wireframe case still captures the device and fails closed when `ScreenId` does not match. Review storyboards (`SB-R-*`, and `SB-06`) fail closed because those steps cannot be driven. They are not compared as capture-shell screenshots.
 
 This suite does not claim a visual match and it is not a Play publication.
