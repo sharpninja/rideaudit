@@ -15,6 +15,8 @@ public class TestRide027PlaybackTests
     [Fact]
     [Trait("FR", "FR-RIDE-047")]
     [Trait("AC", "AC-RIDE-047-001")]
+    [Trait("AC", "AC-TEST-027-001")]
+    [Trait("AC", "AC-UC-018-002")]
     public void Playback_requires_hash_receipt_links_clock_overlay_and_attestation()
     {
         var fixture = Fixtures.CaptureSimulated();
@@ -33,6 +35,7 @@ public class TestRide027PlaybackTests
     [Fact]
     [Trait("FR", "FR-RIDE-047")]
     [Trait("AC", "AC-RIDE-047-002")]
+    [Trait("AC", "AC-TEST-027-002")]
     public void Inconsistent_components_are_reported_and_working_copy_expires()
     {
         var fixture = Fixtures.CaptureSimulated();
@@ -166,7 +169,38 @@ public class TestRide028ViewerTests
 
     [Fact]
     [Trait("FR", "FR-RIDE-049")]
+    [Trait("AC", "AC-RIDE-VIEW-001-001")]
+    public void Unsigned_framework_dependent_publish_receipt_names_three_rids()
+    {
+        var receipt = File.ReadAllText(Path.Combine(
+            Repo.Root(),
+            "docs",
+            "receipts",
+            "distribution",
+            "20260929T033731Z-unsigned-desktop-rid-publish.md"));
+        Assert.Contains("RID=win-x64 EXIT=0", receipt);
+        Assert.Contains("RID=linux-x64 EXIT=0", receipt);
+        Assert.Contains("RID=osx-arm64 EXIT=0", receipt);
+        Assert.Contains("--self-contained false", receipt);
+        Assert.Contains("AUTHENTICODE_win-x64 Status=NotSigned", receipt);
+        Assert.Contains("SignTool Error: No signature found", receipt);
+        Assert.Contains("SIGNTOOL_EXIT=1", receipt);
+        Assert.Contains("CODESIGN_ON_PATH=False", receipt);
+        Assert.Contains("P11b is not closed", receipt);
+        Assert.Contains("eaced988fe0c6ca08aef1951523e1d5b7ad44d3513d1a1f16a2c4ec68dca3b7a", receipt);
+        Assert.Contains("0e15f4c1ffcf0623c4687ab41fe9fcfe420f8f69e2862631aa41304c3eac1c87", receipt);
+        Assert.Contains("a613f01406cb6760b131312a42aad2d43915ed2445a11be3159c211d344807c6", receipt);
+        Assert.DoesNotContain("ReproducibleSignedClaim: true", receipt);
+    }
+
+    [Fact]
+    [Trait("FR", "FR-RIDE-049")]
     [Trait("AC", "AC-RIDE-049-002")]
+    [Trait("AC", "AC-RIDE-VIEW-001-002")]
+    [Trait("AC", "AC-UC-019-002")]
+    [Trait("AC", "AC-UC-019-001")]
+    [Trait("AC", "AC-UC-026-001")]
+    [Trait("AC", "AC-TEST-028-002")]
     public void Decrypt_uses_escrow_release()
     {
         var fixture = Fixtures.CaptureSimulated();
@@ -213,6 +247,7 @@ public class TestRide028ViewerTests
     [Fact]
     [Trait("FR", "FR-RIDE-051")]
     [Trait("AC", "AC-RIDE-051-001")]
+    [Trait("AC", "AC-RIDE-VIEW-003-001")]
     public void Timeline_shows_available_tracks_and_labels_gaps()
     {
         var fixture = Fixtures.CaptureSimulated();
@@ -232,6 +267,7 @@ public class TestRide028ViewerTests
     [Fact]
     [Trait("FR", "FR-RIDE-051")]
     [Trait("AC", "AC-RIDE-051-002")]
+    [Trait("AC", "AC-RIDE-VIEW-003-002")]
     public void Timeline_does_not_require_the_collection_device()
     {
         var fixture = Fixtures.CaptureSimulated();
@@ -242,6 +278,8 @@ public class TestRide028ViewerTests
     [Fact]
     [Trait("FR", "FR-RIDE-052")]
     [Trait("AC", "AC-RIDE-052-001")]
+    [Trait("AC", "AC-RIDE-VIEW-004-001")]
+    [Trait("AC", "AC-TEST-028-001")]
     public void Every_review_creates_a_session_and_report()
     {
         var fixture = Fixtures.CaptureHappy();
@@ -268,6 +306,7 @@ public class TestRide028ViewerTests
     [Fact]
     [Trait("FR", "FR-RIDE-052")]
     [Trait("AC", "AC-RIDE-052-002")]
+    [Trait("AC", "AC-RIDE-VIEW-004-002")]
     public void Viewer_logic_is_versioned_gpl()
     {
         Assert.Equal(LicenseMetadata.GplId, ViewerLogic.License);

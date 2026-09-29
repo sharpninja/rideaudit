@@ -14,6 +14,9 @@ public class TestRide025SyncTests
     [Fact]
     [Trait("FR", "FR-RIDE-041")]
     [Trait("AC", "AC-RIDE-041-001")]
+    [Trait("AC", "AC-TEST-025-001")]
+    [Trait("AC", "AC-TEST-034-001")]
+    [Trait("AC", "AC-UC-017-001")]
     public void Two_phones_collect_one_session()
     {
         var fixture = Fixtures.CaptureHappy();
@@ -130,6 +133,9 @@ public class TestRide034BluetoothTests
     [Fact]
     [Trait("FR", "FR-RIDE-053")]
     [Trait("AC", "AC-RIDE-053-002")]
+    [Trait("AC", "AC-TEST-025-002")]
+    [Trait("AC", "AC-TEST-034-002")]
+    [Trait("AC", "AC-UC-017-002")]
     public void Pairing_fails_closed_without_discovery_or_confirmation()
     {
         var service = new BluetoothPairingService(new InMemoryDiscoveryBus());

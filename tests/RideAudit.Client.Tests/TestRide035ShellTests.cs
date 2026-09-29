@@ -59,6 +59,7 @@ public class TestRide035ShellTests
     [Fact]
     [Trait("FR", "FR-RIDE-057")]
     [Trait("AC", "AC-RIDE-057-001")]
+    [Trait("AC", "AC-TEST-035-001")]
     public void Desktop_host_builds_with_avalonia_desktop()
     {
         var program = File.ReadAllText(Path.Combine(Repo.Root(), "src/RideAudit.Client.Desktop/Program.cs"));
@@ -91,11 +92,13 @@ public class TestRide035ShellTests
     [Fact]
     [Trait("FR", "FR-RIDE-058")]
     [Trait("AC", "AC-RIDE-058-002")]
+    [Trait("AC", "AC-UC-027-001")]
     public void Both_hosts_reference_shared_ui()
     {
         var root = Repo.Root();
         Assert.Contains("RideAudit.Shared.Ui.csproj", File.ReadAllText(Path.Combine(root, "src/RideAudit.Client.Android/RideAudit.Client.Android.csproj")));
         Assert.Contains("RideAudit.Shared.Ui.csproj", File.ReadAllText(Path.Combine(root, "src/RideAudit.Client.Desktop/RideAudit.Client.Desktop.csproj")));
+        Assert.Contains("GPL-2.0-or-later", UiLicense.Notice);
     }
 
     [Fact]
@@ -170,6 +173,7 @@ public class TestRide035ShellTests
     }
 
     [AvaloniaFact]
+    [Trait("AC", "AC-TEST-035-002")]
     public void Review_shell_fail_closed_blocks_decrypt_and_playback()
     {
         var fixture = Fixtures.CaptureHappy();

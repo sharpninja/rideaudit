@@ -20,6 +20,11 @@ public class TestRide001Through006And011And030
     [Trait("TEST", "TEST-RIDE-001")]
     [Trait("FR", "FR-RIDE-001")]
         [Trait("AC", "AC-RIDE-001-001")]
+        [Trait("AC", "AC-RIDE-001-002")]
+        [Trait("AC", "AC-RIDE-001-003")]
+        [Trait("AC", "AC-UC-001-001")]
+        [Trait("AC", "AC-UC-001-002")]
+        [Trait("AC", "AC-TEST-001-001")]
         [Trait("AC", "AC-RIDE-INGEST-001-001")]
         [Trait("AC", "AC-RIDE-INGEST-001-002")]
         [Trait("AC", "AC-RIDE-INGEST-006-001")]
@@ -44,6 +49,13 @@ public class TestRide001Through006And011And030
     [Trait("FR", "FR-RIDE-002")]
     [Trait("FR", "FR-RIDE-206")]
         [Trait("AC", "AC-RIDE-206-001")]
+        [Trait("AC", "AC-RIDE-002-001")]
+        [Trait("AC", "AC-RIDE-002-003")]
+        [Trait("AC", "AC-RIDE-206-002")]
+        [Trait("AC", "AC-UC-002-001")]
+        [Trait("AC", "AC-UC-002-002")]
+        [Trait("AC", "AC-TEST-002-001")]
+        [Trait("AC", "AC-TEST-002-002")]
         [Trait("AC", "AC-RIDE-INGEST-002-001")]
         [Trait("AC", "AC-RIDE-INGEST-002-002")]
     public void Smooth_cruiser_scores_come_only_from_export_fields_or_manual_entry()
@@ -54,6 +66,10 @@ public class TestRide001Through006And011And030
         Assert.Equal("imported", scored.Status);
         var score = Assert.Single(world.App.Imports.Scores);
         Assert.Equal(80, score.Overall);
+        Assert.Equal(81, score.GentleBraking);
+        Assert.Equal(82, score.SmoothSteering);
+        Assert.Equal(83, score.PhoneMount);
+        Assert.Equal(84, score.SpeedVsArea);
         Assert.Equal(ProvenanceTags.PrivacyExport, score.Provenance);
 
         var manual = world.App.Ingest.RecordManualScore(Consent(driver.DriverId), 1_700_000_000_000, 70, 71, 72, 73, 74);
@@ -70,6 +86,9 @@ public class TestRide001Through006And011And030
     [Fact]
     [Trait("TEST", "TEST-RIDE-003")]
     [Trait("FR", "FR-RIDE-003")]
+    [Trait("AC", "AC-RIDE-003-001")]
+    [Trait("AC", "AC-RIDE-INGEST-003-001")]
+    [Trait("AC", "AC-TEST-003-001")]
     public void Trip_rows_keep_ids_and_provenance()
     {
         var world = ServerWorld.Create();
@@ -87,6 +106,10 @@ public class TestRide001Through006And011And030
     [Trait("FR", "FR-RIDE-011")]
     [Trait("FR", "FR-RIDE-012")]
     [Trait("AC", "AC-RIDE-011-001")]
+    [Trait("AC", "AC-RIDE-011-002")]
+    [Trait("AC", "AC-UC-020-001")]
+    [Trait("AC", "AC-TEST-004-001")]
+    [Trait("AC", "AC-TEST-004-002")]
     public void Concierge_stays_behind_the_partnership_gate_and_does_not_call_a_private_api()
     {
         var root = ServerWorld.RepoRoot();
@@ -115,6 +138,15 @@ public class TestRide001Through006And011And030
     [Fact]
     [Trait("TEST", "TEST-RIDE-005")]
     [Trait("FR", "FR-RIDE-005")]
+    [Trait("AC", "AC-RIDE-005-001")]
+    [Trait("AC", "AC-RIDE-005-002")]
+    [Trait("AC", "AC-RIDE-005-003")]
+    [Trait("AC", "AC-RIDE-INGEST-005-001")]
+    [Trait("AC", "AC-RIDE-INGEST-005-002")]
+    [Trait("AC", "AC-UC-004-001")]
+    [Trait("AC", "AC-UC-004-002")]
+    [Trait("AC", "AC-TEST-005-001")]
+    [Trait("AC", "AC-TEST-005-002")]
     public void Third_party_samples_keep_their_own_provenance()
     {
         var world = ServerWorld.Create();
@@ -124,12 +156,18 @@ public class TestRide001Through006And011And030
         Assert.Equal(ProvenanceTags.ThirdParty, result.Provenance);
         var sample = Assert.Single(world.App.Imports.Locations);
         Assert.Equal("third-party-sample", sample.MetricKind);
+        Assert.NotEqual(ProvenanceTags.PrivacyExport, sample.Provenance);
+        Assert.NotEqual(ProvenanceTags.Concierge, sample.Provenance);
         Assert.Empty(world.App.Imports.Scores);
     }
 
     [Fact]
     [Trait("TEST", "TEST-RIDE-006")]
     [Trait("FR", "FR-RIDE-006")]
+    [Trait("AC", "AC-RIDE-006-001")]
+    [Trait("AC", "AC-RIDE-006-002")]
+    [Trait("AC", "AC-TEST-006-001")]
+    [Trait("AC", "AC-TEST-006-002")]
     public void Import_without_consent_is_rejected_and_a_granted_consent_is_ledgered()
     {
         var world = ServerWorld.Create();
@@ -150,6 +188,10 @@ public class TestRide001Through006And011And030
     [Fact]
     [Trait("TEST", "TEST-RIDE-011")]
     [Trait("FR", "FR-RIDE-013")]
+    [Trait("AC", "AC-RIDE-013-001")]
+    [Trait("AC", "AC-RIDE-013-002")]
+    [Trait("AC", "AC-TEST-011-001")]
+    [Trait("AC", "AC-TEST-011-002")]
     public void Raw_import_hash_and_version_are_stable_across_a_retry()
     {
         var world = ServerWorld.Create();
@@ -174,6 +216,8 @@ public class TestRide001Through006And011And030
     [Trait("TEST", "TEST-RIDE-030")]
     [Trait("FR", "FR-RIDE-204")]
     [Trait("FR", "FR-RIDE-206")]
+    [Trait("AC", "AC-TEST-030-001")]
+    [Trait("AC", "AC-TEST-030-002")]
     public void Ride_status_outage_does_not_corrupt_rides_or_invent_a_smooth_cruiser_score()
     {
         var world = ServerWorld.Create();
@@ -258,6 +302,15 @@ public class TestRide007Through009And016And023
     [Trait("TEST", "TEST-RIDE-007")]
     [Trait("FR", "FR-RIDE-007")]
     [Trait("FR", "FR-RIDE-209")]
+    [Trait("AC", "AC-RIDE-007-001")]
+    [Trait("AC", "AC-RIDE-007-002")]
+    [Trait("AC", "AC-RIDE-209-001")]
+    [Trait("AC", "AC-RIDE-ANAL-002-001")]
+    [Trait("AC", "AC-RIDE-ANAL-002-002")]
+    [Trait("AC", "AC-UC-005-001")]
+    [Trait("AC", "AC-UC-005-002")]
+    [Trait("AC", "AC-TEST-007-001")]
+    [Trait("AC", "AC-TEST-007-002")]
     public void Coverage_matrix_separates_collected_available_and_missing_signals()
     {
         var world = ServerWorld.Create();
@@ -273,6 +326,7 @@ public class TestRide007Through009And016And023
         Assert.False(score.AvailableToAuditor);
         Assert.True(score.Missing);
         Assert.Contains("not a Smooth Cruiser", score.GapNotice, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("2026-09-27", score.GapNotice, StringComparison.Ordinal);
         var imu = Assert.Single(matrix.Cells, cell => cell.Signal == "imu");
         Assert.True(imu.Missing);
         Assert.Equal(AnalSlice.State, "implemented");
@@ -281,6 +335,15 @@ public class TestRide007Through009And016And023
     [Fact]
     [Trait("TEST", "TEST-RIDE-008")]
     [Trait("FR", "FR-RIDE-008")]
+    [Trait("AC", "AC-RIDE-008-001")]
+    [Trait("AC", "AC-RIDE-008-002")]
+    [Trait("AC", "AC-RIDE-008-003")]
+    [Trait("AC", "AC-RIDE-ANAL-003-001")]
+    [Trait("AC", "AC-RIDE-ANAL-003-002")]
+    [Trait("AC", "AC-UC-006-001")]
+    [Trait("AC", "AC-UC-006-002")]
+    [Trait("AC", "AC-TEST-008-001")]
+    [Trait("AC", "AC-TEST-008-002")]
     public void Online_hours_flags_only_when_hours_data_exists()
     {
         var world = ServerWorld.Create();
@@ -300,11 +363,21 @@ public class TestRide007Through009And016And023
         var regional = world.App.Analysis.OnlineHours(driver.DriverId, Roles.Subject, driver.DriverId, "US-NY", 8, 6);
         Assert.Contains(regional.Violations, line => line.Contains("exceeds 8h", StringComparison.Ordinal));
         Assert.Contains("regional override", regional.Policy, StringComparison.Ordinal);
+        var analysis = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "src/RideAudit.Anal/AnalysisService.cs"));
+        Assert.DoesNotContain("FMCSA", analysis, StringComparison.Ordinal);
     }
 
     [Fact]
     [Trait("TEST", "TEST-RIDE-009")]
     [Trait("FR", "FR-RIDE-009")]
+    [Trait("AC", "AC-RIDE-009-001")]
+    [Trait("AC", "AC-RIDE-009-002")]
+    [Trait("AC", "AC-RIDE-ANAL-004-001")]
+    [Trait("AC", "AC-RIDE-ANAL-004-002")]
+    [Trait("AC", "AC-UC-007-001")]
+    [Trait("AC", "AC-UC-007-002")]
+    [Trait("AC", "AC-TEST-009-001")]
+    [Trait("AC", "AC-TEST-009-002")]
     public void Incident_window_returns_only_rows_inside_the_range()
     {
         var world = ServerWorld.Create();
@@ -327,6 +400,13 @@ public class TestRide007Through009And016And023
     [Trait("TEST", "TEST-RIDE-016")]
     [Trait("FR", "FR-RIDE-020")]
     [Trait("FR", "FR-RIDE-021")]
+    [Trait("AC", "AC-RIDE-021-001")]
+    [Trait("AC", "AC-RIDE-021-002")]
+    [Trait("AC", "AC-RIDE-017-002")]
+    [Trait("AC", "AC-RIDE-CHAIN-002-002")]
+    [Trait("AC", "AC-UC-010-001")]
+    [Trait("AC", "AC-UC-010-002")]
+    [Trait("AC", "AC-TEST-016-001")]
     public void Verification_report_checks_the_hash_and_does_not_decrypt()
     {
         var world = ServerWorld.Create();
@@ -348,6 +428,17 @@ public class TestRide007Through009And016And023
     [Trait("TEST", "TEST-RIDE-023")]
     [Trait("FR", "FR-RIDE-037")]
     [Trait("FR", "FR-RIDE-038")]
+    [Trait("AC", "AC-RIDE-037-001")]
+    [Trait("AC", "AC-RIDE-037-002")]
+    [Trait("AC", "AC-RIDE-038-001")]
+    [Trait("AC", "AC-RIDE-038-002")]
+    [Trait("AC", "AC-RIDE-SERVER-006-002")]
+    [Trait("AC", "AC-RIDE-SERVER-007-001")]
+    [Trait("AC", "AC-RIDE-SERVER-007-002")]
+    [Trait("AC", "AC-UC-016-001")]
+    [Trait("AC", "AC-UC-016-002")]
+    [Trait("AC", "AC-TEST-023-001")]
+    [Trait("AC", "AC-TEST-023-002")]
     public void Multi_driver_bundle_keeps_each_record_independent()
     {
         var world = ServerWorld.Create();
@@ -364,7 +455,12 @@ public class TestRide007Through009And016And023
         var bundle = world.App.Counsel.Build(Roles.Counsel, "case-9", new[] { a.SubmissionId, b.SubmissionId });
         Assert.False(bundle.AggregationReplacesRecords);
         Assert.Equal(2, bundle.Records.Count);
-        Assert.All(bundle.Records, row => Assert.True(row.IndependentCustody));
+        Assert.All(bundle.Records, row =>
+        {
+            Assert.True(row.IndependentCustody);
+            Assert.True(row.HashMatches);
+            Assert.False(string.IsNullOrWhiteSpace(row.AnchorStatus));
+        });
         Assert.Equal(first.Driver.DriverId, bundle.Records[0].DriverId);
         Assert.Equal(second.Driver.DriverId, bundle.Records[1].DriverId);
         Assert.NotEqual(bundle.Records[0].ContentHashHex, bundle.Records[1].ContentHashHex);
@@ -381,6 +477,13 @@ public class TestRide010012029031032
     [Trait("TEST", "TEST-RIDE-010")]
     [Trait("FR", "FR-RIDE-010")]
     [Trait("FR", "FR-RIDE-210")]
+    [Trait("AC", "AC-RIDE-010-002")]
+    [Trait("AC", "AC-RIDE-210-001")]
+    [Trait("AC", "AC-RIDE-PRIV-003-002")]
+    [Trait("AC", "AC-UC-008-001")]
+    [Trait("AC", "AC-UC-008-002")]
+    [Trait("AC", "AC-TEST-010-001")]
+    [Trait("AC", "AC-TEST-010-002")]
     public void Dsar_deletes_personal_imports_unless_a_legal_hold_is_active()
     {
         var world = ServerWorld.Create();
@@ -410,6 +513,17 @@ public class TestRide010012029031032
     [Trait("TEST", "TEST-RIDE-012")]
     [Trait("FR", "FR-RIDE-014")]
     [Trait("FR", "FR-RIDE-202")]
+    [Trait("AC", "AC-RIDE-014-001")]
+    [Trait("AC", "AC-RIDE-014-002")]
+    [Trait("AC", "AC-RIDE-202-001")]
+    [Trait("AC", "AC-RIDE-202-002")]
+    [Trait("AC", "AC-RIDE-PRIV-002-001")]
+    [Trait("AC", "AC-RIDE-PRIV-002-002")]
+    [Trait("AC", "AC-RIDE-SEC-002-001")]
+    [Trait("AC", "AC-RIDE-SEC-002-002")]
+    [Trait("AC", "AC-UC-020-002")]
+    [Trait("AC", "AC-TEST-012-001")]
+    [Trait("AC", "AC-TEST-012-002")]
     public void Roles_mask_precise_location_and_block_cross_driver_reads()
     {
         var world = ServerWorld.Create();
@@ -426,11 +540,17 @@ public class TestRide010012029031032
         var precise = Assert.Single(world.App.Privacy.ViewLocations(other.DriverId, Roles.Auditor, driver.DriverId));
         Assert.True(precise.Precise);
         Assert.Contains("37.7749", precise.Latitude, StringComparison.Ordinal);
+        Assert.True(LocationAccessPolicy.MayViewPreciseLocation(Roles.Auditor));
+        Assert.False(LocationAccessPolicy.MayViewPreciseLocation(Roles.Subject));
+        Assert.True(world.App.Roles.Is(driver.DriverId, Roles.Subject));
     }
 
     [Fact]
     [Trait("TEST", "TEST-RIDE-029")]
     [Trait("FR", "FR-RIDE-203")]
+    [Trait("AC", "AC-RIDE-203-001")]
+    [Trait("AC", "AC-TEST-029-001")]
+    [Trait("AC", "AC-TEST-029-002")]
     public void Access_log_is_append_only()
     {
         var world = ServerWorld.Create();
@@ -451,6 +571,13 @@ public class TestRide010012029031032
     [Trait("TEST", "TEST-RIDE-031")]
     [Trait("FR", "FR-RIDE-205")]
     [Trait("FR", "FR-RIDE-207")]
+    [Trait("AC", "AC-RIDE-207-001")]
+    [Trait("AC", "AC-RIDE-010-001")]
+    [Trait("AC", "AC-RIDE-PRIV-003-001")]
+    [Trait("AC", "AC-RIDE-PERF-002-001")]
+    [Trait("AC", "AC-UC-021-001")]
+    [Trait("AC", "AC-TEST-031-001")]
+    [Trait("AC", "AC-TEST-031-002")]
     public void Multi_year_window_uses_the_index_and_the_audit_zip_omits_plaintext()
     {
         var world = ServerWorld.Create();
@@ -474,11 +601,26 @@ public class TestRide010012029031032
         Assert.DoesNotContain("RAWZIP-MARKER-9f3a", manifest, StringComparison.Ordinal);
         Assert.Contains("GPL-2.0-only", notice, StringComparison.Ordinal);
         Assert.Contains("does not contain sealed plaintext", notice, StringComparison.OrdinalIgnoreCase);
+        Assert.NotNull(zip.GetEntry("provenance.csv"));
+        Assert.NotNull(zip.GetEntry("provenance.json"));
+        var pdf = zip.GetEntry("summary.pdf") ?? throw new InvalidOperationException("summary.pdf missing");
+        using var pdfStream = pdf.Open();
+        using var pdfReader = new StreamReader(pdfStream);
+        var pdfText = pdfReader.ReadToEnd();
+        Assert.StartsWith("%PDF-", pdfText, StringComparison.Ordinal);
+        var csv = new StreamReader(zip.GetEntry("provenance.csv")!.Open()).ReadToEnd();
+        Assert.Contains("import_id,content_hash", csv, StringComparison.Ordinal);
+        Assert.Contains(imported.ContentHashHex, csv, StringComparison.Ordinal);
     }
 
     [Fact]
     [Trait("TEST", "TEST-RIDE-032")]
     [Trait("FR", "FR-RIDE-208")]
+    [Trait("AC", "AC-RIDE-208-001")]
+    [Trait("AC", "AC-RIDE-208-002")]
+    [Trait("AC", "AC-TEST-032-001")]
+    [Trait("AC", "AC-TEST-032-002")]
+    [Trait("AC", "AC-UC-021-002")]
     public void Retention_is_shorter_in_california_and_stops_for_a_legal_hold()
     {
         var world = ServerWorld.Create();
@@ -527,6 +669,7 @@ public class TestRide020And036ServerPortions
     [Trait("TEST", "TEST-RIDE-038")]
     [Trait("FR", "FR-RIDE-063")]
     [Trait("AC", "AC-RIDE-063-003")]
+    [Trait("AC", "AC-TEST-038-001")]
     [Trait("AC", "AC-TEST-038-002")]
     public void Octopus_desktop_pointer_is_a_receipt_not_a_live_probe_or_ghcr_row()
     {
@@ -543,12 +686,18 @@ public class TestRide020And036ServerPortions
     [Fact]
     [Trait("TEST", "TEST-RIDE-036")]
     [Trait("FR", "FR-RIDE-059")]
+    [Trait("AC", "AC-UC-028-001")]
+    [Trait("AC", "AC-TEST-036-001")]
+    [Trait("AC", "AC-TEST-036-002")]
     public void Counsel_container_sketch_targets_dotnet_10()
     {
         var docker = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "deploy/containers/counsel/Dockerfile"));
         Assert.Contains("mcr.microsoft.com/dotnet/aspnet:10.0", docker, StringComparison.Ordinal);
         Assert.Contains("mcr.microsoft.com/dotnet/sdk:10.0", docker, StringComparison.Ordinal);
         Assert.Contains("GPL-2.0-only", docker, StringComparison.Ordinal);
+        Assert.DoesNotContain("lyft.com", docker, StringComparison.OrdinalIgnoreCase);
+        var admission = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "src/RideAudit.Server.Admission/AdmissionCoordinator.cs"));
+        Assert.Contains("Public ingest accepts only sealed ciphertext.", admission, StringComparison.Ordinal);
     }
 
     [Fact]

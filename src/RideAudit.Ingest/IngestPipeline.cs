@@ -206,6 +206,9 @@ public sealed class IngestPipeline
 
     private static string Gap(ParsedExport parsed)
     {
+        var fieldNotice = parsed.FieldGaps.Count == 0
+            ? ""
+            : string.Join(" ", parsed.FieldGaps.Select(gap => gap.Detail));
         var available = new HashSet<string>(StringComparer.Ordinal);
         if (parsed.Trips.Count > 0)
             available.Add("trip_records");
@@ -217,11 +220,20 @@ public sealed class IngestPipeline
             || !parsed.DictionaryPresent
             || parsed.RejectedFalseLabels.Count > 0
             || parsed.Unverified.Count > 0;
-        if (!missing && parsed.Scores.Count > 0 && parsed.Unverified.Count == 0)
+        if (!missing && parsed.Scores.Count > 0 && parsed.Unverified.Count == 0 && fieldNotice.Length == 0)
             return "";
-        if (parsed.Scores.Count == 0 || parsed.RejectedFalseLabels.Count > 0 || parsed.Unverified.Count > 0 || !parsed.DictionaryPresent)
-            return ApiGapNotice.Text;
-        return "";
+        if (parsed.Scores.Count == 0 || parsed.RejectedFalseLabels.Count > 0 || parsed.Unverified.Count > 0 || !parsed.DictionaryPresent || fieldNotice.Length > 0)
+            return JoinGap(fieldNotice, ApiGapNotice.Text);
+        return JoinGap(fieldNotice, "");
+    }
+
+    private static string JoinGap(string fieldNotice, string rest)
+    {
+        if (fieldNotice.Length == 0)
+            return rest;
+        if (rest.Length == 0)
+            return fieldNotice;
+        return fieldNotice + " " + rest;
     }
 
     private sealed class PartnershipGate

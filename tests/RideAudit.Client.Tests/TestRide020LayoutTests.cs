@@ -76,7 +76,6 @@ public class TestRide020LayoutTests
 
     [Fact]
     [Trait("FR", "FR-RIDE-031")]
-    [Trait("AC", "AC-RIDE-031-002")]
     public void Distribution_scaffold_is_present_and_does_not_invent_a_play_receipt()
     {
         var manifest = PublicationClaimGuard.LoadEmbedded();
@@ -94,7 +93,6 @@ public class TestRide020LayoutTests
 
     [Fact]
     [Trait("FR", "FR-RIDE-031")]
-    [Trait("AC", "AC-RIDE-031-001")]
     public void Play_published_claim_without_receipt_is_rejected()
     {
         var manifest = PublicationClaimGuard.LoadEmbedded();

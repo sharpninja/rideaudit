@@ -30,9 +30,12 @@ public class TestRide017Escrow
     [Trait("TEST", "TEST-RIDE-017")]
     [Trait("FR", "FR-RIDE-022")]
     [Trait("FR", "FR-RIDE-023")]
-    [Trait("AC", "AC-RIDE-022-001")]
+        [Trait("AC", "AC-RIDE-022-001")]
     [Trait("AC", "AC-RIDE-023-001")]
         [Trait("AC", "AC-RIDE-023-003")]
+        [Trait("AC", "AC-RIDE-022-002")]
+        [Trait("AC", "AC-RIDE-214-001")]
+        [Trait("AC", "AC-RIDE-216-001")]
         [Trait("AC", "AC-RIDE-ESCROW-001-001")]
         [Trait("AC", "AC-RIDE-ESCROW-001-002")]
         [Trait("AC", "AC-RIDE-ESCROW-003-001")]
@@ -53,6 +56,9 @@ public class TestRide017Escrow
             Assert.True(dump.AsSpan().IndexOf(share) < 0);
         Assert.False(world.App.Hsm.ReleaseLogHasRemovalApi());
         Assert.DoesNotContain(world.App.Hsm.AuditLog, entry => entry.Detail.Contains("PRIVATE", StringComparison.Ordinal));
+        var described = world.App.Hsm.Describe(ready.Package.KeyId);
+        Assert.True(described.ThresholdM >= 2);
+        Assert.True(described.TotalN >= described.ThresholdM);
     }
 }
 
@@ -65,8 +71,19 @@ public class TestRide018CourtRelease
     [Fact]
     [Trait("TEST", "TEST-RIDE-018")]
     [Trait("FR", "FR-RIDE-024")]
-    [Trait("AC", "AC-RIDE-024-001")]
+        [Trait("AC", "AC-RIDE-024-001")]
         [Trait("AC", "AC-RIDE-024-003")]
+        [Trait("AC", "AC-RIDE-024-002")]
+        [Trait("AC", "AC-RIDE-216-002")]
+        [Trait("AC", "AC-RIDE-214-002")]
+        [Trait("AC", "AC-RIDE-ANAL-001-001")]
+        [Trait("AC", "AC-RIDE-ANAL-001-002")]
+        [Trait("AC", "AC-TEST-017-001")]
+        [Trait("AC", "AC-TEST-017-002")]
+        [Trait("AC", "AC-TEST-018-001")]
+        [Trait("AC", "AC-TEST-018-002")]
+        [Trait("AC", "AC-UC-011-001")]
+        [Trait("AC", "AC-UC-011-002")]
         [Trait("AC", "AC-RIDE-ESCROW-002-001")]
         [Trait("AC", "AC-RIDE-ESCROW-002-002")]
         [Trait("AC", "AC-RIDE-ESCROW-003-002")]
@@ -94,6 +111,9 @@ public class TestRide018CourtRelease
         Assert.Equal(receipt, ready.Package.ReceiptCoreBytes);
         Assert.True(world.App.Hsm.IsEscrowed(other.Package.KeyId, enrolled.Driver.TenantId));
         Assert.Contains(world.App.Hsm.ReleaseLog, entry => entry.Action == "open-working-copy" && entry.KeyId == ready.Package.KeyId);
+        var custody = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "src/RideAudit.Escrow/HsmKeyCustody.cs"));
+        Assert.Contains("In-process HSM/KMS boundary", custody, StringComparison.Ordinal);
+        Assert.Contains("production must map them to separate HSMs", custody, StringComparison.Ordinal);
 
         world.Clock.Advance(TimeSpan.FromMinutes(16));
         Assert.Throws<RideAuditException>(() => copy.ReadPlaintext());
@@ -105,6 +125,12 @@ public class TestRide018CourtRelease
     [Trait("FR", "FR-RIDE-028")]
     [Trait("AC", "AC-RIDE-020-001")]
     [Trait("AC", "AC-RIDE-028-001")]
+    [Trait("AC", "AC-RIDE-028-002")]
+    [Trait("AC", "AC-RIDE-020-002")]
+    [Trait("AC", "AC-RIDE-020-003")]
+    [Trait("AC", "AC-RIDE-021-003")]
+    [Trait("AC", "AC-RIDE-CHAIN-004-002")]
+    [Trait("AC", "AC-TEST-016-002")]
     public void Court_path_doc_and_verifier_report_hash_mismatches()
     {
         var doc = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "docs/architecture/court-review-decryption-path.md"));

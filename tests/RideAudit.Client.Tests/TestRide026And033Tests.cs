@@ -16,6 +16,8 @@ public class TestRide026CompositeSealTests
     [Fact]
     [Trait("FR", "FR-RIDE-045")]
     [Trait("AC", "AC-RIDE-045-001")]
+    [Trait("AC", "AC-TEST-026-001")]
+    [Trait("AC", "AC-UC-018-001")]
     public void Composite_is_a_sealed_record()
     {
         var record = Fixtures.CaptureHappy().Capture.SealedComposite;
@@ -175,6 +177,8 @@ public class TestRide033QuotaTests
     [Fact]
     [Trait("FR", "FR-RIDE-220")]
     [Trait("AC", "AC-RIDE-220-001")]
+    [Trait("AC", "AC-RIDE-PERF-003-001")]
+    [Trait("AC", "AC-TEST-033-001")]
     public void Performance_metrics_are_populated()
     {
         var metrics = Fixtures.CaptureHappy().Capture.Performance.Metrics;
@@ -188,6 +192,9 @@ public class TestRide033QuotaTests
     [Fact]
     [Trait("FR", "FR-RIDE-220")]
     [Trait("AC", "AC-RIDE-220-002")]
+    [Trait("AC", "AC-RIDE-PERF-003-002")]
+    [Trait("AC", "AC-TEST-026-002")]
+    [Trait("AC", "AC-TEST-033-002")]
     public void Below_threshold_metrics_are_not_admitted()
     {
         var badSync = new VideoPerformanceMetrics(10, 1000, 50, 30, TimeSpan.FromMilliseconds(10), TimeSpan.FromMilliseconds(80), 0, 10, true, true);

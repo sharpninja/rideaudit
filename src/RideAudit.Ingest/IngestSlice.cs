@@ -23,5 +23,6 @@ public static class ApiGapNotice
 {
     public const string Text =
         "No documented public driver telematics API supplies Smooth Cruiser scores, IMU streams, or high-rate GPS. " +
-        "Missing signals stay missing. Coarse ride-status location is not a Smooth Cruiser score.";
+        "Missing signals stay missing. Coarse ride-status location is not a Smooth Cruiser score. " +
+        "Research date 2026-09-27.";
 }

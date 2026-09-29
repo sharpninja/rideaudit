@@ -29,6 +29,7 @@ public class TestRide021Identity
         [Trait("AC", "AC-RIDE-SERVER-001-001")]
         [Trait("AC", "AC-RIDE-SERVER-001-002")]
         [Trait("AC", "AC-RIDE-PRIV-001-001")]
+        [Trait("AC", "AC-UC-014-002")]
     public void Driver_registration_requires_consent_and_recovery_rotates_the_token()
     {
         var world = ServerWorld.Create();
@@ -52,11 +53,21 @@ public class TestRide021Identity
         [Trait("AC", "AC-RIDE-034-002")]
         [Trait("AC", "AC-RIDE-SERVER-002-001")]
         [Trait("AC", "AC-RIDE-SERVER-002-002")]
+        [Trait("AC", "AC-RIDE-033-001")]
+        [Trait("AC", "AC-RIDE-034-001")]
+        [Trait("AC", "AC-TEST-021-001")]
+        [Trait("AC", "AC-TEST-021-002")]
+        [Trait("AC", "AC-UC-014-001")]
+        [Trait("AC", "AC-UC-014-002")]
     public void Vehicle_history_is_kept_and_a_missing_profile_blocks_the_session()
     {
         var world = ServerWorld.Create();
         var driver = world.Register();
+        var denied = Assert.Throws<RideAuditException>(() => world.App.Identity.RegisterVehicle(world.Require(driver), "VIN-NO", "No consent", "Test", "Model", 2024, false));
+        Assert.Equal(ErrorCodes.ValidationFailed, denied.Code);
         var vehicle = world.AddVehicle(driver);
+        Assert.Equal(driver.DriverId, vehicle.DriverId);
+        Assert.False(string.IsNullOrWhiteSpace(vehicle.VinOrPlateKey));
         var updated = world.App.Identity.UpdateVehicle(world.Require(driver), vehicle.VehicleId, "Renamed", "Test", "Model", 2025, "plate correction");
         Assert.Equal(2, updated.Changes.Count);
         var blocked = Assert.Throws<RideAuditException>(() => world.OpenSession(driver, vehicle.VehicleId));
@@ -77,6 +88,9 @@ public class TestRide022SealedAdmission
         [Trait("AC", "AC-RIDE-SERVER-003-001")]
         [Trait("AC", "AC-RIDE-SERVER-003-002")]
         [Trait("AC", "AC-RIDE-SERVER-004-002")]
+        [Trait("AC", "AC-RIDE-061-002")]
+        [Trait("AC", "AC-UC-030-001")]
+        [Trait("AC", "AC-TEST-022-002")]
     public void Plaintext_and_unauthorized_vehicle_are_rejected_without_storing_a_body()
     {
         var world = ServerWorld.Create();
@@ -170,6 +184,10 @@ public class TestRide019Admission
     [Trait("FR", "FR-RIDE-027")]
     [Trait("AC", "AC-RIDE-026-003")]
     [Trait("AC", "AC-RIDE-027-001")]
+    [Trait("AC", "AC-UC-012-001")]
+    [Trait("AC", "AC-UC-012-002")]
+    [Trait("AC", "AC-TEST-019-001")]
+    [Trait("AC", "AC-TEST-019-002")]
     public void Stale_or_nonce_mismatched_attestation_is_not_admitted_and_success_binds_the_hash()
     {
         var world = ServerWorld.Create();
@@ -208,6 +226,11 @@ public class TestRide024AbuseAndTenant
         [Trait("AC", "AC-RIDE-218-002")]
         [Trait("AC", "AC-RIDE-SERVER-005-001")]
         [Trait("AC", "AC-RIDE-SERVER-005-002")]
+        [Trait("AC", "AC-RIDE-218-001")]
+        [Trait("AC", "AC-RIDE-039-003")]
+        [Trait("AC", "AC-RIDE-204-001")]
+        [Trait("AC", "AC-TEST-024-001")]
+        [Trait("AC", "AC-TEST-024-002")]
     public void Rate_limit_replay_and_backpressure_never_admit()
     {
         var world = ServerWorld.Create();
@@ -216,6 +239,7 @@ public class TestRide024AbuseAndTenant
         var ready = world.SealReady(enrolled.Driver, enrolled.Session);
         var first = world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce, "idem-once");
         Assert.True(first.Admitted);
+        Assert.NotNull(world.App.Journal.Find(first.SubmissionId));
         var limited = Assert.Throws<RideAuditException>(() => world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce, "idem-limited"));
         Assert.Equal(ErrorCodes.RateLimited, limited.Code);
 
@@ -242,6 +266,9 @@ public class TestRide024AbuseAndTenant
             VehicleId = person.Vehicle.VehicleId
         }));
         Assert.Equal(ErrorCodes.PlaintextRejected, jpeg.Code);
+        Assert.Contains(world.App.Logs.Lines, line => line.Contains("admitted submission=", StringComparison.Ordinal));
+        Assert.Contains(pressure.App.Admission.FailureAudit, line => line.Contains("plaintext", StringComparison.OrdinalIgnoreCase));
+        Assert.Empty(pressure.App.Identity.Database.SubmissionCiphertexts);
     }
 
     [Fact]
@@ -250,6 +277,9 @@ public class TestRide024AbuseAndTenant
         [Trait("AC", "AC-RIDE-040-001")]
         [Trait("AC", "AC-RIDE-SERVER-006-001")]
         [Trait("AC", "AC-RIDE-SEC-003-001")]
+        [Trait("AC", "AC-RIDE-032-002")]
+        [Trait("AC", "AC-RIDE-040-002")]
+        [Trait("AC", "AC-UC-015-002")]
     public void Cross_tenant_status_reads_are_isolated()
     {
         var world = ServerWorld.Create();
