@@ -75,12 +75,19 @@ public sealed class AdbDeviceSession
 
     public string DumpUi()
     {
-        var dump = Shell("uiautomator dump /dev/tty", TimeSpan.FromSeconds(25));
-        var text = dump.Text;
+        const string remote = "/data/local/tmp/rideaudit-ui.xml";
+        var dump = Shell("uiautomator dump " + remote, TimeSpan.FromSeconds(25));
+        if (dump.ExitCode != 0)
+        {
+            throw new InvalidOperationException("uiautomator dump failed: " + dump.Text);
+        }
+
+        var cat = Shell("cat " + remote, TimeSpan.FromSeconds(20));
+        var text = cat.Text;
         var start = text.IndexOf("<?xml", StringComparison.Ordinal);
         if (start < 0)
         {
-            throw new InvalidOperationException("uiautomator did not return XML: " + text);
+            throw new InvalidOperationException("uiautomator did not return XML: " + Trim(dump.Text) + " " + Trim(text));
         }
 
         var end = text.LastIndexOf("</hierarchy>", StringComparison.Ordinal);
@@ -91,6 +98,9 @@ public sealed class AdbDeviceSession
 
         return text.Substring(start, end + "</hierarchy>".Length - start);
     }
+
+    private static string Trim(string value) =>
+        value.Length <= 240 ? value.Trim() : value.Trim().Substring(0, 240);
 
     public string? ScreenId(string xml)
     {
@@ -129,22 +139,25 @@ public sealed class AdbDeviceSession
 
     public byte[] Screencap()
     {
-        var psi = new ProcessStartInfo(adb, "-s " + Serial + " exec-out screencap -p")
+        const string remote = "/data/local/tmp/rideaudit-screen.png";
+        var shot = Shell("screencap -p " + remote, TimeSpan.FromSeconds(20));
+        if (shot.ExitCode != 0)
         {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
-        using var process = Process.Start(psi) ?? throw new InvalidOperationException("adb screencap did not start.");
-        using var memory = new MemoryStream();
-        process.StandardOutput.BaseStream.CopyTo(memory);
-        process.WaitForExit(20000);
-        var bytes = memory.ToArray();
-        if (process.ExitCode != 0 || bytes.Length < 8 || bytes[0] != 0x89)
+            throw new InvalidOperationException("screencap failed: " + shot.Text.Trim());
+        }
+
+        var local = Path.Combine(Path.GetTempPath(), "rideaudit-screen-" + Guid.NewGuid().ToString("N") + ".png");
+        var pull = Run(adb, "-s " + Serial + " pull " + remote + " \"" + local + "\"", TimeSpan.FromSeconds(30));
+        if (!File.Exists(local))
         {
-            var error = process.StandardError.ReadToEnd();
-            throw new InvalidOperationException("screencap failed: " + error);
+            throw new InvalidOperationException("adb pull did not write a screenshot: " + pull.Text.Trim());
+        }
+
+        var bytes = File.ReadAllBytes(local);
+        File.Delete(local);
+        if (bytes.Length < 8 || bytes[0] != 0x89)
+        {
+            throw new InvalidOperationException("pulled screenshot is not a PNG. bytes=" + bytes.Length + " pull=" + pull.Text.Trim());
         }
 
         return bytes;
