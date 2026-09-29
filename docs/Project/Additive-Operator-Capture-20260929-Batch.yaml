@@ -918,14 +918,17 @@ records:
       Each wireframe is a single-screen compare unless that wireframe says
       otherwise. Each storyboard is a step sequence: the test drives the
       running app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote)
-      and compares a screenshot at each frame. The comparison threshold is
-      documented. A mismatch fails closed. A static single-shot screenshot
-      does not satisfy a storyboard.
+      and compares a screenshot at each frame. Screenshot validation includes
+      usability validation in addition to baseline comparison. The comparison
+      threshold is documented. A mismatch fails closed. A usability defect
+      fails closed even when pixels match the baseline. A static single-shot
+      screenshot does not satisfy a storyboard.
     priority: high
     area: RIDE
     status: pending
     notes: >
-      Operator add 2026-09-29, updated the same day for storyboard navigation.
+      Operator add 2026-09-29, updated the same day for storyboard navigation
+      and for usability checks in addition to pixel comparison.
       approval: pending Payton AGREE. Does not close plan section 9 or AC-UC-025-001.
       Baselines are the wireframe and storyboard documents under docs/ux, including docs/ux/review-app.
       Storyboard steps are the beats in those documents. Each beat is a frame.
@@ -948,13 +951,19 @@ records:
         text: The visual regression run executes on PAYTON-LEGION2 against a connected Android device. An emulator-only run does not satisfy this AC.
         isSatisfied: false
       - id: AC-RIDE-073-005
-        text: The run writes a receipt that names the host, the connected device, the documented comparison threshold, the pass or fail result for each wireframe, and the pass or fail result for each storyboard frame.
+        text: The run writes a receipt that names the host, the connected device, the documented comparison threshold, the pass or fail result for each wireframe, the pass or fail result for each storyboard frame, and any usability defect found.
         isSatisfied: false
       - id: AC-RIDE-073-006
         text: A baseline is not silently skipped. A skip is a failure unless the receipt documents the reason for that baseline.
         isSatisfied: false
       - id: AC-RIDE-073-007
         text: The comparison threshold is documented. A mismatch against a baseline fails closed.
+        isSatisfied: false
+      - id: AC-RIDE-073-008
+        text: Screenshot validation includes usability validation in addition to baseline comparison. The run fails closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects detectable from the screenshot or the AvaloniaRemote visual tree.
+        isSatisfied: false
+      - id: AC-RIDE-073-009
+        text: A pixel match alone does not satisfy screenshot validation when a usability defect is present.
         isSatisfied: false
 
   - kind: usecase
@@ -967,14 +976,17 @@ records:
       client on PAYTON-LEGION2 against a connected Android device. Each wireframe
       is a single-screen compare. Each storyboard is driven step by step through
       SharpNinja.Avalonia.RemoteControl (AvaloniaRemote), with a screenshot compared
-      at each frame. approval: pending Payton AGREE. Does not close plan section 9.
+      at each frame. The same screenshots are checked for usability defects.
+      A pixel match does not pass when a usability defect is present.
+      approval: pending Payton AGREE. Does not close plan section 9.
     basicFlow: |
       1. Operator confirms the Android Avalonia client references SharpNinja.aiUnit and SharpNinja.Avalonia.RemoteControl.
       2. Operator connects an Android device to PAYTON-LEGION2 and starts the Avalonia Android app.
       3. For each wireframe, the run captures one screen and compares it to that baseline, unless the wireframe specifies otherwise.
       4. For each storyboard, AvaloniaRemote interacts with the running app through the step sequence and compares a screenshot at each frame.
       5. A static single-shot screenshot does not satisfy a storyboard. A mismatch fails closed.
-      6. Operator writes a receipt of the run, including each storyboard frame. A baseline skip without a documented reason fails the run.
+      6. The run checks each captured screen for usability defects using the screenshot and the AvaloniaRemote visual tree. Cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other detectable layout defects fail closed even when the pixels match.
+      7. Operator writes a receipt of the run, including each storyboard frame and any usability defect. A baseline skip without a documented reason fails the run.
     acceptanceCriteria:
       - id: AC-UC-043-001
         text: The Android client references SharpNinja.aiUnit before the run starts.
@@ -989,10 +1001,16 @@ records:
         text: Execution is on PAYTON-LEGION2 with a connected Android device. Emulator-only execution fails this use case.
         isSatisfied: false
       - id: AC-UC-043-005
-        text: The operator records a receipt of the run, including host, device, threshold, each wireframe result, and each storyboard frame result.
+        text: The operator records a receipt of the run, including host, device, threshold, each wireframe result, each storyboard frame result, and any usability defect.
         isSatisfied: false
       - id: AC-UC-043-006
         text: The run does not silently skip a baseline. A skip without a documented reason fails closed.
+        isSatisfied: false
+      - id: AC-UC-043-007
+        text: Screenshot validation includes usability checks in addition to baseline comparison. Cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects detectable from the screenshot or the AvaloniaRemote visual tree fail closed.
+        isSatisfied: false
+      - id: AC-UC-043-008
+        text: A pixel match alone does not satisfy the use case when a usability defect is present.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-073
@@ -1011,13 +1029,15 @@ records:
       along the step sequence, and capture and compare a screenshot at each frame.
       Document the threshold, fail closed on mismatch, write a run receipt, and
       refuse a silent skip. A static single-shot screenshot does not satisfy a storyboard.
+      Usability validation runs in addition to baseline comparison and fails closed
+      on layout defects even when the pixels match.
     priority: high
     area: RIDE
     subarea: VIDEO
     status: pending
     notes: >
       Implements FR-RIDE-073 and uses the RemoteControl path from FR-RIDE-067.
-      Operator update 2026-09-29 for storyboard step sequences.
+      Operator update 2026-09-29 for storyboard step sequences and usability checks.
       approval: pending Payton AGREE. Does not close plan section 9.
       Do not invent a package version. ADB taps are not the storyboard driver.
     acceptanceCriteria:
@@ -1041,6 +1061,12 @@ records:
         isSatisfied: false
       - id: AC-RIDE-VIDEO-017-007
         text: A storyboard result that is only a static single-shot screenshot fails. Wireframe compares stay single-screen unless the wireframe specifies otherwise.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-008
+        text: The harness checks usability from the screenshot or the AvaloniaRemote visual tree, in addition to baseline comparison. It fails closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other detectable layout defects.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-009
+        text: A pixel match does not produce a pass when a usability defect is present.
         isSatisfied: false
 
   - kind: test
@@ -1080,6 +1106,31 @@ records:
         text: A wireframe, storyboard, or storyboard frame omitted from the receipt with no documented reason fails closed.
         isSatisfied: false
 
+  - kind: test
+    id: TEST-RIDE-054
+    title: Usability defects fail closed despite pixel match
+    description: >
+      Verify screenshot validation checks usability in addition to baseline
+      comparison. A pixel match does not pass when the screenshot or the
+      AvaloniaRemote visual tree shows cut-off, truncated, or clipped text,
+      a missing icon, overlapping controls, text overflow, or another layout defect.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-073. Operator add 2026-09-29 for usability validation.
+      approval: pending Payton AGREE. Does not close plan section 9 or AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-TEST-054-001
+        text: Evidence shows a usability check, from the screenshot or the AvaloniaRemote visual tree, in addition to the baseline pixel comparison.
+        isSatisfied: false
+      - id: AC-TEST-054-002
+        text: Cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other detectable layout defects fail the run.
+        isSatisfied: false
+      - id: AC-TEST-054-003
+        text: A case that matches the baseline pixels and still has a usability defect is a failure. Pixel match alone does not satisfy the AC.
+        isSatisfied: false
+
 mappings:
   - frId: FR-RIDE-065
     trIds: [TR-RIDE-EDGE-002]
@@ -1111,7 +1162,7 @@ mappings:
     useCaseLocalIds: [UC-RIDE-042]
   - frId: FR-RIDE-073
     trIds: [TR-RIDE-VIDEO-017]
-    testIds: [TEST-RIDE-053]
+    testIds: [TEST-RIDE-053, TEST-RIDE-054]
     useCaseLocalIds: [UC-RIDE-043]
   - frId: FR-RIDE-222
     trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]

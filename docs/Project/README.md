@@ -49,7 +49,7 @@ Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-
 | Bluetooth pairing | FR-RIDE-053..055 | TR-RIDE-VIDEO-010..011 | TEST-RIDE-034 | UC-RIDE-022..024 |
 | Avalonia/gRPC stack | FR-RIDE-056..062 | TR-RIDE-VIDEO-012, VIEW-005, GPL-004..005, SERVER-008..010 | TEST-RIDE-035..037 | UC-RIDE-025..031 |
 | Post-planning Octopus + ngrok | FR-RIDE-063..064 | TR-RIDE-DEPLOY-001..002, EDGE-001 | TEST-RIDE-038..040 | UC-RIDE-032..033 |
-| Operator capture 2026-09-29 (draft, pending Payton AGREE) | FR-RIDE-065..067, 069..073. FR-RIDE-068 withdrawn. Updates to FR-RIDE-018, 020, 030, 041, 053, 056, 057, 063, 064, 201, 222 | TR-RIDE-VIEW-006, EDGE-002, VIDEO-013..017, HW-001, LAB-001..004 plus CHAIN-002, GPL-002, DEPLOY-002 AC updates | TEST-RIDE-041..053 plus AC updates on TEST-RIDE-016, 034, 038 | UC-RIDE-034..043 plus AC updates on UC-RIDE-009, 010, 017, 022, 025, 032 |
+| Operator capture 2026-09-29 (draft, pending Payton AGREE) | FR-RIDE-065..067, 069..073. FR-RIDE-068 withdrawn. Updates to FR-RIDE-018, 020, 030, 041, 053, 056, 057, 063, 064, 201, 222 | TR-RIDE-VIEW-006, EDGE-002, VIDEO-013..017, HW-001, LAB-001..004 plus CHAIN-002, GPL-002, DEPLOY-002 AC updates | TEST-RIDE-041..054 plus AC updates on TEST-RIDE-016, 034, 038 | UC-RIDE-034..043 plus AC updates on UC-RIDE-009, 010, 017, 022, 025, 032 |
 
 ## Notes
 
