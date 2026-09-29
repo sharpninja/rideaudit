@@ -1,20 +1,20 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.4 — post-planning CD direction: Octopus Deploy to PAYTON-DESKTOP; no GHCR  
+**Revision:** r3.5 — canonical ngrok target is PAYTON-DESKTOP admission `:28080`; Omarchy `:18080` is prior interim. Octopus CD receipt is on file (`octopus-rideaudit`). Not a P11b close.  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
 **Process:** Byrd Dev Process v4 (BDPv4)  
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. This r3.4 docs revision records operator CD direction after that AGREE. It does **not** invent a new Astra AGREE, a live Octopus green, or a Payton section-8 check. Child plans are scoped extracts and do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to PAYTON-DESKTOP admission `192.168.0.149:28080`. It does **not** invent a new Astra AGREE or a Payton section-8 check. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
 **Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Those boxes remain unchecked as historical process state. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
 
 > **Operator CD direction (2026-09-28, binding):** Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
 >
-> That direction is FR-RIDE-063. Plans must cite it and must not weaken it. GitHub Actions container registry and GHCR are not the distribution path. Octopus license exhaustion is not deferral and not out of scope: provision a new Octopus container on PAYTON-DESKTOP. Omarchy loopback plus ngrok remains interim admission hosting (FR-RIDE-064) until Octopus CD lands images on PAYTON-DESKTOP. This plan does not invent a live Octopus green. Authoritative batch: [Additive-PostPlanning-Deploy-Ngrok-Batch.yaml](../Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml).
+> That direction is FR-RIDE-063. Plans must cite it and must not weaken it. GitHub Actions container registry and GHCR are not the distribution path. Octopus license exhaustion is not deferral and not out of scope: provision a new Octopus container on PAYTON-DESKTOP. The recorded CD path is `octopus-rideaudit` on PAYTON-DESKTOP (`20260929T015822Z-octopus-payton-desktop.md`). The canonical ngrok target is that admission bind `192.168.0.149:28080` (FR-RIDE-064). Omarchy loopback `127.0.0.1:18080` is the prior interim. Authoritative batch: [Additive-PostPlanning-Deploy-Ngrok-Batch.yaml](../Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml).
 
 > **HARD GATE (section 8):** No Avalonia/gRPC application implementation, skeletons, application test projects, or generated application bindings until P0 docs repair is complete, Astra returns READY/AGREE with accuracy/completeness/confidence ≥98 on the reviewed portfolio revision, and Payton explicitly agrees. No waivers.
 
@@ -1055,7 +1055,7 @@ Ledger row count: **404** (must equal the pre-additive planning AC inventory).
 
 Operator direction is binding and is not weakened here: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
 
-FR-RIDE-063 owns that CD path. License exhaustion is a provision step, not a deferral. GitHub Container Registry is not an allowed fallback. Omarchy loopback plus ngrok is interim admission hosting (FR-RIDE-064) until Octopus-built images run on PAYTON-DESKTOP. These rows are planned work. They are not a live Octopus green.
+FR-RIDE-063 owns that CD path. License exhaustion is a provision step, not a deferral. GitHub Container Registry is not an allowed fallback. Octopus-built images are recorded on PAYTON-DESKTOP (`octopus-rideaudit`, admission `192.168.0.149:28080`, counsel `192.168.0.149:28081`). The canonical ngrok target is that admission bind. Omarchy loopback `127.0.0.1:18080` is the prior interim. These rows are not a P11b close: Play publication, live OTS/L2/HSM, and the historical section 8 boxes stay open.
 
 Source: `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`.
 
@@ -1369,7 +1369,7 @@ Phase numbering does not authorize bypassing a dependency.
 
 **BDPv4 notes:** Full suite green; no skips
 
-**P11b mandatory release gate:** P11b cannot close until Octopus Deploy has built RideAudit containers and deployed them to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. GitHub Actions container registry is not the distribution path. Retain the Octopus release or dry-run receipt, source commit, image digests, the Octopus instance or container name, the PAYTON-DESKTOP target, and post-deploy verification. Failed Octopus deploy or verification blocks release completion. Omarchy loopback plus ngrok remains interim admission hosting until that Octopus path is live; an Omarchy compose cutover is not an Octopus green. Desktop release evidence must cover signed and reproducible builds on Windows, Linux, and macOS. Play and public-source publication require actual receipts. This revision does not invent a live Octopus green.
+**P11b mandatory release gate:** P11b cannot close until Octopus Deploy has built RideAudit containers and deployed them to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. GitHub Actions container registry is not the distribution path. Retain the Octopus release or dry-run receipt, source commit, image digests, the Octopus instance or container name, the PAYTON-DESKTOP target, and post-deploy verification. Failed Octopus deploy or verification blocks release completion. The Octopus path on file is `octopus-rideaudit` to PAYTON-DESKTOP; an Omarchy compose cutover is not that receipt. Canonical ngrok targets `192.168.0.149:28080`. Omarchy `127.0.0.1:18080` is the prior interim. Desktop release evidence must cover signed and reproducible builds on Windows, Linux, and macOS. Play and public-source publication require actual receipts. This revision does not close P11b.
 
 
 ---
@@ -1433,7 +1433,7 @@ Operator direction (exact): Use Octopus Deploy. Build containers and deploy to P
 | Octopus builds admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to PAYTON-DESKTOP | FR-RIDE-063, TR-RIDE-DEPLOY-001, UC-RIDE-032, TEST-RIDE-038 |
 | License exhaustion on the default Octopus container means provision a new Octopus container on PAYTON-DESKTOP and continue from that instance | FR-RIDE-063 AC-RIDE-063-002, TR-RIDE-DEPLOY-002 |
 | GHCR and GitHub Actions container registry are not the distribution path. Receipts must never claim a GHCR green | FR-RIDE-063 AC-RIDE-063-003 |
-| Omarchy loopback plus ngrok is interim public admission hosting. Target CD host for Octopus-built images is PAYTON-DESKTOP | FR-RIDE-064 |
+| Canonical ngrok target is PAYTON-DESKTOP admission `192.168.0.149:28080`. Omarchy `127.0.0.1:18080` is the prior interim | FR-RIDE-064 |
 | Existing Omarchy Octopus/SQL/Caddy containers and lab loopback cutover receipts are not a RideAudit Octopus CD green | FR-RIDE-063 notes |
 
 See `docs/architecture/stack.md` and `docs/receipts/distribution/cd-receipts.md`.
@@ -1556,7 +1556,29 @@ Before the gate, only documentation, requirement YAML, plans, process records, a
 - [ ] Payton AGREE on the same revision
 - [ ] Only then may implementers begin P1 tests-first skeleton
 
-The boxes above remain **historically unchecked**. They are not backdated as complete. Payton 2026-09-28 authorized a post-HV **remediation loop** (iterate until opposing Sol HV AGREE). That authorization does not rewrite construction-gate history. Per-phase HV custody is still required; code-hv-sol-r1 and code-hv-sol-r2 are recorded DISAGREE and do not close P0–P11b. Rem-phase checklist: [code-hv-sol-r2-remediation-phase-checklist.md](../receipts/remediation/code-hv-sol-r2-remediation-phase-checklist.md).
+The boxes above remain **historically unchecked**. They are class C (Astra/Payton agreement). They are not backdated as complete. Payton 2026-09-28 authorized a post-HV **remediation loop** (iterate until opposing Sol HV AGREE). That authorization does not rewrite construction-gate history. code-hv-sol-r4 later returned READY/AGREE on product head `4f0e741` for the narrow CODE-HV gate only. That AGREE does not check these boxes and does not close P0–P11b. Rem-phase checklist: [code-hv-sol-r2-remediation-phase-checklist.md](../receipts/remediation/code-hv-sol-r2-remediation-phase-checklist.md).
+
+## 11. Closeout inventory (2026-09-29, r3.5)
+
+Classes: **A** implementable in this tree without a third party; **B** ops/config (ngrok, Octopus, docs); **C** blocked on a third party or on a named human/model agreement.
+
+| Item | Class | Disposition in r3.5 |
+| --- | --- | --- |
+| Canonical ngrok still aimed only at Omarchy `127.0.0.1:18080` | B | Done for this host. Receipt `docs/receipts/distribution/20260929T030643Z-ngrok-desktop-28080.md`: systemd user unit, `PROBE_HTTP=200`, public URL `https://zeugmatically-unindicative-calista.ngrok-free.dev`. |
+| Octopus CD receipt vs plan text that said the plan does not invent a live green | B | Plan cites `20260929T015822Z-octopus-payton-desktop.md`. `DistributionReceipts.OctopusDesktopOnFile` is `receipt-on-file`, not a live probe. Dev/Staging/Prod stay `not-run`. |
+| Section 9 boxes (P0 repair, Astra ≥98, Payton AGREE, then P1) | C | Stay unchecked. Historical. code-hv-sol-r4 does not check them. |
+| Android §7 and Server §7 HV/Payton boxes | C | Stay unchecked. Same reason. |
+| Bracket optional Astra/child HV | C | Stay unchecked. Not run. Not a product-HV pass. |
+| Bracket HW1 on-vehicle print | C | Stay unchecked. Needs a physical vehicle and the operator checklist. CAD measurement is not a road release. |
+| Play Store publication (FR-RIDE-031 live store) | C | Fail closed. Not claimed. |
+| Hardware HSM, live OTS confirmation/txid, live L2 signer | C | Fail closed. Fixtures stay labeled. |
+| Physical dual-phone Bluetooth media / production H.264 | C | Fail closed. Source container stays non-H.264. |
+| Lyft Concierge / partnership ingest | C | Stay disabled. |
+| Edge TLS via Caddy (distinct from ngrok HTTPS) | C | Omarchy/DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. ngrok HTTPS is the tunnel, not that AC. |
+| Signed reproducible desktop Win/Linux/macOS and full P11b suite | A remaining | Not closed here. P11b exit stays open. |
+| AC ledger rows still `missing` after the 424-id recount | A remaining | Ledger is 190 covered / 36 deferred / 198 missing / 424 total. The old test expected 7 files and 404 ids and was red against the post-planning batch. A named AC is not semantic closure. The 198 missing rows are not marked done. |
+
+No class A/B row in the unchecked plan boxes is left without this disposition. The remaining class A product gaps are the P11b suite and the unnamed AC ledger rows, and they are not marked done.
 
 ## 10. Primary implementation ownership (parent phases); child homes in §0.2
 

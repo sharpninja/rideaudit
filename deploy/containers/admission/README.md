@@ -36,7 +36,7 @@ The image sets `ASPNETCORE_ENVIRONMENT=Production` and `RIDEAUDIT_EDGE_TLS=true`
 
 PAYTON-LEGION2 Docker Desktop returns HTTP 500. The preferred lab path is `dotnet publish` linux-x64 on LEGION2 and `deploy/omarchy/Dockerfile.runtime` on PAYTON-OMARCHY. See [../../omarchy/README.md](../../omarchy/README.md). A lab runtime image is not a CD green.
 
-Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. This README does not invent a live Octopus green.
+Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. The receipt on file is `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`. This README is not that probe and is not Play publication.
 
 ## Counsel, ingest, and privacy
 

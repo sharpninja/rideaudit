@@ -63,9 +63,9 @@ After merge, the coordinator may pass `-ConfirmCutover` to run compose on loopba
 
 This agent does not pass `-ConfirmCutover`.
 
-## ngrok (interim public URL)
+## ngrok (canonical public URL)
 
-Admission remains bound to Omarchy loopback `:18080`. The current public path is an ngrok tunnel started from LEGION2; the target host after Octopus CD is PAYTON-DESKTOP (FR-RIDE-063). Token via `~/.creds/ngrok.yml`, never git. See [ngrok/README.md](ngrok/README.md).
+Omarchy compose still binds admission on loopback `:18080`. That bind is the prior interim. The canonical public tunnel targets PAYTON-DESKTOP admission `192.168.0.149:28080` (FR-RIDE-064). Token via `~/.creds/ngrok.yml`, never git. See [ngrok/README.md](ngrok/README.md).
 
 ```powershell
 pwsh -NoProfile -File deploy/omarchy/ngrok/Start-Ngrok.ps1

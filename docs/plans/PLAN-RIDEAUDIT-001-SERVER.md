@@ -214,7 +214,7 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | FR IDs | FR-RIDE-217, FR-RIDE-063, FR-RIDE-064 (+ server contribution to FR-031 portfolio gate) |
 | TEST | TEST-RIDE-020, TEST-RIDE-038, TEST-RIDE-039, TEST-RIDE-040 |
 | Depends | S1–S8 + Android A3/A4 + Bracket HW2 as applicable |
-| Exit | Full suite Failed 0 Skipped 0; Octopus built and deployed images to PAYTON-DESKTOP with a receipt that names the instance or container and target and does not claim GHCR (FR-RIDE-063). If the default Octopus container is out of licenses, a new Octopus container on PAYTON-DESKTOP is the fallback, not GHCR. Omarchy plus ngrok remains interim admission hosting (FR-RIDE-064). This exit does not invent a live Octopus green. |
+| Exit | Full suite Failed 0 Skipped 0; Octopus built and deployed images to PAYTON-DESKTOP with a receipt that names the instance or container and target and does not claim GHCR (FR-RIDE-063). If the default Octopus container is out of licenses, a new Octopus container on PAYTON-DESKTOP is the fallback, not GHCR. Recorded path: `octopus-rideaudit`, admission `192.168.0.149:28080`, counsel `192.168.0.149:28081` (`20260929T015822Z-octopus-payton-desktop.md`). Canonical ngrok target is that admission bind (FR-RIDE-064). Omarchy `127.0.0.1:18080` is the prior interim. This exit is not closed: full-suite, Play, and per-phase HV remain open. |
 
 **Authoritative dependencies** (from parent): P1→P0+gate; P2→P1; P3→P1; P4 client on Android; P5→P3+P4; P8→P2+P5+P7; P9→P2..P5; P10→P2+P8+P9; P11a→P3+P6; P11b→all.
 
@@ -255,6 +255,6 @@ Container CD: parent §4.6. Use Octopus Deploy. Build containers and deploy to P
 - [ ] Payton AGREE on portfolio before S1 app code
 - [ ] Phase HV AGREE + Failed 0 Skipped 0 for partitions
 
-These boxes remain historically unchecked. Payton 2026-09-28 authorized iterate-until-HV-agree remediation after code-hv-sol-r1 DISAGREE; that is not a backdated S1–S9 HV pass. Per-phase opposing HV is still required.
+These boxes remain historically unchecked. Class C: they need Payton agreement and per-phase opposing HV, which this closeout does not invent. Payton 2026-09-28 authorized iterate-until-HV-agree remediation after code-hv-sol-r1 DISAGREE; code-hv-sol-r4 AGREE is the narrow CODE-HV gate only and is not a backdated S1–S9 HV pass. S9 Octopus receipt is on file; S9 full-suite exit stays open.
 
 **Sibling plans:** [BRACKET](./PLAN-RIDEAUDIT-001-BRACKET.md) · [ANDROID](./PLAN-RIDEAUDIT-001-ANDROID.md) · [Portfolio index](./PLAN-RIDEAUDIT-001-implementation.md)

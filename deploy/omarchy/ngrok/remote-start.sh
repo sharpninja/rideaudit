@@ -1,9 +1,10 @@
 #!/usr/bin/bash
-# Start a durable ngrok HTTP tunnel to 127.0.0.1:18080. Fail closed if admission is down.
+# Start a durable ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080.
+# Fail closed if admission is down. No Python.
 # SPDX-License-Identifier: GPL-2.0-only
 set -euo pipefail
 
-ADDR="${RIDEAUDIT_NGROK_ADDR:-127.0.0.1:18080}"
+ADDR="${RIDEAUDIT_NGROK_ADDR:-192.168.0.149:28080}"
 CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 UNIT_DIR="$HOME/.config/systemd/user"
@@ -47,22 +48,6 @@ resolve_bin() {
 }
 
 extract_public_url() {
-  if command -v python3 >/dev/null 2>&1; then
-    python3 - <<'PY'
-import json, urllib.request
-try:
-    with urllib.request.urlopen("http://127.0.0.1:4040/api/tunnels", timeout=3) as resp:
-        data = json.load(resp)
-except Exception:
-    raise SystemExit(0)
-urls = [t.get("public_url", "") for t in data.get("tunnels", []) if t.get("public_url")]
-https = [u for u in urls if u.startswith("https://")]
-chosen = (https or urls)
-if chosen:
-    print(chosen[0])
-PY
-    return
-  fi
   if command -v curl >/dev/null 2>&1; then
     curl -sS --max-time 3 "$API_URL" | grep -oE 'https://[A-Za-z0-9._-]+\.ngrok[^"]+' | head -n 1 || true
   fi
@@ -72,7 +57,7 @@ write_unit() {
   local bin="$1"
   cat > "$UNIT_DIR/rideaudit-ngrok.service" <<EOF
 [Unit]
-Description=RideAudit ngrok HTTP tunnel to admission 127.0.0.1:18080
+Description=RideAudit ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080
 After=network-online.target
 Wants=network-online.target
 

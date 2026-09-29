@@ -30,8 +30,8 @@ This is the binding CD path. It supersedes GHCR, GitHub Actions container-regist
 1. **Use Octopus Deploy.** Octopus builds RideAudit admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to **PAYTON-DESKTOP** (FR-RIDE-063).
 2. **License exhaustion is not a deferral.** If the default Octopus container is out of licenses, create a new Octopus container on PAYTON-DESKTOP and continue from that instance (AC-RIDE-063-002, TR-RIDE-DEPLOY-002).
 3. **Do not use GHCR.** Receipts must never claim a GHCR green. GitHub Actions container registry is not the distribution path.
-4. **Interim hosting.** Omarchy loopback plus ngrok remains the documented interim admission front door (FR-RIDE-064). The target CD host for Octopus-built images is PAYTON-DESKTOP.
-5. **Honesty.** This architecture page does not invent a live Octopus green. Existing Omarchy Octopus/SQL/Caddy containers and lab compose cutovers are not RideAudit Octopus CD complete.
+4. **Public tunnel.** The canonical ngrok target is PAYTON-DESKTOP admission `192.168.0.149:28080` (FR-RIDE-064). Omarchy loopback `127.0.0.1:18080` is the prior interim and stays documented. Counsel `192.168.0.149:28081` is not the public tunnel.
+5. **Honesty.** Octopus CD to PAYTON-DESKTOP is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md` (`octopus-rideaudit`, not GHCR). That receipt is not Play publication, not edge-TLS-via-Caddy, and not a claim that every P11b acceptance row is closed. Omarchy compose cutover receipts remain the prior interim path.
 
 Authoritative requirements: `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`. Plan citation: PLAN-RIDEAUDIT-001 r3.4 §4.6.
 
@@ -67,4 +67,4 @@ Mappings live in `docs/Project/Requirements-Mappings-Batch.yaml`. Post-planning 
 | Topic | FR | TR | TEST | UC |
 | --- | --- | --- | --- | --- |
 | Octopus Deploy CD to PAYTON-DESKTOP | FR-RIDE-063 | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 |
-| ngrok ingress (Omarchy interim; PAYTON-DESKTOP target) | FR-RIDE-064 | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 |
+| ngrok ingress (canonical PAYTON-DESKTOP `:28080`; Omarchy `:18080` prior interim) | FR-RIDE-064 | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 |

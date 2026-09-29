@@ -216,6 +216,6 @@ BT roles: `docs/architecture/dual-phone-bluetooth-roles.md`. Stack: `docs/archit
 - [ ] Payton AGREE on portfolio before A1 app code
 - [ ] A3/A4 HV AGREE + suites Failed 0 Skipped 0 for partitions
 
-These boxes remain historically unchecked. Payton 2026-09-28 authorized iterate-until-HV-agree remediation after code-hv-sol-r1 DISAGREE; that is not a backdated A1/A3/A4 HV pass. Per-phase opposing HV is still required.
+These boxes remain historically unchecked. Class C: they need Payton agreement and per-phase opposing HV, which this closeout does not invent. Payton 2026-09-28 authorized iterate-until-HV-agree remediation after code-hv-sol-r1 DISAGREE; code-hv-sol-r4 AGREE is the narrow CODE-HV gate only and is not a backdated A1/A3/A4 HV pass. A5 Play publication stays class C.
 
 **Sibling plans:** [BRACKET](./PLAN-RIDEAUDIT-001-BRACKET.md) · [SERVER](./PLAN-RIDEAUDIT-001-SERVER.md) · [Portfolio index](./PLAN-RIDEAUDIT-001-implementation.md)

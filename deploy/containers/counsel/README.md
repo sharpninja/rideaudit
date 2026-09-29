@@ -35,4 +35,4 @@ The image sets Production and `RIDEAUDIT_EDGE_TLS=true`. Counsel is the same hos
 
 ## Distribution
 
-Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. Octopus receipts are `not-run` until a named instance or container and PAYTON-DESKTOP target exist. See `docs/receipts/distribution/cd-receipts.md`. Play publication is not claimed. This README does not invent a live Octopus green.
+Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. The live receipt is `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md` (`octopus-rideaudit` on PAYTON-DESKTOP). Historical Dev/Staging/Prod rows in `DistributionReceipts.ServerPortions` stay `not-run`. `OctopusDesktopOnFile` points at that receipt and is not a live probe. Play publication is not claimed.
