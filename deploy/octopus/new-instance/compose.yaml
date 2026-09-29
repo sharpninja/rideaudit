@@ -1,0 +1,81 @@
+# New Octopus Server on PAYTON-DESKTOP when the default octopus-legion2
+# instance cannot run tasks (FR-RIDE-063 AC-RIDE-063-002).
+# Secrets come from a non-git .env generated on LEGION2.
+# Do not compose down octopus-legion2, SQL, Caddy, or rideaudit-omarchy.
+# Docker builds run on the polling Tentacle (host docker.sock), not in Server.
+# No GHCR. SPDX-License-Identifier: GPL-2.0-only
+
+name: octopus-rideaudit
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD}
+    ports:
+      - "127.0.0.1:1404:1433"
+    volumes:
+      - octopus-rideaudit-sql:/var/opt/mssql
+    restart: unless-stopped
+
+  octopus:
+    image: octopusdeploy/octopusdeploy:2026.2.13260
+    depends_on:
+      - db
+    environment:
+      ACCEPT_EULA: "Y"
+      OCTOPUS_SERVER_NODE_NAME: payton-desktop-rideaudit
+      DB_CONNECTION_STRING: ${DB_CONNECTION_STRING}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_API_KEY: ${ADMIN_API_KEY}
+      MASTER_KEY: ${MASTER_KEY}
+      DISABLE_DIND: "Y"
+      TASK_CAP: "5"
+    ports:
+      - "192.168.0.149:18066:8080"
+      - "192.168.0.149:19112:10943"
+    volumes:
+      - octopus-rideaudit-repository:/repository
+      - octopus-rideaudit-artifacts:/artifacts
+      - octopus-rideaudit-tasklogs:/taskLogs
+      - octopus-rideaudit-cache:/cache
+    restart: unless-stopped
+
+  tentacle:
+    image: octopusdeploy/tentacle
+    profiles: ["with-tentacle"]
+    depends_on:
+      - octopus
+    environment:
+      ACCEPT_EULA: "Y"
+      DISABLE_DIND: "Y"
+      ServerApiKey: ${ADMIN_API_KEY}
+      ServerUrl: http://octopus:8080
+      ServerPort: "10943"
+      TargetEnvironment: Development
+      TargetRole: rideaudit-host
+      TargetName: PAYTON-DESKTOP-DOCKER
+      Space: Default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    group_add:
+      - "${DOCKER_GID:-966}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
+      - /usr/libexec/docker:/usr/libexec/docker:ro
+      - /home/sharpninja/github/rideaudit:/home/sharpninja/github/rideaudit
+      - octopus-rideaudit-tentacle:/octopus
+    restart: unless-stopped
+
+volumes:
+  octopus-rideaudit-sql:
+  octopus-rideaudit-artifacts:
+  octopus-rideaudit-tasklogs:
+  octopus-rideaudit-cache:
+  octopus-rideaudit-repository:
+  octopus-rideaudit-tentacle:

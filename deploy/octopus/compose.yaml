@@ -1,0 +1,40 @@
+# RideAudit admission + counsel on PAYTON-DESKTOP via Octopus (FR-RIDE-063).
+# Distinct from the Omarchy interim stack on 127.0.0.1:18080.
+# Images stay on the local Docker engine. No GHCR. Do not compose down
+# octopus-legion2, SQL, Caddy, or rideaudit-omarchy.
+# SPDX-License-Identifier: GPL-2.0-only
+
+name: rideaudit-octopus
+
+services:
+  admission:
+    image: rideaudit-admission:octopus
+    pull_policy: never
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      RIDEAUDIT_EDGE_TLS: "true"
+      RIDEAUDIT_OTS_CALENDAR: ${RIDEAUDIT_OTS_CALENDAR:-}
+      RIDEAUDIT_L2_CALENDAR: ${RIDEAUDIT_L2_CALENDAR:-}
+      RIDEAUDIT_L2_RPC: ${RIDEAUDIT_L2_RPC:-}
+      RIDEAUDIT_PLAY_INTEGRITY: ${RIDEAUDIT_PLAY_INTEGRITY:-}
+      RIDEAUDIT_TLS_CERT_PATH: ${RIDEAUDIT_TLS_CERT_PATH:-}
+    ports:
+      - "192.168.0.149:28080:8080"
+    restart: unless-stopped
+
+  counsel:
+    image: rideaudit-counsel:octopus
+    pull_policy: never
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      RIDEAUDIT_EDGE_TLS: "true"
+      RIDEAUDIT_SERVICE_ROLE: counsel
+      RIDEAUDIT_OTS_CALENDAR: ${RIDEAUDIT_OTS_CALENDAR:-}
+      RIDEAUDIT_L2_CALENDAR: ${RIDEAUDIT_L2_CALENDAR:-}
+      RIDEAUDIT_L2_RPC: ${RIDEAUDIT_L2_RPC:-}
+      RIDEAUDIT_PLAY_INTEGRITY: ${RIDEAUDIT_PLAY_INTEGRITY:-}
+    ports:
+      - "192.168.0.149:28081:8080"
+    restart: unless-stopped
