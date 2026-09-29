@@ -1,0 +1,10 @@
+# Example only. Do not put a real authtoken in git.
+# Operator token lives at ~/.creds/ngrok.yml on PAYTON-LEGION2 and is copied
+# over SSH stdin to a non-git path on the tunnel host.
+# SPDX-License-Identifier: GPL-2.0-only
+version: "2"
+authtoken: YOUR_NGROK_AUTHTOKEN
+tunnels:
+  rideaudit-admission:
+    proto: http
+    addr: 127.0.0.1:18080

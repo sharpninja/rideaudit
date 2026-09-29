@@ -1,0 +1,163 @@
+#!/usr/bin/bash
+# Start a durable ngrok HTTP tunnel to 127.0.0.1:18080. Fail closed if admission is down.
+# SPDX-License-Identifier: GPL-2.0-only
+set -euo pipefail
+
+ADDR="${RIDEAUDIT_NGROK_ADDR:-127.0.0.1:18080}"
+CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
+STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
+UNIT_DIR="$HOME/.config/systemd/user"
+PID_FILE="$STATE_DIR/ngrok.pid"
+LOG_FILE="$STATE_DIR/ngrok.log"
+API_URL="http://127.0.0.1:4040/api/tunnels"
+
+mkdir -p "$STATE_DIR" "$UNIT_DIR" "$HOME/.local/bin"
+
+probe_local() {
+  local code=""
+  if command -v curl >/dev/null 2>&1; then
+    code="$(curl -sS -o /tmp/rideaudit-ngrok-admission-body.txt -w '%{http_code}' --max-time 10 "http://${ADDR}/" || true)"
+  elif command -v wget >/dev/null 2>&1; then
+    if wget -q -O /tmp/rideaudit-ngrok-admission-body.txt --timeout=10 "http://${ADDR}/"; then
+      code="200"
+    else
+      code="000"
+    fi
+  else
+    echo "ADMISSION_PROBE_TOOL=missing"
+    exit 1
+  fi
+  echo "ADMISSION_HTTP=${code}"
+  if [ "$code" != "200" ]; then
+    echo "FAIL_CLOSED=admission_not_up"
+    exit 1
+  fi
+}
+
+resolve_bin() {
+  if command -v ngrok >/dev/null 2>&1; then
+    command -v ngrok
+    return
+  fi
+  if [ -x "$HOME/.local/bin/ngrok" ]; then
+    echo "$HOME/.local/bin/ngrok"
+    return
+  fi
+  echo ""
+}
+
+extract_public_url() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY'
+import json, urllib.request
+try:
+    with urllib.request.urlopen("http://127.0.0.1:4040/api/tunnels", timeout=3) as resp:
+        data = json.load(resp)
+except Exception:
+    raise SystemExit(0)
+urls = [t.get("public_url", "") for t in data.get("tunnels", []) if t.get("public_url")]
+https = [u for u in urls if u.startswith("https://")]
+chosen = (https or urls)
+if chosen:
+    print(chosen[0])
+PY
+    return
+  fi
+  if command -v curl >/dev/null 2>&1; then
+    curl -sS --max-time 3 "$API_URL" | grep -oE 'https://[A-Za-z0-9._-]+\.ngrok[^"]+' | head -n 1 || true
+  fi
+}
+
+write_unit() {
+  local bin="$1"
+  cat > "$UNIT_DIR/rideaudit-ngrok.service" <<EOF
+[Unit]
+Description=RideAudit ngrok HTTP tunnel to admission 127.0.0.1:18080
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=${bin} http ${ADDR} --config ${CONFIG} --log stdout --log-format logfmt
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+EOF
+}
+
+start_systemd() {
+  local bin="$1"
+  export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+  if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+    return 1
+  fi
+  if ! command -v systemctl >/dev/null 2>&1; then
+    return 1
+  fi
+  write_unit "$bin"
+  if ! systemctl --user daemon-reload; then
+    return 1
+  fi
+  systemctl --user enable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  if ! systemctl --user restart rideaudit-ngrok.service; then
+    return 1
+  fi
+  echo "NGROK_MODE=systemd-user"
+  return 0
+}
+
+start_nohup() {
+  local bin="$1"
+  if [ -f "$PID_FILE" ]; then
+    old="$(cat "$PID_FILE" || true)"
+    if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
+      echo "NGROK_MODE=nohup-existing"
+      return 0
+    fi
+  fi
+  nohup "$bin" http "$ADDR" --config "$CONFIG" --log "$LOG_FILE" --log-format logfmt \
+    >"$STATE_DIR/ngrok.out" 2>&1 &
+  echo $! > "$PID_FILE"
+  echo "NGROK_MODE=nohup"
+}
+
+probe_local
+
+if [ ! -f "$CONFIG" ]; then
+  echo "FAIL_CLOSED=missing_config"
+  exit 1
+fi
+
+BIN="$(resolve_bin)"
+if [ -z "$BIN" ]; then
+  echo "FAIL_CLOSED=ngrok_binary_missing"
+  exit 1
+fi
+echo "NGROK_BIN=$BIN"
+
+if ! start_systemd "$BIN"; then
+  start_nohup "$BIN"
+fi
+
+url=""
+i=0
+while [ $i -lt 30 ]; do
+  url="$(extract_public_url || true)"
+  if [ -n "$url" ]; then
+    break
+  fi
+  i=$((i + 1))
+  sleep 1
+done
+
+if [ -z "$url" ]; then
+  echo "FAIL_CLOSED=no_public_url"
+  if [ -f "$LOG_FILE" ]; then
+    grep -Eiv 'authtoken|api_key|authorization' "$LOG_FILE" | grep -E 'eror|crit|ERR_NGROK|failed to start' | tail -n 8 || true
+  fi
+  exit 1
+fi
+
+echo "PUBLIC_URL=$url"
