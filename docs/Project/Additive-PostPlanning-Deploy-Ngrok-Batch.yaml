@@ -30,6 +30,10 @@ records:
       PAYTON-OMARCHY, and OMARCHY to 192.168.0.149; do not invent a second host
       if those names resolve together, and do not treat the loopback cutover as
       Octopus CD complete. Not a live Play FR.
+      Update 2026-09-29: recorded path on file is container octopus-rideaudit on
+      PAYTON-DESKTOP (docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md).
+      That receipt does not mark these ACs satisfied and does not authorize GHCR.
+      approval: pending Payton AGREE for that note. Does not close plan section 9.
     acceptanceCriteria:
       - id: AC-RIDE-063-001
         text: Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to PAYTON-DESKTOP.
@@ -62,6 +66,8 @@ records:
       Operator 2026-09-28. Supersedes any GHCR assumption for public ingress.
       Does not invent GHCR. Does not claim Omarchy loopback cutover or live Play
       as this FR. Current vs target must stay honest in receipts.
+      Update 2026-09-29: ngrok HTTPS is not Caddy edge TLS. Caddy is FR-RIDE-065 and remains Class C.
+      approval: pending Payton AGREE for that note. Does not close plan section 9.
     acceptanceCriteria:
       - id: AC-RIDE-064-001
         text: A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.

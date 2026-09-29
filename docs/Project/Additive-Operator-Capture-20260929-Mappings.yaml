@@ -1,0 +1,45 @@
+# Mappings for the 2026-09-29 operator capture.
+# New IDs plus the updated rows for existing FRs.
+# FR-RIDE-063 row is unchanged in links. Notes-only update. No GHCR.
+# approval: pending Payton AGREE. Does not close plan section 9.
+mappings:
+  - frId: FR-RIDE-065
+    trIds: [TR-RIDE-EDGE-002]
+    testIds: [TEST-RIDE-045]
+    useCaseLocalIds: [UC-RIDE-035]
+  - frId: FR-RIDE-066
+    trIds: [TR-RIDE-VIDEO-013]
+    testIds: [TEST-RIDE-046]
+    useCaseLocalIds: [UC-RIDE-036]
+  - frId: FR-RIDE-067
+    trIds: [TR-RIDE-VIDEO-014]
+    testIds: [TEST-RIDE-047]
+    useCaseLocalIds: [UC-RIDE-037]
+  - frId: FR-RIDE-068
+    trIds: [TR-RIDE-HW-001]
+    testIds: [TEST-RIDE-048]
+    useCaseLocalIds: [UC-RIDE-038]
+  - frId: FR-RIDE-069
+    trIds: [TR-RIDE-LAB-001]
+    testIds: [TEST-RIDE-049]
+    useCaseLocalIds: [UC-RIDE-039]
+  - frId: FR-RIDE-222
+    trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
+    testIds: [TEST-RIDE-028, TEST-RIDE-041]
+    useCaseLocalIds: [UC-RIDE-019, UC-RIDE-034]
+  - frId: FR-RIDE-018
+    trIds: [TR-RIDE-CHAIN-002]
+    testIds: [TEST-RIDE-014, TEST-RIDE-042]
+    useCaseLocalIds: [UC-RIDE-009]
+  - frId: FR-RIDE-056
+    trIds: [TR-RIDE-VIDEO-012, TR-RIDE-VIDEO-015]
+    testIds: [TEST-RIDE-035, TEST-RIDE-043]
+    useCaseLocalIds: [UC-RIDE-025]
+  - frId: FR-RIDE-041
+    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016]
+    testIds: [TEST-RIDE-025, TEST-RIDE-044]
+    useCaseLocalIds: [UC-RIDE-017]
+  - frId: FR-RIDE-063
+    trIds: [TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002]
+    testIds: [TEST-RIDE-038, TEST-RIDE-040]
+    useCaseLocalIds: [UC-RIDE-032]

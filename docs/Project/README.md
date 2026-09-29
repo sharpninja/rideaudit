@@ -25,13 +25,14 @@ Repo root currently has `MCP_TRUSTED.yaml` for workspace `F:\GitHub\rideaudit`. 
    - `Additive-Bluetooth-Pairing-Batch.yaml`
    - `Additive-Avalonia-Grpc-Stack-Batch.yaml`
    - `Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`
-4. Apply `Requirements-Mappings-Batch.yaml` after FR/TR/TEST/UC records exist (use-case localIds map to numeric MCP IDs at runtime). Apply `Additive-PostPlanning-Deploy-Ngrok-Mappings.yaml` after the post-planning batch records exist.
-5. Verify counts: base 74 FRs (52 functional + 22 NFR-as-FR), plus additive FR-RIDE-053..055 (Bluetooth), FR-RIDE-056..062 (Avalonia/gRPC stack), and FR-RIDE-063..064 (Octopus CD + ngrok), plus related TR/TEST/UC records and one mapping per FR. Use-Cases-Batch.yaml must contain a single top-level records key with UC-RIDE-001..031 (duplicate records keys are invalid for strict parsers). UC-RIDE-032..033 live in Additive-PostPlanning-Deploy-Ngrok-Batch.yaml.
+   - `Additive-Operator-Capture-20260929-Batch.yaml`
+4. Apply `Requirements-Mappings-Batch.yaml` after FR/TR/TEST/UC records exist (use-case localIds map to numeric MCP IDs at runtime). Apply `Additive-PostPlanning-Deploy-Ngrok-Mappings.yaml` after the post-planning batch records exist. Apply `Additive-Operator-Capture-20260929-Mappings.yaml` after the 2026-09-29 capture records exist. That capture is draft and pending Payton AGREE. It does not close plan section 9.
+5. Verify counts: base 74 FRs (52 functional + 22 NFR-as-FR), plus additive FR-RIDE-053..055 (Bluetooth), FR-RIDE-056..062 (Avalonia/gRPC stack), FR-RIDE-063..064 (Octopus CD + ngrok), and draft FR-RIDE-065..069 (2026-09-29 operator capture, pending Payton AGREE), plus related TR/TEST/UC records and one mapping per FR. Use-Cases-Batch.yaml must contain a single top-level records key with UC-RIDE-001..031 (duplicate records keys are invalid for strict parsers). UC-RIDE-032..033 live in Additive-PostPlanning-Deploy-Ngrok-Batch.yaml. UC-RIDE-034..039 live in the 2026-09-29 capture batch.
 
 ## ID conventions
 
 - FR: `FR-RIDE-001`..`FR-RIDE-052`, NFRs as `FR-RIDE-201`..`FR-RIDE-222`, additive `FR-RIDE-053`+
-- TR: `TR-RIDE-<SUBAREA>-NNN` with SUBAREA in INGEST, STORE, ANAL, SEAL, CHAIN, ESCROW, PLAY, GPL, SERVER, VIDEO, VIEW, PRIV, SEC, PERF, DEPLOY, EDGE
+- TR: `TR-RIDE-<SUBAREA>-NNN` with SUBAREA in INGEST, STORE, ANAL, SEAL, CHAIN, ESCROW, PLAY, GPL, SERVER, VIDEO, VIEW, PRIV, SEC, PERF, DEPLOY, EDGE, HW, LAB
 - TEST: `TEST-RIDE-NNN`
 - Use cases: local `UC-RIDE-NNN` (MCP assigns numeric IDs at ingest)
 
@@ -48,6 +49,7 @@ Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-
 | Bluetooth pairing | FR-RIDE-053..055 | TR-RIDE-VIDEO-010..011 | TEST-RIDE-034 | UC-RIDE-022..024 |
 | Avalonia/gRPC stack | FR-RIDE-056..062 | TR-RIDE-VIDEO-012, VIEW-005, GPL-004..005, SERVER-008..010 | TEST-RIDE-035..037 | UC-RIDE-025..031 |
 | Post-planning Octopus + ngrok | FR-RIDE-063..064 | TR-RIDE-DEPLOY-001..002, EDGE-001 | TEST-RIDE-038..040 | UC-RIDE-032..033 |
+| Operator capture 2026-09-29 (draft, pending Payton AGREE) | FR-RIDE-065..069 plus updates to FR-RIDE-018, 041, 056, 057, 063, 064, 201, 222 | TR-RIDE-VIEW-006, EDGE-002, VIDEO-013..016, HW-001, LAB-001 plus CHAIN-002 AC update | TEST-RIDE-041..049 | UC-RIDE-034..039 plus AC updates on UC-RIDE-009, 017, 025 |
 
 ## Notes
 

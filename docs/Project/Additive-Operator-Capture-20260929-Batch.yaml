@@ -1,0 +1,659 @@
+# Additive batch: operator capture after plan approval (2026-09-29)
+# Draft BDPv4. approval: pending Payton AGREE.
+# Does not close plan section 9 Class C boxes.
+# Does not mark AC-RIDE-222-001, AC-UC-025-001, live OTS confirmation, or Caddy TLS satisfied.
+# Reconciled updates to existing IDs live in the source batch that already defines that ID.
+# This file holds new IDs only.
+# Author: Sharp Ninja
+records:
+  - kind: fr
+    id: FR-RIDE-065
+    title: Caddy edge TLS distinct from ngrok
+    description: >
+      RideAudit edge TLS is terminated by Caddy and is distinct from ngrok HTTPS.
+      ngrok HTTPS remains FR-RIDE-064 and is not this requirement. Omarchy or
+      PAYTON-DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. This item
+      is Class C and may still be in flight.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29 from plan section 11. approval: pending Payton AGREE.
+      Does not close plan section 9. Does not treat the ngrok public URL as edge TLS.
+    acceptanceCriteria:
+      - id: AC-RIDE-065-001
+        text: Caddy presents edge TLS for the documented RideAudit edge host.
+        isSatisfied: false
+      - id: AC-RIDE-065-002
+        text: An ngrok HTTPS URL is not accepted as the Caddy edge TLS receipt.
+        isSatisfied: false
+      - id: AC-RIDE-065-003
+        text: Loopback or LAN HTTP is not accepted as the Caddy edge TLS receipt. The item stays open while Class C.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-066
+    title: Larger durable default Android UI font
+    description: >
+      The Android capture UI sets a larger durable default font in application
+      styles. Operating system accessibility font scaling is not a substitute
+      for that application default.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. approval: pending Payton AGREE.
+      docs/receipts/android/20260929T145412Z-dual-phone-fold4-edge.md left
+      MainView.axaml FontSize 20 unchanged. That prior size does not satisfy
+      this FR. Does not close plan section 9 or AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-RIDE-066-001
+        text: Capture UI default font is defined in application styles and is larger than the prior FontSize 20 title default.
+        isSatisfied: false
+      - id: AC-RIDE-066-002
+        text: OS accessibility font scaling alone does not satisfy the default font AC.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-067
+    title: Avalonia RemoteControl visual-tree debugging
+    description: >
+      Android debug sessions integrate SharpNinja.Avalonia.RemoteControl so an
+      operator can inspect the live visual tree. ADB UI tapping is not the
+      required method for that inspection.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. approval: pending Payton AGREE.
+      Does not close plan section 9. Does not claim the package is already referenced.
+    acceptanceCriteria:
+      - id: AC-RIDE-067-001
+        text: The Android capture client integrates SharpNinja.Avalonia.RemoteControl for live visual-tree inspection.
+        isSatisfied: false
+      - id: AC-RIDE-067-002
+        text: ADB tapping is not the required debug path for that visual-tree inspection.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-068
+    title: Fold 4 closed landscape forward camera tray
+    description: >
+      A phone tray is sized to securely hold a Samsung Galaxy Z Fold 4 while
+      the phone is CLOSED, oriented LANDSCAPE, with primary cameras facing
+      FORWARD.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. approval: pending Payton AGREE.
+      The generic headrest mount in PLAN-RIDEAUDIT-001-BRACKET (HW-AC-MOUNT-001)
+      is not this tray until a measurement receipt shows Fold 4 closed,
+      landscape, primary cameras forward, and a secure hold. Does not close
+      plan section 9 or the on-vehicle print box.
+    acceptanceCriteria:
+      - id: AC-RIDE-068-001
+        text: The tray securely holds a Galaxy Z Fold 4 in the CLOSED state.
+        isSatisfied: false
+      - id: AC-RIDE-068-002
+        text: The held phone is LANDSCAPE with primary cameras facing FORWARD.
+        isSatisfied: false
+      - id: AC-RIDE-068-003
+        text: A generic two-phone headrest cradle drawing is not accepted as this fit without a Fold 4 closed-landscape measurement receipt.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-069
+    title: Cursor agents on PAYTON-LEGION2 private worker
+    description: >
+      When RideAudit lab work uses Cursor cloud coding agents, those agents
+      run on the PAYTON-LEGION2 private worker so mcpserver-grok-plugin stays
+      available to the agent.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. Lab process requirement, included because
+      RideAudit requirements already cover lab CD and ingress process.
+      approval: pending Payton AGREE. Does not close plan section 9.
+      A single session on that host does not satisfy this AC.
+    acceptanceCriteria:
+      - id: AC-RIDE-069-001
+        text: Cursor cloud coding agents for this repo run on the PAYTON-LEGION2 private worker.
+        isSatisfied: false
+      - id: AC-RIDE-069-002
+        text: That worker path keeps mcpserver-grok-plugin available. An agent path that cannot use the plugin is not the required lab path.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-034
+    title: Operator publishes a lab-signed Windows desktop build
+    actors:
+      - Operator
+    briefDescription: >
+      Operator signs a Windows lab desktop build with CN=RideAudit Lab Self-Signed
+      and records that the result is not Public Trust. Commercial IV plus eSigner
+      or OV plus cloud HSM, and macOS codesign, stay deferred. approval: pending Payton AGREE.
+    basicFlow: |
+      1. Operator publishes the framework-dependent win-x64 desktop build on PAYTON-LEGION2.
+      2. Operator signs it with the lab certificate subject CN=RideAudit Lab Self-Signed and refuses unrelated store certificates.
+      3. Operator records that signtool sees a signature and that verify /pa does not establish Public Trust.
+      4. Operator leaves commercial signing (individual Payton Byrd: IV plus eSigner, or OV plus cloud HSM) and macOS codesign deferred.
+      5. Operator does not treat the lab signature as AC-RIDE-222-001 or plan section 9.
+    acceptanceCriteria:
+      - id: AC-UC-034-001
+        text: Lab win-x64 signing uses CN=RideAudit Lab Self-Signed, is not Public Trust, and does not close AC-RIDE-222-001 or plan section 9.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-222
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-035
+    title: Operator proves Caddy edge TLS apart from ngrok
+    actors:
+      - Operator
+    briefDescription: >
+      Operator shows Caddy edge TLS for RideAudit and does not cite ngrok HTTPS
+      or loopback HTTP as that proof. approval: pending Payton AGREE. Class C.
+    basicFlow: |
+      1. Operator identifies the Caddy edge host for RideAudit.
+      2. Operator records a Caddy TLS receipt for that host.
+      3. Operator keeps the ngrok HTTPS tunnel under FR-RIDE-064 and does not reuse it as the Caddy receipt.
+      4. If Caddy TLS is not up, the AC stays open. Plan section 9 stays unchecked.
+    acceptanceCriteria:
+      - id: AC-UC-035-001
+        text: Caddy edge TLS is shown apart from ngrok HTTPS and apart from loopback HTTP, or the AC stays open.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-065
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-036
+    title: Driver reads capture UI at the app default font
+    actors:
+      - Driver
+    briefDescription: >
+      Driver uses the Android capture UI whose default font comes from application
+      styles and is larger than the prior FontSize 20 default. approval: pending Payton AGREE.
+    basicFlow: |
+      1. Driver opens the Avalonia Android capture UI.
+      2. The default font is the application style, not an OS accessibility override.
+      3. That default is larger than the prior FontSize 20 title default.
+    acceptanceCriteria:
+      - id: AC-UC-036-001
+        text: The capture UI default font is an application style larger than FontSize 20, without relying on OS accessibility scaling.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-066
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-037
+    title: Operator inspects the Android visual tree with RemoteControl
+    actors:
+      - Operator
+    briefDescription: >
+      Operator debugs the Android capture UI through SharpNinja.Avalonia.RemoteControl
+      instead of ADB tapping. approval: pending Payton AGREE.
+    basicFlow: |
+      1. Operator attaches the capture client debug session.
+      2. SharpNinja.Avalonia.RemoteControl shows the live visual tree.
+      3. Operator does not use ADB taps as the required inspection method.
+    acceptanceCriteria:
+      - id: AC-UC-037-001
+        text: Live visual-tree inspection uses SharpNinja.Avalonia.RemoteControl rather than ADB tapping.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-067
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-038
+    title: Operator seats a closed Fold 4 in the forward camera tray
+    actors:
+      - Operator
+    briefDescription: >
+      Operator places a closed Galaxy Z Fold 4 in the phone tray in landscape
+      with primary cameras facing forward. approval: pending Payton AGREE.
+    basicFlow: |
+      1. Operator closes the Galaxy Z Fold 4.
+      2. Operator seats it in the tray in landscape.
+      3. Primary cameras face forward and the phone stays secure.
+    acceptanceCriteria:
+      - id: AC-UC-038-001
+        text: A closed Fold 4 stays seated landscape with primary cameras facing forward.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-068
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-039
+    title: Operator runs Cursor cloud agents on the LEGION2 private worker
+    actors:
+      - Operator
+    briefDescription: >
+      Operator places Cursor cloud coding agents for RideAudit on the
+      PAYTON-LEGION2 private worker so the MCP plugin stays available.
+      approval: pending Payton AGREE.
+    basicFlow: |
+      1. Operator targets the PAYTON-LEGION2 private worker for a Cursor cloud coding agent.
+      2. The agent can use mcpserver-grok-plugin.
+      3. An agent that cannot use the plugin is not accepted as the lab path.
+    acceptanceCriteria:
+      - id: AC-UC-039-001
+        text: The Cursor cloud agent runs on the PAYTON-LEGION2 private worker and can use mcpserver-grok-plugin.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-069
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-VIEW-006
+    title: Lab Authenticode interim and deferred public trust
+    description: >
+      Allow a non-exportable lab Authenticode certificate with subject
+      CN=RideAudit Lab Self-Signed on PAYTON-LEGION2 for win-x64 lab builds.
+      Refuse unrelated store certificates. Do not commit a pfx. Treat verify /pa
+      failure and SmartScreen warning as expected for that lab certificate.
+      Defer Public Trust. Deferred commercial paths are individual publisher
+      Payton Byrd using IV plus eSigner, or OV plus cloud HSM. Defer macOS
+      codesign. Linux Authenticode does not apply.
+    priority: high
+    area: RIDE
+    subarea: VIEW
+    status: pending
+    notes: >
+      Implements FR-RIDE-222. Operator capture 2026-09-29. PR #22.
+      approval: pending Payton AGREE. Does not satisfy AC-RIDE-222-001.
+      Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIEW-006-001
+        text: Lab win-x64 on PAYTON-LEGION2 may be signed with CN=RideAudit Lab Self-Signed. Unrelated store certificates are refused. No pfx is committed.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-006-002
+        text: signtool may see the lab signature while verify /pa fails closed on Public Trust. A SmartScreen warning is expected. That result is not Public Trust.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-006-003
+        text: Commercial signing stays deferred for individual publisher Payton Byrd, using either IV plus eSigner or OV plus cloud HSM.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-006-004
+        text: macOS codesign stays deferred. Linux Authenticode does not apply. Windows-only lab builds do not satisfy AC-RIDE-222-001.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-EDGE-002
+    title: Caddy edge TLS separate from the ngrok tunnel
+    description: >
+      Terminate RideAudit edge TLS with Caddy. Keep that certificate path
+      distinct from the ngrok HTTPS tunnel and from loopback or LAN HTTP.
+    priority: high
+    area: RIDE
+    subarea: EDGE
+    status: pending
+    notes: >
+      Implements FR-RIDE-065. Operator capture 2026-09-29. Class C.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-EDGE-002-001
+        text: Caddy is the edge TLS terminator for the documented RideAudit edge.
+        isSatisfied: false
+      - id: AC-RIDE-EDGE-002-002
+        text: ngrok HTTPS and loopback HTTP are excluded from the Caddy TLS evidence.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-013
+    title: Application style default font
+    description: >
+      Set the Android capture default UI font in application styles, larger
+      than the prior FontSize 20 title default. Do not rely on OS accessibility
+      scaling as the only control.
+    priority: medium
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-066. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-013-001
+        text: Application styles define a default UI font larger than FontSize 20.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-013-002
+        text: The style default remains in effect when OS accessibility scaling is at the platform default.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-014
+    title: SharpNinja.Avalonia.RemoteControl debug attach
+    description: >
+      Reference SharpNinja.Avalonia.RemoteControl from the Android capture
+      client and expose the live visual tree to the operator during debug.
+    priority: medium
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-067. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-014-001
+        text: The capture client references SharpNinja.Avalonia.RemoteControl.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-014-002
+        text: A debug session can read the live visual tree without ADB taps as the inspection method.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-015
+    title: Fold 4 USB primary device proof
+    description: >
+      Treat a Samsung Galaxy Z Fold 4 attached by USB as the primary device
+      for AC-UC-025 class runtime proof. Emulator-only runs are not that proof.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-056. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not mark AC-UC-025-001 satisfied.
+      Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-015-001
+        text: Primary runtime evidence names a Galaxy Z Fold 4 on USB.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-015-002
+        text: Emulator-only evidence is rejected for that runtime class.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-016
+    title: Motorola edge 2024 wireless adb secondary
+    description: >
+      Use a Motorola edge 2024 reached by wireless adb as the lab secondary
+      phone for dual-phone roles. It does not replace the Fold 4 primary.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-041. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close AC-UC-025-001 or plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-016-001
+        text: The secondary lab phone is a Motorola edge 2024 over wireless adb.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-016-002
+        text: The secondary phone is not accepted as the Fold 4 primary proof.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-HW-001
+    title: Fold 4 closed landscape tray geometry
+    description: >
+      Size the phone tray so a Galaxy Z Fold 4 fits while CLOSED, in LANDSCAPE,
+      with primary cameras facing FORWARD, and stays secure in that pose.
+    priority: high
+    area: RIDE
+    subarea: HW
+    status: pending
+    notes: >
+      Implements FR-RIDE-068. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close the bracket on-vehicle print or plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-HW-001-001
+        text: Tray geometry is specified for Fold 4 CLOSED, LANDSCAPE, primary cameras FORWARD.
+        isSatisfied: false
+      - id: AC-RIDE-HW-001-002
+        text: A fit check shows the closed phone remains seated in that pose.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-LAB-001
+    title: Private worker hosts Cursor cloud agents
+    description: >
+      Configure Cursor cloud coding agents for this repo to run on the
+      PAYTON-LEGION2 private worker so mcpserver-grok-plugin is reachable.
+    priority: high
+    area: RIDE
+    subarea: LAB
+    status: pending
+    notes: >
+      Implements FR-RIDE-069. Operator capture 2026-09-29. Lab process.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-RIDE-LAB-001-001
+        text: Agent runs for this repo target the PAYTON-LEGION2 private worker.
+        isSatisfied: false
+      - id: AC-RIDE-LAB-001-002
+        text: The worker path can invoke mcpserver-grok-plugin.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-041
+    title: Lab Authenticode is not Public Trust
+    description: >
+      Verify a lab win-x64 signature with subject CN=RideAudit Lab Self-Signed
+      is recorded as signed and not Public Trust, that unrelated store
+      certificates are refused, that no pfx is committed, and that commercial
+      IV plus eSigner or OV plus cloud HSM and macOS codesign stay deferred.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-222. Operator capture 2026-09-29. PR #22.
+      approval: pending Payton AGREE. Does not close AC-RIDE-222-001 or plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-041-001
+        text: Evidence shows CN=RideAudit Lab Self-Signed on win-x64, signtool sees a signature, and verify /pa does not establish Public Trust.
+        isSatisfied: false
+      - id: AC-TEST-041-002
+        text: Evidence shows commercial individual Payton Byrd signing (IV plus eSigner or OV plus cloud HSM) and macOS codesign remain deferred, and AC-RIDE-222-001 stays unsatisfied.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-042
+    title: Live OTS calendar submit without txid
+    description: >
+      Verify a live OpenTimestamps public calendar submit can be receipted as
+      pending, and that confirmation, Bitcoin txid, block height, admission,
+      and live_bitcoin_metadata stay false until upgrade succeeds.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-018. Operator capture 2026-09-29. PR #23.
+      approval: pending Payton AGREE. Class C for confirmation. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-042-001
+        text: A live public calendar submit receipt shows HTTP success and a pending attestation, and it is not a documented fixture calendar.
+        isSatisfied: false
+      - id: AC-TEST-042-002
+        text: The same evidence has no Bitcoin txid or block height, does not set live_bitcoin_metadata, and does not admit a record.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-043
+    title: Fold 4 USB primary, not emulator-only
+    description: >
+      Verify AC-UC-025 class runtime proof names a Samsung Galaxy Z Fold 4
+      attached by USB. Emulator-only runs fail this test. The test does not
+      mark AC-UC-025-001 satisfied.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-056. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-043-001
+        text: Runtime evidence identifies a Galaxy Z Fold 4 on USB as the primary device.
+        isSatisfied: false
+      - id: AC-TEST-043-002
+        text: Emulator-only evidence is a failure for this runtime class, and AC-UC-025-001 remains unsatisfied.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-044
+    title: Motorola edge 2024 wireless secondary
+    description: >
+      Verify the lab secondary phone for dual-phone roles is a Motorola edge
+      2024 over wireless adb, and that it is not substituted for the Fold 4 primary.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-041. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close AC-UC-025-001 or plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-044-001
+        text: Evidence shows a Motorola edge 2024 connected by wireless adb in the secondary role.
+        isSatisfied: false
+      - id: AC-TEST-044-002
+        text: The secondary attachment is not scored as Fold 4 primary proof or as AC-UC-025-001 closure.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-045
+    title: Caddy TLS receipt excludes ngrok
+    description: >
+      Verify edge TLS evidence names Caddy and does not use ngrok HTTPS or
+      loopback HTTP as the pass condition.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-065. Operator capture 2026-09-29. Class C.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-045-001
+        text: The receipt names Caddy as the TLS terminator.
+        isSatisfied: false
+      - id: AC-TEST-045-002
+        text: ngrok HTTPS and loopback or LAN HTTP are recorded as non-proof for this test.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-046
+    title: App style font larger than FontSize 20
+    description: >
+      Verify application styles set a capture UI default font larger than
+      FontSize 20 and that OS accessibility scaling is not the only control.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-066. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-046-001
+        text: A style or test asserts the default UI font is larger than FontSize 20.
+        isSatisfied: false
+      - id: AC-TEST-046-002
+        text: The assertion targets application styles, not only OS accessibility settings.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-047
+    title: RemoteControl visual tree without ADB taps
+    description: >
+      Verify SharpNinja.Avalonia.RemoteControl is integrated and that visual-tree
+      debug evidence does not depend on ADB tapping.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-067. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-047-001
+        text: The capture project references SharpNinja.Avalonia.RemoteControl.
+        isSatisfied: false
+      - id: AC-TEST-047-002
+        text: Debug evidence for the visual tree does not require ADB taps.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-048
+    title: Fold 4 closed landscape tray fit
+    description: >
+      Verify tray dimensions or a fit receipt hold a Galaxy Z Fold 4 CLOSED,
+      LANDSCAPE, with primary cameras facing FORWARD.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-068. Operator capture 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-048-001
+        text: Fit evidence states CLOSED, LANDSCAPE, and primary cameras FORWARD for a Galaxy Z Fold 4.
+        isSatisfied: false
+      - id: AC-TEST-048-002
+        text: The phone remains secure in that pose. A generic cradle note without those three conditions fails.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-049
+    title: LEGION2 private worker agent path
+    description: >
+      Verify Cursor cloud coding agents for this repo are targeted at the
+      PAYTON-LEGION2 private worker and that mcpserver-grok-plugin is available there.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-069. Operator capture 2026-09-29. Lab process.
+      approval: pending Payton AGREE. Does not close plan section 9.
+    acceptanceCriteria:
+      - id: AC-TEST-049-001
+        text: Agent target evidence names the PAYTON-LEGION2 private worker.
+        isSatisfied: false
+      - id: AC-TEST-049-002
+        text: Plugin availability on that worker is shown. A host that cannot load the plugin fails.
+        isSatisfied: false
+
+mappings:
+  - frId: FR-RIDE-065
+    trIds: [TR-RIDE-EDGE-002]
+    testIds: [TEST-RIDE-045]
+    useCaseLocalIds: [UC-RIDE-035]
+  - frId: FR-RIDE-066
+    trIds: [TR-RIDE-VIDEO-013]
+    testIds: [TEST-RIDE-046]
+    useCaseLocalIds: [UC-RIDE-036]
+  - frId: FR-RIDE-067
+    trIds: [TR-RIDE-VIDEO-014]
+    testIds: [TEST-RIDE-047]
+    useCaseLocalIds: [UC-RIDE-037]
+  - frId: FR-RIDE-068
+    trIds: [TR-RIDE-HW-001]
+    testIds: [TEST-RIDE-048]
+    useCaseLocalIds: [UC-RIDE-038]
+  - frId: FR-RIDE-069
+    trIds: [TR-RIDE-LAB-001]
+    testIds: [TEST-RIDE-049]
+    useCaseLocalIds: [UC-RIDE-039]
+  - frId: FR-RIDE-222
+    trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
+    testIds: [TEST-RIDE-028, TEST-RIDE-041]
+    useCaseLocalIds: [UC-RIDE-019, UC-RIDE-034]
+  - frId: FR-RIDE-018
+    trIds: [TR-RIDE-CHAIN-002]
+    testIds: [TEST-RIDE-014, TEST-RIDE-042]
+    useCaseLocalIds: [UC-RIDE-009]
+  - frId: FR-RIDE-056
+    trIds: [TR-RIDE-VIDEO-012, TR-RIDE-VIDEO-015]
+    testIds: [TEST-RIDE-035, TEST-RIDE-043]
+    useCaseLocalIds: [UC-RIDE-025]
+  - frId: FR-RIDE-041
+    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016]
+    testIds: [TEST-RIDE-025, TEST-RIDE-044]
+    useCaseLocalIds: [UC-RIDE-017]
+  - frId: FR-RIDE-063
+    trIds: [TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002]
+    testIds: [TEST-RIDE-038, TEST-RIDE-040]
+    useCaseLocalIds: [UC-RIDE-032]

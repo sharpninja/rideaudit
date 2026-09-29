@@ -277,13 +277,19 @@ records:
     area: RIDE
     subarea: CHAIN
     status: pending
-    notes: "Implements/supports: FR-RIDE-018, FR-RIDE-212"
+    notes: "Implements/supports: FR-RIDE-018, FR-RIDE-212. Update 2026-09-29: live public OpenTimestamps submit may stay pending (PR #23). approval: pending Payton AGREE. Does not close plan section 9."
     acceptanceCriteria:
       - id: AC-RIDE-CHAIN-002-001
         text: "Chain configurable by env/jurisdiction."
         isSatisfied: false
       - id: AC-RIDE-CHAIN-002-002
         text: "Confirmation metadata recorded."
+        isSatisfied: false
+      - id: AC-RIDE-CHAIN-002-003
+        text: "A live public OpenTimestamps calendar submit that returns a pending proof is recorded as pending. It does not fill transaction hash, block height, or live_bitcoin_metadata. Fixture calendars are not this AC."
+        isSatisfied: false
+      - id: AC-RIDE-CHAIN-002-004
+        text: "Confirmation and Bitcoin txid stay unsatisfied until a later upgrade succeeds."
         isSatisfied: false
   - kind: tr
     id: TR-RIDE-CHAIN-003
@@ -677,7 +683,7 @@ records:
     area: RIDE
     subarea: VIEW
     status: pending
-    notes: "Implements/supports: FR-RIDE-049, FR-RIDE-222"
+    notes: "Implements/supports: FR-RIDE-049, FR-RIDE-222. Update 2026-09-29: macOS codesign and macOS publish are deferred (Windows-only lab builds for now). AC-RIDE-VIEW-001-001 stays unsatisfied for the macOS leg. Lab Authenticode policy is TR-RIDE-VIEW-006. approval: pending Payton AGREE. Does not close plan section 9."
     acceptanceCriteria:
       - id: AC-RIDE-VIEW-001-001
         text: "Builds on Win/Linux/macOS."
