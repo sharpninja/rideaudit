@@ -1,9 +1,9 @@
 # Operator requirement capture after plan approval
 
-Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T15:55:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
+Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T16:09:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
 SPDX: GPL-2.0-only.
 
-This receipt lists draft BDPv4 entities captured from operator direction after PLAN-RIDEAUDIT-001 approval (Astra AGREE R7 on r3.3). Every new or updated row is pending Payton AGREE. Astra plan AGREE is not Payton section 8 AGREE. None of these rows close plan section 9 Class C boxes. None mark AC-RIDE-222-001 or AC-UC-025-001 satisfied. Live OpenTimestamps confirmation and Caddy edge TLS stay open.
+This receipt lists draft BDPv4 entities captured from operator direction after PLAN-RIDEAUDIT-001 approval (Astra AGREE R7 on r3.3). Every new or updated row is pending Payton AGREE. Astra plan AGREE is not Payton section 8 AGREE. Section 9 Astra/Payton plan-acceptance boxes are not open work (Payton 2026-09-29). None mark AC-RIDE-222-001 or AC-UC-025-001 satisfied. Live OpenTimestamps confirmation and Caddy edge TLS stay open.
 
 The 15:15Z text of this file was a partial Class C inventory. This revision replaces that list. The partial list is not frozen and is not complete.
 
@@ -37,6 +37,8 @@ Addendum 2026-09-29T15:46:19Z: storyboard tests must walk each step sequence thr
 Addendum 2026-09-29T15:51:33Z: screenshot validation includes usability validation in addition to baseline comparison. Fail closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects from the screenshot or the AvaloniaRemote visual tree. A pixel match alone does not satisfy the ACs when a usability defect is present. `updateBatch` updated FR-RIDE-073 and TR-RIDE-VIDEO-017 (`total: 2`, `errors: []`). `createBatch` created TEST-RIDE-054 (`errors: []`). Mapping for FR-RIDE-073 is TR-RIDE-VIDEO-017, TEST-RIDE-053, and TEST-RIDE-054. UC-RIDE-043 (170) brief includes AC-UC-043-007 and AC-UC-043-008. `getFr` AC-RIDE-073-009 stays unsatisfied. Plan section 9 is not closed.
 
 Addendum 2026-09-29T15:54:53Z: SharpNinja.aiUnit for RideAudit Android visual and usability tests must use the codex-subscription profile. Another profile does not satisfy the AC. `updateBatch` updated FR-RIDE-073, TR-RIDE-VIDEO-017, and TEST-RIDE-054 (`total: 3`, `errors: []`). New ACs: AC-RIDE-073-010, AC-UC-043-009, AC-RIDE-VIDEO-017-010, AC-TEST-054-004. UC-RIDE-043 (170) brief updated. `getFr` AC-RIDE-073-010 stays unsatisfied. Plan section 9 is not closed.
+
+Addendum 2026-09-29T16:09:00Z: Payton directed that Section 9 Astra/Payton plan-acceptance boxes are not open work. No new FR or AC treats Section 9 as pending Class C. Capture notes and ACs that only kept those boxes as open Class C work were removed. `workflow.requirements.updateBatch` updated 47 FR/TR/TEST records in six batches (`total` 8, 8, 8, 8, 8, 7; `success: true`). Use-case briefs updated and left Draft: 136, 137, 144, 149, 152, 161, 167, 168, 170. `getFr` FR-RIDE-070, FR-RIDE-071, and FR-RIDE-041, and `GetAsync` for use cases 167, 161, 137, and 162, no longer contain section 9. `isSatisfied` stays false. Product items stay pending: Public Trust, Caddy TLS, live OTS txid, AC-RIDE-222-001, AC-UC-025-001, HW1, and P11b. Historical addenda above keep their original wording.
 
 New MCP use cases (approvalStatus left Draft, not Approved):
 
@@ -91,6 +93,6 @@ Brief updates this revision: 137 (UC-RIDE-010), 149 (UC-RIDE-022), 159 (UC-RIDE-
 
 FR-RIDE-068 (Fold 4 tray as its own FR) is withdrawn. Bracket plan HW-AC-MOUNT criteria stay on FR-RIDE-041. UC-RIDE-038 remains and realizes FR-RIDE-041. MCP no longer has FR-RIDE-068.
 
-## Not closed
+## Still open
 
-Plan section 9 stays unchecked. Public Trust is not claimed. Caddy TLS is not receipted. Live OTS has no Bitcoin txid. AC-RIDE-222-001 and AC-UC-025-001 stay unsatisfied. HW1 on-vehicle print stays open. A lab signature, an Octopus receipt-on-file, and an ngrok HTTP 200 are evidence, not AC satisfaction.
+Public Trust is not claimed. Caddy TLS is not receipted. Live OTS has no Bitcoin txid. AC-RIDE-222-001 and AC-UC-025-001 stay unsatisfied. HW1 on-vehicle print stays open. A lab signature, an Octopus receipt-on-file, and an ngrok HTTP 200 are evidence, not AC satisfaction. Section 9 Astra/Payton plan-acceptance boxes are not open work (Payton 2026-09-29). That direction does not satisfy the product items in this section.

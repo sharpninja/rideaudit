@@ -1,4 +1,4 @@
-﻿
+
 # Additive batch: Bluetooth driver-rider dual-phone roles (2026-09-27)
 records:
   - kind: fr
@@ -11,7 +11,7 @@ records:
     notes: >
       Driver phone and passenger (rider-side) phone. Not Lyft Bluetooth.
       Update 2026-09-29 full history: pairing is RideAudit Bluetooth only.
-      approval: pending Payton AGREE for that AC. Does not close plan section 9.
+      approval: pending Payton AGREE for that AC.
     acceptanceCriteria:
       - id: AC-RIDE-053-001
         text: Phones discover peers via Bluetooth and only complete pairing when both sides confirm driver vs passenger role and shared session intent.
