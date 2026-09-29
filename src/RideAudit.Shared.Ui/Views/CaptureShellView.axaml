@@ -1,22 +1,214 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="RideAudit.Shared.Ui.Views.CaptureShellView"
+             Background="#F4F7FA"
              FontSize="{StaticResource RideAuditBodyFontSize}">
+  <UserControl.Styles>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="BorderBrush" Value="#D5DEE8" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="16" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+    <Style Selector="Button.card">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="Foreground" Value="#1A2433" />
+      <Setter Property="BorderBrush" Value="#D5DEE8" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="16" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+    <Style Selector="Button.selected">
+      <Setter Property="BorderBrush" Value="#173E66" />
+      <Setter Property="BorderThickness" Value="2" />
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="#173E66" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="16" />
+      <Setter Property="Margin" Value="0,8,0,0" />
+    </Style>
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="#5C6B7C" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="TextBlock.wordmark">
+      <Setter Property="FontSize" Value="28" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+  </UserControl.Styles>
   <ScrollViewer>
-  <StackPanel Spacing="16">
-    <TextBlock x:Name="ScreenId" Text="WF-01" />
-    <TextBlock Text="Select your role for session" />
-    <Button x:Name="DriverButton" Content="DRIVER  Session coordinator" />
-    <Button x:Name="PassengerButton" Content="PASSENGER  Video compositor" />
-    <TextBlock x:Name="PairingStatus" Text="Bluetooth discovery idle" />
-    <Button x:Name="DiscoverButton" Content="Discover RideAudit peer" />
-    <TextBlock x:Name="ClockText" Text="Session clock not started" />
-    <Button x:Name="StartButton" Content="Start session" />
-    <Button x:Name="StopButton" Content="Stop session" IsEnabled="False" />
-    <TextBlock x:Name="SpiderGraph" Text="Spider graph idle" />
-    <TextBlock x:Name="SealStatus" Text="Seal not started" />
-    <TextBlock x:Name="FailClosedText" IsVisible="False" />
-    <TextBlock x:Name="SubmitStatus" Text="No submission" />
-  </StackPanel>
+    <Grid Margin="20,12,20,24">
+      <TextBlock x:Name="ScreenId" Text="WF-01" />
+
+      <StackPanel x:Name="RolePage" Spacing="8">
+        <Border Width="64" Height="64" CornerRadius="32" Background="#173E66" HorizontalAlignment="Center" Margin="0,24,0,8" />
+        <TextBlock Classes="wordmark" Text="RideAudit" />
+        <TextBlock Classes="muted" HorizontalAlignment="Center" Text="Dual-phone telematics audit" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8" Margin="0,8,0,4">
+          <Border Background="#FFF4D8" CornerRadius="13" Padding="10,4">
+            <TextBlock Foreground="#8A5A00" FontSize="12" Text="GPL-2.0" />
+          </Border>
+          <Border Background="#E5F6F1" CornerRadius="13" Padding="10,4">
+            <TextBlock x:Name="IntegrityBadge" Foreground="#0C7A62" FontSize="12" Text="Play Integrity OK" />
+          </Border>
+        </StackPanel>
+        <TextBlock Classes="muted" HorizontalAlignment="Center" Margin="0,8,0,8" Text="Select your role for this session" />
+        <Button x:Name="DriverButton" Classes="card">
+          <StackPanel Spacing="2">
+            <TextBlock FontWeight="Bold" Text="Driver" />
+            <TextBlock Text="Session coordinator" />
+            <TextBlock Classes="muted" Text="Clock master and sealed submit" />
+          </StackPanel>
+        </Button>
+        <Button x:Name="PassengerButton" Classes="card">
+          <StackPanel Spacing="2">
+            <TextBlock FontWeight="Bold" Text="Passenger" />
+            <TextBlock Text="Video sync and composite" />
+            <TextBlock Classes="muted" Text="Telematics overlay" />
+          </StackPanel>
+        </Button>
+        <TextBlock Classes="muted" Text="Vehicle" Margin="0,8,0,0" />
+        <Border Classes="card">
+          <TextBlock Text="VA-1042" />
+        </Border>
+        <Button x:Name="ContinueButton" Classes="primary" Content="Continue to Bluetooth pairing" />
+        <TextBlock Classes="muted" HorizontalAlignment="Center" Text="About / source    Privacy notice" />
+      </StackPanel>
+
+      <StackPanel x:Name="DiscoverPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" Text="Bluetooth discover" />
+        <TextBlock x:Name="PairingStatus" Text="Scanning for RideAudit peers..." />
+        <TextBlock Classes="muted" Text="Invite code: 7K2M" />
+        <TextBlock FontWeight="SemiBold" Text="Nearby peers" Margin="0,8,0,0" />
+        <Button x:Name="PeerButton" Classes="card">
+          <StackPanel Spacing="2">
+            <TextBlock Text="Pixel-7a    PASSENGER?    -42 dBm" />
+            <TextBlock Classes="muted" Text="code hint: 7K2M" />
+          </StackPanel>
+        </Button>
+        <Border Classes="card">
+          <StackPanel Spacing="2">
+            <TextBlock Text="SM-S911    unknown    -71 dBm" />
+            <TextBlock Classes="muted" Text="code hint: ----" />
+          </StackPanel>
+        </Border>
+        <TextBlock x:Name="AdvertiseStatus" Text="Advertising as: RideAudit-Driver" />
+        <TextBlock Classes="muted" Text="Vehicle: VA-1042" />
+        <Button x:Name="DiscoverButton" Classes="primary" Content="Rescan" />
+        <TextBlock Classes="muted" Text="Both phones must confirm roles. This is RideAudit pairing, not Lyft." />
+      </StackPanel>
+
+      <StackPanel x:Name="PairPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" Text="Confirm pairing" />
+        <TextBlock FontWeight="SemiBold" Text="Session draft" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Session   DS-20260927-A1" />
+            <TextBlock Text="Vehicle   VA-1042" />
+            <TextBlock Text="Invite    7K2M" />
+          </StackPanel>
+        </Border>
+        <TextBlock FontWeight="SemiBold" Text="This phone" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <TextBlock x:Name="LocalRoleLine" Text="Role: DRIVER (coordinator)" />
+            <TextBlock Text="Device: this phone" />
+            <TextBlock Text="Play Integrity: pending live check" />
+          </StackPanel>
+        </Border>
+        <TextBlock FontWeight="SemiBold" Text="Peer phone" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <TextBlock x:Name="PeerRoleLine" Text="Role: PASSENGER (compositor)" />
+            <TextBlock Text="Device: Pixel-7a" />
+            <TextBlock Text="Play Integrity: pending live check" />
+          </StackPanel>
+        </Border>
+        <CheckBox x:Name="ConfirmCheck" Content="I confirm this role and shared session intent" />
+        <Button x:Name="ConfirmPairButton" Classes="primary" Content="Confirm pair" />
+      </StackPanel>
+
+      <StackPanel x:Name="DriverPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" Text="Driver dashboard" />
+        <TextBlock Text="Session DS-20260927-A1    VA-1042" />
+        <TextBlock x:Name="LinkStatus" Text="Peer link: not a live radio peer" />
+        <TextBlock FontWeight="SemiBold" Text="Readiness" Margin="0,8,0,0" />
+        <TextBlock Text="Bluetooth pair: layout only" />
+        <TextBlock Text="Passenger compositor: not confirmed live" />
+        <TextBlock Text="Play Integrity: not called" />
+        <TextBlock Text="Seal module: waits for stop" />
+        <TextBlock Text="Storage: not measured" />
+        <TextBlock FontWeight="SemiBold" Text="Clock master (this phone)" Margin="0,8,0,0" />
+        <TextBlock x:Name="ClockText" Text="Session clock not started" />
+        <TextBlock Text="Status: PAIRED / IDLE" />
+        <Button x:Name="StartButton" Classes="primary" Content="START SESSION" />
+        <Button x:Name="StopButton" Classes="primary" Content="STOP" IsEnabled="False" />
+        <TextBlock Classes="muted" Text="After stop: Seal, then submit" />
+      </StackPanel>
+
+      <StackPanel x:Name="PassengerPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" Text="Passenger capture" />
+        <TextBlock Text="REC    DS-20260927-A1" />
+        <TextBlock Classes="muted" Text="Clock slave. Stop is owned by the driver phone." />
+        <Border Classes="card" Height="160">
+          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="LOCAL CAMERA (composite)" />
+        </Border>
+        <TextBlock FontWeight="SemiBold" Text="Telematics overlay" />
+        <Border Classes="card">
+          <TextBlock x:Name="SpiderGraph" Text="Spider graph idle" />
+        </Border>
+        <TextBlock Classes="muted" Text="Status: waiting for the driver clock" />
+      </StackPanel>
+
+      <StackPanel x:Name="SealPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" Text="Seal at collect" />
+        <TextBlock Text="Session DS-20260927-A1" />
+        <TextBlock Text="Package: passenger-composite-01" />
+        <TextBlock x:Name="SealStatus" Text="Seal not started" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <TextBlock Text="chain_id: btc-ots" />
+            <TextBlock Text="receipt: pending" />
+            <TextBlock Text="attest: not issued" />
+          </StackPanel>
+        </Border>
+        <TextBlock Classes="muted" Text="Do not power off. Unsealed data will not be uploaded." />
+        <Button x:Name="SubmitButton" Classes="primary" Content="Continue to sealed submit" />
+      </StackPanel>
+
+      <StackPanel x:Name="SubmitPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" Text="Sealed submit" />
+        <TextBlock Text="Public server admission" />
+        <Border Classes="card">
+          <TextBlock Text="driver-telematics    waiting for seal" />
+        </Border>
+        <Border Classes="card">
+          <TextBlock Text="passenger-composite    waiting for seal" />
+        </Border>
+        <TextBlock Classes="muted" Text="Server: sealed ciphertext only. No decrypt at ingest." />
+        <TextBlock x:Name="SubmitStatus" Text="No submission" />
+      </StackPanel>
+
+      <StackPanel x:Name="FailPage" Spacing="8" IsVisible="False">
+        <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Foreground="#8A1C1C" Text="NOT ADMISSIBLE" />
+        <Border Classes="card" BorderBrush="#E7B4B4">
+          <TextBlock x:Name="FailClosedText" TextWrapping="Wrap" />
+        </Border>
+        <TextBlock FontWeight="SemiBold" Text="What you can do" />
+        <TextBlock Classes="muted" Text="Evidence was not uploaded." />
+        <Button x:Name="ReturnButton" Classes="primary" Content="Return to safe screen" />
+      </StackPanel>
+    </Grid>
   </ScrollViewer>
 </UserControl>

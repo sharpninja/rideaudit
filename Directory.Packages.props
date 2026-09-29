@@ -21,6 +21,7 @@
     <PackageVersion Include="Avalonia.Headless.XUnit" Version="12.1.3" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
     <PackageVersion Include="SharpNinja.Avalonia.RemoteControl.Runtime" Version="0.7.4" />
+    <PackageVersion Include="SharpNinja.Avalonia.RemoteControl.Protocol" Version="0.7.4" />
     <PackageVersion Include="SharpNinja.aiUnit" Version="3.0.0" />
     <PackageVersion Include="Svg.Skia" Version="5.2.3" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />

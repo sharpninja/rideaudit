@@ -171,28 +171,45 @@ public sealed class AdbDeviceSession
         {
             case "WF-01":
                 return;
+            case "WF-02":
+                TapResource("DriverButton", 0);
+                TapResource("ContinueButton", 2);
+                return;
+            case "WF-03":
+                TapResource("DriverButton", 0);
+                TapResource("ContinueButton", 2);
+                TapResource("PeerButton", 2);
+                return;
             case "WF-04":
                 TapResource("DriverButton", 0);
+                TapResource("ContinueButton", 2);
+                TapResource("PeerButton", 2);
+                TapResource("ConfirmCheck", 2);
+                TapResource("ConfirmPairButton", 2);
                 return;
             case "WF-05":
                 TapResource("PassengerButton", 0);
-                return;
-            case "WF-02":
-                TapResource("DriverButton", 0);
-                TapResource("DiscoverButton", 4);
-                return;
-            case "WF-08":
-                TapResource("PassengerButton", 0);
-                TapResource("StartButton", 6);
+                TapResource("ContinueButton", 2);
+                TapResource("PeerButton", 2);
+                TapResource("ConfirmCheck", 2);
+                TapResource("ConfirmPairButton", 2);
                 return;
             case "WF-06":
-                TapResource("DriverButton", 0);
-                TapResource("StartButton", 6);
+                Navigate("WF-04");
+                TapResource("StartButton", 4);
                 TapResource("StopButton", 4);
                 return;
             case "WF-07":
+                Navigate("WF-06");
+                TapResource("SubmitButton", 4);
+                return;
+            case "WF-08":
                 TapResource("DriverButton", 0);
-                TapResource("StopButton", 4);
+                TapResource("ContinueButton", 2);
+                TapResource("PeerButton", 2);
+                TapResource("ConfirmCheck", 2);
+                TapResource("ConfirmPairButton", 2);
+                TapResource("StartButton", 4);
                 return;
             default:
                 return;
@@ -216,6 +233,9 @@ public sealed class AdbDeviceSession
         Shell("input tap " + x + " " + y, TimeSpan.FromSeconds(15));
         return true;
     }
+
+    public (int ExitCode, string Text) ShellPublic(string command) =>
+        Run(adb, "-s " + Serial + " " + command, TimeSpan.FromSeconds(20));
 
     private (int ExitCode, string Text) Shell(string command, TimeSpan timeout) =>
         Run(adb, "-s " + Serial + " shell " + command, timeout);
