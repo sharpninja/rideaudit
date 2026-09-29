@@ -2,7 +2,7 @@
 # New IDs plus the updated rows for existing FRs.
 # FR-RIDE-068 was withdrawn. Cradle TR/TEST/UC map to FR-RIDE-041.
 # FR-RIDE-063 row links are unchanged. Omarchy compose is an AC on that FR, not a new FR.
-# approval: pending Payton AGREE.
+# approval: Payton AGREE 2026-09-29.
 mappings:
   - frId: FR-RIDE-065
     trIds: [TR-RIDE-EDGE-002]

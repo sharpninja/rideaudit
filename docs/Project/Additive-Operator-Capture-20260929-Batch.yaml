@@ -1,5 +1,5 @@
 # Additive batch: operator capture after plan approval (2026-09-29)
-# Draft BDPv4. approval: pending Payton AGREE.
+# BDPv4. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied.
 # Plan section 9 Astra/Payton acceptance boxes are not open work (Payton 2026-09-29).
 # Does not mark AC-RIDE-222-001, AC-UC-025-001, live OTS confirmation, or Caddy TLS satisfied.
 # Reconciled updates to existing IDs live in the source batch that already defines that ID.
@@ -18,7 +18,7 @@ records:
     area: RIDE
     status: pending
     notes: >
-      Operator capture 2026-09-29 from plan section 11. approval: pending Payton AGREE.
+      Operator capture 2026-09-29 from plan section 11. approval: Payton AGREE 2026-09-29.
       Does not treat the ngrok public URL as edge TLS.
     acceptanceCriteria:
       - id: AC-RIDE-065-001
@@ -42,7 +42,7 @@ records:
     area: RIDE
     status: pending
     notes: >
-      Operator capture 2026-09-29. approval: pending Payton AGREE.
+      Operator capture 2026-09-29. approval: Payton AGREE 2026-09-29.
       docs/receipts/android/20260929T145412Z-dual-phone-fold4-edge.md left
       MainView.axaml FontSize 20 unchanged. That prior size does not satisfy
       this FR. Does not close AC-UC-025-001.
@@ -65,7 +65,7 @@ records:
     area: RIDE
     status: pending
     notes: >
-      Operator capture 2026-09-29. approval: pending Payton AGREE.
+      Operator capture 2026-09-29. approval: Payton AGREE 2026-09-29.
       Does not claim the package is already referenced.
     acceptanceCriteria:
       - id: AC-RIDE-067-001
@@ -88,7 +88,7 @@ records:
     notes: >
       Operator capture 2026-09-29. Lab process requirement, included because
       RideAudit requirements already cover lab CD and ingress process.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
       A single session on that host does not satisfy this AC.
       Cursor Desktop is installed on PAYTON-LEGION2. Agent identity is ninja@thesharp.ninja.
     acceptanceCriteria:
@@ -115,7 +115,7 @@ records:
       and records that the result is not Public Trust. Commercial signing is
       individual Payton Byrd using IV plus eSigner, not an organization OV
       certificate, and must not be purchased yet. macOS codesign stays deferred.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator publishes the framework-dependent win-x64 desktop build on PAYTON-LEGION2.
       2. Operator signs it with the lab certificate subject CN=RideAudit Lab Self-Signed and refuses unrelated store certificates.
@@ -137,7 +137,7 @@ records:
       - Operator
     briefDescription: >
       Operator shows Caddy edge TLS for RideAudit and does not cite ngrok HTTPS
-      or loopback HTTP as that proof. approval: pending Payton AGREE. Class C.
+      or loopback HTTP as that proof. approval: Payton AGREE 2026-09-29. Class C.
     basicFlow: |
       1. Operator identifies the Caddy edge host for RideAudit.
       2. Operator records a Caddy TLS receipt for that host.
@@ -158,7 +158,7 @@ records:
       - Driver
     briefDescription: >
       Driver uses the Android capture UI whose default font comes from application
-      styles and is larger than the prior FontSize 20 default. approval: pending Payton AGREE.
+      styles and is larger than the prior FontSize 20 default. approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Driver opens the Avalonia Android capture UI.
       2. The default font is the application style, not an OS accessibility override.
@@ -178,7 +178,7 @@ records:
       - Operator
     briefDescription: >
       Operator debugs the Android capture UI through SharpNinja.Avalonia.RemoteControl
-      instead of ADB tapping. approval: pending Payton AGREE.
+      instead of ADB tapping. approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator attaches the capture client debug session.
       2. SharpNinja.Avalonia.RemoteControl shows the live visual tree.
@@ -200,7 +200,7 @@ records:
       Operator places a closed Galaxy Z Fold 4 in the headrest tray in landscape
       with primary cameras facing forward. The mount uses dual post-blocks,
       slotted arms, thumbscrews, and a cradle grid. This use case realizes
-      FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate. approval: pending Payton AGREE.
+      FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate. approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator closes the Galaxy Z Fold 4.
       2. Operator seats it in the tray in landscape.
@@ -224,7 +224,7 @@ records:
       Operator places Cursor cloud coding agents for RideAudit on the
       PAYTON-LEGION2 private worker so the MCP plugin stays available.
       Cursor Desktop is installed on that host. Agent identity is ninja@thesharp.ninja.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator installs Cursor Desktop on PAYTON-LEGION2 and signs in as ninja@thesharp.ninja.
       2. Operator targets the PAYTON-LEGION2 private worker for a Cursor cloud coding agent.
@@ -256,7 +256,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-222. Operator capture 2026-09-29. PR #22.
-      approval: pending Payton AGREE. Does not satisfy AC-RIDE-222-001.
+      approval: Payton AGREE 2026-09-29. Does not satisfy AC-RIDE-222-001.
      
     acceptanceCriteria:
       - id: AC-RIDE-VIEW-006-001
@@ -284,7 +284,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-065. Operator capture 2026-09-29. Class C.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-EDGE-002-001
         text: Caddy is the edge TLS terminator for the documented RideAudit edge.
@@ -306,7 +306,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-066. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-VIDEO-013-001
         text: Application styles define a default UI font larger than FontSize 20.
@@ -327,7 +327,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-067. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-VIDEO-014-001
         text: The capture client references SharpNinja.Avalonia.RemoteControl.
@@ -348,7 +348,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-056. Operator capture 2026-09-29.
-      approval: pending Payton AGREE. Does not mark AC-UC-025-001 satisfied.
+      approval: Payton AGREE 2026-09-29. Does not mark AC-UC-025-001 satisfied.
      
     acceptanceCriteria:
       - id: AC-RIDE-VIDEO-015-001
@@ -370,7 +370,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-041. Operator capture 2026-09-29.
-      approval: pending Payton AGREE. Does not close AC-UC-025-001.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
     acceptanceCriteria:
       - id: AC-RIDE-VIDEO-016-001
         text: The secondary lab phone is a Motorola edge 2024 over wireless adb.
@@ -392,7 +392,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate of HW-AC-MOUNT-001 on FR-RIDE-041.
-      Operator capture 2026-09-29. approval: pending Payton AGREE.
+      Operator capture 2026-09-29. approval: Payton AGREE 2026-09-29.
       Does not close the bracket on-vehicle print.
     acceptanceCriteria:
       - id: AC-RIDE-HW-001-001
@@ -415,7 +415,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-069. Operator capture 2026-09-29. Lab process.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-LAB-001-001
         text: Agent runs for this repo target the PAYTON-LEGION2 private worker.
@@ -442,7 +442,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-222. Operator capture 2026-09-29. PR #22.
-      approval: pending Payton AGREE. Does not close AC-RIDE-222-001.
+      approval: Payton AGREE 2026-09-29. Does not close AC-RIDE-222-001.
     acceptanceCriteria:
       - id: AC-TEST-041-001
         text: Evidence shows CN=RideAudit Lab Self-Signed on win-x64, signtool sees a signature, and verify /pa does not establish Public Trust.
@@ -463,7 +463,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-018. Operator capture 2026-09-29. PR #23.
-      approval: pending Payton AGREE. Class C for confirmation.
+      approval: Payton AGREE 2026-09-29. Class C for confirmation.
     acceptanceCriteria:
       - id: AC-TEST-042-001
         text: A live public calendar submit receipt shows HTTP success and a pending attestation, and it is not a documented fixture calendar.
@@ -484,7 +484,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-056. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-043-001
         text: Runtime evidence identifies a Galaxy Z Fold 4 on USB as the primary device.
@@ -504,7 +504,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-041. Operator capture 2026-09-29.
-      approval: pending Payton AGREE. Does not close AC-UC-025-001.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
     acceptanceCriteria:
       - id: AC-TEST-044-001
         text: Evidence shows a Motorola edge 2024 connected by wireless adb in the secondary role.
@@ -524,7 +524,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-065. Operator capture 2026-09-29. Class C.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-045-001
         text: The receipt names Caddy as the TLS terminator.
@@ -544,7 +544,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-066. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-046-001
         text: A style or test asserts the default UI font is larger than FontSize 20.
@@ -564,7 +564,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-067. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-047-001
         text: The capture project references SharpNinja.Avalonia.RemoteControl.
@@ -584,7 +584,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-048-001
         text: Fit evidence states CLOSED, LANDSCAPE, and primary cameras FORWARD for a Galaxy Z Fold 4.
@@ -605,7 +605,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-069. Operator capture 2026-09-29. Lab process.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-049-001
         text: Agent target evidence names the PAYTON-LEGION2 private worker.
@@ -630,7 +630,7 @@ records:
     status: pending
     notes: >
       Operator capture 2026-09-29 from full conversation history.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
       CODE-HV READY is not product complete.
     acceptanceCriteria:
       - id: AC-RIDE-070-001
@@ -655,7 +655,7 @@ records:
     briefDescription: >
       Operator sends hostile validation to an opposing agent and model, commits
       the request and response JSONL immediately, and treats AGREE as requiring
-      accuracy and completeness at or above 98. approval: pending Payton AGREE.
+      accuracy and completeness at or above 98. approval: Payton AGREE 2026-09-29.
      
     basicFlow: |
       1. Operator sends the validation request to an opposing agent and model.
@@ -685,7 +685,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-070. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-LAB-002-001
         text: HV request and response JSONL are written and committed in the same change as the claim they support.
@@ -706,7 +706,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-070. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-050-001
         text: Evidence names an opposing model and points at committed request and response JSONL.
@@ -729,7 +729,7 @@ records:
     status: pending
     notes: >
       Operator capture 2026-09-29 from full conversation history and plan r3.6.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-071-001
         text: Every Class A acceptance criterion is named to a test source or explicitly deferred.
@@ -752,7 +752,7 @@ records:
     briefDescription: >
       Operator keeps the Class A ledger so each acceptance criterion is named
       to a test source or explicitly deferred. Deferred wins for live third-party
-      criteria. approval: pending Payton AGREE.
+      criteria. approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator lists Class A acceptance criteria.
       2. Operator names a test source or records an explicit deferral for each one.
@@ -780,7 +780,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-071. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-LAB-003-001
         text: The ledger row for each Class A AC is either a test-source name or an explicit deferral.
@@ -801,7 +801,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-071. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-051-001
         text: A fixture deferred live third-party row remains deferred even when a test-source name is present.
@@ -824,7 +824,7 @@ records:
     status: pending
     notes: >
       Operator capture 2026-09-29 from full conversation history process rules.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-072-001
         text: Lab work records a receipt for the path taken and the result, and prefers an accurate receipt over a convenient substitute.
@@ -851,7 +851,7 @@ records:
       Operator runs RideAudit lab work with receipts, no silent path
       substitution, no Python, and no em or en dashes. Lab work on
       PAYTON-DESKTOP and PAYTON-LEGION2 is go-by-default. Other execution
-      waits for approval. approval: pending Payton AGREE.
+      waits for approval. approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator selects the documented path and does not swap it without a receipt.
       2. Operator runs the lab step without Python.
@@ -879,7 +879,7 @@ records:
     status: pending
     notes: >
       Implements FR-RIDE-072. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-LAB-004-001
         text: A lab change cites its receipt and the path it actually used.
@@ -900,7 +900,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-072. Operator capture 2026-09-29.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-052-001
         text: A scan of the lab change finds a receipt reference and no em or en dash characters.
@@ -930,7 +930,7 @@ records:
       Operator add 2026-09-29, updated the same day for storyboard navigation
       and for usability checks in addition to pixel comparison.
       Android visual and usability tests use the SharpNinja.aiUnit codex-subscription profile.
-      approval: pending Payton AGREE. Does not close AC-UC-025-001.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
       Baselines are the wireframe and storyboard documents under docs/ux, including docs/ux/review-app.
       Storyboard steps are the beats in those documents. Each beat is a frame.
       Storyboard driving uses SharpNinja.Avalonia.RemoteControl, required by FR-RIDE-067.
@@ -982,7 +982,7 @@ records:
       SharpNinja.Avalonia.RemoteControl (AvaloniaRemote), with a screenshot compared
       at each frame. The same screenshots are checked for usability defects.
       A pixel match does not pass when a usability defect is present.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator confirms the Android Avalonia client references SharpNinja.aiUnit and SharpNinja.Avalonia.RemoteControl, and that aiUnit uses the codex-subscription profile.
       2. Operator connects an Android device to PAYTON-LEGION2 and starts the Avalonia Android app.
@@ -1045,7 +1045,7 @@ records:
     notes: >
       Implements FR-RIDE-073 and uses the RemoteControl path from FR-RIDE-067.
       Operator update 2026-09-29 for storyboard step sequences and usability checks.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
       Do not invent a package version. ADB taps are not the storyboard driver.
     acceptanceCriteria:
       - id: AC-RIDE-VIDEO-017-001
@@ -1095,7 +1095,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-073. Operator update 2026-09-29 for storyboard RemoteControl sequences.
-      approval: pending Payton AGREE. Does not close AC-UC-025-001.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
     acceptanceCriteria:
       - id: AC-TEST-053-001
         text: The Android client project file references SharpNinja.aiUnit. A missing reference fails.
@@ -1129,7 +1129,7 @@ records:
     status: pending
     notes: >
       Covers FR-RIDE-073. Operator add 2026-09-29 for usability validation.
-      approval: pending Payton AGREE. Does not close AC-UC-025-001.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
     acceptanceCriteria:
       - id: AC-TEST-054-001
         text: Evidence shows a usability check, from the screenshot or the AvaloniaRemote visual tree, in addition to the baseline pixel comparison.

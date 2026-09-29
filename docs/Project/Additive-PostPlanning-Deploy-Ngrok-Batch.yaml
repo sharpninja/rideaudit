@@ -33,7 +33,7 @@ records:
       Update 2026-09-29: recorded path on file is container octopus-rideaudit on
       PAYTON-DESKTOP (docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md).
       That receipt does not mark these ACs satisfied and does not authorize GHCR.
-      approval: pending Payton AGREE for that note.
+      approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:
       - id: AC-RIDE-063-001
         text: Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to PAYTON-DESKTOP.
@@ -70,7 +70,7 @@ records:
       Does not invent GHCR. Does not claim Omarchy loopback cutover or live Play
       as this FR. Current vs target must stay honest in receipts.
       Update 2026-09-29: ngrok HTTPS is not Caddy edge TLS. Caddy is FR-RIDE-065 and remains Class C.
-      approval: pending Payton AGREE for that note.
+      approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:
       - id: AC-RIDE-064-001
         text: A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.
@@ -89,7 +89,7 @@ records:
       - Operator
       - OctopusDeploy
       - PaytonDesktop
-    briefDescription: Operator configures the RideAudit Octopus project and releases container images to PAYTON-DESKTOP without using GHCR.
+    briefDescription: "Operator configures the RideAudit Octopus project and releases container images to PAYTON-DESKTOP without using GHCR. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     basicFlow: |
       1. Operator opens the RideAudit Octopus project on the licensed instance (default container, or a new container on PAYTON-DESKTOP if licenses are exhausted).
       2. Operator confirms the process builds admission, counsel, and related images from deploy/containers.
@@ -161,7 +161,7 @@ records:
     area: RIDE
     subarea: DEPLOY
     status: pending
-    notes: Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green.
+    notes: "Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     acceptanceCriteria:
       - id: AC-RIDE-DEPLOY-002-001
         text: PAYTON-DESKTOP is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
@@ -204,7 +204,7 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28."
+    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     acceptanceCriteria:
       - id: AC-TEST-038-001
         text: Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP.

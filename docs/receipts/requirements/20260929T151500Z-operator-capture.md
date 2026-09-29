@@ -1,9 +1,9 @@
 # Operator requirement capture after plan approval
 
-Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T16:09:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
+Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T16:16:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
 SPDX: GPL-2.0-only.
 
-This receipt lists draft BDPv4 entities captured from operator direction after PLAN-RIDEAUDIT-001 approval (Astra AGREE R7 on r3.3). Every new or updated row is pending Payton AGREE. Astra plan AGREE is not Payton section 8 AGREE. Section 9 Astra/Payton plan-acceptance boxes are not open work (Payton 2026-09-29). None mark AC-RIDE-222-001 or AC-UC-025-001 satisfied. Live OpenTimestamps confirmation and Caddy edge TLS stay open.
+This receipt lists draft BDPv4 entities captured from operator direction after PLAN-RIDEAUDIT-001 approval (Astra AGREE R7 on r3.3). Payton AGREE 2026-09-29 covers the drafted text in `docs/receipts/requirements/20260929T161600Z-payton-agree-capture.md`. Astra plan AGREE is not Payton section 8 AGREE. Section 9 Astra/Payton plan-acceptance boxes are not open work. None mark AC-RIDE-222-001 or AC-UC-025-001 satisfied. Live OpenTimestamps confirmation and Caddy edge TLS stay open.
 
 The 15:15Z text of this file was a partial Class C inventory. This revision replaces that list. The partial list is not frozen and is not complete.
 
@@ -40,7 +40,9 @@ Addendum 2026-09-29T15:54:53Z: SharpNinja.aiUnit for RideAudit Android visual an
 
 Addendum 2026-09-29T16:09:00Z: Payton directed that Section 9 Astra/Payton plan-acceptance boxes are not open work. No new FR or AC treats Section 9 as pending Class C. Capture notes and ACs that only kept those boxes as open Class C work were removed. `workflow.requirements.updateBatch` updated 47 FR/TR/TEST records in six batches (`total` 8, 8, 8, 8, 8, 7; `success: true`). Use-case briefs updated and left Draft: 136, 137, 144, 149, 152, 161, 167, 168, 170. `getFr` FR-RIDE-070, FR-RIDE-071, and FR-RIDE-041, and `GetAsync` for use cases 167, 161, 137, and 162, no longer contain section 9. `isSatisfied` stays false. Product items stay pending: Public Trust, Caddy TLS, live OTS txid, AC-RIDE-222-001, AC-UC-025-001, HW1, and P11b. Historical addenda above keep their original wording.
 
-New MCP use cases (approvalStatus left Draft, not Approved):
+Addendum 2026-09-29T16:16:00Z: Payton AGREE on the drafted requirement text. The approval column in the inventory above is superseded by `docs/receipts/requirements/20260929T161600Z-payton-agree-capture.md`. That AGREE does not satisfy acceptance criteria and does not reopen Section 9.
+
+New MCP use cases (created Draft; Payton AGREE 2026-09-29 sets approvalStatus Approved):
 
 | YAML localId | MCP useCaseId | FR |
 | --- | --- | --- |

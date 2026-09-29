@@ -248,7 +248,7 @@ records:
       text: Unverified caveats from source requirements remain visible where applicable.
       isSatisfied: false
     - id: AC-UC-009-003
-      text: A live OpenTimestamps public calendar submit may be pending only. Confirmation, Bitcoin txid, and admission stay open until upgrade succeeds. A pending proof is not the happy-path confirmation. approval pending Payton AGREE.
+      text: "A live OpenTimestamps public calendar submit may be pending only. Confirmation, Bitcoin txid, and admission stay open until upgrade succeeds. A pending proof is not the happy-path confirmation. approval: Payton AGREE 2026-09-29."
       isSatisfied: false
     briefDescription: Collect datum, seal/encrypt immediately, write custody receipt to configured public chain, admit only on confirmation.
     basicFlow: |
@@ -283,7 +283,7 @@ records:
     - id: AC-UC-010-003
       text: RAES or RIDESEAL1 decrypt happens only as an expiring counsel working copy after HSM escrow release. Public admission stays fail-closed.
       isSatisfied: false
-    briefDescription: Counsel verifies hash, chain, attestation, escrow logs, then obtains an expiring RAES or RIDESEAL1 working copy only through the counsel and HSM path. Public admission does not decrypt. approval pending Payton AGREE for the RAES AC.
+    briefDescription: "Counsel verifies hash, chain, attestation, escrow logs, then obtains an expiring RAES or RIDESEAL1 working copy only through the counsel and HSM path. Public admission does not decrypt. approval: Payton AGREE 2026-09-29 for the RAES AC."
     basicFlow: |
       1. Counsel opens verification report for sealed record.
       2. System recomputes hash and checks on-chain receipt.
@@ -498,7 +498,7 @@ records:
       text: Unverified caveats from source requirements remain visible where applicable.
       isSatisfied: false
     - id: AC-UC-017-003
-      text: Lab secondary phone for dual-phone roles is a Motorola edge 2024 over wireless adb. That attachment is not semantic closure of the composite happy path and does not satisfy AC-UC-025-001. approval pending Payton AGREE.
+      text: "Lab secondary phone for dual-phone roles is a Motorola edge 2024 over wireless adb. That attachment is not semantic closure of the composite happy path and does not satisfy AC-UC-025-001. approval: Payton AGREE 2026-09-29."
       isSatisfied: false
     briefDescription: Two phones capture, sync clocks, composite with spider graph on-device, seal composite, submit sealed package.
     basicFlow: |
@@ -634,7 +634,7 @@ records:
     actors:
     - DriverPhone
     - PassengerPhone
-    briefDescription: Driver and passenger phones discover each other via RideAudit Bluetooth only, not a Lyft Bluetooth API, and confirm roles for one session. approval pending Payton AGREE for that limit.
+    briefDescription: "Driver and passenger phones discover each other via RideAudit Bluetooth only, not a Lyft Bluetooth API, and confirm roles for one session. approval: Payton AGREE 2026-09-29 for that limit."
     acceptanceCriteria:
     - id: AC-UC-022-001
       text: Pairing uses RideAudit Bluetooth only and does not call a Lyft Bluetooth API.
@@ -689,7 +689,7 @@ records:
       text: Capture primary screens run on Avalonia UI 12 Android client.
       isSatisfied: false
     - id: AC-UC-025-002
-      text: Primary runtime proof uses a Samsung Galaxy Z Fold 4 attached by USB. Emulator-only evidence does not pass this class. AC-UC-025-001 stays unsatisfied until a real dual-phone capture session succeeds. approval pending Payton AGREE.
+      text: "Primary runtime proof uses a Samsung Galaxy Z Fold 4 attached by USB. Emulator-only evidence does not pass this class. AC-UC-025-001 stays unsatisfied until a real dual-phone capture session succeeds. approval: Payton AGREE 2026-09-29."
       isSatisfied: false
     briefDescription: Driver and passenger use the Avalonia UI 12 Android client for dual-phone capture roles.
     basicFlow: |

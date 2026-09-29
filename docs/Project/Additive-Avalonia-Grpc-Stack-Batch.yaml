@@ -12,7 +12,7 @@ records:
     notes: >
       Stack decision. Cross-link docs/architecture/stack.md and ART-RIDE-ANDROID-001. Author Sharp Ninja.
       Update 2026-09-29: primary device proof for AC-UC-025 class runtime is a Samsung Galaxy Z Fold 4 on USB.
-      Emulator-only evidence does not satisfy that class. approval: pending Payton AGREE.
+      Emulator-only evidence does not satisfy that class. approval: Payton AGREE 2026-09-29.
       Does not mark AC-UC-025-001 satisfied.
     acceptanceCriteria:
       - id: AC-RIDE-056-001
@@ -34,7 +34,7 @@ records:
     notes: >
       Stack decision. Extends FR-RIDE-049. Cross-link docs/architecture/stack.md and ART-RIDE-UX-REVIEW-001. Author Sharp Ninja.
       Update 2026-09-29: macOS codesign and macOS publish are deferred. Current lab desktop builds are Windows only.
-      AC-RIDE-057-001 stays unsatisfied for the macOS leg. approval: pending Payton AGREE.
+      AC-RIDE-057-001 stays unsatisfied for the macOS leg. approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-057-001
         text: Desktop court viewer builds with Avalonia UI 12 on Windows, Linux, and macOS.

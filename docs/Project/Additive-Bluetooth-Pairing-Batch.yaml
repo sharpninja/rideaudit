@@ -11,7 +11,7 @@ records:
     notes: >
       Driver phone and passenger (rider-side) phone. Not Lyft Bluetooth.
       Update 2026-09-29 full history: pairing is RideAudit Bluetooth only.
-      approval: pending Payton AGREE for that AC.
+      approval: Payton AGREE 2026-09-29 for that AC.
     acceptanceCriteria:
       - id: AC-RIDE-053-001
         text: Phones discover peers via Bluetooth and only complete pairing when both sides confirm driver vs passenger role and shared session intent.
@@ -58,6 +58,7 @@ records:
     area: RIDE
     subarea: VIDEO
     status: pending
+    notes: "Update 2026-09-29: do not call a Lyft Bluetooth API. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
   - kind: tr
     id: TR-RIDE-VIDEO-011
     title: Driver coordinator and passenger compositor split
@@ -76,7 +77,7 @@ records:
     notes: >
       Covers FR-RIDE-053 FR-RIDE-054 FR-RIDE-055.
       Update 2026-09-29: pairing is RideAudit Bluetooth only and does not call a Lyft Bluetooth API.
-      approval: pending Payton AGREE.
+      approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-034-001
         text: Pairing evidence uses the RideAudit Bluetooth session and does not call a Lyft Bluetooth API.

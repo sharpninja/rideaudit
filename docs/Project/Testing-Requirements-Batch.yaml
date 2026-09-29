@@ -232,7 +232,7 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-020, FR-RIDE-021; method: system. Update 2026-09-29: RAES working-copy decrypt is counsel and HSM only. approval: pending Payton AGREE."
+    notes: "Covers FR-RIDE-020, FR-RIDE-021; method: system. Update 2026-09-29: RAES working-copy decrypt is counsel and HSM only. approval: Payton AGREE 2026-09-29."
     acceptanceCriteria:
       - id: AC-TEST-016-001
         text: "Test TEST-RIDE-016 passes for happy path of covered requirements."
