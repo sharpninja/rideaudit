@@ -45,7 +45,7 @@ The new stack is `octopus-rideaudit`:
 | `octopus-rideaudit-octopus-1` | Server HTTP `192.168.0.149:18066`, Tentacle comms `:19112` |
 | `octopus-rideaudit-tentacle-1` | Polling worker, host `docker.sock`, role `rideaudit-host` |
 
-`MASTER_KEY` is generated on LEGION2, stored in the remote `.env` and in `~\.creds\octopus-rideaudit.cred.xml` (DPAPI). Recreating Server without that key cannot decrypt the existing database (certificate decrypt crash-loop). The default `octopus-legion2-*` containers stay up.
+`MASTER_KEY` is generated on LEGION2, stored in the remote `.env` and in `~\.creds\octopus-rideaudit.cred.xml` (DPAPI). Recreating Server without that key cannot decrypt the existing database (certificate decrypt crash-loop). Provision creates environment **Development** before starting the Tentacle (registration fails if that environment is missing). Shell CR-stripping uses `sed s/\x0d$//` — GNU `s/\r$//` strips a trailing letter `r` and breaks `docker`. The default `octopus-legion2-*` containers stay up.
 
 A new container starts on the free license (zero deployment targets). `Apply-RideAuditOctopusLicense.ps1` copies the subscription **LicenseText** from the default instance. Serials and XML are not printed.
 

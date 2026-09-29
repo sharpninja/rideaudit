@@ -123,7 +123,7 @@ else {
 }
 
 $remoteUp = "$RemoteAbs/deploy/octopus/new-instance/remote-up.sh"
-Invoke-OmarchyBash -SshHost $SshHost -Command "chmod +x $remoteUp && sed -i s/\r`$// $remoteUp"
+Invoke-OmarchyBash -SshHost $SshHost -Command "chmod +x $remoteUp && sed -i s/\x0d`$// $remoteUp"
 
 $upMode = "server"
 if ($ResetData) { $upMode = "reset" }
@@ -155,6 +155,26 @@ try {
 }
 catch {
     Write-Host ("license apply failed (tentacle start may still run): {0}" -f $_.Exception.Message)
+}
+
+$bootCx = Get-RideAuditOctopusConnection -ApiBase $apiBase -CredPath $CredOut
+$envs = Get-RideAuditOctopusJson -Connection $bootCx -Path "/api/environments/all"
+$envItems = @()
+if ($envs -is [System.Array]) { $envItems = @($envs) }
+elseif ($null -ne $envs -and $envs.PSObject.Properties.Name -contains "Items") { $envItems = @($envs.Items) }
+elseif ($null -ne $envs) { $envItems = @($envs) }
+$dev = @($envItems) | Where-Object { $_.Name -eq "Development" } | Select-Object -First 1
+if (-not $dev) {
+    $dev = Invoke-RideAuditOctopusApi -Connection $bootCx -Method POST -Path "/api/Spaces-1/environments" -Body @{
+        Name             = "Development"
+        Description      = "FR-RIDE-063 PAYTON-DESKTOP"
+        SortOrder        = 1
+        UseGuidedFailure = $false
+    }
+    Write-Host ("created environment {0} before Tentacle start" -f $dev.Id)
+}
+else {
+    Write-Host ("environment {0} already exists" -f $dev.Id)
 }
 
 Write-Host "starting polling Tentacle (docker.sock worker)"

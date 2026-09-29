@@ -16,7 +16,7 @@ $omarchy = Join-Path $here "..\omarchy"
 & (Join-Path $omarchy "Sync-FromLegion2.ps1") -SshHost $SshHost -RemoteAbs $RemoteAbs
 
 . (Join-Path $omarchy "OmarchySsh.ps1")
-Invoke-OmarchyBash -SshHost $SshHost -Command "for f in $RemoteAbs/deploy/octopus/*.sh $RemoteAbs/deploy/octopus/new-instance/*.sh; do sed -i s/\r`$// `$f; chmod +x `$f; done; if [ ! -f $RemoteAbs/deploy/octopus/.env ]; then cp $RemoteAbs/deploy/octopus/env.example $RemoteAbs/deploy/octopus/.env; fi; echo SYNC_OCTOPUS_TREE_OK"
+Invoke-OmarchyBash -SshHost $SshHost -Command "for f in $RemoteAbs/deploy/octopus/*.sh $RemoteAbs/deploy/octopus/new-instance/*.sh; do sed -i s/\x0d`$// `$f; chmod +x `$f; done; if [ ! -f $RemoteAbs/deploy/octopus/.env ]; then cp $RemoteAbs/deploy/octopus/env.example $RemoteAbs/deploy/octopus/.env; fi; echo SYNC_OCTOPUS_TREE_OK"
 
 if ($WithPublish) {
     $root = git rev-parse --show-toplevel
