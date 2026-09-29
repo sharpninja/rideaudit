@@ -1,0 +1,31 @@
+# RideAudit lab Caddy. Published host ports so the LAN path matches :28080/:28081.
+# Joins external network rideaudit-caddy-edge. Does not recreate admission or counsel.
+# Does not replace octopus-legion2-octopus-api-tls-1 (Octopus API TLS on :8445).
+# Image is the local copy. --pull never. Not GHCR.
+# SPDX-License-Identifier: GPL-2.0-only
+
+name: rideaudit-caddy
+
+services:
+  caddy:
+    image: caddy:2.10.0-alpine@sha256:ae4458638da8e1a91aafffb231c5f8778e964bca650c8a8cb23a7e8ac557aa3c
+    container_name: rideaudit-caddy
+    restart: unless-stopped
+    ports:
+      - "192.168.0.149:28443:28443"
+      - "192.168.0.149:28444:28444"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true
+    name: rideaudit-caddy-edge
+
+volumes:
+  caddy_data:
+  caddy_config:

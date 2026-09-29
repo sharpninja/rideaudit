@@ -1,0 +1,27 @@
+# Lab edge TLS for RideAudit. Caddy internal CA only.
+# Not a public CA. Not ngrok. Not the Octopus API Caddy on :8445.
+# admission and counsel are the Octopus containers on the rideaudit-caddy-edge network.
+# SPDX-License-Identifier: GPL-2.0-only
+
+{
+	auto_https disable_redirects
+	skip_install_trust
+	default_sni 192.168.0.149
+	servers {
+		protocols h1 h2
+	}
+}
+
+https://192.168.0.149:28443 {
+	tls internal {
+		protocols tls1.2 tls1.3
+	}
+	reverse_proxy rideaudit-octopus-admission-1:8080
+}
+
+https://192.168.0.149:28444 {
+	tls internal {
+		protocols tls1.2 tls1.3
+	}
+	reverse_proxy rideaudit-octopus-counsel-1:8080
+}

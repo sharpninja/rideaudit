@@ -16,6 +16,7 @@ The Octopus PAYTON-DESKTOP row is a live release (`20260929T015822Z-octopus-payt
 | Octopus to PAYTON-DESKTOP (FR-RIDE-063) | live-octopus-desktop; see `20260929T015822Z-octopus-payton-desktop.md` (new container `octopus-rideaudit`, `Releases-2` / `Deployments-2`, probe `:28080` HTTP 200). Not GHCR. | not-claimed | GPL-2.0-only |
 | PAYTON-LEGION2 Docker Desktop | engine-http-500 | not-claimed | GPL-2.0-only |
 | PAYTON-OMARCHY lab images (prior interim, not Octopus CD) | loopback compose `127.0.0.1:18080`; see `legion2-omarchy-20260928.md` | not-claimed | GPL-2.0-only |
-| ngrok canonical tunnel (FR-RIDE-064) | live to `192.168.0.149:28080`; see `20260929T030643Z-ngrok-desktop-28080.md`. Prior interim was `:18080`. Not GHCR. | not-claimed | GPL-2.0-only |
+| ngrok canonical tunnel (FR-RIDE-064) | live to `192.168.0.149:28080`; see `20260929T030643Z-ngrok-desktop-28080.md`. Prior interim was `:18080`. Not GHCR. Not the Caddy edge. | not-claimed | GPL-2.0-only |
+| Lab Caddy TLS (not ngrok, not a public CA) | `rideaudit-caddy` on `https://192.168.0.149:28443` and `:28444`; see `20260929T145508Z-caddy-edge-tls.md`. Internal CA. Plaintext listeners remain. | not-claimed | GPL-2.0-only |
 
 Android client publication, store listing, and bracket hardware distribution are outside this server receipt.
