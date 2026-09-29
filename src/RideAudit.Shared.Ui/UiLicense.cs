@@ -9,5 +9,10 @@ public static class UiLicense
         "RideAudit UI. Copyright (C) 2026 RideAudit contributors. Licensed GPL-2.0-or-later. " +
         "In-scope RideAudit UI code is not relicensed MIT or Apache-2.0.";
 
+    public const string Attributions =
+        "Avalonia UI 12. License: MIT. Credit: AvaloniaUI authors. " +
+        "The Avalonia UI framework is an upstream dependency. " +
+        "In-scope RideAudit application UI code stays GPL-2.0-or-later.";
+
     public const string Framework = "Avalonia UI 12";
 }

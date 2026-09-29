@@ -3,6 +3,9 @@
 
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.VisualTree;
 using RideAudit.Bt;
 using RideAudit.Client.Contracts;
 using RideAudit.Client.Tests.Support;
@@ -152,9 +155,14 @@ public class TestRide035ShellTests
         Assert.Equal("WF-01", shell.FindControl<StackPanel>("RolePage")!.IsVisible ? "WF-01" : "hidden");
 
         var main = new MainView();
+        var mainWindow = new Window { Width = 400, Height = 800, Content = main };
+        mainWindow.Show();
         Assert.Equal(28, main.FindControl<TextBlock>("TitleText")!.FontSize);
-        Assert.Equal(16, main.FindControl<TextBlock>("LicenseNotice")!.FontSize);
-        Assert.Equal("Avalonia UI 12", main.FindControl<TextBlock>("FrameworkNotice")!.Text);
+        Assert.Null(main.FindControl<TextBlock>("LicenseNotice"));
+        main.OpenAbout();
+        var about = main.GetVisualDescendants().OfType<AboutView>().Single();
+        Assert.Equal(16, about.FindControl<TextBlock>("CopyrightText")!.FontSize);
+        Assert.Contains("Avalonia UI 12", about.FindControl<TextBlock>("AttributionText")!.Text);
     }
 
     [AvaloniaFact]
@@ -164,7 +172,32 @@ public class TestRide035ShellTests
         var window = new Window { Width = 400, Height = 800, Content = view };
         window.Show();
         Assert.Equal("WF-01", view.FindControl<TextBlock>("ScreenId")!.Text);
-        Assert.Contains("GPL-2.0-or-later", new MainView().FindControl<TextBlock>("LicenseNotice")!.Text);
+        var chrome = new MainView();
+        var chromeWindow = new Window { Width = 400, Height = 800, Content = chrome };
+        chromeWindow.Show();
+        chrome.ApplyMode(ShellMode.Capture);
+        Assert.Null(chrome.FindControl<TextBlock>("LicenseNotice"));
+        Assert.DoesNotContain(
+            chrome.GetVisualDescendants().OfType<TextBlock>(),
+            block => (block.Text ?? "").Contains("Copyright", StringComparison.Ordinal));
+        chrome.FindControl<Button>("AboutButton")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        chromeWindow.UpdateLayout();
+        var about = chrome.GetVisualDescendants().OfType<AboutView>().Single();
+        var copyright = about.FindControl<TextBlock>("CopyrightText")!;
+        var credit = about.FindControl<TextBlock>("AttributionText")!;
+        Assert.Contains("Copyright (C) 2026", copyright.Text);
+        Assert.Contains("GPL-2.0-or-later", copyright.Text);
+        Assert.Contains("MIT", credit.Text);
+        Assert.Contains("AvaloniaUI authors", credit.Text);
+        Assert.Equal(TextWrapping.Wrap, copyright.TextWrapping);
+        Assert.Equal(TextTrimming.None, copyright.TextTrimming);
+        Assert.Equal(TextWrapping.Wrap, credit.TextWrapping);
+        Assert.True(copyright.Bounds.Width > 200);
+        var copyrightLines = Math.Max(1, (int)Math.Ceiling(copyright.Text!.Length * copyright.FontSize * 0.45 / copyright.Bounds.Width));
+        Assert.True(copyright.Bounds.Height + 2 >= copyrightLines * copyright.FontSize);
+        var creditLines = Math.Max(1, (int)Math.Ceiling(credit.Text!.Length * credit.FontSize * 0.45 / credit.Bounds.Width));
+        Assert.True(credit.Bounds.Height + 2 >= creditLines * credit.FontSize);
+        Assert.Equal("ABOUT", about.FindControl<TextBlock>("ScreenId")!.Text);
         view.SelectPassenger();
         view.StartSession();
         Assert.Equal("WF-08", view.FindControl<TextBlock>("ScreenId")!.Text);

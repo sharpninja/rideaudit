@@ -22,6 +22,7 @@ public static class UsabilityInspector
         "missing-icons",
         "low-contrast",
         "broken-layout",
+        "about-cutoff",
     ];
 
     public static int CountBaselineIconGroups(string svgPath)
@@ -66,6 +67,7 @@ public static class UsabilityInspector
             MissingIcons(visible, baselineIconGroups),
             new UsabilityCheck("low-contrast", "not-detectable", "Contrast uses the screenshot crop after the tree is known.", "pending bitmap"),
             BrokenLayout(visible, expectedScreenId, actualScreenId),
+            AboutCutoff(visible),
         ];
     }
 
@@ -169,6 +171,69 @@ public static class UsabilityInspector
         }
 
         return new UsabilityCheck("low-contrast", "pass", measured + " text regions met the contrast floor.", "sampled " + measured);
+    }
+
+    private static UsabilityCheck AboutCutoff(IReadOnlyList<TreeNode> visible)
+    {
+        var nodes = visible.Where(node =>
+            node.Name is "CopyrightText" or "AttributionText").ToList();
+        if (nodes.Count == 0)
+        {
+            return new UsabilityCheck(
+                "about-cutoff",
+                "not-run",
+                "This frame has no About copyright or attribution text.",
+                "CopyrightText absent");
+        }
+
+        var hits = new List<string>();
+        foreach (var node in nodes)
+        {
+            var text = TextOf(node);
+            var font = FontSize(node);
+            var bounds = node.AbsoluteBounds;
+            var wrapping = Prop(node, "TextWrapping");
+            var trimming = Prop(node, "TextTrimming");
+            if (text.Length == 0)
+            {
+                hits.Add(Label(node) + " is empty");
+                continue;
+            }
+
+            if (trimming.Length > 0 && !trimming.Equals("None", StringComparison.OrdinalIgnoreCase))
+            {
+                hits.Add(Label(node) + " TextTrimming " + trimming);
+            }
+
+            if (!wrapping.Contains("Wrap", StringComparison.OrdinalIgnoreCase))
+            {
+                hits.Add(Label(node) + " TextWrapping is not Wrap");
+            }
+
+            if (font > bounds.Height + 1)
+            {
+                hits.Add(Label(node) + " font " + font.ToString("0") + " exceeds height " + bounds.Height.ToString("0"));
+                continue;
+            }
+
+            if (bounds.Width < 8)
+            {
+                hits.Add(Label(node) + " width " + bounds.Width.ToString("0"));
+                continue;
+            }
+
+            var lines = Math.Max(1, (int)Math.Ceiling(text.Length * font * 0.45 / bounds.Width));
+            var required = lines * font;
+            if (bounds.Height + 2 < required)
+            {
+                hits.Add(Label(node) + " height " + bounds.Height.ToString("0")
+                    + " is below " + required.ToString("0") + " for " + lines + " lines");
+            }
+        }
+
+        return hits.Count == 0
+            ? new UsabilityCheck("about-cutoff", "pass", "About copyright and attributions wrap inside their boxes.", "CopyrightText AttributionText")
+            : new UsabilityCheck("about-cutoff", "fail", string.Join("; ", hits.Take(4)), Snippet(visible, hits[0]));
     }
 
     private static UsabilityCheck ClippedText(IReadOnlyList<TreeNode> visible)

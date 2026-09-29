@@ -129,6 +129,70 @@ public sealed class UsabilityInspectorTests
         Assert.Equal("fail", checks.Single(check => check.Id == "clipped-text").Status);
         Assert.Equal("fail", checks.Single(check => check.Id == "overlapping-controls").Status);
         Assert.Equal("not-detectable", checks.Single(check => check.Id == "missing-icons").Status);
+        Assert.Equal("not-run", checks.Single(check => check.Id == "about-cutoff").Status);
+    }
+
+    [Fact]
+    public void About_copyright_cutoff_fails_when_the_box_is_too_short()
+    {
+        var clipped = new List<TreeNode>
+        {
+            new()
+            {
+                Id = "copy",
+                TypeName = "TextBlock",
+                Name = "CopyrightText",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 20, Y = 80, Width = 320, Height = 16 },
+                Properties =
+                {
+                    new PropertyValue { Name = "Text", Value = "RideAudit UI. Copyright (C) 2026 RideAudit contributors. Licensed GPL-2.0-or-later. In-scope RideAudit UI code is not relicensed MIT or Apache-2.0." },
+                    new PropertyValue { Name = "FontSize", Value = "16" },
+                    new PropertyValue { Name = "TextWrapping", Value = "Wrap" },
+                    new PropertyValue { Name = "TextTrimming", Value = "None" },
+                },
+            },
+        };
+
+        var failed = UsabilityInspector.InspectTree(clipped, "ABOUT", "ABOUT", baselineIconGroups: 0);
+        Assert.Equal("fail", failed.Single(check => check.Id == "about-cutoff").Status);
+
+        var fitted = new List<TreeNode>
+        {
+            new()
+            {
+                Id = "copy",
+                TypeName = "TextBlock",
+                Name = "CopyrightText",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 20, Y = 80, Width = 320, Height = 96 },
+                Properties =
+                {
+                    new PropertyValue { Name = "Text", Value = "RideAudit UI. Copyright (C) 2026 RideAudit contributors. Licensed GPL-2.0-or-later." },
+                    new PropertyValue { Name = "FontSize", Value = "16" },
+                    new PropertyValue { Name = "TextWrapping", Value = "Wrap" },
+                    new PropertyValue { Name = "TextTrimming", Value = "None" },
+                },
+            },
+            new()
+            {
+                Id = "credit",
+                TypeName = "TextBlock",
+                Name = "AttributionText",
+                IsVisible = true,
+                AbsoluteBounds = new Rect { X = 20, Y = 180, Width = 320, Height = 96 },
+                Properties =
+                {
+                    new PropertyValue { Name = "Text", Value = "Avalonia UI 12. License: MIT. Credit: AvaloniaUI authors." },
+                    new PropertyValue { Name = "FontSize", Value = "16" },
+                    new PropertyValue { Name = "TextWrapping", Value = "Wrap" },
+                    new PropertyValue { Name = "TextTrimming", Value = "None" },
+                },
+            },
+        };
+
+        var passed = UsabilityInspector.InspectTree(fitted, "ABOUT", "ABOUT", baselineIconGroups: 0);
+        Assert.Equal("pass", passed.Single(check => check.Id == "about-cutoff").Status);
     }
 
     [Fact]

@@ -203,6 +203,9 @@ public sealed class AdbDeviceSession
                 Navigate("WF-06");
                 TapResource("SubmitButton", 4);
                 return;
+            case "ABOUT":
+                TapResource("AboutButton", 2);
+                return;
             case "WF-08":
                 TapResource("DriverButton", 0);
                 TapResource("ContinueButton", 2);

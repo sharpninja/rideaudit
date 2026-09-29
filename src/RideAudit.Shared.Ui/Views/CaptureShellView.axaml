@@ -84,7 +84,6 @@
           <TextBlock Text="VA-1042" />
         </Border>
         <Button x:Name="ContinueButton" Classes="primary" Content="Continue to Bluetooth pairing" />
-        <TextBlock Classes="muted" HorizontalAlignment="Center" Text="About / source    Privacy notice" />
       </StackPanel>
 
       <StackPanel x:Name="DiscoverPage" Spacing="8" IsVisible="False">

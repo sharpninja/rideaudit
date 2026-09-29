@@ -7,22 +7,36 @@ namespace RideAudit.Shared.Ui.Views;
 
 public partial class MainView : UserControl
 {
+    private Control? _shell;
+
     public MainView()
     {
         InitializeComponent();
-        LicenseNotice.Text = UiLicense.Notice;
-        FrameworkNotice.Text = UiLicense.Framework;
+        AboutButton.Click += (_, _) => OpenAbout();
     }
 
     public void ApplyMode(ShellMode mode)
     {
         if (mode != ShellMode.Capture)
         {
-            Body.Content = new ReviewShellView();
-            return;
+            _shell = new ReviewShellView();
+        }
+        else
+        {
+            _shell = App.CaptureRuntime?.CreateShell()
+                ?? CaptureShellView.CreateUncomposedRefuse();
         }
 
-        Body.Content = App.CaptureRuntime?.CreateShell()
-            ?? CaptureShellView.CreateUncomposedRefuse();
+        ShowShell();
+    }
+
+    public void OpenAbout()
+    {
+        Body.Content = new AboutView(ShowShell);
+    }
+
+    public void ShowShell()
+    {
+        Body.Content = _shell;
     }
 }

@@ -37,7 +37,7 @@ Realistic SVG mock with inline icon paths. The ASCII block below stays the struc
 |                                                                      |
 |   [ Open bundle ]          [ Quit ]                                  |
 |                                                                      |
-|   About / source  |  License  |  Privacy / legal process notice      |
+|   [ About ]  |  License  |  Privacy / legal process notice          |
 +----------------------------------------------------------------------+
 ```
 
