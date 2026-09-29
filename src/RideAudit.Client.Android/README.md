@@ -21,6 +21,18 @@ Use a second `--host-port` when two phones are forwarded at once. The transport 
 
 On PAYTON-LEGION2 the USB Fold forward completed GetCapabilities (frames and input supported). The motorola edge 2024 wireless forward reached the device port and did not complete GetCapabilities. That lab note is `docs/receipts/android/20260929T164101Z-android-remote-control.md`.
 
+## Device visual tests
+
+`RideAudit.Client.Android` references `SharpNinja.aiUnit` 3.0.0 from nuget.org. Runtime assets are excluded from the APK. The runner is `tests/RideAudit.Client.Android.AiUnit.Tests`. Its `appsettings.aiunit.json` sets `ActiveStrategy` to `codex-subscription`.
+
+On PAYTON-LEGION2, with adb and a phone attached:
+
+```powershell
+dotnet test tests/RideAudit.Client.Android.AiUnit.Tests/RideAudit.Client.Android.AiUnit.Tests.csproj
+```
+
+The suite prefers USB serial `RFCW7078MVZ`. If that phone is absent it uses the motorola edge 2024 wireless serial. A missing device fails the device tests. It does not skip them. See that test project's README for the pixel threshold and the diff artifact path.
+
 ## Build
 
 The Android head targets `net10.0-android` and needs the .NET Android workload. On PAYTON-LEGION2 (2026-09-28) the workload, Android SDK platform 36, build-tools 36.0.0, and Microsoft OpenJDK 17 were present. `dotnet build -c Release` produced an APK. `adb devices` listed no device, so the APK was not installed. That is not a Play Store receipt.

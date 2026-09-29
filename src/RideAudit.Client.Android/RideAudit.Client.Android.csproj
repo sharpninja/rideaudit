@@ -25,6 +25,13 @@
     <PackageReference Include="SharpNinja.Avalonia.RemoteControl.Runtime" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Compile reference only. Runtime assets stay out of the APK. Tests use the same package. -->
+    <PackageReference Include="SharpNinja.aiUnit">
+      <PrivateAssets>all</PrivateAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <Compile Remove="AndroidRemoteControlHost.cs" />
   </ItemGroup>
