@@ -1,9 +1,9 @@
-# Stop the Omarchy ngrok tunnel. After this, no public URL is advertised.
+# Stop the PAYTON-DESKTOP ngrok tunnel. After this, no public URL is advertised.
 # SPDX-License-Identifier: GPL-2.0-only
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-OMARCHY"
+    [string]$SshHost = "PAYTON-DESKTOP"
 )
 
 $ErrorActionPreference = "Stop"

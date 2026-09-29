@@ -24,6 +24,7 @@ if [ -f "$PID_FILE" ]; then
   rm -f "$PID_FILE"
 fi
 
+pkill -f 'ngrok http 192.168.0.149:28080' >/dev/null 2>&1 || true
 pkill -f 'ngrok http 127.0.0.1:18080' >/dev/null 2>&1 || true
 echo "NGROK_STOPPED=1"
 echo "PUBLIC_URL_ADVERTISED=0"

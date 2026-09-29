@@ -4,7 +4,7 @@ GPL-2.0-only. FR-RIDE-063 / UC-RIDE-032 / TR-RIDE-DEPLOY-001 / TR-RIDE-DEPLOY-00
 
 Operator direction: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
 
-This path is the product CD. Omarchy loopback plus ngrok (`deploy/omarchy`, `:18080`) stays interim only (FR-RIDE-064) and does not satisfy FR-RIDE-063.
+This path is the product CD. The canonical ngrok tunnel (`deploy/omarchy/ngrok`) targets this stack's admission `192.168.0.149:28080` (FR-RIDE-064). Omarchy loopback `:18080` is the prior interim and does not satisfy FR-RIDE-063.
 
 ## What this tree does
 

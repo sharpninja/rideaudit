@@ -524,6 +524,23 @@ public class TestRide020And036ServerPortions
     }
 
     [Fact]
+    [Trait("TEST", "TEST-RIDE-038")]
+    [Trait("FR", "FR-RIDE-063")]
+    [Trait("AC", "AC-RIDE-063-003")]
+    [Trait("AC", "AC-TEST-038-002")]
+    public void Octopus_desktop_pointer_is_a_receipt_not_a_live_probe_or_ghcr_row()
+    {
+        var onFile = DistributionReceipts.OctopusDesktopOnFile;
+        Assert.Equal("Octopus-PAYTON-DESKTOP", onFile.Environment);
+        Assert.Equal("receipt-on-file", onFile.Status);
+        Assert.Equal(DistributionReceipts.PlayNotClaimed, onFile.PlayPublication);
+        Assert.Contains("20260929T015822Z-octopus-payton-desktop.md", onFile.Detail, StringComparison.Ordinal);
+        Assert.Contains("not a live probe", onFile.Detail, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ghcr.io", onFile.Detail, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(onFile.Environment, DistributionReceipts.ServerPortions.Select(row => row.Environment));
+    }
+
+    [Fact]
     [Trait("TEST", "TEST-RIDE-036")]
     [Trait("FR", "FR-RIDE-059")]
     public void Counsel_container_sketch_targets_dotnet_10()

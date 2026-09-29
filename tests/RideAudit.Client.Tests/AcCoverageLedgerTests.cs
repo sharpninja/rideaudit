@@ -18,7 +18,7 @@ public class AcCoverageLedgerTests
     {
         var root = Repo.Root();
         var yamlFiles = Directory.GetFiles(Path.Combine(root, "docs", "Project"), "*Batch.yaml");
-        Assert.Equal(7, yamlFiles.Length);
+        Assert.Equal(8, yamlFiles.Length);
 
         var records = new List<AcRecord>();
         foreach (var file in yamlFiles.OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
@@ -37,7 +37,7 @@ public class AcCoverageLedgerTests
             .Select(group => group.First())
             .OrderBy(record => record.Id, StringComparer.Ordinal)
             .ToList();
-        Assert.Equal(404, unique.Count);
+        Assert.Equal(424, unique.Count);
 
         var testText = string.Join('\n', Directory.GetFiles(Path.Combine(root, "tests"), "*.cs", SearchOption.AllDirectories)
             .Select(File.ReadAllText));
@@ -63,7 +63,7 @@ public class AcCoverageLedgerTests
         output.AppendLine();
         output.AppendLine("Generated: 2026-09-28. Workspace: PAYTON-LEGION2. Not a claim that all ACs are satisfied.");
         output.AppendLine();
-        output.AppendLine("Statuses: `covered` = AC ID appears in `tests/**/*.cs`; `deferred` = live hardware/Play/HSM/CD/partnership proof is honestly out of scope for this tree; `missing` = no test reference yet.");
+        output.AppendLine("Statuses: `covered` = AC ID appears in `tests/**/*.cs`; `deferred` = live hardware/Play/HSM/partnership/Caddy-TLS proof this tree does not claim; `missing` = no test reference yet. A covered row is a name in test source, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is PAYTON-DESKTOP admission 192.168.0.149:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
         output.AppendLine();
         output.AppendLine("| Status | Count |");
         output.AppendLine("| --- | ---: |");
@@ -82,7 +82,7 @@ public class AcCoverageLedgerTests
         var dest = Path.Combine(destDir, "20260928-ledger.md");
         File.WriteAllText(dest, output.ToString());
         Assert.True(File.Exists(dest));
-        Assert.Equal(404, rows.Count);
+        Assert.Equal(424, rows.Count);
         Assert.Equal(0, rows.Count(row => string.IsNullOrWhiteSpace(row.Item4)));
     }
 

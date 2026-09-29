@@ -51,9 +51,10 @@ records:
       auth token and related secrets come from a secret store or environment
       variable and are never committed. If ngrok is misconfigured or the tunnel
       is not live, the system fails closed and does not advertise a public URL.
-      Docs must state which host currently terminates the tunnel. Interim
-      admission may still bind Omarchy loopback. The target CD host is
-      PAYTON-DESKTOP once the Octopus path in FR-RIDE-063 is live.
+      Docs must state which host currently terminates the tunnel. The
+      canonical tunnel target is PAYTON-DESKTOP admission 192.168.0.149:28080
+      after the Octopus path in FR-RIDE-063. Omarchy loopback 127.0.0.1:18080
+      is the prior interim and may remain bound.
     priority: high
     area: RIDE
     status: pending

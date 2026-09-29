@@ -18,4 +18,16 @@ public static class DistributionReceipts
         new("Staging", NotRun, "No continuous-delivery runner executed in this environment. This record is not a deployment.", PlayNotClaimed, "GPL-2.0-only"),
         new("Prod", NotRun, "No continuous-delivery runner executed in this environment. This record is not a deployment.", PlayNotClaimed, "GPL-2.0-only")
     ];
+
+    /// <summary>
+    /// Pointer to the Octopus PAYTON-DESKTOP receipt on file. Status is receipt-on-file.
+    /// This constant is not a live probe and is not a GHCR row. Dev/Staging/Prod stay in <see cref="ServerPortions"/>.
+    /// </summary>
+    public static CdEnvironmentReceipt OctopusDesktopOnFile { get; } =
+        new(
+            "Octopus-PAYTON-DESKTOP",
+            "receipt-on-file",
+            "docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md names octopus-rideaudit and PAYTON-DESKTOP. This constant is not a live probe and is not GHCR.",
+            PlayNotClaimed,
+            "GPL-2.0-only");
 }
