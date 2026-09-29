@@ -70,7 +70,7 @@ mappings:
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-018
     trIds: [TR-RIDE-CHAIN-002]
-    testIds: [TEST-RIDE-014]
+    testIds: [TEST-RIDE-014, TEST-RIDE-042]
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-019
     trIds: [TR-RIDE-CHAIN-003]
@@ -161,9 +161,9 @@ mappings:
     testIds: [TEST-RIDE-024]
     useCaseLocalIds: [UC-RIDE-015]
   - frId: FR-RIDE-041
-    trIds: [TR-RIDE-VIDEO-001]
-    testIds: [TEST-RIDE-025]
-    useCaseLocalIds: [UC-RIDE-017]
+    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016, TR-RIDE-HW-001]
+    testIds: [TEST-RIDE-025, TEST-RIDE-044, TEST-RIDE-048]
+    useCaseLocalIds: [UC-RIDE-017, UC-RIDE-038]
   - frId: FR-RIDE-042
     trIds: [TR-RIDE-VIDEO-002]
     testIds: [TEST-RIDE-025]
@@ -293,9 +293,9 @@ mappings:
     testIds: [TEST-RIDE-027]
     useCaseLocalIds: [UC-RIDE-018]
   - frId: FR-RIDE-222
-    trIds: [TR-RIDE-VIEW-001]
-    testIds: [TEST-RIDE-028]
-    useCaseLocalIds: [UC-RIDE-019]
+    trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
+    testIds: [TEST-RIDE-028, TEST-RIDE-041]
+    useCaseLocalIds: [UC-RIDE-019, UC-RIDE-034]
 
   - frId: FR-RIDE-053
     trIds: [TR-RIDE-VIDEO-010]
@@ -311,8 +311,8 @@ mappings:
     useCaseLocalIds: [UC-RIDE-024]
 
   - frId: FR-RIDE-056
-    trIds: [TR-RIDE-VIDEO-012]
-    testIds: [TEST-RIDE-035]
+    trIds: [TR-RIDE-VIDEO-012, TR-RIDE-VIDEO-015]
+    testIds: [TEST-RIDE-035, TEST-RIDE-043]
     useCaseLocalIds: [UC-RIDE-025]
   - frId: FR-RIDE-057
     trIds: [TR-RIDE-VIEW-005]

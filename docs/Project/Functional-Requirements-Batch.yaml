@@ -280,7 +280,7 @@ records:
     priority: critical
     area: RIDE
     status: pending
-    notes: "Original FR-18."
+    notes: "Original FR-18. Update 2026-09-29: a live OpenTimestamps public calendar submit may be pending only (PR #23). Confirmation and txid stay Class C until upgrade succeeds. approval: Payton AGREE 2026-09-29. Does not set live_bitcoin_metadata or admission."
     acceptanceCriteria:
       - id: AC-RIDE-018-001
         text: "Receipt write is synchronous with or immediately after sealing in the same collection boundary."
@@ -290,6 +290,12 @@ records:
         isSatisfied: false
       - id: AC-RIDE-018-003
         text: "Chain brand is configurable, not hard-coded to one mainnet."
+        isSatisfied: false
+      - id: AC-RIDE-018-004
+        text: "A live OpenTimestamps public calendar submit may be receipted as pending when the calendar returns HTTP success and a pending attestation. A documented fixture calendar is not this AC. A pending proof is not confirmation."
+        isSatisfied: false
+      - id: AC-RIDE-018-005
+        text: "Bitcoin confirmation, transaction id, and block height stay unsatisfied (Class C) until a later upgrade succeeds. A pending calendar body is not stored as transaction_reference, does not set live_bitcoin_metadata, and does not admit the record."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-019
@@ -316,7 +322,7 @@ records:
     priority: critical
     area: RIDE
     status: pending
-    notes: "Original FR-20."
+    notes: "Original FR-20. Update 2026-09-29: RAES or RIDESEAL1 working-copy decrypt is only through the counsel and HSM escrow path. Public admission stays fail-closed and does not decrypt. approval: Payton AGREE 2026-09-29."
     acceptanceCriteria:
       - id: AC-RIDE-020-001
         text: "Documentation identifies custodians, legal process, escrow jurisdiction, dual-control, working-copy scope/expiry."
@@ -326,6 +332,9 @@ records:
         isSatisfied: false
       - id: AC-RIDE-020-003
         text: "Implementation matches documented path."
+        isSatisfied: false
+      - id: AC-RIDE-020-004
+        text: "An RAES or RIDESEAL1 envelope is decrypted only as an expiring counsel working copy after HSM escrow release. Public admission does not decrypt."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-021
@@ -484,13 +493,16 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Original FR-30."
+    notes: "Original FR-30. Update 2026-09-29 full history: headrest mount scad, README, BOM, and ARTIFACT carry GPL notices (HW-AC-MOUNT-003 and HW-AC-MOUNT-004). approval: Payton AGREE 2026-09-29. UI copyright placement is FR-RIDE-074, which stays Draft until a separate AGREE. This pointer does not withdraw the AGREE on this row."
     acceptanceCriteria:
       - id: AC-RIDE-030-001
         text: "Shared software/schema/receipt/attestation/verification artifacts carry GPL2 and commit notice."
         isSatisfied: false
       - id: AC-RIDE-030-002
         text: "Sealed evidence payloads remain access-controlled despite open-source code."
+        isSatisfied: false
+      - id: AC-RIDE-030-003
+        text: "Headrest mount scad, README, BOM, and ARTIFACT carry GPL notices. CAD is not a road release."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-031
@@ -655,13 +667,25 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Original FR-41."
+    notes: "Original FR-41. Update 2026-09-29 full history: Motorola edge 2024 over wireless adb is the lab secondary. Cradle criteria from HW-AC-MOUNT-001 live here, not on a second FR. Fold 4 CLOSED landscape, primary cameras forward. Dual post-blocks, slotted arms, thumbscrews, cradle grid. HW1 on-vehicle print stays open. approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001."
     acceptanceCriteria:
       - id: AC-RIDE-041-001
         text: "Two approved phones can collect for one authorized session."
         isSatisfied: false
       - id: AC-RIDE-041-002
         text: "Each stream retains device identity, attestation, camera metadata, timestamps."
+        isSatisfied: false
+      - id: AC-RIDE-041-003
+        text: "The lab secondary phone for dual-phone roles is a Motorola edge 2024 reached by wireless adb. It is not a substitute for the Fold 4 primary proof and does not by itself satisfy AC-UC-025-001."
+        isSatisfied: false
+      - id: AC-RIDE-041-004
+        text: "The headrest tray securely holds a Galaxy Z Fold 4 CLOSED, LANDSCAPE, with primary cameras facing FORWARD and not blocked by the cradle."
+        isSatisfied: false
+      - id: AC-RIDE-041-005
+        text: "The mount uses dual post-blocks, slotted arms, thumbscrews, and a cradle grid. CAD measurement is not a road release."
+        isSatisfied: false
+      - id: AC-RIDE-041-006
+        text: "HW1 on-vehicle print stays open until the operator vehicle checklist is filled."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-042
@@ -835,7 +859,7 @@ records:
     priority: critical
     area: RIDE
     status: pending
-    notes: "Original NFR-1. Mapped into FR namespace as FR-RIDE-201 per MCP entity conventions."
+    notes: "Original NFR-1. Mapped into FR namespace as FR-RIDE-201 per MCP entity conventions. Update 2026-09-29: ngrok HTTPS and loopback HTTP do not satisfy AC-RIDE-201-001. Caddy edge TLS is FR-RIDE-065 and stays Class C. approval: Payton AGREE 2026-09-29 for that note."
     acceptanceCriteria:
       - id: AC-RIDE-201-001
         text: "TLS 1.2+ enforced for network traffic."
@@ -1147,11 +1171,20 @@ records:
     priority: critical
     area: RIDE
     status: pending
-    notes: "Original NFR-22. Mapped into FR namespace as FR-RIDE-222 per MCP entity conventions."
+    notes: "Original NFR-22. Update 2026-09-29 from full operator history and PR #22. Lab self-signed Authenticode subject CN=RideAudit Lab Self-Signed is allowed on PAYTON-LEGION2 for lab win-x64 only and is not Public Trust. Do not buy a certificate yet. Commercial path is individual Payton Byrd using IV plus eSigner, not an organization OV certificate. macOS codesign deferred. Windows-only builds for now. approval: Payton AGREE 2026-09-29. AC-RIDE-222-001 stays unsatisfied."
     acceptanceCriteria:
       - id: AC-RIDE-222-001
         text: "Signed/reproducible GPL2 builds tested on Windows, Linux, macOS."
         isSatisfied: false
       - id: AC-RIDE-222-002
         text: "Viewer does not decrypt/render on any verification failure."
+        isSatisfied: false
+      - id: AC-RIDE-222-003
+        text: "Lab builds on PAYTON-LEGION2 may use a self-signed Authenticode certificate with subject CN=RideAudit Lab Self-Signed. Unrelated store certificates are refused and no pfx is committed. That lab signature is not Public Trust and does not satisfy AC-RIDE-222-001."
+        isSatisfied: false
+      - id: AC-RIDE-222-004
+        text: "Public Trust commercial signing is deferred and must not be purchased yet. Publisher identity is the individual Payton Byrd using IV plus eSigner. An organization OV certificate is not the publisher identity. The lab certificate does not satisfy this AC."
+        isSatisfied: false
+      - id: AC-RIDE-222-005
+        text: "macOS codesign is deferred. Current desktop publish scope is Windows only. Linux Authenticode does not apply. AC-RIDE-222-001 remains unsatisfied."
         isSatisfied: false

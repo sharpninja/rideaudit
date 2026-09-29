@@ -30,6 +30,10 @@ records:
       PAYTON-OMARCHY, and OMARCHY to 192.168.0.149; do not invent a second host
       if those names resolve together, and do not treat the loopback cutover as
       Octopus CD complete. Not a live Play FR.
+      Update 2026-09-29: recorded path on file is container octopus-rideaudit on
+      PAYTON-DESKTOP (docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md).
+      That receipt does not mark these ACs satisfied and does not authorize GHCR.
+      approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:
       - id: AC-RIDE-063-001
         text: Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to PAYTON-DESKTOP.
@@ -39,6 +43,9 @@ records:
         isSatisfied: false
       - id: AC-RIDE-063-003
         text: Release receipts record the Octopus instance or container and the target machine, and never claim GHCR as the distribution path or a GHCR green.
+        isSatisfied: false
+      - id: AC-RIDE-063-004
+        text: PAYTON-OMARCHY compose cutover is prior interim evidence. It is not the Octopus CD green for PAYTON-DESKTOP.
         isSatisfied: false
 
   - kind: fr
@@ -62,6 +69,8 @@ records:
       Operator 2026-09-28. Supersedes any GHCR assumption for public ingress.
       Does not invent GHCR. Does not claim Omarchy loopback cutover or live Play
       as this FR. Current vs target must stay honest in receipts.
+      Update 2026-09-29: ngrok HTTPS is not Caddy edge TLS. Caddy is FR-RIDE-065 and remains Class C.
+      approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:
       - id: AC-RIDE-064-001
         text: A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.
@@ -80,7 +89,7 @@ records:
       - Operator
       - OctopusDeploy
       - PaytonDesktop
-    briefDescription: Operator configures the RideAudit Octopus project and releases container images to PAYTON-DESKTOP without using GHCR.
+    briefDescription: "Operator configures the RideAudit Octopus project and releases container images to PAYTON-DESKTOP without using GHCR. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     basicFlow: |
       1. Operator opens the RideAudit Octopus project on the licensed instance (default container, or a new container on PAYTON-DESKTOP if licenses are exhausted).
       2. Operator confirms the process builds admission, counsel, and related images from deploy/containers.
@@ -90,6 +99,9 @@ records:
     acceptanceCriteria:
       - id: AC-UC-032-001
         text: Operator can configure the Octopus project and complete a release to PAYTON-DESKTOP with a receipt that names the instance and target and does not claim GHCR.
+        isSatisfied: false
+      - id: AC-UC-032-002
+        text: A PAYTON-OMARCHY compose cutover is not accepted as the Octopus CD green.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-063
@@ -149,13 +161,16 @@ records:
     area: RIDE
     subarea: DEPLOY
     status: pending
-    notes: Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green.
+    notes: "Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     acceptanceCriteria:
       - id: AC-RIDE-DEPLOY-002-001
         text: PAYTON-DESKTOP is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
         isSatisfied: false
       - id: AC-RIDE-DEPLOY-002-002
         text: License exhaustion on the default Octopus container results in a new Octopus container on PAYTON-DESKTOP rather than a GHCR workaround.
+        isSatisfied: false
+      - id: AC-RIDE-DEPLOY-002-003
+        text: PAYTON-OMARCHY compose cutover is recorded as prior interim and is not the Octopus deployment green.
         isSatisfied: false
 
   - kind: tr
@@ -189,13 +204,16 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28."
+    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     acceptanceCriteria:
       - id: AC-TEST-038-001
         text: Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP.
         isSatisfied: false
       - id: AC-TEST-038-002
         text: Receipt names the Octopus instance or container and target machine and contains no GHCR green claim.
+        isSatisfied: false
+      - id: AC-TEST-038-003
+        text: A PAYTON-OMARCHY compose cutover receipt is not scored as the Octopus CD green.
         isSatisfied: false
 
   - kind: test

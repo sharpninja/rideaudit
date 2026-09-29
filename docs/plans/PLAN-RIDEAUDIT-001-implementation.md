@@ -1,15 +1,15 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.8: A live OpenTimestamps calendar submit on PAYTON-LEGION2 is receipted as pending only (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`). No Bitcoin txid. Confirmation stays open. r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust, section 9 Class C boxes, and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
+**Revision:** r3.9: Payton 2026-09-29 directed that Section 9 Astra/Payton plan-acceptance boxes are not open work. That direction does not close product Class C items. r3.8: A live OpenTimestamps calendar submit on PAYTON-LEGION2 is receipted as pending only (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`). No Bitcoin txid. Confirmation stays open. r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
 **Process:** Byrd Dev Process v4 (BDPv4)  
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to PAYTON-DESKTOP admission `192.168.0.149:28080`. r3.6 records the Class A ledger recount (`docs/receipts/ac-coverage/20260928-ledger.md`: 401 covered / 23 deferred / 0 missing / 424) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. r3.7 records the lab self-signed win-x64 path (`docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`): signtool sees a signature, `verify /pa` exits 1, and the result is Signed but not Public Trust. That receipt does not check section 9 and does not close P11b. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
-**Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Those boxes remain unchecked as historical process state. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to PAYTON-DESKTOP admission `192.168.0.149:28080`. r3.6 records the Class A ledger recount (`docs/receipts/ac-coverage/20260928-ledger.md`: 401 covered / 23 deferred / 0 missing / 424) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. r3.7 records the lab self-signed win-x64 path (`docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`): signtool sees a signature, `verify /pa` exits 1, and the result is Signed but not Public Trust. That receipt does not close P11b. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Payton 2026-09-29 directed that the Section 9 plan-acceptance boxes are not open work. That direction does not rewrite the pre-PR history and does not close product Class C items. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
 
 > **Operator CD direction (2026-09-28, binding):** Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
@@ -1377,7 +1377,7 @@ Phase numbering does not authorize bypassing a dependency.
 - [x] linux-x64 framework-dependent publish from the same lab script, unsigned. Authenticode does not apply. Hostile AGREE: `docs/receipts/hostile-validator-20260929T135012Z.md`.
 - [ ] Commercial OV/IV Authenticode + cloud HSM. Deferred. Real certs later. Nothing purchased.
 - [ ] Public Trust and a SmartScreen-clean reputation.
-- [ ] Section 9 Class C boxes (Astra/Payton plan acceptance). Not closed.
+- Section 9 Astra/Payton plan-acceptance boxes are not open work (Payton 2026-09-29).
 - [ ] macOS codesign. Operator deferred. Windows only.
 - [ ] Full P11b exit (signed reproducible Win/Linux/macOS public release, Play and source receipts, opposing-model AGREE). full P11b is not closed.
 
@@ -1561,14 +1561,18 @@ Before the gate, only documentation, requirement YAML, plans, process records, a
 
 ## 9. Acceptance of this plan
 
-- [ ] P0 documentation repair complete (UC YAML consolidated; AC inventory; custody contracts text; process HV exception note)
-- [ ] Astra READY + AGREE with accuracy/completeness/confidence ≥98 on this revision; pairs committed
-- [ ] Payton AGREE on the same revision
-- [ ] Only then may implementers begin P1 tests-first skeleton
+Payton 2026-09-29: the project is past this gate. The four plan-acceptance items below are not open work. This note does not mark each historical item complete on its original evidence terms, and it does not close product Class C items (Caddy edge TLS, live OTS confirmation and txid, Play, HW1, Public Trust, P11b, AC-RIDE-222-001, AC-UC-025-001).
 
-The boxes above remain **historically unchecked**. They are class C (Astra/Payton agreement). They are not backdated as complete. Payton 2026-09-28 authorized a post-HV **remediation loop** (iterate until opposing Sol HV AGREE). That authorization does not rewrite construction-gate history. code-hv-sol-r4 later returned READY/AGREE on product head `4f0e741` for the narrow CODE-HV gate only. That AGREE does not check these boxes and does not close P0–P11b. Rem-phase checklist: [code-hv-sol-r2-remediation-phase-checklist.md](../receipts/remediation/code-hv-sol-r2-remediation-phase-checklist.md).
+Historical record, not a remaining checklist:
 
-## 11. Closeout inventory (2026-09-29, r3.8 live OTS pending note; r3.7 lab signing note; r3.6 ledger still applies)
+- P0 documentation repair complete (UC YAML consolidated; AC inventory; custody contracts text; process HV exception note)
+- Astra READY + AGREE with accuracy/completeness/confidence ≥98 on this revision; pairs committed
+- Payton AGREE on the same revision
+- Only then may implementers begin P1 tests-first skeleton
+
+These items are not tracked as pending Class C. Payton 2026-09-28 authorized a post-HV remediation loop (iterate until opposing Sol HV AGREE). That authorization is historical and does not rewrite construction-gate history. code-hv-sol-r4 later returned READY/AGREE on product head `4f0e741` for the narrow CODE-HV gate only. That AGREE does not close P0-P11b product work. Rem-phase checklist: [code-hv-sol-r2-remediation-phase-checklist.md](../receipts/remediation/code-hv-sol-r2-remediation-phase-checklist.md).
+
+## 11. Closeout inventory (2026-09-29, r3.9 Section 9 plan-acceptance boxes are not open work; r3.8 live OTS pending note; r3.7 lab signing note; r3.6 ledger still applies)
 
 Classes: **A** implementable in this tree without a third party; **B** ops/config (ngrok, Octopus, docs); **C** blocked on a third party or on a named human/model agreement.
 
@@ -1576,8 +1580,8 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | --- | --- | --- |
 | Canonical ngrok still aimed only at Omarchy `127.0.0.1:18080` | B | Done for this host. Receipt `docs/receipts/distribution/20260929T030643Z-ngrok-desktop-28080.md`: systemd user unit, `PROBE_HTTP=200`, public URL `https://zeugmatically-unindicative-calista.ngrok-free.dev`. |
 | Octopus CD receipt vs plan text that said the plan does not invent a live green | B | Plan cites `20260929T015822Z-octopus-payton-desktop.md`. `DistributionReceipts.OctopusDesktopOnFile` is `receipt-on-file`, not a live probe. Dev/Staging/Prod stay `not-run`. |
-| Section 9 boxes (P0 repair, Astra ≥98, Payton AGREE, then P1) | C | Stay unchecked. Historical. code-hv-sol-r4 does not check them. |
-| Android §7 and Server §7 HV/Payton boxes | C | Stay unchecked. Same reason. |
+| Section 9 boxes (P0 repair, Astra ≥98, Payton AGREE, then P1) | past gate | Not open work. Payton 2026-09-29. Not tracked as pending Class C. This row does not close Caddy, live OTS confirmation and txid, Play, HW1, Public Trust, or P11b. |
+| Android §7 and Server §7 HV/Payton boxes | C | Stay unchecked. Historical child-plan boxes. code-hv-sol-r4 does not check them. |
 | Bracket optional Astra/child HV | C | Stay unchecked. Not run. Not a product-HV pass. |
 | Bracket HW1 on-vehicle print | C | Stay unchecked. Needs a physical vehicle and the operator checklist. CAD measurement is not a road release. |
 | Play Store publication (FR-RIDE-031 live store) | C | Fail closed. Not claimed. |
@@ -1588,7 +1592,7 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | Edge TLS via Caddy (distinct from ngrok HTTPS) | C | Omarchy/DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. ngrok HTTPS is the tunnel, not that AC. |
 | Lab self-signed Authenticode win-x64 on PAYTON-LEGION2 | A lab slice | Closed for the lab path only, after hostile AGREE `docs/receipts/hostile-validator-20260929T135012Z.md`. Subject `CN=RideAudit Lab Self-Signed`, thumbprint `98B8942B143D2D788F635530531C1B2DF0EC3C79`, store `CurrentUser\My`, key NonExportable. Receipt `docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`. signtool sees the signature and a DigiCert timestamp. `signtool verify /pa` exit 1 (untrusted root). Signed but not Public Trust. SmartScreen will warn. Not Class C. Not a reproducible public signed release. |
 | Commercial OV/IV Authenticode + cloud HSM | C deferred | Operator: self-sign for now; real certs later. Inventory `docs/receipts/distribution/20260929T124653Z-p11b-signing-inventory.md`. Nothing purchased. |
-| Signed reproducible desktop Win/Linux/macOS and full P11b suite | A remaining | Not closed. The unsigned receipt `docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md` stays historical (`Status=NotSigned` at that time). linux-x64 in the lab script is unsigned. macOS was not published on r3.7. Section 9 Class C boxes stay unchecked. Public Trust is not closed. P11b exit stays open. |
+| Signed reproducible desktop Win/Linux/macOS and full P11b suite | A remaining | Not closed. The unsigned receipt `docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md` stays historical (`Status=NotSigned` at that time). linux-x64 in the lab script is unsigned. macOS was not published on r3.7. Public Trust is not closed. P11b exit stays open. |
 | AC ledger rows still `missing` after the 424-id recount | A remaining | Name-or-defer recount is 401 covered / 23 deferred / 0 missing / 424 (`docs/receipts/ac-coverage/20260928-ledger.md`). Before: 190 covered / 36 deferred / 198 missing. Deferred wins over a test-source name when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live third-party work. A neighboring YAML requirement does not defer the AC. A covered row is a test-source name, not whole-AC closure. P11b still owns that closure. This row is not marked done. |
 
 No class A/B row in the unchecked plan boxes is left without this disposition. P11b and whole-AC acceptance beyond a test-source name remain open. They are not marked done.
