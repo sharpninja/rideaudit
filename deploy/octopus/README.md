@@ -10,10 +10,10 @@ This path is the product CD. Omarchy loopback plus ngrok (`deploy/omarchy`, `:18
 
 From PAYTON-LEGION2:
 
-1. Sync the git tree to the live Linux Docker host over SSH stdin (same constraint as `deploy/omarchy`: the login shell is pwsh, so scp/sftp break).
-2. Talk to the existing Octopus Server container (`octopus-legion2-octopus-server-1`, image `octopusdeploy/octopusdeploy:2026.2.13260`) on that host.
-3. Ensure project **RideAudit**, a Linux SSH deployment target with Docker, a script process that builds from `deploy/containers/*`, and a release.
-4. Octopus runs `remote-build-and-run.sh` on the target. Images stay on the local Docker engine. No GHCR push or pull as the distribution path. Microsoft Container Registry base images (`mcr.microsoft.com/dotnet/*`) are allowed.
+1. Sync the git tree to the live Linux Docker host over SSH stdin (same constraint as `deploy/omarchy`: the login shell is pwsh, so scp/sftp break). Shell scripts are stripped of CR so bash does not see `\r`.
+2. Prefer the RideAudit Octopus instance `octopus-rideaudit` on `192.168.0.149:18066` when `~\.creds\octopus-rideaudit.cred.xml` exists. The default `octopus-legion2` instance on `:8066` stays up; its node was observed with a dead task engine (`MaxConcurrentTasks=0` / queued since 2026-09-27).
+3. Ensure project **RideAudit**, environment **Development**, and a polling Tentacle (`PAYTON-DESKTOP-DOCKER`, role `rideaudit-host`) that talks to the host Docker engine through `/var/run/docker.sock`.
+4. Octopus runs `remote-build-and-run.sh` on that Tentacle. Images stay on the local Docker engine. No GHCR push or pull as the distribution path. Microsoft Container Registry base images (`mcr.microsoft.com/dotnet/*`) are allowed.
 5. Compose project `rideaudit-octopus` binds admission on `192.168.0.149:28080` and counsel on `192.168.0.149:28081`. That is a different stack from `rideaudit-omarchy` on `127.0.0.1:18080`. Do not `docker compose down` Octopus, SQL, Caddy, or the interim Omarchy stack.
 
 ## Host facts (verify, do not invent)
@@ -22,31 +22,46 @@ SSH aliases `PAYTON-DESKTOP`, `PAYTON-OMARCHY`, and `OMARCHY` currently resolve 
 
 The default Octopus instance already has a polling Tentacle named **PAYTON-DESKTOP**. That target is Windows 11. Its last successful connection in this work was 2026-09-23, health `HasWarnings`. WinRM `:5985`/`:5986` from LEGION2 did not connect. Grok Bot local-execution on Windows DESKTOP may be offline.
 
-This path therefore registers a **Linux SSH target** (`PAYTON-DESKTOP-LINUX`, role `rideaudit-host`) at the Octopus container's docker-bridge gateway (`172.19.0.1`) so Calamari SSHs to the same machine that already runs Docker and the default Octopus container. That is the live PAYTON-DESKTOP Docker host for this lab. It is not a claim that the Windows Tentacle is healthy.
+SSH from an Octopus Server container to host `:22` was observed CLOSED (hairpin / bridge). Do not treat container-to-host SSH as the worker path. The worker is the **polling Tentacle container** with the host Docker socket.
 
-Default instance license observed from `/api/licenses/licenses-current` (no key material recorded here): subscription valid through 2027-07-07, project limit 10, machine limit 10. Nine projects existed before RideAudit.
+Default instance license observed from `/api/licenses/licenses-current` (no key material recorded here): subscription valid through 2027-07-07, project limit 10, machine limit 10. Nine projects existed before this work on the default instance.
 
-The default node `legion2-octopus` was found with `MaxConcurrentTasks=0` and every task queued since 2026-09-27 (including after raising the cap to 5: `RunningTasks` stayed 0). That is a blocked default container. FR-RIDE-063 then requires a **new Octopus container** on PAYTON-DESKTOP:
+## New instance (required when the default task engine is dead)
 
 ```powershell
 pwsh -NoProfile -File deploy/octopus/Provision-RideAuditOctopusContainer.ps1
-pwsh -NoProfile -File deploy/octopus/Invoke-RideAuditOctopusRelease.ps1 -ApiBase http://192.168.0.149:18066
+# After a lost MASTER_KEY / crash-loop (recreate without the key):
+pwsh -NoProfile -File deploy/octopus/Provision-RideAuditOctopusContainer.ps1 -ResetData
+pwsh -NoProfile -File deploy/octopus/Invoke-RideAuditOctopusRelease.ps1
 ```
 
-The new stack is `octopus-rideaudit` on `192.168.0.149:18066` (HTTP) and `:19112` (Tentacle comms). It does not steal `8066`/`8444`/`11112`. Creds are written to `~\.creds\octopus-rideaudit.cred.xml` (DPAPI, not git). The default `octopus-legion2-*` containers stay up.
+`-ResetData` wipes only `octopus-rideaudit_*` volumes. It does not touch `octopus-legion2-*`.
+
+The new stack is `octopus-rideaudit`:
+
+| Container | Role |
+| --- | --- |
+| `octopus-rideaudit-db-1` | SQL 2022 on host `127.0.0.1:1404` |
+| `octopus-rideaudit-octopus-1` | Server HTTP `192.168.0.149:18066`, Tentacle comms `:19112` |
+| `octopus-rideaudit-tentacle-1` | Polling worker, host `docker.sock`, role `rideaudit-host` |
+
+`MASTER_KEY` is generated on LEGION2, stored in the remote `.env` and in `~\.creds\octopus-rideaudit.cred.xml` (DPAPI). Recreating Server without that key cannot decrypt the existing database (certificate decrypt crash-loop). The default `octopus-legion2-*` containers stay up.
+
+A new container starts on the free license (zero deployment targets). `Apply-RideAuditOctopusLicense.ps1` copies the subscription **LicenseText** from the default instance. Serials and XML are not printed.
 
 ## Secrets (never git)
 
 | File | Use |
 | --- | --- |
-| `C:\Users\kingd\.creds\octopus-desktop.cred.xml` | API key. `ServerUrl` is `https://payton-desktop:8444`. |
+| `C:\Users\kingd\.creds\octopus-rideaudit.cred.xml` | API key + master key for `http://192.168.0.149:18066`. |
+| `C:\Users\kingd\.creds\octopus-desktop.cred.xml` | API key. `ServerUrl` is `https://payton-desktop:8444` (default instance). |
 | `C:\Users\kingd\.creds\octopus-legion2.cred.xml` | Alternate API key for `https://payton-legion2:8444` (not the live API from this host). |
 | `C:\Users\kingd\.creds\octopus-payton.cred.xml` | Admin + API for the older `http://payton-desktop:8065` URL (port closed). |
 | `C:\Users\kingd\.creds\payton-omarchy.yaml` | SSH user for the Linux host. Host field may say `PAYTON-DESKTOP`; verify aliases. |
 | `C:\Users\kingd\.creds\paytondesktop.cred.xml` | Windows `kingd` WinRM cred. Unused while WinRM is down. |
-| `C:\Users\kingd\.ssh\id_ed25519_payton_desktop` | Preferred Octopus SSH account material (BatchMode from LEGION2). |
+| `C:\Users\kingd\.ssh\id_ed25519_payton_desktop` | SSH account material if WorkerMode=Ssh (BatchMode from LEGION2). |
 
-Scripts create an Octopus SSH account at runtime from the key file (or the yaml password). They do not print or commit those values.
+Scripts do not print or commit those values.
 
 ## Repeatable commands (PAYTON-LEGION2)
 
@@ -57,12 +72,12 @@ pwsh -NoProfile -File deploy/octopus/Sync-RideAuditTree.ps1
 pwsh -NoProfile -File deploy/octopus/Invoke-RideAuditOctopusRelease.ps1
 ```
 
-`Invoke-RideAuditOctopusRelease.ps1` syncs, ensures infrastructure, creates a release, deploys to the **Development** environment, and probes `http://192.168.0.149:28080/`. Expect HTTP 200 and body `RideAudit admission gRPC. Contract authority: grpc-protobuf...`.
+`Invoke-RideAuditOctopusRelease.ps1` syncs, waits for the Tentacle, creates a release, deploys to **Development**, and probes `http://192.168.0.149:28080/`. Expect HTTP 200 and body `RideAudit admission gRPC. Contract authority: grpc-protobuf...`.
 
 Useful URLs after a real release (IDs come from the script stdout, not from this README):
 
-- Portal: `https://payton-desktop:8444/app#/Spaces-1/projects/rideaudit`
-- HTTP API/UI: `http://192.168.0.149:8066/app#/Spaces-1/projects/rideaudit`
+- RideAudit Octopus: `http://192.168.0.149:18066/app#/Spaces-1/projects/rideaudit`
+- Default Octopus (not the FR-063 runner): `http://192.168.0.149:8066/app#/Spaces-1`
 - Admission health: `http://192.168.0.149:28080/`
 - Counsel (same host, role env): `http://192.168.0.149:28081/`
 
@@ -72,9 +87,11 @@ Primary: `deploy/containers/admission/Dockerfile` and `deploy/containers/counsel
 
 Fallback: `deploy/omarchy/Dockerfile.runtime` against a linux-x64 publish tree synced by `-WithPublish`. That is the documented successor already used for Omarchy lab images. It is still an Octopus-orchestrated local build, not GHCR.
 
+If the Tentacle image has no Compose plugin, `remote-build-and-run.sh` falls back to `docker run` on `:28080`/`:28081`.
+
 ## License fallback
 
-If the default instance is out of licenses **or cannot run tasks**, do **not** switch to GHCR. Run `Provision-RideAuditOctopusContainer.ps1` and point `Invoke-RideAuditOctopusRelease.ps1 -ApiBase` at `http://192.168.0.149:18066`. Record the new container name in the receipt. Existing `octopus-legion2-*` containers must stay up.
+If the default instance is out of licenses **or cannot run tasks**, do **not** switch to GHCR. Run `Provision-RideAuditOctopusContainer.ps1` and `Invoke-RideAuditOctopusRelease.ps1`. Record the new container name in the receipt. Existing `octopus-legion2-*` containers must stay up.
 
 ## What this is not
 

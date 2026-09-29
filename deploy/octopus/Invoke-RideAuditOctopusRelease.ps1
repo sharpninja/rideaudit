@@ -6,17 +6,20 @@
 param(
     [string]$ProjectName = "RideAudit",
     [string]$EnvironmentName = "Development",
-    [string]$TargetName = "PAYTON-DESKTOP-LINUX",
+    [string]$TargetName = "PAYTON-DESKTOP-DOCKER",
     [string]$TargetRole = "rideaudit-host",
     [string]$SshHost = "PAYTON-DESKTOP",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
-    [string]$SshConnectHost = "192.168.0.149",
+    [string]$SshConnectHost = "172.21.0.1",
     [string]$AdmissionUrl = "http://192.168.0.149:28080/",
-    [string]$ApiBase = "http://192.168.0.149:8066",
+    [string]$ApiBase = "",
+    [string]$CredPath = "",
     [string]$Version = "",
     [switch]$SkipSync,
     [switch]$SkipHealthCheck,
-    [switch]$WithPublish
+    [switch]$WithPublish,
+    [ValidateSet("Tentacle", "Ssh", "RunOnServer")]
+    [string]$WorkerMode = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,6 +31,7 @@ $scriptBody = @"
 set -eu
 ROOT="$RemoteAbs"
 test -f "`$ROOT/deploy/octopus/remote-build-and-run.sh"
+command -v docker
 /usr/bin/bash --noprofile --norc "`$ROOT/deploy/octopus/remote-build-and-run.sh"
 "@
 
@@ -71,12 +75,13 @@ function Ensure-SshAccount {
     $body = $null
     if (Test-Path -LiteralPath $keyPath) {
         $pem = [IO.File]::ReadAllText($keyPath)
+        $pemB64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pem))
         $body = @{
-            AccountType                   = "SshKeyPair"
-            Name                          = "RideAudit PAYTON-DESKTOP SSH"
-            Description                   = "FR-RIDE-063 Linux Docker host SSH. Created from LEGION2 key file, not git."
-            Username                      = "sharpninja"
-            PrivateKeyFile                = @{ HasValue = $true; NewValue = $pem }
+            AccountType                     = "SshKeyPair"
+            Name                            = "RideAudit PAYTON-DESKTOP SSH"
+            Description                     = "FR-RIDE-063 Linux Docker host SSH. Created from LEGION2 key file, not git."
+            Username                        = "sharpninja"
+            PrivateKeyFile                  = @{ HasValue = $true; NewValue = $pemB64 }
             TenantedDeploymentParticipation = "Untenanted"
         }
         Write-Host "creating SSH key-pair account from local key file (not printed)"
@@ -84,11 +89,11 @@ function Ensure-SshAccount {
     elseif (Test-Path -LiteralPath $yamlPath) {
         $yaml = Get-RideAuditYamlMap -Path $yamlPath
         $body = @{
-            AccountType                   = "UsernamePassword"
-            Name                          = "RideAudit PAYTON-DESKTOP SSH"
-            Description                   = "FR-RIDE-063 Linux Docker host SSH. Password from ~/.creds, not git."
-            Username                      = $yaml.username
-            Password                      = @{ HasValue = $true; NewValue = $yaml.password }
+            AccountType                     = "UsernamePassword"
+            Name                            = "RideAudit PAYTON-DESKTOP SSH"
+            Description                     = "FR-RIDE-063 Linux Docker host SSH. Password from ~/.creds, not git."
+            Username                        = $yaml.username
+            Password                        = @{ HasValue = $true; NewValue = $yaml.password }
             TenantedDeploymentParticipation = "Untenanted"
         }
         Write-Host "creating username/password account from cred yaml (not printed)"
@@ -102,17 +107,42 @@ function Ensure-SshAccount {
     return $created
 }
 
-function Ensure-LinuxTarget {
-    param($Connection, $Account, [string]$Fingerprint)
-    $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
-    $existing = @($machines) | Where-Object { $_.Name -eq $TargetName } | Select-Object -First 1
+function Ensure-Environment {
+    param($Connection, [string]$Name)
+    $envs = @(Get-OctopusItems -Connection $Connection -Path "/api/environments/all")
+    $existing = @($envs) | Where-Object { $_.Name -eq $Name } | Select-Object -First 1
     if ($existing) {
+        Write-Host ("using environment {0}" -f $existing.Id)
+        return $existing
+    }
+    $created = Invoke-RideAuditOctopusApi -Connection $Connection -Method POST -Path "/api/Spaces-1/environments" -Body @{
+        Name             = $Name
+        Description      = "FR-RIDE-063 PAYTON-DESKTOP"
+        SortOrder        = 1
+        UseGuidedFailure = $false
+    }
+    Write-Host ("created environment {0}" -f $created.Id)
+    return $created
+}
+
+function Ensure-LinuxTarget {
+    param($Connection, $Account, [string]$Fingerprint, [string[]]$EnvironmentIds)
+    $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
+    $existing = @($machines) | Where-Object { $_.Name -eq "PAYTON-DESKTOP-LINUX" } | Select-Object -First 1
+    if ($existing) {
+        if ($existing.Endpoint.Host -ne $SshConnectHost) {
+            $existing.Endpoint.Host = $SshConnectHost
+            $existing.Endpoint.Uri = "ssh://${SshConnectHost}:22/"
+            $existing.Endpoint.Port = 22
+            $existing = Invoke-RideAuditOctopusApi -Connection $Connection -Method PUT -Path "/api/Spaces-1/machines/$($existing.Id)" -Body $existing
+            Write-Host ("updated machine {0} host={1}" -f $existing.Id, $existing.Endpoint.Host)
+        }
         Write-Host ("using machine {0} health={1}" -f $existing.Id, $existing.HealthStatus)
         return $existing
     }
 
     $body = @{
-        Name                            = $TargetName
+        Name                            = "PAYTON-DESKTOP-LINUX"
         IsDisabled                      = $false
         HealthStatus                    = "Unknown"
         IsInProcess                     = $true
@@ -127,13 +157,34 @@ function Ensure-LinuxTarget {
             AccountId          = $Account.Id
         }
         TenantedDeploymentParticipation = "Untenanted"
-        EnvironmentIds                  = @("Environments-1", "Environments-3")
+        EnvironmentIds                  = @($EnvironmentIds)
         Roles                           = @($TargetRole)
         TenantIds                       = @()
     }
     $created = Invoke-RideAuditOctopusApi -Connection $Connection -Method POST -Path "/api/Spaces-1/machines" -Body $body
     Write-Host ("created machine {0}" -f $created.Id)
     return $created
+}
+
+function Wait-RoleTarget {
+    param($Connection, [int]$TimeoutSec = 240)
+    $deadline = (Get-Date).AddSeconds($TimeoutSec)
+    do {
+        $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
+        $named = @($machines) | Where-Object { $_.Name -eq $TargetName } | Select-Object -First 1
+        $roled = @($machines) | Where-Object {
+            @($_.Roles) -contains $TargetRole
+        } | Select-Object -First 1
+        $hit = $named
+        if (-not $hit) { $hit = $roled }
+        if ($hit) {
+            Write-Host ("using target {0} name={1} health={2} style={3}" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
+            return $hit
+        }
+        Write-Host "waiting for tentacle/target role=$TargetRole"
+        Start-Sleep -Seconds 5
+    } while ((Get-Date) -lt $deadline)
+    throw "no Octopus target with name $TargetName or role $TargetRole after $TimeoutSec seconds"
 }
 
 function Start-MachineHealth {
@@ -143,9 +194,9 @@ function Start-MachineHealth {
         Description = "Health check $TargetName for FR-RIDE-063"
         SpaceId     = "Spaces-1"
         Arguments   = @{
-            MachineIds        = @($MachineId)
-            Timeout           = "00:05:00"
-            MachineTimeout    = "00:02:00"
+            MachineIds         = @($MachineId)
+            Timeout            = "00:05:00"
+            MachineTimeout     = "00:02:00"
             OnlyTestConnection = $false
         }
     }
@@ -159,7 +210,7 @@ function Start-MachineHealth {
 }
 
 function Ensure-ProjectAndProcess {
-    param($Connection)
+    param($Connection, [string]$RunMode)
     $projects = @(Get-OctopusItems -Connection $Connection -Path "/api/projects/all")
     $project = @($projects) | Where-Object { $_.Name -eq $ProjectName } | Select-Object -First 1
     if (-not $project) {
@@ -185,43 +236,50 @@ function Ensure-ProjectAndProcess {
         Write-Host ("using project {0}" -f $project.Id)
     }
 
+    $runOnServer = if ($RunMode -eq "RunOnServer") { "true" } else { "false" }
+    $stepProps = @{
+        "Octopus.Action.RunOnServer"         = $runOnServer
+        "Octopus.Action.EnabledFeatures"     = ""
+        "Octopus.Action.Script.ScriptSource" = "Inline"
+        "Octopus.Action.Script.Syntax"       = "Bash"
+        "Octopus.Action.Script.ScriptBody"   = $scriptBody
+    }
+    $stepTopProps = @{}
+    if ($RunMode -ne "RunOnServer") {
+        $stepTopProps["Octopus.Action.TargetRoles"] = $TargetRole
+    }
+
     $process = Get-RideAuditOctopusJson -Connection $Connection -Path "/api/Spaces-1/deploymentprocesses/$($project.DeploymentProcessId)"
     $stepName = "Build and run RideAudit containers"
     $step = @{
         Name               = $stepName
         Type               = "Step"
         PackageRequirement = "LetOctopusDecide"
-        Properties         = @{ "Octopus.Action.TargetRoles" = $TargetRole }
+        Properties         = $stepTopProps
         Condition          = "Success"
         StartTrigger       = "StartAfterPrevious"
         Actions            = @(
             @{
-                ActionType                   = "Octopus.Script"
-                Name                         = $stepName
-                IsDisabled                   = $false
-                IsRequired                   = $true
+                ActionType                    = "Octopus.Script"
+                Name                          = $stepName
+                IsDisabled                    = $false
+                IsRequired                    = $true
                 CanBeUsedForProjectVersioning = $false
-                WorkerPoolId                 = $null
-                Container                    = @{ Image = $null; FeedId = $null }
-                Environments                 = @()
-                ExcludedEnvironments         = @()
-                Channels                     = @()
-                TenantTags                   = @()
-                Packages                     = @()
-                Condition                    = "Success"
-                Properties                   = @{
-                    "Octopus.Action.RunOnServer"        = "false"
-                    "Octopus.Action.EnabledFeatures"    = ""
-                    "Octopus.Action.Script.ScriptSource" = "Inline"
-                    "Octopus.Action.Script.Syntax"      = "Bash"
-                    "Octopus.Action.Script.ScriptBody"  = $scriptBody
-                }
+                WorkerPoolId                  = $null
+                Container                     = @{ Image = $null; FeedId = $null }
+                Environments                  = @()
+                ExcludedEnvironments          = @()
+                Channels                      = @()
+                TenantTags                    = @()
+                Packages                      = @()
+                Condition                     = "Success"
+                Properties                    = $stepProps
             }
         )
     }
     $process.Steps = @($step)
     $updated = Invoke-RideAuditOctopusApi -Connection $Connection -Method PUT -Path "/api/Spaces-1/deploymentprocesses/$($process.Id)" -Body $process
-    Write-Host ("updated process {0} version={1}" -f $updated.Id, $updated.Version)
+    Write-Host ("updated process {0} version={1} worker={2}" -f $updated.Id, $updated.Version, $RunMode)
     return $project
 }
 
@@ -231,10 +289,10 @@ function New-RideAuditReleaseAndDeploy {
     $channel = @($channels) | Select-Object -First 1
     if (-not $channel) { throw "project $($Project.Id) has no channel" }
     $releaseBody = @{
-        ProjectId     = $Project.Id
-        ChannelId     = $channel.Id
-        Version       = $ReleaseVersion
-        ReleaseNotes  = "FR-RIDE-063 RideAudit containers to PAYTON-DESKTOP. Local Docker only. No GHCR."
+        ProjectId    = $Project.Id
+        ChannelId    = $channel.Id
+        Version      = $ReleaseVersion
+        ReleaseNotes = "FR-RIDE-063 RideAudit containers to PAYTON-DESKTOP. Local Docker only. No GHCR."
     }
     $release = Invoke-RideAuditOctopusApi -Connection $Connection -Method POST -Path "/api/Spaces-1/releases" -Body $releaseBody
     Write-Host ("created release {0} version={1}" -f $release.Id, $release.Version)
@@ -252,17 +310,37 @@ function New-RideAuditReleaseAndDeploy {
     Write-Host ("created deployment {0} task={1}" -f $deployment.Id, $deployment.TaskId)
     $task = Wait-OctopusTask -Connection $Connection -TaskId $deployment.TaskId -TimeoutSec 5400
     return [pscustomobject]@{
-        Release    = $release
-        Deployment = $deployment
-        Task       = $task
-        Channel    = $channel
+        Release     = $release
+        Deployment  = $deployment
+        Task        = $task
+        Channel     = $channel
         Environment = $env
     }
 }
 
 Write-Host "FR-RIDE-063 RideAudit Octopus release from PAYTON-LEGION2. No GHCR."
-$cx = Get-RideAuditOctopusConnection -ApiBase $ApiBase
-Write-Host ("octopus api={0} portal={1} stored-url={2}" -f $cx.ApiBase, $cx.PortalBase, $cx.ServerUrl)
+$rideauditCred = Join-Path $env:USERPROFILE ".creds\octopus-rideaudit.cred.xml"
+if ([string]::IsNullOrWhiteSpace($ApiBase)) {
+    if (Test-Path -LiteralPath $rideauditCred) {
+        $ApiBase = "http://192.168.0.149:18066"
+    }
+    else {
+        $ApiBase = "http://192.168.0.149:8066"
+    }
+}
+if ([string]::IsNullOrWhiteSpace($CredPath) -and $ApiBase -match ":18066" -and (Test-Path -LiteralPath $rideauditCred)) {
+    $CredPath = $rideauditCred
+}
+if ([string]::IsNullOrWhiteSpace($WorkerMode)) {
+    $WorkerMode = if ($ApiBase -match ":18066") { "Tentacle" } else { "Ssh" }
+}
+if ([string]::IsNullOrWhiteSpace($CredPath)) {
+    $cx = Get-RideAuditOctopusConnection -ApiBase $ApiBase
+}
+else {
+    $cx = Get-RideAuditOctopusConnection -ApiBase $ApiBase -CredPath $CredPath
+}
+Write-Host ("octopus api={0} portal={1} stored-url={2} cred={3} worker={4}" -f $cx.ApiBase, $cx.PortalBase, $cx.ServerUrl, $cx.CredPath, $WorkerMode)
 
 $root = Get-RideAuditOctopusJson -Connection $cx -Path "/api"
 Write-Host ("octopus version={0} installation={1}" -f $root.Version, $root.InstallationId)
@@ -272,11 +350,19 @@ if (-not $SkipSync) {
     & (Join-Path $here "Sync-RideAuditTree.ps1") -SshHost $SshHost -RemoteAbs $RemoteAbs -WithPublish:$WithPublish
 }
 
-$account = Ensure-SshAccount -Connection $cx
-$fingerprint = Get-RideAuditSshFingerprint -SshHost $SshHost
-Write-Host ("ssh fingerprint MD5 (host key, not a secret)={0}" -f $fingerprint)
-$machine = Ensure-LinuxTarget -Connection $cx -Account $account -Fingerprint $fingerprint
-if (-not $SkipHealthCheck) {
+$environment = Ensure-Environment -Connection $cx -Name $EnvironmentName
+$machine = $null
+if ($WorkerMode -eq "Tentacle") {
+    $machine = Wait-RoleTarget -Connection $cx -TimeoutSec 240
+}
+elseif ($WorkerMode -eq "Ssh") {
+    $account = Ensure-SshAccount -Connection $cx
+    $fingerprint = Get-RideAuditSshFingerprint -SshHost $SshHost
+    Write-Host ("ssh fingerprint MD5 (host key, not a secret)={0}" -f $fingerprint)
+    $machine = Ensure-LinuxTarget -Connection $cx -Account $account -Fingerprint $fingerprint -EnvironmentIds @($environment.Id)
+}
+
+if ($machine -and -not $SkipHealthCheck) {
     $healthTask = Start-MachineHealth -Connection $cx -MachineId $machine.Id
     if ($healthTask) {
         try {
@@ -291,10 +377,11 @@ if (-not $SkipHealthCheck) {
     }
 }
 
-$project = Ensure-ProjectAndProcess -Connection $cx
+$project = Ensure-ProjectAndProcess -Connection $cx -RunMode $WorkerMode
 if ([string]::IsNullOrWhiteSpace($Version)) {
     $sha = (git rev-parse --short HEAD).Trim()
-    $Version = "0.1.0-$sha"
+    $stamp = Get-Date -Format "yyyyMMddHHmmss"
+    $Version = "0.1.0-$sha-$stamp"
 }
 
 $result = New-RideAuditReleaseAndDeploy -Connection $cx -Project $project -ReleaseVersion $Version
@@ -317,7 +404,7 @@ Write-Host "OCTOPUS_RELEASE=$($result.Release.Id)"
 Write-Host "OCTOPUS_RELEASE_VERSION=$($result.Release.Version)"
 Write-Host "OCTOPUS_DEPLOYMENT=$($result.Deployment.Id)"
 Write-Host "OCTOPUS_TASK=$($result.Task.Id)"
-Write-Host "OCTOPUS_MACHINE=$($machine.Id)"
+if ($machine) { Write-Host "OCTOPUS_MACHINE=$($machine.Id)" }
 Write-Host "OCTOPUS_WEB=$web"
 Write-Host "OCTOPUS_WEB_HTTP=$apiWeb"
 Write-Host "OCTOPUS_PROBE_HTTP=$([int]$probe.StatusCode)"

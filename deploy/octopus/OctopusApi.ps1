@@ -36,9 +36,11 @@ function Get-RideAuditOctopusConnection {
         # hostname checks against the LAN IP).
         $base = "http://192.168.0.149:8066"
     }
+    $portal = [string]$stored.ServerUrl
+    if ([string]::IsNullOrWhiteSpace($portal)) { $portal = $base }
     return [pscustomobject]@{
         ApiBase    = $base.TrimEnd("/")
-        PortalBase = "https://payton-desktop:8444"
+        PortalBase = $portal.TrimEnd("/")
         ApiKey     = $apiKey
         ServerUrl  = [string]$stored.ServerUrl
         CredPath   = $CredPath
