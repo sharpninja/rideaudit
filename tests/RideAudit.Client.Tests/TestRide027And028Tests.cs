@@ -165,6 +165,7 @@ public class TestRide028ViewerTests
         Assert.Equal("not-produced", manifest.DesktopBuilds.Windows);
         Assert.Equal("not-produced", manifest.DesktopBuilds.Macos);
         Assert.False(manifest.DesktopBuilds.ReproducibleSignedClaim);
+        Assert.Contains("not Public Trust", manifest.DesktopBuilds.Note, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -191,6 +192,46 @@ public class TestRide028ViewerTests
         Assert.Contains("0e15f4c1ffcf0623c4687ab41fe9fcfe420f8f69e2862631aa41304c3eac1c87", receipt);
         Assert.Contains("a613f01406cb6760b131312a42aad2d43915ed2445a11be3159c211d344807c6", receipt);
         Assert.DoesNotContain("ReproducibleSignedClaim: true", receipt);
+    }
+
+    [Fact]
+    [Trait("FR", "FR-RIDE-049")]
+    public void Lab_self_signed_receipt_does_not_claim_public_trust_or_full_p11b()
+    {
+        var files = Directory.GetFiles(
+            Path.Combine(Repo.Root(), "docs", "receipts", "distribution"),
+            "*-self-signed-desktop-rid-publish.md");
+        var receipt = File.ReadAllText(Assert.Single(files));
+        Assert.Contains("CN=RideAudit Lab Self-Signed", receipt);
+        Assert.Contains("SIGNING_THUMBPRINT=98B8942B143D2D788F635530531C1B2DF0EC3C79", receipt);
+        Assert.Contains("real certs later", receipt);
+        Assert.Contains("Signed but not Public Trust", receipt);
+        Assert.Contains("SmartScreen will warn", receipt);
+        Assert.Contains("signtool verify /pa", receipt);
+        Assert.Contains("SIGNTOOL_VERIFY_PA_EXIT=1", receipt);
+        Assert.Contains("CurrentUser\\My", receipt);
+        Assert.Contains("New-SelfSignedCertificate -Type CodeSigningCert", receipt);
+        Assert.Contains("full P11b is not closed", receipt);
+        Assert.Contains("--self-contained false", receipt);
+        Assert.Contains("RID=win-x64 EXIT=0", receipt);
+        Assert.Contains("RID=linux-x64 EXIT=0", receipt);
+        Assert.Contains("were not used", receipt);
+        Assert.Contains("Class C", receipt);
+        Assert.DoesNotContain("ReproducibleSignedClaim: true", receipt);
+        Assert.DoesNotContain("SIGNING_THUMBPRINT=FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4", receipt);
+        Assert.DoesNotContain("SIGNING_THUMBPRINT=50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919", receipt);
+        var plan = File.ReadAllText(Path.Combine(Repo.Root(), "docs", "plans", "PLAN-RIDEAUDIT-001-implementation.md"));
+        Assert.Contains("- [x] Lab self-signed Authenticode", plan);
+        Assert.Contains("- [ ] Commercial OV/IV Authenticode + cloud HSM", plan);
+        Assert.Contains("- [ ] Section 9 Class C boxes", plan);
+        Assert.Contains("- [ ] P0 documentation repair complete", plan);
+        var publish = File.ReadAllText(Path.Combine(Repo.Root(), "deploy", "desktop", "Publish-RideAuditDesktopLab.ps1"));
+        var create = File.ReadAllText(Path.Combine(Repo.Root(), "deploy", "desktop", "New-RideAuditLabCodeSigningCert.ps1"));
+        Assert.Contains("FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4", publish);
+        Assert.Contains("50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919", publish);
+        Assert.Contains("NonExportable", create);
+        Assert.DoesNotContain("Export-PfxCertificate", create + publish);
+        Assert.DoesNotContain("osx-arm64", publish);
     }
 
     [Fact]

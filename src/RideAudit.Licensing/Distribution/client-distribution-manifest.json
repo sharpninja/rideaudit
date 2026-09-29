@@ -17,7 +17,7 @@
     "linux": "not-produced-as-signed-release",
     "macos": "not-produced",
     "reproducibleSignedClaim": false,
-    "note": "Signed reproducible desktop builds were not produced in this cloud run."
+    "note": "A lab self-signed win-x64 Authenticode file may exist on PAYTON-LEGION2. It is not Public Trust, not a SmartScreen-clean release, and not a reproducible signed release. Commercial certificates are deferred. macOS was not produced."
   },
   "roadReady": false
 }
