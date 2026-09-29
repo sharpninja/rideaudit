@@ -1,4 +1,4 @@
-﻿# P11b desktop signing inventory (PAYTON-LEGION2)
+# P11b desktop signing inventory (PAYTON-LEGION2)
 
 Date: 20260929T124653Z (host clock 2026-09-29T07:46:53-05:00). Operator host: PAYTON-LEGION2. SPDX: GPL-2.0-only.
 
@@ -13,9 +13,9 @@ Plan closeout (r3.6): signed reproducible desktop builds and full P11b remain **
 | --- | --- |
 | Publisher | **Payton Byrd** (individual) |
 | Platforms | **Windows only** (win-x64 Authenticode) |
-| macOS / Apple codesign | **Deferred by operator** — do not plan |
+| macOS / Apple codesign | **Deferred by operator** - do not plan |
 | Provision path | **Traditional OV Authenticode + cloud HSM** |
-| Azure Artifact Signing | **Stopped** — Azure subscription state is not usable for this path |
+| Azure Artifact Signing | **Stopped** - Azure subscription state is not usable for this path |
 | Purchase this turn | **No** (agent must not buy) |
 
 ## Verdict
@@ -25,7 +25,7 @@ Plan closeout (r3.6): signed reproducible desktop builds and full P11b remain **
 | Usable RideAudit / sharpninja / Payton Byrd Authenticode material with private key on LEGION2? | **N** |
 | Mac + codesign path? | **N** (and macOS deferred) |
 | SignTool present? | **Y** (SDK; not on PATH) |
-| Ready to sign win-x64 today? | **N** — provision OV + cloud HSM first |
+| Ready to sign win-x64 today? | **N** - provision OV + cloud HSM first |
 
 ## Tooling (LEGION2)
 
@@ -38,9 +38,9 @@ Plan closeout (r3.6): signed reproducible desktop builds and full P11b remain **
 | SSL.com eSigner CLI / jsign | Missing |
 | 1Password CLI `op` | Not on PATH |
 
-Registered agents: PAYTON-LEGION2, PAYTON-DESKTOP, PAYTON-DESKTOP2 — all Windows. No Mac. SSH only to OMARCHY/PAYTON-DESKTOP `192.168.0.149` (Linux).
+Registered agents: PAYTON-LEGION2, PAYTON-DESKTOP, PAYTON-DESKTOP2 - all Windows. No Mac. SSH only to OMARCHY/PAYTON-DESKTOP `192.168.0.149` (Linux).
 
-## Cert store (READ ONLY) — CurrentUser\My Code Signing EKU + HasPrivateKey
+## Cert store (READ ONLY) - CurrentUser\My Code Signing EKU + HasPrivateKey
 
 **Do not use** (unrelated self-signed):
 
@@ -61,8 +61,8 @@ For an **individual** publisher, CAs typically issue **IV** (Individual Validati
 
 ### Recommended default order
 
-1. **SSL.com — OV (or individual-equivalent) Code Signing + eSigner** — preferred for LEGION2 automation.
-2. **DigiCert — KeyLocker / Software Trust Manager** — fallback if SSL.com KYC/pricing fails.
+1. **SSL.com - OV (or individual-equivalent) Code Signing + eSigner** - preferred for LEGION2 automation.
+2. **DigiCert - KeyLocker / Software Trust Manager** - fallback if SSL.com KYC/pricing fails.
 
 Do **not** fall back to Azure Artifact Signing while the subscription is disabled/Warned.
 
@@ -71,16 +71,16 @@ Do **not** fall back to Azure Artifact Signing while the subscription is disable
 - SSL.com code signing: https://www.ssl.com/code-signing-certificates/
 - DigiCert code signing / KeyLocker: https://www.digicert.com/signing/code-signing-certificates
 
-### Next steps — SSL.com OV + eSigner
+### Next steps - SSL.com OV + eSigner
 
 1. Confirm legal display name for the cert subject: **Payton Byrd** (and DBA/org if any).
-2. Create SSL.com account; select **Code Signing** with **eSigner** (cloud) — avoid file-based `.pfx` day-to-day if possible.
+2. Create SSL.com account; select **Code Signing** with **eSigner** (cloud) - avoid file-based `.pfx` day-to-day if possible.
 3. Complete identity validation (government ID, address, phone/email as CA requires for individual / OV).
 4. After issuance: install eSigner credential on LEGION2; keep TOTP/API secrets in 1Password (not git).
 5. Canary-sign `artifacts/desktop-publish/win-x64/RideAudit.Client.Desktop.exe` via eSigner + SignTool; verify `Get-AuthenticodeSignature` Valid and `signtool verify /pa` exit 0.
 6. Wire publish env vars (below); re-receipt; still do not claim whole P11b closed.
 
-### Next steps — DigiCert KeyLocker (fallback)
+### Next steps - DigiCert KeyLocker (fallback)
 
 1. Same identity prep for **Payton Byrd**.
 2. Enroll DigiCert Code Signing with **KeyLocker** / Software Trust Manager cloud key.
