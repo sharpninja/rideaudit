@@ -15,7 +15,7 @@ mappings:
   - frId: FR-RIDE-067
     trIds: [TR-RIDE-VIDEO-014]
     testIds: [TEST-RIDE-047]
-    useCaseLocalIds: [UC-RIDE-037]
+    useCaseLocalIds: [UC-RIDE-037, UC-RIDE-043]
   - frId: FR-RIDE-069
     trIds: [TR-RIDE-LAB-001]
     testIds: [TEST-RIDE-049]
