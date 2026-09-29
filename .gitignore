@@ -19,3 +19,5 @@ TestResults/
 deploy/omarchy/.env
 artifacts/omarchy-publish/
 artifacts/desktop-publish/
+*.pfx
+*.p12

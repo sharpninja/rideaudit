@@ -1,0 +1,176 @@
+{
+    "TimestampUtc":  "2026-09-29T13:50:12Z",
+    "ValidatorIdentity":  "GrokSubagentHostile",
+    "AddProfileExecuted":  true,
+    "AddProfileFileCount":  19,
+    "Workspace":  "F:\\GitHub\\rideaudit",
+    "Host":  "PAYTON-LEGION2",
+    "Branch":  "cursor/p11b-lab-self-sign-3902",
+    "Head":  "fa5185683255a8856011a72cad48789e55e3c7bc",
+    "HeadSubject":  "docs(dist): drop inventory em dashes",
+    "WorkClass":  "MIXED",
+    "AccuracyScore":  99,
+    "CompletenessScore":  99,
+    "OverallVerdict":  "AGREE",
+    "FailList":  [
+
+                 ],
+    "UnknownList":  [
+
+                    ],
+    "Claims":  [
+                   {
+                       "Summary":  "HEAD fa5185683255a8856011a72cad48789e55e3c7bc on cursor/p11b-lab-self-sign-3902 subject docs(dist): drop inventory em dashes",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A1"
+                   },
+                   {
+                       "Summary":  "Added lines em dash U+2014 count 0 and en dash U+2013 count 0. Deleted em dash 1 and context dashes are out of scope.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A2"
+                   },
+                   {
+                       "Summary":  "CN=RideAudit Lab Self-Signed thumbprint 98B8942B143D2D788F635530531C1B2DF0EC3C79 code-signing EKU private key ExportPolicy None RSA 3072. No tracked pfx.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A3"
+                   },
+                   {
+                       "Summary":  "win-x64 exe signer is the lab thumbprint. Authenticode status UnknownError, not NotSigned. signtool verify /pa exit 1. Timestamp present. Signed but not Public Trust.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A4"
+                   },
+                   {
+                       "Summary":  "linux-x64 ELF has no signer and dll is NotSigned. Publish script publishes only win-x64 and linux-x64.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A5"
+                   },
+                   {
+                       "Summary":  "Blocked thumbprints FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4 and 50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919 are not the signer.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A6"
+                   },
+                   {
+                       "Summary":  "explicit-deferrals.txt says the lab certificate was used and is not AC-RIDE-222-001. It does not say no RideAudit code-signing certificate was used.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A7"
+                   },
+                   {
+                       "Summary":  "Lab, linux, commercial, Public Trust, section 9 Class C, macOS, full P11b, and section 9 historical boxes are unchecked. This commit does not mark the lab boxes done.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A8"
+                   },
+                   {
+                       "Summary":  "Manifest windows not-produced and reproducibleSignedClaim false.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A9"
+                   },
+                   {
+                       "Summary":  "Signer is self-signed. Branch diff has no purchase artifact.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A10"
+                   },
+                   {
+                       "Summary":  "Honesty test passed 1 failed 0 skipped 0 and does not close AC-RIDE-222-001.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A11"
+                   },
+                   {
+                       "Summary":  "Full P11b, section 9, Public Trust, and AC-RIDE-222-001 are not claimed closed.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A12"
+                   },
+                   {
+                       "Summary":  "Live signature evidence matches the receipt. Inventory table is historical; the addendum is the later statement.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B1"
+                   },
+                   {
+                       "Summary":  "Byrd does not FAIL the class 2 cert action. Class 1 slice is not claimed phase-complete.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B2"
+                   },
+                   {
+                       "Summary":  "Cert, hash, Authenticode, signtool, dash bytes, and the honesty test were re-run.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B3"
+                   },
+                   {
+                       "Summary":  "Branch diff does not edit todo.yaml, session logs, or Functional-Requirements-Batch.yaml.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B4"
+                   },
+                   {
+                       "Summary":  "Lab scripts are PowerShell. No Python.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B5"
+                   },
+                   {
+                       "Summary":  "Workspace no-em-dash rule holds on added lines: U+2014 and U+2013 counts are zero.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B6"
+                   },
+                   {
+                       "Summary":  "Class 2 lab certificate creation. Surface C is N/A for missing FR on that ops action.",
+                       "Verdict":  "N/A",
+                       "Surface":  "C",
+                       "Id":  "C0"
+                   },
+                   {
+                       "Summary":  "AC-RIDE-222-001 isSatisfied false and the deferral text is true.",
+                       "Verdict":  "PASS",
+                       "Surface":  "C",
+                       "Id":  "C1"
+                   },
+                   {
+                       "Summary":  "Honesty test does not close AC-RIDE-222-001.",
+                       "Verdict":  "PASS",
+                       "Surface":  "C",
+                       "Id":  "C2"
+                   },
+                   {
+                       "Summary":  "Lab and linux boxes remain open. This AGREE does not check them.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D1"
+                   },
+                   {
+                       "Summary":  "Commercial, Public Trust, Class C, macOS, and full P11b stay open.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D2"
+                   },
+                   {
+                       "Summary":  "Section 9 historical boxes stay unchecked.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D3"
+                   },
+                   {
+                       "Summary":  "Plan DoD for full P11b is not met and is not claimed met.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D4"
+                   }
+               ],
+    "ReceiptMarkdownPath":  "F:\\GitHub\\rideaudit\\docs\\receipts\\hostile-validator-20260929T135012Z.md",
+    "ParentTurnRequestId":  "req-20260929T134340Z-prompt-2e49",
+    "VerdictMarkdown":  "# Hostile validator receipt\r\n\r\nTimestampUtc: 2026-09-29T13:50:12Z\r\n\r\nValidatorIdentity: GrokSubagentHostile\r\n\r\nWorkspace: F:\\GitHub\\rideaudit\r\n\r\nHost: PAYTON-LEGION2\r\n\r\nBranch: cursor/p11b-lab-self-sign-3902\r\n\r\nHEAD: fa5185683255a8856011a72cad48789e55e3c7bc\r\n\r\nHEAD subject: docs(dist): drop inventory em dashes\r\n\r\ngit log -1 confirmed that subject. Short prefix fa51856 matches.\r\n\r\nWorkClass: MIXED.\r\n\r\nClass 2, user-directed lab ops: the lab self-signed certificate and the win-x64 Authenticode canary. Surface C is N/A for missing FR on that ops action. This review does not FAIL for the absence of a new FR for creating the certificate.\r\n\r\nClass 1, project slice: the plan, receipts, deferral text, scripts, manifest, and honesty test. This review does not treat the lab signature as closing full P11b, section 9, Public Trust, or AC-RIDE-222-001.\r\n\r\nadd-profile: executed yes. Profile file count read: 19. Excluded skill port add-profile.grok.md. Files read in full: PROFILE.md, user-payton-byrd.md, accuracy-first-verify-sources.md, approve-before-execute.md, philosophical-dialogue-mode.md, log-decisions-as-conclusions.md, session-turn-title-summary.md, never-skip-explicit-actions.md, adversarial-review-global.md, hv-jsonl-and-session-log.md, bring-the-receipts.md, hostile-on-goal-state.md, hostile-ops-vs-requirements.md, hostile-phase-gates.md, lab-authorization.md, no-attitude-honesty-tell.md, no-python-lab.md, no-shortcuts-precision-over-convenience.md, requirement-change-plan-first.md.\r\n\r\nAccuracyScore: 99\r\n\r\nCompletenessScore: 99\r\n\r\nOverallVerdict: AGREE\r\n\r\nFAIL list: none\r\n\r\nUNKNOWN list: none\r\n\r\nThis AGREE is only the gate that allows a later commit to check the two lab boxes (lab self-signed win-x64, and unsigned linux-x64). This review did not check those boxes, did not edit the plan, and did not commit.\r\n\r\nMCP sessionlog tools were not in this subagent catalog. mcpserver-box namespaceStatus was error. Parent turn req-20260929T134340Z-prompt-2e49 was already active. That gap is recorded here. It is not an unevaluated implementer claim.\r\n\r\n## A. Requested validation\r\n\r\n### A1. HEAD is fa51856 on cursor/p11b-lab-self-sign-3902. PASS\r\n\r\ngit rev-parse HEAD returned fa5185683255a8856011a72cad48789e55e3c7bc. git branch showed cursor/p11b-lab-self-sign-3902. git log -1 subject was docs(dist): drop inventory em dashes. Merge base with origin/master is d1ce4d10f3cd041b19cbe7b6bc014bef15610bcc, which is also origin/master.\r\n\r\n### A2. Added lines of git diff origin/master...HEAD contain zero U+2014 and zero U+2013. PASS\r\n\r\ngit diff --text origin/master...HEAD was written to a temp file (179122 bytes, 1424 lines). A UTF-8 character scan of added lines (prefix +, not +++) counted em dash (U+2014) added = 0 and en dash (U+2013) added = 0. A separate byte scan of those added lines counted UTF-8 E2 80 94 = 0 and E2 80 93 = 0 across 1224 added lines. The new inventory file docs/receipts/distribution/20260929T124653Z-p11b-signing-inventory.md is 7588 bytes and also contains 0 of each sequence.\r\n\r\nOut of scope, not defects: em dash deleted = 1 (old plan revision line removed), em dash context = 2, en dash context = 2. Those sit on context or deleted lines inside docs/plans/PLAN-RIDEAUDIT-001-implementation.md. Pre-existing dashes that are not on added lines are out of scope. A deleted line that removes an old dash is not a new defect.\r\n\r\n### A3. Lab certificate, private key, export policy None, no tracked pfx. PASS\r\n\r\nGet-Item Cert:\\CurrentUser\\My\\98B8942B143D2D788F635530531C1B2DF0EC3C79:\r\n\r\n- Subject CN=RideAudit Lab Self-Signed\r\n- Issuer CN=RideAudit Lab Self-Signed (self-signed)\r\n- Thumbprint 98B8942B143D2D788F635530531C1B2DF0EC3C79\r\n- HasPrivateKey True\r\n- EKU 1.3.6.1.5.5.7.3.3 Code Signing\r\n- RSACng ExportPolicy None\r\n- KeySize 3072\r\n- NotBefore 2026-09-29T07:41:51-05:00\r\n- NotAfter 2029-09-29T07:51:51-05:00\r\n- Exactly one certificate with that subject in CurrentUser\\My\r\n\r\ngit ls-files for pfx and p12 returned no paths. A recursive search under F:\\GitHub\\rideaudit for pfx and p12 files returned none.\r\n\r\n### A4. win-x64 exe signed by that thumbprint, not NotSigned, verify /pa exit 1, timestamp present, not Public Trust. PASS\r\n\r\nFile F:\\GitHub\\rideaudit\\artifacts\\desktop-publish\\win-x64\\RideAudit.Client.Desktop.exe exists. Length 170640. Magic 4D 5A 90 00. SHA256 DFCF5EDEDF8B51521855E56AB5EABFAC421E2E34758AEE7EA480AE2AFAFD5221. That hash matches the distribution receipt.\r\n\r\nGet-AuthenticodeSignature Status=UnknownError. StatusMessage: A certificate chain processed, but terminated in a root certificate which is not trusted by the trust provider. That status is not NotSigned. SignerCertificate.Thumbprint=98B8942B143D2D788F635530531C1B2DF0EC3C79. Signer subject CN=RideAudit Lab Self-Signed. TimeStamperCertificate subject CN=DigiCert SHA256 RSA4096 Timestamp Responder 2026 1. Timestamp thumbprint 51D9ABDA034973D84F4266ACA48248E6B369C439.\r\n\r\nsigntool.exe at C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\x64\\signtool.exe verify /pa /v exited 1. Stdout shows Signature Index 0, SHA1 hash 98B8942B143D2D788F635530531C1B2DF0EC3C79, issued to and by RideAudit Lab Self-Signed, and \"The signature is timestamped: Tue Sep 29 07:54:43 2026\". Stderr: SignTool Error: A certificate chain processed, but terminated in a root certificate which is not trusted by the trust provider. Number of files successfully Verified: 0. Number of errors: 1.\r\n\r\nSigned but not Public Trust. The win-x64 dll is NotSigned. The receipt says the exe is the canary.\r\n\r\n### A5. linux-x64 unsigned. Publish script does not publish macOS. PASS\r\n\r\nartifacts\\desktop-publish directories: linux-x64 and win-x64 only. osx-arm64, osx-x64, and osx do not exist. linux-x64\\RideAudit.Client.Desktop.exe is absent.\r\n\r\nlinux-x64\\RideAudit.Client.Desktop magic 7F 45 4C 46 (ELF). Get-AuthenticodeSignature Status=UnknownError, message says the form is not supported by the trust provider, SignerCertificate null. SHA256 862760BD037B24E1A6731D273B4C2E5432691280CB5A90AE744A983CFFC7DCC3.\r\n\r\nlinux-x64\\RideAudit.Client.Desktop.dll Status=NotSigned, SignerCertificate null. SHA256 37D088687B777480F6E8192F5B9EF0A1FE91F55C955BC835D61EEE92A4A41781. That hash matches the distribution receipt. win-x64 dll SHA256 2C1F09297C27DC95B3C39A25558D1FDAB6ADD27D2B2816D08E6F7D087C8DAA46 also matches the receipt.\r\n\r\ndeploy/desktop/Publish-RideAuditDesktopLab.ps1 calls Publish-Rid only for win-x64 (line 117) and linux-x64 (line 118). It signs only the win-x64 exe. macOS appears as \"out of scope\" and as MACOS=not-published. The script does not contain osx-arm64.\r\n\r\n### A6. Blocked thumbprints are not the signer. PASS\r\n\r\nBoth blocked certificates are present in CurrentUser\\My: CN=McpServerManager Dev FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4 and CN=ClaudeMigrator 50ACCEC97BFD3A50A6C2EB7E34F454B2994D1919. The exe signer thumbprint is 98B8942B143D2D788F635530531C1B2DF0EC3C79. signtool showed one primary signature. The publish script refuses those two thumbprints.\r\n\r\n### A7. explicit-deferrals.txt AC-RIDE-222-001 says the lab certificate was used and is not that AC. PASS\r\n\r\ndocs/receipts/ac-coverage/explicit-deferrals.txt line 2 says a lab self-signed win-x64 certificate (CN=RideAudit Lab Self-Signed, thumbprint 98B8942B143D2D788F635530531C1B2DF0EC3C79) was used on PAYTON-LEGION2, that the signature is not Public Trust, and that it is not this AC.\r\n\r\nSelect-String on that file for the sentence \"no RideAudit code-signing certificate was used\" returned no hits. The old sentence remains only as a deleted diff line and as quoted history inside older hostile receipts. It is not the live deferral. The ledger row for AC-RIDE-222-001 uses the same current reason and status deferred.\r\n\r\n### A8. Plan boxes stay unchecked. The implementer is not claiming the lab boxes done in this commit. PASS\r\n\r\nChecked-box search of added plan lines (git diff origin/master...HEAD, pattern added [x]) returned none.\r\n\r\nStill open, marker [ ]:\r\n\r\n- Line 1376 lab self-signed Authenticode. Text says the box stays open until a hostile AGREE.\r\n- Line 1377 linux-x64 framework-dependent publish, unsigned. Same open-until-AGREE sentence.\r\n- Line 1378 commercial OV/IV Authenticode plus cloud HSM.\r\n- Line 1379 Public Trust and a SmartScreen-clean reputation.\r\n- Line 1380 section 9 Class C boxes. Not closed.\r\n- Line 1381 macOS codesign.\r\n- Line 1382 full P11b exit. Text says full P11b is not closed.\r\n- Lines 1564 through 1567 are the section 9 historical boxes (P0 repair, Astra AGREE, Payton AGREE, then P1). All [ ]. The following paragraph says they remain historically unchecked.\r\n\r\n### A9. Manifest windows is not-produced and reproducibleSignedClaim is false. PASS\r\n\r\nsrc/RideAudit.Licensing/Distribution/client-distribution-manifest.json desktopBuilds.windows is not-produced. linux is not-produced-as-signed-release. macos is not-produced. reproducibleSignedClaim is false. The note says a lab self-signed win-x64 file is not Public Trust and macOS was not produced.\r\n\r\n### A10. Signer is self-signed and the branch diff has no purchase artifact. PASS\r\n\r\nIssuer equals subject on the lab certificate. The script that creates it calls New-SelfSignedCertificate. git diff --name-only origin/master...HEAD has 17 paths: gitignore, two PowerShell scripts, the plan, the ledger, explicit-deferrals.txt, two distribution receipts, four hostile-validator files, four hv jsonl files, the manifest, and TestRide027And028Tests.cs. No invoice, order, pfx, or purchase file. The inventory states nothing was purchased. This review does not invent a finding about purchases outside the repo.\r\n\r\n### A11. Honesty test does not close AC-RIDE-222-001, and it passes. PASS\r\n\r\nLab_self_signed_receipt_does_not_claim_public_trust_or_full_p11b has trait FR-RIDE-049 and no AC-RIDE-222-001 trait. It asserts the receipt says full P11b is not closed, verify /pa exit 1, and the plan lines stay [ ].\r\n\r\ndotnet test tests/RideAudit.Client.Tests/RideAudit.Client.Tests.csproj -c Release --filter FullyQualifiedName~Lab_self_signed_receipt_does_not_claim_public_trust_or_full_p11b exited 0. Passed 1, Failed 0, Skipped 0, Total 1.\r\n\r\n### A12. Lab signature is not full P11b, section 9, Public Trust, or AC-RIDE-222-001. PASS\r\n\r\nPlan revision r3.7 says Public Trust, section 9 Class C boxes, and full P11b stay open. Section 11 says the lab checklist box stays open until a hostile AGREE, and that the signature is not Class C and not a reproducible public signed release. Functional-Requirements-Batch.yaml AC-RIDE-222-001 text is \"Signed/reproducible GPL2 builds tested on Windows, Linux, macOS.\" isSatisfied false. That yaml is not in this branch name-status. The distribution receipt says verify /pa does not succeed and full P11b is not closed.\r\n\r\n## B. Workspace rules\r\n\r\n### B1. Honesty. PASS\r\n\r\nLive thumbprint, hashes, Authenticode status, and signtool exit 1 match the distribution receipt and the plan section 11 lab row. The deferral no longer denies that a RideAudit lab certificate was used.\r\n\r\nObservation, not a FAIL: the inventory verdict table still says ready to sign win-x64 today is N, and an earlier sentence says publish scripts are not yet wired. The same file addendum says the operator later chose lab self-sign and that the lab certificate was created and used. The addendum is the later statement. The table was not rewritten in place. It does not say the lab signature is Public Trust.\r\n\r\n### B2. Byrd v4. PASS for this class split\r\n\r\nClass 2 certificate creation is not a Byrd phase. The class 1 slice does not claim a phase complete, a plan exit, or AC-RIDE-222-001 satisfied. This review does not FAIL B2 from FR createdAt versus file times. Inter-phase hostile review is not required to score this non-closure.\r\n\r\n### B3. Receipts. PASS\r\n\r\nThis receipt re-ran cert, hash, Authenticode, signtool, dash byte counts, and the honesty test. It does not accept the prior DISAGREE receipt as proof.\r\n\r\n### B4. MCP-only storage. PASS\r\n\r\ngit diff --name-only origin/master...HEAD does not include todo.yaml, a session log store, or Functional-Requirements-Batch.yaml. No direct TODO or requirements store edit is in the branch delta.\r\n\r\n### B5. PowerShell only. PASS\r\n\r\nThe new lab scripts are PowerShell. Select-String for python in those two scripts returned no hits. This review used PowerShell and dotnet test. It did not use Python.\r\n\r\n### B6. No new em dash or en dash on added lines. PASS\r\n\r\nSame measurement as A2. Added-line counts are zero for U+2014 and zero for U+2013.\r\n\r\n## C. Requirements\r\n\r\n### C0. Class 2 lab certificate creation. N/A\r\n\r\nSurface C does not FAIL for a missing FR on the operator-directed certificate action.\r\n\r\n### C1. AC-RIDE-222-001 stays deferred and the reason is true. PASS\r\n\r\nYAML isSatisfied false. Ledger status deferred. The reason names the lab thumbprint and says that signature is not Public Trust and is not this AC. One self-signed win-x64 file is not signed reproducible Windows, Linux, and macOS public trust.\r\n\r\n### C2. The honesty test does not close AC-RIDE-222-001. PASS\r\n\r\nThe test method is a prose guard with trait FR-RIDE-049. It does not set AC-RIDE-222-001 satisfied. The implementer did not claim that AC closed.\r\n\r\n## D. Plan\r\n\r\n### D1. Lab and linux checklist boxes are still open. PASS\r\n\r\nLines 1376 and 1377 are [ ], not [x]. This commit does not claim those boxes done. This AGREE allows a later commit to check them. This review did not check them.\r\n\r\n### D2. Commercial, Public Trust, section 9 Class C, macOS, and full P11b stay open. PASS\r\n\r\nLines 1378 through 1382 are [ ]. The P11b exit paragraph says this revision does not close P11b. Manifest reproducibleSignedClaim is false.\r\n\r\n### D3. Section 9 historical boxes stay open. PASS\r\n\r\nLines 1564 through 1567 are [ ]. Closeout text says they stay unchecked and that code-hv-sol-r4 does not check them.\r\n\r\n### D4. Holistic DoD. PASS as non-closure\r\n\r\nP11b exit still requires signed reproducible Win/Linux/macOS public release, Play and source receipts, and opposing-model AGREE. Those are not met. This verdict does not close them.\r\n\r\n## Scores\r\n\r\nAccuracy 99: every scoped claim was remeasured against git, the certificate store, Authenticode, signtool, and the honesty test. The historical inventory table is noted and does not contradict the later addendum.\r\n\r\nCompleteness 99: surfaces A, B, C, and D were scored. Class 2 surface C is N/A. No briefed claim was left UNKNOWN. Live MCP requirement query was unavailable and was not required to read the committed deferral, the yaml projection, or the certificate.\r\n"
+}
