@@ -2,6 +2,8 @@
 // Copyright (C) 2026 RideAudit contributors
 
 using Avalonia.RemoteControl.Protocol.V1;
+using SharpNinja.AiUnit.Strategy;
+using SharpNinja.AiUnit.Xunit;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -166,6 +168,23 @@ public sealed class UsabilityInspectorTests
 
         var strongCheck = UsabilityInspector.InspectContrast(strong, [node], Path.GetTempPath(), "strong");
         Assert.Equal("pass", strongCheck.Status);
+    }
+}
+
+public sealed class CodexSubscriptionProfileTests
+{
+    [Fact]
+    public void Codex_subscription_profile_is_the_active_strategy()
+    {
+        CodexVisualGate.RequireCodexSubscriptionProfile();
+        var fixture = AiStrategyFixture.Default;
+        var resolved = Assert.IsType<ResolvedStrategy>(fixture.Resolved);
+        Assert.Equal(CodexSubscriptionProfile.Name, resolved.Name);
+        Assert.Equal("cli", resolved.Kind);
+        Assert.Equal("(cli-managed)", resolved.Model);
+        Assert.NotNull(fixture.Client);
+        Assert.Equal("codex-subscription:codex", fixture.Client.Provider);
+        Assert.Equal(string.Empty, fixture.SkipReason);
     }
 }
 

@@ -3,6 +3,7 @@
 
 using System.Text.Json;
 using SharpNinja.AiUnit.Frontier;
+using SharpNinja.AiUnit.Strategy;
 using SharpNinja.AiUnit.Xunit;
 
 namespace RideAudit.Client.Android.AiUnit.Tests;
@@ -13,13 +14,73 @@ public static class CodexVisualGate
 {
     public static void RequireCodexSubscriptionProfile()
     {
+        const string name = CodexSubscriptionProfile.Name;
+        RejectOverride("AIUNIT_STRATEGY", name);
+        RejectOverride("AIUNIT_KIND", "cli");
+        RejectOverride("AIUNIT_COMMAND", "codex");
+        RejectOverride("AIUNIT_MODEL", "(cli-managed)");
+
         var path = Path.Combine(AppContext.BaseDirectory, "appsettings.aiunit.json");
-        using var document = JsonDocument.Parse(File.ReadAllText(path));
-        var active = document.RootElement.GetProperty("AiUnit").GetProperty("ActiveStrategy").GetString();
-        if (!string.Equals(active, "codex-subscription", StringComparison.Ordinal))
+        if (!File.Exists(path))
         {
-            throw new InvalidOperationException("aiUnit ActiveStrategy is '" + active + "'. codex-subscription is required.");
+            throw new InvalidOperationException(
+                "appsettings.aiunit.json is missing from the test output. "
+                + "Keep tests/RideAudit.Client.Android.AiUnit.Tests/appsettings.aiunit.json and copy it to the output directory. "
+                + "Set AiUnit.ActiveStrategy to codex-subscription and add Strategies.codex-subscription with Kind cli, Command codex, and Model (cli-managed).");
         }
+
+        var config = AiUnitStrategyLoader.TryLoad(path);
+        if (config is null)
+        {
+            throw new InvalidOperationException(
+                "appsettings.aiunit.json did not parse an AiUnit section. Set ActiveStrategy to codex-subscription.");
+        }
+
+        if (!string.Equals(config.ActiveStrategy, name, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                "AiUnit.ActiveStrategy is '" + config.ActiveStrategy + "'. Set it to codex-subscription. "
+                + "When ActiveStrategy is empty and AIUNIT_STRATEGY is unset, the package selects claude.");
+        }
+
+        if (config.Strategies is null || !config.Strategies.ContainsKey(name))
+        {
+            throw new InvalidOperationException(
+                "Strategies is missing the exact key codex-subscription. Add that entry. The name codex is a different strategy.");
+        }
+
+        var settings = config.Strategies[name];
+        if (!string.Equals(settings.Kind, "cli", StringComparison.Ordinal)
+            || !string.Equals(settings.Command, "codex", StringComparison.Ordinal)
+            || !string.Equals(settings.Model, "(cli-managed)", StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                "codex-subscription settings are Kind '" + settings.Kind + "', Command '" + settings.Command
+                + "', Model '" + settings.Model + "'. The package profile is Kind cli, Command codex, Model (cli-managed).");
+        }
+
+        var (resolvedName, resolvedSettings) = AiUnitStrategyLoader.ResolveActive(config);
+        if (!string.Equals(resolvedName, name, StringComparison.Ordinal) || resolvedSettings is null)
+        {
+            var env = Environment.GetEnvironmentVariable("AIUNIT_STRATEGY");
+            throw new InvalidOperationException(
+                "SharpNinja.aiUnit selected '" + resolvedName + "' (AIUNIT_STRATEGY='" + (env ?? "") + "'). "
+                + "Set AIUNIT_STRATEGY to codex-subscription or unset it, and keep ActiveStrategy at codex-subscription. "
+                + "Run codex login when the CLI is not authenticated. A missing client stays fail-closed.");
+        }
+    }
+
+    private static void RejectOverride(string variable, string expected)
+    {
+        var value = Environment.GetEnvironmentVariable(variable);
+        if (string.IsNullOrWhiteSpace(value) || string.Equals(value, expected, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        throw new InvalidOperationException(
+            variable + " is '" + value + "'. Unset it, or set it to '" + expected
+            + "', so the codex-subscription profile is not replaced.");
     }
 
     public static PerceptualResult Compare(string screenId, string actualPath, string baselinePath)

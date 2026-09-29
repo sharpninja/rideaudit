@@ -23,7 +23,7 @@ On PAYTON-LEGION2 the USB Fold forward completed GetCapabilities (frames and inp
 
 ## Device visual tests
 
-`RideAudit.Client.Android` references `SharpNinja.aiUnit` 3.0.0 from nuget.org. Runtime assets are excluded from the APK. The runner is `tests/RideAudit.Client.Android.AiUnit.Tests`. Its `appsettings.aiunit.json` sets `ActiveStrategy` to `codex-subscription`.
+`RideAudit.Client.Android` references `SharpNinja.aiUnit` 3.0.0 from nuget.org. Runtime assets are excluded from the APK. The runner is `tests/RideAudit.Client.Android.AiUnit.Tests`. That project selects the package profile `codex-subscription` (`ActiveStrategy` and `AIUNIT_STRATEGY`). Another profile fails closed.
 
 On PAYTON-LEGION2, with adb and a phone attached:
 

@@ -6,7 +6,7 @@ These tests reference `SharpNinja.aiUnit` 3.0.0 and run on PAYTON-LEGION2 agains
 dotnet test tests/RideAudit.Client.Android.AiUnit.Tests/RideAudit.Client.Android.AiUnit.Tests.csproj
 ```
 
-`appsettings.aiunit.json` sets `ActiveStrategy` to `codex-subscription`. Another profile fails `CodexVisualGate.RequireCodexSubscriptionProfile`.
+The package profile name is `codex-subscription`. `appsettings.aiunit.json` sets `AiUnit.ActiveStrategy` to that name and defines `Strategies.codex-subscription` as Kind `cli`, Command `codex`, Model `(cli-managed)`. A module initializer sets `AIUNIT_STRATEGY` to `codex-subscription` when that variable is empty, because the package reads `AIUNIT_STRATEGY` before `ActiveStrategy` and otherwise falls back to `claude`. Another name, including `codex`, fails `CodexVisualGate.RequireCodexSubscriptionProfile`. Unset `AIUNIT_KIND`, `AIUNIT_COMMAND`, and `AIUNIT_MODEL`, or set them to `cli`, `codex`, and `(cli-managed)`. If the profile is missing, restore that JSON entry and copy the file to the test output. If the CLI is not authenticated, run `codex login`. A missing client stays fail-closed.
 
 ## Device
 
