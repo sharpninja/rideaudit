@@ -2,6 +2,7 @@
 # Sibling to Additive-PostPlanning-Deploy-Ngrok-Batch.yaml.
 # Style matches Requirements-Mappings-Batch.yaml.
 # Operator deltas supersede GHCR distribution assumptions.
+# FR-RIDE-063 is binding. License exhaustion is not deferral. Do not use GHCR.
 mappings:
   - frId: FR-RIDE-063
     trIds: [TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002]

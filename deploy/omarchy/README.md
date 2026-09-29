@@ -4,6 +4,8 @@ GPL-2.0-only. SSH host aliases: `PAYTON-OMARCHY`, `OMARCHY`, `PAYTON-DESKTOP` â†
 
 This is a lab deploy path. It is not a continuous-delivery receipt and not a production cutover.
 
+Product CD (FR-RIDE-063): Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. Omarchy loopback plus ngrok is interim admission hosting only. Existing Octopus/SQL/Caddy containers on this lab host are not a RideAudit Octopus CD green.
+
 ## What LEGION2 cannot do
 
 Docker Desktop on PAYTON-LEGION2 answers HTTP 500 on both `npipe:////./pipe/dockerDesktopLinuxEngine` and `npipe:////./pipe/docker_engine`. `com.docker.service` is stopped (`WIN32_EXIT_CODE 1077`). There is no GHCR push in this tree.

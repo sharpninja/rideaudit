@@ -31,8 +31,8 @@ Privacy-export ingest accepts a driver-provided ZIP (`DataDictionary.csv`, `trip
 docker build -f deploy/containers/counsel/Dockerfile -t rideaudit-counsel:local .
 ```
 
-The image sets Production and `RIDEAUDIT_EDGE_TLS=true`. Counsel is the same host as admission with `RIDEAUDIT_SERVICE_ROLE=counsel`. PAYTON-LEGION2 Docker Desktop returns HTTP 500. The preferred path is a LEGION2 linux-x64 publish plus [../../omarchy/Dockerfile.runtime](../../omarchy/Dockerfile.runtime). A lab image was tagged and not started. That is not a CD green.
+The image sets Production and `RIDEAUDIT_EDGE_TLS=true`. Counsel is the same host as admission with `RIDEAUDIT_SERVICE_ROLE=counsel`. PAYTON-LEGION2 Docker Desktop returns HTTP 500. The preferred lab path is a LEGION2 linux-x64 publish plus [../../omarchy/Dockerfile.runtime](../../omarchy/Dockerfile.runtime). A lab image is not a CD green.
 
 ## Distribution
 
-Dev, Staging, and Prod continuous-delivery receipts are recorded as `not-run`. See `docs/receipts/distribution/cd-receipts.md`. Play publication is not claimed.
+Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. Octopus receipts are `not-run` until a named instance or container and PAYTON-DESKTOP target exist. See `docs/receipts/distribution/cd-receipts.md`. Play publication is not claimed. This README does not invent a live Octopus green.

@@ -2,7 +2,7 @@
 
 **Status:** Process amendment  
 **Scope:** Product opposing-model HV for RideAudit  
-**Does not:** Claim HV AGREE, Play Store, live HSM, GHCR, or CD greens
+**Does not:** Claim HV AGREE, Play Store, live HSM, a GHCR green, or a live Octopus CD green. Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Do not use GHCR. License exhaustion means a new Octopus container on PAYTON-DESKTOP, not deferral.
 
 `docs/process/hostile-validation.md` and `docs/process/code-generation.md` named `gpt-6-sol` at `xhigh` as the required opposing validator to Grok `grok-4.6-xhigh` generation.
 

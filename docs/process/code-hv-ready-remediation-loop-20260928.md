@@ -12,17 +12,17 @@ Opposing Sol HV (`gpt-5.6-sol` xhigh) may **AGREE** on **code readiness** when:
 2. Deferred live tracks remain **fail-closed** and are **not overclaimed**.
 3. Operator 2026-09-28 iterate-until-agree is the **active gate**. Historical section 8 / P0 / Payton AGREE boxes stay unchecked. They are not backdated.
 
-CODE-HV READY is **not** product-complete, Play Store, live HSM, dual-phone media, GHCR, or CD-green.
+CODE-HV READY is **not** product-complete, Play Store, live HSM, dual-phone media, or a live Octopus CD green. GHCR is not the CD path and is not an allowed fallback.
 
 ## Deferred live tracks (must stay fail-closed)
 
-These remain out of scope for this loop. Missing them must not block CODE-HV AGREE if the code path refuses honestly:
+These remain out of scope for **this CODE-HV loop**. Missing them must not block CODE-HV AGREE if the code path refuses honestly. They are not a rewrite of product CD direction.
 
 | Track | HV id | Honest state |
 | --- | --- | --- |
 | Physical Bluetooth media / H.264 composite | B04 | In-process source-payload container only. No two-device radio media. |
 | Real Play decode, hardware HSM, OTS confirm, L2 signer | B07 | Adapters fail-closed or labeled fixture. No invented tokens or txids. |
-| Production CD / GHCR / edge TLS / Play publication | B08 | Lab Omarchy loopback only. |
+| Production CD / edge TLS / Play publication | B08 | Lab Omarchy loopback plus ngrok is interim only. Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Do not use GHCR. If the default Octopus container is out of licenses, create a new Octopus container on PAYTON-DESKTOP; that is not deferral and not out of scope. This loop still must not invent a live Octopus green. |
 
 Do **not** weaken fail-closed behavior to manufacture greens.
 

@@ -1,6 +1,11 @@
 # Additive batch: post-planning Octopus Deploy CD and ngrok ingress (2026-09-28)
 # Operator deltas after PLAN-RIDEAUDIT-001 / docs/Project/* planning batches.
-# Does not invent GHCR, Omarchy-as-FR, live Play, or extra product features.
+# Binding direction: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP.
+# If you are out of licenses on the default container, create a new Octopus container
+# on PAYTON-DESKTOP. Do not use GHCR.
+# Plans (PLAN-RIDEAUDIT-001 r3.4 and children) must cite FR-RIDE-063 and must not weaken it.
+# License exhaustion is a provision step, not deferral and not out of scope.
+# Does not invent GHCR, a live Octopus green, Omarchy-as-FR, live Play, or extra product features.
 # Author: Sharp Ninja
 records:
   - kind: fr
