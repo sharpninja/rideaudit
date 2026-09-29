@@ -6,6 +6,10 @@ Avalonia UI 12 dual-phone capture client (FR-RIDE-056).
 - Passenger phone: video sync, compositing, spider-graph telematics overlay.
 - Pairing is RideAudit Bluetooth device pairing. There is no Lyft private API.
 
+## Debug lab TLS
+
+Debug builds bake `rideaudit-lab.env` and `caddy-lab-root.pem`. The admission address is `https://192.168.0.149:28443`. The capture client has no counsel endpoint, so port 28444 is not called. At startup the app calls admission `Health` through `CaptureAdmissionChannel`. Trust is the Caddy local root in that PEM. A chain that does not build to that root fails the handshake. The bearer `lab-caddy-probe` only satisfies the client guard. `Health` does not authenticate it. Release builds omit the env file and the PEM. This is not a public-trust certificate and it does not close the Caddy edge.
+
 ## Debug visual tree
 
 Debug builds reference `SharpNinja.Avalonia.RemoteControl.Runtime` 0.7.4 and listen on device loopback port 47100. Release builds do not. The bearer token is random per process and is written only to the package-private marker `files/avalonia-remote-control.json`. This is not a Play publication.

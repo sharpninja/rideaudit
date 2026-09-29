@@ -84,6 +84,12 @@ public partial class CaptureShellView : UserControl
         FailClosedText.Text = message;
     }
 
+    public void ShowEdgeTls(string message)
+    {
+        EdgeTlsText.Text = message;
+        EdgeTlsText.IsVisible = true;
+    }
+
     private void OnDriver(object? sender, RoutedEventArgs e)
     {
         _role = "driver";

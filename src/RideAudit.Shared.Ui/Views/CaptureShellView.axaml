@@ -52,6 +52,7 @@
       <TextBlock x:Name="ScreenId" Text="WF-01" />
 
       <StackPanel x:Name="RolePage" Spacing="8">
+        <TextBlock x:Name="EdgeTlsText" TextWrapping="Wrap" IsVisible="False" Foreground="#173E66" />
         <Border Width="64" Height="64" CornerRadius="32" Background="#173E66" HorizontalAlignment="Center" Margin="0,24,0,8" />
         <TextBlock Classes="wordmark" Text="RideAudit" />
         <TextBlock Classes="muted" HorizontalAlignment="Center" Text="Dual-phone telematics audit" />

@@ -24,6 +24,8 @@
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <PackageReference Include="SharpNinja.Avalonia.RemoteControl.Runtime" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <AndroidEnvironment Include="rideaudit-lab.env" />
+    <AndroidAsset Include="caddy-lab-root.pem" />
   </ItemGroup>
   <ItemGroup>
     <!-- Compile reference only. Runtime assets stay out of the APK. Tests use the same package. -->

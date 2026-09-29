@@ -1,4 +1,6 @@
+using System.Net.Security;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using RideAudit.Bt;
 using RideAudit.Capture;
@@ -104,6 +106,76 @@ public class CaptureGrpcAdmissionTests
         var noBearer = Assert.Throws<RideAuditFailClosedException>(() =>
             CaptureAdmissionChannel.Connect(new CaptureAdmissionOptions { AdmissionAddress = "http://127.0.0.1:1" }));
         Assert.Equal(ErrorCodes.AuthRequired, noBearer.Code);
+    }
+
+    [Fact]
+    public void Edge_tls_probe_refuses_plaintext_and_ngrok()
+    {
+        var plaintext = Assert.Throws<RideAuditFailClosedException>(() =>
+            CaptureAdmissionChannel.RequireEdgeTlsAddress("http://192.168.0.149:28443"));
+        Assert.Equal(ErrorCodes.AdmissionUnavailable, plaintext.Code);
+        Assert.Contains("non-https", plaintext.Message, StringComparison.Ordinal);
+
+        var admissionPort = Assert.Throws<RideAuditFailClosedException>(() =>
+            CaptureAdmissionChannel.RequireEdgeTlsAddress("https://192.168.0.149:28080"));
+        Assert.Contains("28080", admissionPort.Message, StringComparison.Ordinal);
+        var counselPort = Assert.Throws<RideAuditFailClosedException>(() =>
+            CaptureAdmissionChannel.RequireEdgeTlsAddress("https://192.168.0.149:28081"));
+        Assert.Contains("28081", counselPort.Message, StringComparison.Ordinal);
+        Assert.Throws<RideAuditFailClosedException>(() =>
+            CaptureAdmissionChannel.RequireEdgeTlsAddress("https://lab.ngrok.io"));
+        CaptureAdmissionChannel.RequireEdgeTlsAddress("https://192.168.0.149:28443");
+    }
+
+    [Fact]
+    public void Lab_root_trust_rejects_unrelated_and_name_mismatch()
+    {
+        using var root = LoadCaddyRoot();
+        using var unrelated = CreateSelfSigned("unrelated.example");
+        Assert.False(LabRootTrust.Accepts(
+            unrelated,
+            presented: null,
+            SslPolicyErrors.RemoteCertificateChainErrors,
+            root));
+        Assert.False(LabRootTrust.Accepts(
+            root,
+            presented: null,
+            SslPolicyErrors.RemoteCertificateNameMismatch,
+            root));
+        Assert.True(LabRootTrust.Accepts(
+            root,
+            presented: null,
+            SslPolicyErrors.RemoteCertificateChainErrors,
+            root));
+    }
+
+    private static X509Certificate2 LoadCaddyRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null)
+        {
+            var candidate = Path.Combine(dir.FullName, "src", "RideAudit.Client.Android", "caddy-lab-root.pem");
+            if (File.Exists(candidate))
+            {
+                return X509Certificate2.CreateFromPem(File.ReadAllText(candidate));
+            }
+
+            dir = dir.Parent;
+        }
+
+        throw new FileNotFoundException("caddy-lab-root.pem");
+    }
+
+    private static X509Certificate2 CreateSelfSigned(string commonName)
+    {
+        using var rsa = RSA.Create(2048);
+        var request = new CertificateRequest(
+            "CN=" + commonName,
+            rsa,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+        using var created = request.CreateSelfSigned(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1));
+        return X509CertificateLoader.LoadCertificate(created.Export(X509ContentType.Cert));
     }
 
     private static SourceStream Stream(string id, string device, IReadOnlyList<TimeSpan> frames, string payload) =>
