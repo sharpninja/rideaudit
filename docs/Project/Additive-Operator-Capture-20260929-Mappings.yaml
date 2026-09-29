@@ -32,6 +32,10 @@ mappings:
     trIds: [TR-RIDE-LAB-004]
     testIds: [TEST-RIDE-052]
     useCaseLocalIds: [UC-RIDE-042]
+  - frId: FR-RIDE-073
+    trIds: [TR-RIDE-VIDEO-017]
+    testIds: [TEST-RIDE-053]
+    useCaseLocalIds: [UC-RIDE-043]
   - frId: FR-RIDE-222
     trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
     testIds: [TEST-RIDE-028, TEST-RIDE-041]

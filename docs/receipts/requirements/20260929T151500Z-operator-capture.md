@@ -1,6 +1,6 @@
 # Operator requirement capture after plan approval
 
-Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T15:40:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
+Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T15:42:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
 SPDX: GPL-2.0-only.
 
 This receipt lists draft BDPv4 entities captured from operator direction after PLAN-RIDEAUDIT-001 approval (Astra AGREE R7 on r3.3). Every new or updated row is pending Payton AGREE. Astra plan AGREE is not Payton section 8 AGREE. None of these rows close plan section 9 Class C boxes. None mark AC-RIDE-222-001 or AC-UC-025-001 satisfied. Live OpenTimestamps confirmation and Caddy edge TLS stay open.
@@ -9,7 +9,7 @@ The 15:15Z text of this file was a partial Class C inventory. This revision repl
 
 ## Sources
 
-- conversation-history (full), from PLAN-RIDEAUDIT-001 approval through the full-history correction. This is not limited to the Class C morning stretch.
+- conversation-history (full), from PLAN-RIDEAUDIT-001 approval through the full-history correction, plus the 2026-09-29 follow-up to add SharpNinja.aiUnit device visual regression. This is not limited to the Class C morning stretch.
 - Seed file: `C:\Users\kingd\.cursor\projects\F-GitHub-rideaudit\uploads\operator-directions-seed_8c95.md` (operator-directions-seed).
 - Repo evidence: `docs/Project/*.yaml`, plan revisions r3.4 through r3.8 in `docs/plans/PLAN-RIDEAUDIT-001-implementation.md`, `docs/plans/PLAN-RIDEAUDIT-001-BRACKET.md` (HW-AC-MOUNT-001, no second FR for the cradle), and receipts under `docs/receipts/` (distribution Octopus and ngrok, chain live OTS pending, android Fold 4 and edge, requirements 20260928T234854Z).
 
@@ -30,6 +30,8 @@ This revision, 2026-09-29T15:34:14Z: `workflow.requirements.createBatch` created
 `getFr` FR-RIDE-222 shows AC-RIDE-222-004 as individual Payton Byrd using IV plus eSigner, not an organization OV certificate, and not to be purchased yet. `isSatisfied` remains false.
 `getFr` FR-RIDE-070 is pending with AC-RIDE-070-001..004 unsatisfied.
 
+Addendum 2026-09-29T15:41:19Z: `createBatch` created FR-RIDE-073, TR-RIDE-VIDEO-017, and TEST-RIDE-053 (`total: 3`, `errors: []`). `createMapping` stored FR-RIDE-073 to TR-RIDE-VIDEO-017 and TEST-RIDE-053. `client.UseCases.CreateAsync` created useCaseId 170 for UC-RIDE-043, left Draft. `getFr` FR-RIDE-073 is pending. No AC is satisfied. This does not close plan section 9.
+
 New MCP use cases (approvalStatus left Draft, not Approved):
 
 | YAML localId | MCP useCaseId | FR |
@@ -43,6 +45,7 @@ New MCP use cases (approvalStatus left Draft, not Approved):
 | UC-RIDE-040 | 167 | FR-RIDE-070 |
 | UC-RIDE-041 | 168 | FR-RIDE-071 |
 | UC-RIDE-042 | 169 | FR-RIDE-072 |
+| UC-RIDE-043 | 170 | FR-RIDE-073 |
 
 Brief updates this revision: 137 (UC-RIDE-010), 149 (UC-RIDE-022), 159 (UC-RIDE-032), 161, 165, 166. MCP use case objects do not store acceptance-criteria arrays. AC text is in repo YAML.
 
@@ -75,6 +78,7 @@ Brief updates this revision: 137 (UC-RIDE-010), 149 (UC-RIDE-022), 159 (UC-RIDE-
 | SharpNinja.Avalonia.RemoteControl instead of ADB taps | new from the partial pass, still pending | FR-RIDE-067, UC-RIDE-037 (164), TR-RIDE-VIDEO-014, TEST-RIDE-047 | pending Payton AGREE |
 | GPL notices, including headrest mount scad, README, BOM, and ARTIFACT | update | FR-RIDE-030 AC-003, TR-RIDE-GPL-002 AC-003. FR-RIDE-029 stays the GPL-2.0 code FR | pending Payton AGREE |
 | Lab conduct: accuracy, receipts, no silent path substitution, no Python, no em or en dashes, approve-before-execute except go-by-default on DESKTOP and LEGION2 | new | FR-RIDE-072, UC-RIDE-042 (169), TR-RIDE-LAB-004, TEST-RIDE-052 | pending Payton AGREE |
+| Android Avalonia client references SharpNinja.aiUnit and compares a connected-device screenshot to each wireframe and each storyboard. Threshold documented. Mismatch fails closed. Run on LEGION2. Receipt required. No silent skip | new | FR-RIDE-073, UC-RIDE-043 (170), TR-RIDE-VIDEO-017, TEST-RIDE-053. ACs cover package reference, per-wireframe coverage, per-storyboard coverage, device-connected execution on PAYTON-LEGION2, run receipt, and no silent skip | pending Payton AGREE |
 | Play, HSM escrow, Concierge | reconciled, no duplicate | FR-RIDE-031, FR-RIDE-214, FR-RIDE-004 | pending Payton AGREE |
 
 ## Withdrawn

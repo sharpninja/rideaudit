@@ -909,6 +909,159 @@ records:
         text: The change does not add Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for PAYTON-DESKTOP and PAYTON-LEGION2.
         isSatisfied: false
 
+  - kind: fr
+    id: FR-RIDE-073
+    title: Android visual regression with SharpNinja.aiUnit
+    description: >
+      The RideAudit Android Avalonia client references SharpNinja.aiUnit and
+      runs automated visual regression tests. For each wireframe and each
+      storyboard in the repo, a test captures a screenshot from a connected
+      Android device and compares it to that baseline. The comparison threshold
+      is documented. A mismatch fails closed.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator add 2026-09-29 to the full-history capture. approval: pending Payton AGREE.
+      Does not close plan section 9 or AC-UC-025-001.
+      Baselines are the wireframe and storyboard documents under docs/ux, including docs/ux/review-app.
+      Current client project is src/RideAudit.Client.Android/RideAudit.Client.Android.csproj.
+      An emulator-only run does not satisfy device-connected execution.
+      Package version is not invented here.
+    acceptanceCriteria:
+      - id: AC-RIDE-073-001
+        text: The Android Avalonia client references the SharpNinja.aiUnit package.
+        isSatisfied: false
+      - id: AC-RIDE-073-002
+        text: Each wireframe in the repo has a device screenshot compared to that wireframe baseline.
+        isSatisfied: false
+      - id: AC-RIDE-073-003
+        text: Each storyboard in the repo has a device screenshot compared to that storyboard baseline.
+        isSatisfied: false
+      - id: AC-RIDE-073-004
+        text: The visual regression run executes on PAYTON-LEGION2 against a connected Android device. An emulator-only run does not satisfy this AC.
+        isSatisfied: false
+      - id: AC-RIDE-073-005
+        text: The run writes a receipt that names the host, the connected device, the documented comparison threshold, and the pass or fail result for each baseline.
+        isSatisfied: false
+      - id: AC-RIDE-073-006
+        text: A baseline is not silently skipped. A skip is a failure unless the receipt documents the reason for that baseline.
+        isSatisfied: false
+      - id: AC-RIDE-073-007
+        text: The comparison threshold is documented. A mismatch against a baseline fails closed.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-043
+    title: Operator runs device visual regression for every baseline
+    actors:
+      - Operator
+    briefDescription: >
+      Operator runs SharpNinja.aiUnit visual regression from the Android Avalonia
+      client on PAYTON-LEGION2 against a connected Android device. Every wireframe
+      and every storyboard in the repo is compared to its baseline. approval: pending Payton AGREE.
+      Does not close plan section 9.
+    basicFlow: |
+      1. Operator confirms the Android Avalonia client references SharpNinja.aiUnit.
+      2. Operator connects an Android device to PAYTON-LEGION2.
+      3. The run captures a screenshot for each wireframe and each storyboard in the repo.
+      4. Each screenshot is compared to its baseline using the documented threshold.
+      5. A mismatch fails closed.
+      6. Operator writes a receipt of the run. A baseline skip without a documented reason fails the run.
+    acceptanceCriteria:
+      - id: AC-UC-043-001
+        text: The Android client references SharpNinja.aiUnit before the run starts.
+        isSatisfied: false
+      - id: AC-UC-043-002
+        text: The run covers each wireframe in the repo with a device screenshot compared to that baseline.
+        isSatisfied: false
+      - id: AC-UC-043-003
+        text: The run covers each storyboard in the repo with a device screenshot compared to that baseline.
+        isSatisfied: false
+      - id: AC-UC-043-004
+        text: Execution is on PAYTON-LEGION2 with a connected Android device. Emulator-only execution fails this use case.
+        isSatisfied: false
+      - id: AC-UC-043-005
+        text: The operator records a receipt of the run, including host, device, threshold, and per-baseline result.
+        isSatisfied: false
+      - id: AC-UC-043-006
+        text: The run does not silently skip a baseline. A skip without a documented reason fails closed.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-073
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-017
+    title: aiUnit device screenshot compare on LEGION2
+    description: >
+      Add a SharpNinja.aiUnit package reference to the Android Avalonia client.
+      Implement visual regression that, on PAYTON-LEGION2, captures a screenshot
+      from a connected Android device for each wireframe and each storyboard in
+      the repo, compares it to that baseline with a documented threshold, fails
+      closed on mismatch, writes a run receipt, and refuses a silent skip.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-073. Operator add 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9.
+      Do not invent a package version.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-017-001
+        text: RideAudit.Client.Android references SharpNinja.aiUnit.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-002
+        text: The test set includes one device screenshot comparison for each wireframe under docs/ux, including docs/ux/review-app.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-003
+        text: The test set includes one device screenshot comparison for each storyboard under docs/ux, including docs/ux/review-app.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-004
+        text: The harness runs on PAYTON-LEGION2 and requires a connected Android device. Emulator-only mode is not a pass.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-005
+        text: The harness writes a receipt with host, device, documented threshold, and a result for every baseline.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-006
+        text: Omitting a baseline without a documented reason in that receipt fails the run.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-053
+    title: Device visual regression covers every baseline
+    description: >
+      Verify the Android Avalonia client references SharpNinja.aiUnit and that a
+      PAYTON-LEGION2 run against a connected Android device compares a screenshot
+      to every wireframe and every storyboard baseline, documents the threshold,
+      fails closed on mismatch, receipts the run, and does not silently skip a baseline.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-073. Operator add 2026-09-29.
+      approval: pending Payton AGREE. Does not close plan section 9 or AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-TEST-053-001
+        text: The Android client project file references SharpNinja.aiUnit. A missing reference fails.
+        isSatisfied: false
+      - id: AC-TEST-053-002
+        text: Evidence lists a device screenshot comparison for each wireframe in the repo. A missing wireframe without a documented reason fails.
+        isSatisfied: false
+      - id: AC-TEST-053-003
+        text: Evidence lists a device screenshot comparison for each storyboard in the repo. A missing storyboard without a documented reason fails.
+        isSatisfied: false
+      - id: AC-TEST-053-004
+        text: Evidence shows the run host is PAYTON-LEGION2 and the screenshot source is a connected Android device. Emulator-only evidence fails.
+        isSatisfied: false
+      - id: AC-TEST-053-005
+        text: A run receipt names host, device, documented threshold, and per-baseline pass or fail. A mismatch is a failed test.
+        isSatisfied: false
+      - id: AC-TEST-053-006
+        text: A baseline omitted from the receipt with no documented reason fails closed.
+        isSatisfied: false
+
 mappings:
   - frId: FR-RIDE-065
     trIds: [TR-RIDE-EDGE-002]
@@ -938,6 +1091,10 @@ mappings:
     trIds: [TR-RIDE-LAB-004]
     testIds: [TEST-RIDE-052]
     useCaseLocalIds: [UC-RIDE-042]
+  - frId: FR-RIDE-073
+    trIds: [TR-RIDE-VIDEO-017]
+    testIds: [TEST-RIDE-053]
+    useCaseLocalIds: [UC-RIDE-043]
   - frId: FR-RIDE-222
     trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
     testIds: [TEST-RIDE-028, TEST-RIDE-041]
