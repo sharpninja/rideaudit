@@ -10,11 +10,12 @@ param(
     [string]$TargetRole = "rideaudit-host",
     [string]$SshHost = "PAYTON-DESKTOP",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
-    [string]$SshConnectHost = "172.19.0.1",
+    [string]$SshConnectHost = "192.168.0.149",
     [string]$AdmissionUrl = "http://192.168.0.149:28080/",
     [string]$ApiBase = "http://192.168.0.149:8066",
     [string]$Version = "",
     [switch]$SkipSync,
+    [switch]$SkipHealthCheck,
     [switch]$WithPublish
 )
 
@@ -55,11 +56,11 @@ function Wait-OctopusTask {
 
 function Ensure-SshAccount {
     param($Connection)
-    $accounts = Get-OctopusItems -Connection $Connection -Path "/api/Spaces-1/accounts/all"
-    if ($accounts.Count -eq 0) {
-        $accounts = Get-OctopusItems -Connection $Connection -Path "/api/accounts/all"
+    $accounts = @(Get-OctopusItems -Connection $Connection -Path "/api/Spaces-1/accounts/all")
+    if (@($accounts).Count -eq 0) {
+        $accounts = @(Get-OctopusItems -Connection $Connection -Path "/api/accounts/all")
     }
-    $existing = $accounts | Where-Object { $_.Name -eq "RideAudit PAYTON-DESKTOP SSH" } | Select-Object -First 1
+    $existing = @($accounts) | Where-Object { $_.Name -eq "RideAudit PAYTON-DESKTOP SSH" } | Select-Object -First 1
     if ($existing) {
         Write-Host ("using account {0}" -f $existing.Id)
         return $existing
@@ -103,8 +104,8 @@ function Ensure-SshAccount {
 
 function Ensure-LinuxTarget {
     param($Connection, $Account, [string]$Fingerprint)
-    $machines = Get-OctopusItems -Connection $Connection -Path "/api/machines/all"
-    $existing = $machines | Where-Object { $_.Name -eq $TargetName } | Select-Object -First 1
+    $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
+    $existing = @($machines) | Where-Object { $_.Name -eq $TargetName } | Select-Object -First 1
     if ($existing) {
         Write-Host ("using machine {0} health={1}" -f $existing.Id, $existing.HealthStatus)
         return $existing
@@ -159,8 +160,8 @@ function Start-MachineHealth {
 
 function Ensure-ProjectAndProcess {
     param($Connection)
-    $projects = Get-OctopusItems -Connection $Connection -Path "/api/projects/all"
-    $project = $projects | Where-Object { $_.Name -eq $ProjectName } | Select-Object -First 1
+    $projects = @(Get-OctopusItems -Connection $Connection -Path "/api/projects/all")
+    $project = @($projects) | Where-Object { $_.Name -eq $ProjectName } | Select-Object -First 1
     if (-not $project) {
         $body = @{
             Name           = $ProjectName
@@ -226,8 +227,8 @@ function Ensure-ProjectAndProcess {
 
 function New-RideAuditReleaseAndDeploy {
     param($Connection, $Project, [string]$ReleaseVersion)
-    $channels = Get-OctopusItems -Connection $Connection -Path "/api/Spaces-1/projects/$($Project.Id)/channels"
-    $channel = $channels | Select-Object -First 1
+    $channels = @(Get-OctopusItems -Connection $Connection -Path "/api/Spaces-1/projects/$($Project.Id)/channels")
+    $channel = @($channels) | Select-Object -First 1
     if (-not $channel) { throw "project $($Project.Id) has no channel" }
     $releaseBody = @{
         ProjectId     = $Project.Id
@@ -238,8 +239,8 @@ function New-RideAuditReleaseAndDeploy {
     $release = Invoke-RideAuditOctopusApi -Connection $Connection -Method POST -Path "/api/Spaces-1/releases" -Body $releaseBody
     Write-Host ("created release {0} version={1}" -f $release.Id, $release.Version)
 
-    $envs = Get-OctopusItems -Connection $Connection -Path "/api/environments/all"
-    $env = $envs | Where-Object { $_.Name -eq $EnvironmentName } | Select-Object -First 1
+    $envs = @(Get-OctopusItems -Connection $Connection -Path "/api/environments/all")
+    $env = @($envs) | Where-Object { $_.Name -eq $EnvironmentName } | Select-Object -First 1
     if (-not $env) { throw "environment $EnvironmentName not found" }
 
     $deployBody = @{
@@ -267,7 +268,7 @@ $root = Get-RideAuditOctopusJson -Connection $cx -Path "/api"
 Write-Host ("octopus version={0} installation={1}" -f $root.Version, $root.InstallationId)
 
 if (-not $SkipSync) {
-    Write-Host "syncing tree to $SshHost:$RemoteAbs"
+    Write-Host "syncing tree to ${SshHost}:${RemoteAbs}"
     & (Join-Path $here "Sync-RideAuditTree.ps1") -SshHost $SshHost -RemoteAbs $RemoteAbs -WithPublish:$WithPublish
 }
 
@@ -275,12 +276,19 @@ $account = Ensure-SshAccount -Connection $cx
 $fingerprint = Get-RideAuditSshFingerprint -SshHost $SshHost
 Write-Host ("ssh fingerprint MD5 (host key, not a secret)={0}" -f $fingerprint)
 $machine = Ensure-LinuxTarget -Connection $cx -Account $account -Fingerprint $fingerprint
-$healthTask = Start-MachineHealth -Connection $cx -MachineId $machine.Id
-if ($healthTask) {
-    $health = Wait-OctopusTask -Connection $cx -TaskId $healthTask.Id -TimeoutSec 180
-    Write-Host ("health task {0}" -f $health.State)
-    $machine = Get-RideAuditOctopusJson -Connection $cx -Path "/api/machines/$($machine.Id)"
-    Write-Host ("machine health={0} summary={1}" -f $machine.HealthStatus, $machine.StatusSummary)
+if (-not $SkipHealthCheck) {
+    $healthTask = Start-MachineHealth -Connection $cx -MachineId $machine.Id
+    if ($healthTask) {
+        try {
+            $health = Wait-OctopusTask -Connection $cx -TaskId $healthTask.Id -TimeoutSec 180
+            Write-Host ("health task {0}" -f $health.State)
+        }
+        catch {
+            Write-Host ("health wait skipped: {0}" -f $_.Exception.Message)
+        }
+        $machine = Get-RideAuditOctopusJson -Connection $cx -Path "/api/machines/$($machine.Id)"
+        Write-Host ("machine health={0} summary={1}" -f $machine.HealthStatus, $machine.StatusSummary)
+    }
 }
 
 $project = Ensure-ProjectAndProcess -Connection $cx

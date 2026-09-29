@@ -24,7 +24,16 @@ The default Octopus instance already has a polling Tentacle named **PAYTON-DESKT
 
 This path therefore registers a **Linux SSH target** (`PAYTON-DESKTOP-LINUX`, role `rideaudit-host`) at the Octopus container's docker-bridge gateway (`172.19.0.1`) so Calamari SSHs to the same machine that already runs Docker and the default Octopus container. That is the live PAYTON-DESKTOP Docker host for this lab. It is not a claim that the Windows Tentacle is healthy.
 
-Default instance license observed from `/api/licenses/licenses-current` (no key material recorded here): subscription valid through 2027-07-07, project limit 10, machine limit 10. Nine projects existed before RideAudit. Creating RideAudit uses the last project slot. A new Octopus container is only required if that create is rejected.
+Default instance license observed from `/api/licenses/licenses-current` (no key material recorded here): subscription valid through 2027-07-07, project limit 10, machine limit 10. Nine projects existed before RideAudit.
+
+The default node `legion2-octopus` was found with `MaxConcurrentTasks=0` and every task queued since 2026-09-27 (including after raising the cap to 5: `RunningTasks` stayed 0). That is a blocked default container. FR-RIDE-063 then requires a **new Octopus container** on PAYTON-DESKTOP:
+
+```powershell
+pwsh -NoProfile -File deploy/octopus/Provision-RideAuditOctopusContainer.ps1
+pwsh -NoProfile -File deploy/octopus/Invoke-RideAuditOctopusRelease.ps1 -ApiBase http://192.168.0.149:18066
+```
+
+The new stack is `octopus-rideaudit` on `192.168.0.149:18066` (HTTP) and `:19112` (Tentacle comms). It does not steal `8066`/`8444`/`11112`. Creds are written to `~\.creds\octopus-rideaudit.cred.xml` (DPAPI, not git). The default `octopus-legion2-*` containers stay up.
 
 ## Secrets (never git)
 
@@ -65,7 +74,7 @@ Fallback: `deploy/omarchy/Dockerfile.runtime` against a linux-x64 publish tree s
 
 ## License fallback
 
-If creating project **RideAudit** fails with a license/limit error, do **not** switch to GHCR. Provision a new Octopus Server container on this same host (different published ports, for example `18066`/`18444`/`19112`) and point `Invoke-RideAuditOctopusRelease.ps1 -ApiBase` at that instance. Record the new container name in the receipt. Existing `octopus-legion2-*` containers must stay up.
+If the default instance is out of licenses **or cannot run tasks**, do **not** switch to GHCR. Run `Provision-RideAuditOctopusContainer.ps1` and point `Invoke-RideAuditOctopusRelease.ps1 -ApiBase` at `http://192.168.0.149:18066`. Record the new container name in the receipt. Existing `octopus-legion2-*` containers must stay up.
 
 ## What this is not
 
