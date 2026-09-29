@@ -176,7 +176,8 @@ public static class UsabilityInspector
     private static UsabilityCheck AboutCutoff(IReadOnlyList<TreeNode> visible)
     {
         var nodes = visible.Where(node =>
-            node.Name is "CopyrightText" or "AttributionText").ToList();
+            node.Name is "CopyrightText" or "AttributionText" or "AttributionScope"
+            || (node.Name?.StartsWith("Attribution", StringComparison.Ordinal) ?? false)).ToList();
         if (nodes.Count == 0)
         {
             return new UsabilityCheck(

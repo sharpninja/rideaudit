@@ -160,9 +160,12 @@ public class TestRide035ShellTests
         Assert.Equal(28, main.FindControl<TextBlock>("TitleText")!.FontSize);
         Assert.Null(main.FindControl<TextBlock>("LicenseNotice"));
         main.OpenAbout();
+        mainWindow.UpdateLayout();
         var about = main.GetVisualDescendants().OfType<AboutView>().Single();
         Assert.Equal(16, about.FindControl<TextBlock>("CopyrightText")!.FontSize);
-        Assert.Contains("Avalonia UI 12", about.FindControl<TextBlock>("AttributionText")!.Text);
+        var firstCredit = about.GetVisualDescendants().OfType<TextBlock>().Single(block => block.Name == "AttributionName0");
+        Assert.Contains("Avalonia 12.1.3", firstCredit.Text);
+        Assert.Equal(UiLicense.Credits.Count, about.FindControl<StackPanel>("AttributionList")!.Children.Count);
     }
 
     [AvaloniaFact]
@@ -184,19 +187,35 @@ public class TestRide035ShellTests
         chromeWindow.UpdateLayout();
         var about = chrome.GetVisualDescendants().OfType<AboutView>().Single();
         var copyright = about.FindControl<TextBlock>("CopyrightText")!;
-        var credit = about.FindControl<TextBlock>("AttributionText")!;
+        var credits = about.GetVisualDescendants().OfType<TextBlock>()
+            .Where(block => block.Name?.StartsWith("Attribution", StringComparison.Ordinal) == true)
+            .ToList();
         Assert.Contains("Copyright (C) 2026", copyright.Text);
         Assert.Contains("GPL-2.0-or-later", copyright.Text);
-        Assert.Contains("MIT", credit.Text);
-        Assert.Contains("AvaloniaUI authors", credit.Text);
+        var joined = string.Join(" ", credits.Select(block => block.Text));
+        Assert.Contains("MIT", joined);
+        Assert.Contains("Apache-2.0", joined);
+        Assert.Contains("BSD-3-Clause", joined);
+        Assert.Contains("The gRPC Authors", joined);
+        Assert.Contains("Google Inc.", joined);
+        Assert.Contains("SkiaSharp 3.119.4", joined);
+        Assert.Contains("Debug builds only", joined);
         Assert.Equal(TextWrapping.Wrap, copyright.TextWrapping);
         Assert.Equal(TextTrimming.None, copyright.TextTrimming);
-        Assert.Equal(TextWrapping.Wrap, credit.TextWrapping);
         Assert.True(copyright.Bounds.Width > 200);
         var copyrightLines = Math.Max(1, (int)Math.Ceiling(copyright.Text!.Length * copyright.FontSize * 0.45 / copyright.Bounds.Width));
         Assert.True(copyright.Bounds.Height + 2 >= copyrightLines * copyright.FontSize);
-        var creditLines = Math.Max(1, (int)Math.Ceiling(credit.Text!.Length * credit.FontSize * 0.45 / credit.Bounds.Width));
-        Assert.True(credit.Bounds.Height + 2 >= creditLines * credit.FontSize);
+        foreach (var block in credits)
+        {
+            Assert.Equal(TextWrapping.Wrap, block.TextWrapping);
+            Assert.Equal(TextTrimming.None, block.TextTrimming);
+            Assert.True(block.Bounds.Width > 120, block.Name);
+            var lines = Math.Max(1, (int)Math.Ceiling(block.Text!.Length * block.FontSize * 0.45 / block.Bounds.Width));
+            Assert.True(block.Bounds.Height + 2 >= lines * block.FontSize, block.Name + " " + block.Bounds);
+        }
+
+        var scroll = about.FindControl<ScrollViewer>("AboutScroll")!;
+        Assert.True(scroll.Extent.Height > scroll.Viewport.Height);
         Assert.Equal("ABOUT", about.FindControl<TextBlock>("ScreenId")!.Text);
         view.SelectPassenger();
         view.StartSession();
