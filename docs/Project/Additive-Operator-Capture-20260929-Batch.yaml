@@ -929,6 +929,7 @@ records:
     notes: >
       Operator add 2026-09-29, updated the same day for storyboard navigation
       and for usability checks in addition to pixel comparison.
+      Android visual and usability tests use the SharpNinja.aiUnit codex-subscription profile.
       approval: pending Payton AGREE. Does not close plan section 9 or AC-UC-025-001.
       Baselines are the wireframe and storyboard documents under docs/ux, including docs/ux/review-app.
       Storyboard steps are the beats in those documents. Each beat is a frame.
@@ -965,6 +966,9 @@ records:
       - id: AC-RIDE-073-009
         text: A pixel match alone does not satisfy screenshot validation when a usability defect is present.
         isSatisfied: false
+      - id: AC-RIDE-073-010
+        text: SharpNinja.aiUnit for RideAudit Android visual and usability tests is configured to use the codex-subscription profile. Another profile does not satisfy this AC.
+        isSatisfied: false
 
   - kind: usecase
     localId: UC-RIDE-043
@@ -980,7 +984,7 @@ records:
       A pixel match does not pass when a usability defect is present.
       approval: pending Payton AGREE. Does not close plan section 9.
     basicFlow: |
-      1. Operator confirms the Android Avalonia client references SharpNinja.aiUnit and SharpNinja.Avalonia.RemoteControl.
+      1. Operator confirms the Android Avalonia client references SharpNinja.aiUnit and SharpNinja.Avalonia.RemoteControl, and that aiUnit uses the codex-subscription profile.
       2. Operator connects an Android device to PAYTON-LEGION2 and starts the Avalonia Android app.
       3. For each wireframe, the run captures one screen and compares it to that baseline, unless the wireframe specifies otherwise.
       4. For each storyboard, AvaloniaRemote interacts with the running app through the step sequence and compares a screenshot at each frame.
@@ -1011,6 +1015,9 @@ records:
         isSatisfied: false
       - id: AC-UC-043-008
         text: A pixel match alone does not satisfy the use case when a usability defect is present.
+        isSatisfied: false
+      - id: AC-UC-043-009
+        text: The operator configures SharpNinja.aiUnit to the codex-subscription profile before the Android visual and usability run. Another profile fails this use case.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-073
@@ -1067,6 +1074,9 @@ records:
         isSatisfied: false
       - id: AC-RIDE-VIDEO-017-009
         text: A pixel match does not produce a pass when a usability defect is present.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-010
+        text: The aiUnit harness configuration for these Android visual and usability tests selects the codex-subscription profile.
         isSatisfied: false
 
   - kind: test
@@ -1129,6 +1139,9 @@ records:
         isSatisfied: false
       - id: AC-TEST-054-003
         text: A case that matches the baseline pixels and still has a usability defect is a failure. Pixel match alone does not satisfy the AC.
+        isSatisfied: false
+      - id: AC-TEST-054-004
+        text: Evidence shows SharpNinja.aiUnit is configured with the codex-subscription profile for the Android visual and usability run. A different profile fails.
         isSatisfied: false
 
 mappings:

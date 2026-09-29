@@ -1,6 +1,6 @@
 # Operator requirement capture after plan approval
 
-Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T15:52:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
+Date: 2026-09-29T15:15:00Z. Revised: 2026-09-29T15:55:00Z. Host: PAYTON-LEGION2. Workspace: `F:\GitHub\rideaudit`.
 SPDX: GPL-2.0-only.
 
 This receipt lists draft BDPv4 entities captured from operator direction after PLAN-RIDEAUDIT-001 approval (Astra AGREE R7 on r3.3). Every new or updated row is pending Payton AGREE. Astra plan AGREE is not Payton section 8 AGREE. None of these rows close plan section 9 Class C boxes. None mark AC-RIDE-222-001 or AC-UC-025-001 satisfied. Live OpenTimestamps confirmation and Caddy edge TLS stay open.
@@ -35,6 +35,8 @@ Addendum 2026-09-29T15:41:19Z: `createBatch` created FR-RIDE-073, TR-RIDE-VIDEO-
 Addendum 2026-09-29T15:46:19Z: storyboard tests must walk each step sequence through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) and compare a screenshot at each frame. A static single-shot screenshot does not satisfy a storyboard AC. Wireframe tests stay a single-screen compare unless that wireframe says otherwise. `updateBatch` updated FR-RIDE-073, TR-RIDE-VIDEO-017, and TEST-RIDE-053 (`total: 3`, `errors: []`). UC-RIDE-043 brief updated. `LinkFrAsync` links use case 170 to FR-RIDE-067. `getFr` AC-RIDE-073-003 matches that storyboard rule and stays unsatisfied. Plan section 9 is not closed.
 
 Addendum 2026-09-29T15:51:33Z: screenshot validation includes usability validation in addition to baseline comparison. Fail closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects from the screenshot or the AvaloniaRemote visual tree. A pixel match alone does not satisfy the ACs when a usability defect is present. `updateBatch` updated FR-RIDE-073 and TR-RIDE-VIDEO-017 (`total: 2`, `errors: []`). `createBatch` created TEST-RIDE-054 (`errors: []`). Mapping for FR-RIDE-073 is TR-RIDE-VIDEO-017, TEST-RIDE-053, and TEST-RIDE-054. UC-RIDE-043 (170) brief includes AC-UC-043-007 and AC-UC-043-008. `getFr` AC-RIDE-073-009 stays unsatisfied. Plan section 9 is not closed.
+
+Addendum 2026-09-29T15:54:53Z: SharpNinja.aiUnit for RideAudit Android visual and usability tests must use the codex-subscription profile. Another profile does not satisfy the AC. `updateBatch` updated FR-RIDE-073, TR-RIDE-VIDEO-017, and TEST-RIDE-054 (`total: 3`, `errors: []`). New ACs: AC-RIDE-073-010, AC-UC-043-009, AC-RIDE-VIDEO-017-010, AC-TEST-054-004. UC-RIDE-043 (170) brief updated. `getFr` AC-RIDE-073-010 stays unsatisfied. Plan section 9 is not closed.
 
 New MCP use cases (approvalStatus left Draft, not Approved):
 
@@ -82,7 +84,7 @@ Brief updates this revision: 137 (UC-RIDE-010), 149 (UC-RIDE-022), 159 (UC-RIDE-
 | SharpNinja.Avalonia.RemoteControl instead of ADB taps | new from the partial pass, still pending | FR-RIDE-067, UC-RIDE-037 (164), TR-RIDE-VIDEO-014, TEST-RIDE-047 | pending Payton AGREE |
 | GPL notices, including headrest mount scad, README, BOM, and ARTIFACT | update | FR-RIDE-030 AC-003, TR-RIDE-GPL-002 AC-003. FR-RIDE-029 stays the GPL-2.0 code FR | pending Payton AGREE |
 | Lab conduct: accuracy, receipts, no silent path substitution, no Python, no em or en dashes, approve-before-execute except go-by-default on DESKTOP and LEGION2 | new | FR-RIDE-072, UC-RIDE-042 (169), TR-RIDE-LAB-004, TEST-RIDE-052 | pending Payton AGREE |
-| Android Avalonia client references SharpNinja.aiUnit. Wireframes are a single-screen device compare unless the wireframe says otherwise. Storyboards are a RemoteControl step sequence with a compare at each frame. Screenshot validation also checks usability and fails closed on layout defects. A pixel match does not pass when a usability defect is present. A static single-shot screenshot does not satisfy a storyboard. Threshold documented. Run on LEGION2. Receipt required. No silent skip | update | FR-RIDE-073 AC-008 and AC-009, UC-RIDE-043 AC-007 and AC-008, TR-RIDE-VIDEO-017 AC-008 and AC-009, TEST-RIDE-053, TEST-RIDE-054 | pending Payton AGREE |
+| Android Avalonia client references SharpNinja.aiUnit, configured to the codex-subscription profile. Wireframes are a single-screen device compare unless the wireframe says otherwise. Storyboards are a RemoteControl step sequence with a compare at each frame. Screenshot validation also checks usability and fails closed on layout defects. A pixel match does not pass when a usability defect is present. A static single-shot screenshot does not satisfy a storyboard. Threshold documented. Run on LEGION2. Receipt required. No silent skip | update | FR-RIDE-073 AC-010, UC-RIDE-043 AC-009, TR-RIDE-VIDEO-017 AC-010, TEST-RIDE-054 AC-004. Prior ACs on FR-RIDE-073, UC-RIDE-043, TR-RIDE-VIDEO-017, TEST-RIDE-053, and TEST-RIDE-054 remain | pending Payton AGREE |
 | Play, HSM escrow, Concierge | reconciled, no duplicate | FR-RIDE-031, FR-RIDE-214, FR-RIDE-004 | pending Payton AGREE |
 
 ## Withdrawn
