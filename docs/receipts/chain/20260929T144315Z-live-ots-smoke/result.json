@@ -1,0 +1,299 @@
+{
+    "Stamp":  "20260929T144315Z",
+    "Host":  "PAYTON-LEGION2",
+    "RepoRoot":  "F:\\GitHub\\rideaudit",
+    "GitBase":  "a5a649179a7e9ab6d098ec4517720c3d35a39001",
+    "PayloadFile":  "smoke-payload.txt",
+    "PayloadLength":  314,
+    "DigestHex":  "a0652ab08af36fe082729db4586c7e76cbbc3caca085d92987d6ae5f9660c80c",
+    "Algorithm":  "SHA-256",
+    "UpgradeWaitSeconds":  60,
+    "UserAgent":  "RideAudit-LiveOtsSmoke/1.0",
+    "Accept":  "application/vnd.opentimestamps.v1",
+    "InTreeClient":  "src/RideAudit.Chain.OpenTimestamps/PublicOtsCalendarClient.cs",
+    "InTreeCalendarConstant":  "https://alice.btc.calendar.opentimestamps.org",
+    "AnyRecognizedSubmit":  true,
+    "BitcoinAttestationSeen":  false,
+    "TransactionId":  null,
+    "TransactionIdNote":  "No txid is parsed or invented. BitcoinBlockHeaderAttestation carries a block height only. Pending proofs have no txid.",
+    "Submits":  [
+                    {
+                        "Name":  "a.pool",
+                        "CalendarUrl":  "https://a.pool.opentimestamps.org",
+                        "RequestUrl":  "https://a.pool.opentimestamps.org/digest",
+                        "HttpMethod":  "POST",
+                        "ContentType":  "application/octet-stream",
+                        "RequestBodyLength":  32,
+                        "HttpStatus":  200,
+                        "Reason":  "OK",
+                        "ResponseContentType":  "application/vnd.opentimestamps.v1",
+                        "ElapsedMs":  877,
+                        "Error":  "",
+                        "BodyLength":  172,
+                        "BodyPrefixHex":  "f008c3a322ef7faaf5c408f010794755868ec2a9deef04bf6315dc863708f020396a5f6102ff976135be60ab33ed1fed",
+                        "RawFile":  "a.pool.submit.bin",
+                        "OtsFile":  "a.pool.submit.ots",
+                        "Pending":  [
+                                        {
+                                            "Uri":  "https://alice.btc.calendar.opentimestamps.org",
+                                            "CommitmentHex":  "6abbce84a70c9b4bd89bc1ec353625d861c387329cc031cad6546bb8ee19746d90f94327379b80bc9f85a4c6"
+                                        }
+                                    ],
+                        "BitcoinHeights":  [
+
+                                           ],
+                        "UnknownTags":  [
+
+                                        ],
+                        "WalkerError":  "",
+                        "WalkerConsumed":  172,
+                        "PendingTagPresent":  true,
+                        "BitcoinTagPresent":  false,
+                        "Recognized":  true
+                    },
+                    {
+                        "Name":  "b.pool",
+                        "CalendarUrl":  "https://b.pool.opentimestamps.org",
+                        "RequestUrl":  "https://b.pool.opentimestamps.org/digest",
+                        "HttpMethod":  "POST",
+                        "ContentType":  "application/octet-stream",
+                        "RequestBodyLength":  32,
+                        "HttpStatus":  200,
+                        "Reason":  "OK",
+                        "ResponseContentType":  "application/vnd.opentimestamps.v1",
+                        "ElapsedMs":  526,
+                        "Error":  "",
+                        "BodyLength":  205,
+                        "BodyPrefixHex":  "f008776fdbe158644cce08f120f1129a129d0735b1aaa9a9ac611bea28e0f06a5f8c26cea166300b66c5d646a908f020",
+                        "RawFile":  "b.pool.submit.bin",
+                        "OtsFile":  "b.pool.submit.ots",
+                        "Pending":  [
+                                        {
+                                            "Uri":  "https://bob.btc.calendar.opentimestamps.org",
+                                            "CommitmentHex":  "6abbce85d1ab13830a2f63dd264ac89d92bb268f03002ada8e7912d5c121a670c11b1756832462a66efaa6d6"
+                                        }
+                                    ],
+                        "BitcoinHeights":  [
+
+                                           ],
+                        "UnknownTags":  [
+
+                                        ],
+                        "WalkerError":  "",
+                        "WalkerConsumed":  205,
+                        "PendingTagPresent":  true,
+                        "BitcoinTagPresent":  false,
+                        "Recognized":  true
+                    },
+                    {
+                        "Name":  "alice",
+                        "CalendarUrl":  "https://alice.btc.calendar.opentimestamps.org",
+                        "RequestUrl":  "https://alice.btc.calendar.opentimestamps.org/digest",
+                        "HttpMethod":  "POST",
+                        "ContentType":  "application/octet-stream",
+                        "RequestBodyLength":  32,
+                        "HttpStatus":  200,
+                        "Reason":  "OK",
+                        "ResponseContentType":  "application/vnd.opentimestamps.v1",
+                        "ElapsedMs":  1244,
+                        "Error":  "",
+                        "BodyLength":  277,
+                        "BodyPrefixHex":  "f00822b091728c08f02308f12056f888306e98931f8629337bf6d5bdcdf43d41ca66efafdea3b16ec1aea45c5808f010",
+                        "RawFile":  "alice.submit.bin",
+                        "OtsFile":  "alice.submit.ots",
+                        "Pending":  [
+                                        {
+                                            "Uri":  "https://alice.btc.calendar.opentimestamps.org",
+                                            "CommitmentHex":  "6abbce865a7c491c51f330fa8e841032f362f62bd445c35b3d35ec097b04aad7b627ec5fece62519e59efc8a"
+                                        }
+                                    ],
+                        "BitcoinHeights":  [
+
+                                           ],
+                        "UnknownTags":  [
+
+                                        ],
+                        "WalkerError":  "",
+                        "WalkerConsumed":  277,
+                        "PendingTagPresent":  true,
+                        "BitcoinTagPresent":  false,
+                        "Recognized":  true
+                    },
+                    {
+                        "Name":  "bob",
+                        "CalendarUrl":  "https://bob.btc.calendar.opentimestamps.org",
+                        "RequestUrl":  "https://bob.btc.calendar.opentimestamps.org/digest",
+                        "HttpMethod":  "POST",
+                        "ContentType":  "application/octet-stream",
+                        "RequestBodyLength":  32,
+                        "HttpStatus":  200,
+                        "Reason":  "OK",
+                        "ResponseContentType":  "application/vnd.opentimestamps.v1",
+                        "ElapsedMs":  511,
+                        "Error":  "",
+                        "BodyLength":  135,
+                        "BodyPrefixHex":  "f008177d021bc93e468708f010bf0cc8cc4a5ed74ee634d187a85a5db708f120939012319a5c10142355f63b4793bab3",
+                        "RawFile":  "bob.submit.bin",
+                        "OtsFile":  "bob.submit.ots",
+                        "Pending":  [
+                                        {
+                                            "Uri":  "https://bob.btc.calendar.opentimestamps.org",
+                                            "CommitmentHex":  "6abbce87faa1baf7fa98f75cc311513a26526e8371f404e1ab4ec31471c66f7717608da117dafa164b1e4321"
+                                        }
+                                    ],
+                        "BitcoinHeights":  [
+
+                                           ],
+                        "UnknownTags":  [
+
+                                        ],
+                        "WalkerError":  "",
+                        "WalkerConsumed":  135,
+                        "PendingTagPresent":  true,
+                        "BitcoinTagPresent":  false,
+                        "Recognized":  true
+                    }
+                ],
+    "Upgrades":  [
+                     {
+                         "Name":  "a.pool",
+                         "RequestUrl":  "https://a.pool.opentimestamps.org/digest",
+                         "HttpStatus":  200,
+                         "Reason":  "OK",
+                         "Error":  "",
+                         "ElapsedMs":  481,
+                         "BodyLength":  242,
+                         "BodyPrefixHex":  "f0084eb1292042ea27c208f0206372e59d32d2dc3f7280b562d1c8160ab3efa52db50ca07ec932c8d57de5d71408f010",
+                         "RawFile":  "a.pool.upgrade.bin",
+                         "PendingCount":  1,
+                         "BitcoinHeights":  [
+
+                                            ],
+                         "WalkerError":  "",
+                         "BitcoinTagPresent":  false,
+                         "PendingTagPresent":  true,
+                         "Gets":  [
+                                      {
+                                          "Url":  "https://alice.btc.calendar.opentimestamps.org/timestamp/6abbce84a70c9b4bd89bc1ec353625d861c387329cc031cad6546bb8ee19746d90f94327379b80bc9f85a4c6",
+                                          "HttpStatus":  404,
+                                          "Reason":  "Not Found",
+                                          "Error":  "",
+                                          "BodyLength":  42,
+                                          "BodyPrefixHex":  "50656e64696e6720636f6e6669726d6174696f6e20696e20426974636f696e20626c6f636b636861696e",
+                                          "RawFile":  "a.pool.get.0.bin",
+                                          "BitcoinHeights":  [
+
+                                                             ],
+                                          "PendingCount":  0,
+                                          "WalkerError":  "unsupported ots op 0x50",
+                                          "BitcoinTagPresent":  false
+                                      }
+                                  ]
+                     },
+                     {
+                         "Name":  "b.pool",
+                         "RequestUrl":  "https://b.pool.opentimestamps.org/digest",
+                         "HttpStatus":  200,
+                         "Reason":  "OK",
+                         "Error":  "",
+                         "ElapsedMs":  524,
+                         "BodyLength":  205,
+                         "BodyPrefixHex":  "f008d6f2e954335e309108f01018287df41b2ef49fc5c2b16961bd402408f02056fe2bc9d8afc24fea454297aecab902",
+                         "RawFile":  "b.pool.upgrade.bin",
+                         "PendingCount":  1,
+                         "BitcoinHeights":  [
+
+                                            ],
+                         "WalkerError":  "",
+                         "BitcoinTagPresent":  false,
+                         "PendingTagPresent":  true,
+                         "Gets":  [
+                                      {
+                                          "Url":  "https://bob.btc.calendar.opentimestamps.org/timestamp/6abbce85d1ab13830a2f63dd264ac89d92bb268f03002ada8e7912d5c121a670c11b1756832462a66efaa6d6",
+                                          "HttpStatus":  404,
+                                          "Reason":  "Not Found",
+                                          "Error":  "",
+                                          "BodyLength":  42,
+                                          "BodyPrefixHex":  "50656e64696e6720636f6e6669726d6174696f6e20696e20426974636f696e20626c6f636b636861696e",
+                                          "RawFile":  "b.pool.get.0.bin",
+                                          "BitcoinHeights":  [
+
+                                                             ],
+                                          "PendingCount":  0,
+                                          "WalkerError":  "unsupported ots op 0x50",
+                                          "BitcoinTagPresent":  false
+                                      }
+                                  ]
+                     },
+                     {
+                         "Name":  "alice",
+                         "RequestUrl":  "https://alice.btc.calendar.opentimestamps.org/digest",
+                         "HttpStatus":  200,
+                         "Reason":  "OK",
+                         "Error":  "",
+                         "ElapsedMs":  1143,
+                         "BodyLength":  207,
+                         "BodyPrefixHex":  "f008ee0d4c36e391a5db08f120632f97200aa8daab360f819ce487a8d3af4b0fc0c8c2bff6d6f287dfc876633808f010",
+                         "RawFile":  "alice.upgrade.bin",
+                         "PendingCount":  1,
+                         "BitcoinHeights":  [
+
+                                            ],
+                         "WalkerError":  "",
+                         "BitcoinTagPresent":  false,
+                         "PendingTagPresent":  true,
+                         "Gets":  [
+                                      {
+                                          "Url":  "https://alice.btc.calendar.opentimestamps.org/timestamp/6abbce865a7c491c51f330fa8e841032f362f62bd445c35b3d35ec097b04aad7b627ec5fece62519e59efc8a",
+                                          "HttpStatus":  404,
+                                          "Reason":  "Not Found",
+                                          "Error":  "",
+                                          "BodyLength":  42,
+                                          "BodyPrefixHex":  "50656e64696e6720636f6e6669726d6174696f6e20696e20426974636f696e20626c6f636b636861696e",
+                                          "RawFile":  "alice.get.0.bin",
+                                          "BitcoinHeights":  [
+
+                                                             ],
+                                          "PendingCount":  0,
+                                          "WalkerError":  "unsupported ots op 0x50",
+                                          "BitcoinTagPresent":  false
+                                      }
+                                  ]
+                     },
+                     {
+                         "Name":  "bob",
+                         "RequestUrl":  "https://bob.btc.calendar.opentimestamps.org/digest",
+                         "HttpStatus":  200,
+                         "Reason":  "OK",
+                         "Error":  "",
+                         "ElapsedMs":  574,
+                         "BodyLength":  240,
+                         "BodyPrefixHex":  "f008879dfe7cc01bc8e308f1205c1383b56d6e5c07efd22186cc816f752c5a41c26ae25e624b275bd00aeeae4708f010",
+                         "RawFile":  "bob.upgrade.bin",
+                         "PendingCount":  1,
+                         "BitcoinHeights":  [
+
+                                            ],
+                         "WalkerError":  "",
+                         "BitcoinTagPresent":  false,
+                         "PendingTagPresent":  true,
+                         "Gets":  [
+                                      {
+                                          "Url":  "https://bob.btc.calendar.opentimestamps.org/timestamp/6abbce87faa1baf7fa98f75cc311513a26526e8371f404e1ab4ec31471c66f7717608da117dafa164b1e4321",
+                                          "HttpStatus":  404,
+                                          "Reason":  "Not Found",
+                                          "Error":  "",
+                                          "BodyLength":  42,
+                                          "BodyPrefixHex":  "50656e64696e6720636f6e6669726d6174696f6e20696e20426974636f696e20626c6f636b636861696e",
+                                          "RawFile":  "bob.get.0.bin",
+                                          "BitcoinHeights":  [
+
+                                                             ],
+                                          "PendingCount":  0,
+                                          "WalkerError":  "unsupported ots op 0x50",
+                                          "BitcoinTagPresent":  false
+                                      }
+                                  ]
+                     }
+                 ]
+}

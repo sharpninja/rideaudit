@@ -334,43 +334,58 @@ try {
         $url = $cal.Url.TrimEnd("/") + "/digest"
         Write-Output ("SUBMIT " + $cal.Name + " " + $url)
         $hit = Invoke-HttpBytes -Client $http -Method POST -Url $url -Body $digest
-        $walk = Invoke-Walk -Body $hit.Body -Digest $digest
-        $safe = $cal.Name
+        $body = New-Object byte[] 0
+        if ($null -ne $hit.Body) { $body = [byte[]]@($hit.Body) }
+        $walk = Invoke-Walk -Body $body -Digest $digest
+        $safe = [string]$cal.Name
         $rawName = $safe + ".submit.bin"
         $otsName = $safe + ".submit.ots"
-        [IO.File]::WriteAllBytes((Join-Path $outDir $rawName), $hit.Body)
-        $otsWritten = $false
-        $recognized = ($walk.Pending.Count -gt 0 -or $walk.BitcoinHeights.Count -gt 0) -and [string]::IsNullOrEmpty($walk.WalkerError)
+        [IO.File]::WriteAllBytes((Join-Path $outDir $rawName), $body)
+        $otsFile = ""
+        $recognized = ($walk.Pending.Count -gt 0 -or $walk.BitcoinHeights.Count -gt 0) -and [string]::IsNullOrEmpty([string]$walk.WalkerError)
         if ($recognized) {
-            $wrapped = New-OtsWrapper -Digest $digest -CalendarBody $hit.Body
+            $wrapped = New-OtsWrapper -Digest $digest -CalendarBody $body
             [IO.File]::WriteAllBytes((Join-Path $outDir $otsName), $wrapped)
-            $otsWritten = $true
+            $otsFile = $otsName
         }
-        $submits += [pscustomobject]@{
-            Name = $cal.Name
-            CalendarUrl = $cal.Url
+        $pendingRows = New-Object System.Collections.Generic.List[object]
+        foreach ($p in $walk.Pending) {
+            $pendingRows.Add([pscustomobject]@{
+                Uri = [string]$p.Uri
+                CommitmentHex = [string]$p.CommitmentHex
+            }) | Out-Null
+        }
+        $heights = New-Object System.Collections.Generic.List[object]
+        foreach ($h in $walk.BitcoinHeights) { $heights.Add($h) | Out-Null }
+        $unknown = New-Object System.Collections.Generic.List[string]
+        foreach ($t in $walk.UnknownTags) { $unknown.Add([string]$t) | Out-Null }
+        $row = [pscustomobject]@{
+            Name = $safe
+            CalendarUrl = [string]$cal.Url
             RequestUrl = $url
-            Method = "POST"
+            HttpMethod = "POST"
             ContentType = "application/octet-stream"
             RequestBodyLength = 32
             HttpStatus = $hit.HttpStatus
-            Reason = $hit.Reason
-            ResponseContentType = $hit.ContentType
+            Reason = [string]$hit.Reason
+            ResponseContentType = [string]$hit.ContentType
             ElapsedMs = $hit.ElapsedMs
-            Error = $hit.Error
-            BodyLength = $hit.Body.Length
-            BodyPrefixHex = (Format-HexBytes $hit.Body 48)
+            Error = [string]$hit.Error
+            BodyLength = $body.Length
+            BodyPrefixHex = (Format-HexBytes $body 48)
             RawFile = $rawName
-            OtsFile = $(if ($otsWritten) { $otsName } else { "" })
-            Pending = @($walk.Pending)
-            BitcoinHeights = @($walk.BitcoinHeights)
-            UnknownTags = @($walk.UnknownTags)
-            WalkerError = $walk.WalkerError
+            OtsFile = $otsFile
+            Pending = $pendingRows.ToArray()
+            BitcoinHeights = $heights.ToArray()
+            UnknownTags = $unknown.ToArray()
+            WalkerError = [string]$walk.WalkerError
             WalkerConsumed = $walk.Consumed
-            PendingTagPresent = ((Find-Tag $hit.Body $PendingTag) -ge 0)
-            BitcoinTagPresent = ((Find-Tag $hit.Body $BitcoinTag) -ge 0)
-            Recognized = $recognized
+            PendingTagPresent = ((Find-Tag $body $PendingTag) -ge 0)
+            BitcoinTagPresent = ((Find-Tag $body $BitcoinTag) -ge 0)
+            Recognized = [bool]$recognized
         }
+        $submits += $row
+        Write-Output ("SUBMIT_DONE " + $safe + " http=" + $hit.HttpStatus + " bytes=" + $body.Length + " recognized=" + $recognized)
     }
 
     Write-Output ("WAIT_SECONDS " + $UpgradeWaitSeconds)
@@ -378,51 +393,62 @@ try {
 
     $upgrades = @()
     foreach ($sub in $submits) {
-        $url = $sub.RequestUrl
+        $url = [string]$sub.RequestUrl
         Write-Output ("REQUERY " + $sub.Name + " " + $url)
         $hit = Invoke-HttpBytes -Client $http -Method POST -Url $url -Body $digest
-        $walk = Invoke-Walk -Body $hit.Body -Digest $digest
-        $rawName = $sub.Name + ".upgrade.bin"
-        [IO.File]::WriteAllBytes((Join-Path $outDir $rawName), $hit.Body)
+        $body = New-Object byte[] 0
+        if ($null -ne $hit.Body) { $body = [byte[]]@($hit.Body) }
+        $walk = Invoke-Walk -Body $body -Digest $digest
+        $rawName = [string]$sub.Name + ".upgrade.bin"
+        [IO.File]::WriteAllBytes((Join-Path $outDir $rawName), $body)
         $gets = @()
-        foreach ($pend in @($sub.Pending)) {
-            $getUrl = $pend.Uri.TrimEnd("/") + "/timestamp/" + $pend.CommitmentHex
+        $pendingList = @($sub.Pending)
+        foreach ($pend in $pendingList) {
+            $commitment = [string]$pend.CommitmentHex
+            $getUrl = ([string]$pend.Uri).TrimEnd("/") + "/timestamp/" + $commitment
             Write-Output ("GET " + $getUrl)
             $got = Invoke-HttpBytes -Client $http -Method GET -Url $getUrl -Body (New-Object byte[] 0)
-            $gwalk = Invoke-Walk -Body $got.Body -Digest ([byte[]](Convert-HexToBytes $pend.CommitmentHex))
-            $gname = $sub.Name + ".get." + ($gets.Count) + ".bin"
-            [IO.File]::WriteAllBytes((Join-Path $outDir $gname), $got.Body)
+            $gbody = New-Object byte[] 0
+            if ($null -ne $got.Body) { $gbody = [byte[]]@($got.Body) }
+            $gwalk = Invoke-Walk -Body $gbody -Digest (Convert-HexToBytes $commitment)
+            $gname = [string]$sub.Name + ".get." + ($gets.Count) + ".bin"
+            [IO.File]::WriteAllBytes((Join-Path $outDir $gname), $gbody)
+            $gHeights = New-Object System.Collections.Generic.List[object]
+            foreach ($h in $gwalk.BitcoinHeights) { $gHeights.Add($h) | Out-Null }
             $gets += [pscustomobject]@{
                 Url = $getUrl
                 HttpStatus = $got.HttpStatus
-                Reason = $got.Reason
-                Error = $got.Error
-                BodyLength = $got.Body.Length
-                BodyPrefixHex = (Format-HexBytes $got.Body 48)
+                Reason = [string]$got.Reason
+                Error = [string]$got.Error
+                BodyLength = $gbody.Length
+                BodyPrefixHex = (Format-HexBytes $gbody 48)
                 RawFile = $gname
-                BitcoinHeights = @($gwalk.BitcoinHeights)
-                PendingCount = @($gwalk.Pending).Count
-                WalkerError = $gwalk.WalkerError
-                BitcoinTagPresent = ((Find-Tag $got.Body $BitcoinTag) -ge 0)
+                BitcoinHeights = $gHeights.ToArray()
+                PendingCount = $gwalk.Pending.Count
+                WalkerError = [string]$gwalk.WalkerError
+                BitcoinTagPresent = ((Find-Tag $gbody $BitcoinTag) -ge 0)
             }
         }
+        $uHeights = New-Object System.Collections.Generic.List[object]
+        foreach ($h in $walk.BitcoinHeights) { $uHeights.Add($h) | Out-Null }
         $upgrades += [pscustomobject]@{
-            Name = $sub.Name
+            Name = [string]$sub.Name
             RequestUrl = $url
             HttpStatus = $hit.HttpStatus
-            Reason = $hit.Reason
-            Error = $hit.Error
+            Reason = [string]$hit.Reason
+            Error = [string]$hit.Error
             ElapsedMs = $hit.ElapsedMs
-            BodyLength = $hit.Body.Length
-            BodyPrefixHex = (Format-HexBytes $hit.Body 48)
+            BodyLength = $body.Length
+            BodyPrefixHex = (Format-HexBytes $body 48)
             RawFile = $rawName
-            PendingCount = @($walk.Pending).Count
-            BitcoinHeights = @($walk.BitcoinHeights)
-            WalkerError = $walk.WalkerError
-            BitcoinTagPresent = ((Find-Tag $hit.Body $BitcoinTag) -ge 0)
-            PendingTagPresent = ((Find-Tag $hit.Body $PendingTag) -ge 0)
+            PendingCount = $walk.Pending.Count
+            BitcoinHeights = $uHeights.ToArray()
+            WalkerError = [string]$walk.WalkerError
+            BitcoinTagPresent = ((Find-Tag $body $BitcoinTag) -ge 0)
+            PendingTagPresent = ((Find-Tag $body $PendingTag) -ge 0)
             Gets = $gets
         }
+        Write-Output ("REQUERY_DONE " + $sub.Name + " http=" + $hit.HttpStatus + " bitcoin=" + ((Find-Tag $body $BitcoinTag) -ge 0))
     }
 }
 finally {
