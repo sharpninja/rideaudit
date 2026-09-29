@@ -66,6 +66,7 @@ public sealed class AdbDeviceSession
     public void RestartApp()
     {
         Shell("am force-stop " + PackageName, TimeSpan.FromSeconds(15));
+        Shell("run-as " + PackageName + " rm -f files/avalonia-remote-control.json", TimeSpan.FromSeconds(15));
         var start = Shell("am start -n " + Activity, TimeSpan.FromSeconds(20));
         if (start.ExitCode != 0 || start.Text.Contains("Error", StringComparison.OrdinalIgnoreCase))
         {
@@ -77,7 +78,8 @@ public sealed class AdbDeviceSession
     {
         const string remote = "/data/local/tmp/rideaudit-ui.xml";
         var dump = Shell("uiautomator dump " + remote, TimeSpan.FromSeconds(25));
-        if (dump.ExitCode != 0)
+        var announced = dump.Text.Contains("dumped to", StringComparison.OrdinalIgnoreCase);
+        if (dump.ExitCode != 0 && !announced)
         {
             throw new InvalidOperationException("uiautomator dump failed: " + dump.Text);
         }
