@@ -1,6 +1,7 @@
 # Mappings for the 2026-09-29 operator capture.
 # New IDs plus the updated rows for existing FRs.
-# FR-RIDE-063 row is unchanged in links. Notes-only update. No GHCR.
+# FR-RIDE-068 was withdrawn. Cradle TR/TEST/UC map to FR-RIDE-041.
+# FR-RIDE-063 row links are unchanged. Omarchy compose is an AC on that FR, not a new FR.
 # approval: pending Payton AGREE. Does not close plan section 9.
 mappings:
   - frId: FR-RIDE-065
@@ -15,14 +16,22 @@ mappings:
     trIds: [TR-RIDE-VIDEO-014]
     testIds: [TEST-RIDE-047]
     useCaseLocalIds: [UC-RIDE-037]
-  - frId: FR-RIDE-068
-    trIds: [TR-RIDE-HW-001]
-    testIds: [TEST-RIDE-048]
-    useCaseLocalIds: [UC-RIDE-038]
   - frId: FR-RIDE-069
     trIds: [TR-RIDE-LAB-001]
     testIds: [TEST-RIDE-049]
     useCaseLocalIds: [UC-RIDE-039]
+  - frId: FR-RIDE-070
+    trIds: [TR-RIDE-LAB-002]
+    testIds: [TEST-RIDE-050]
+    useCaseLocalIds: [UC-RIDE-040]
+  - frId: FR-RIDE-071
+    trIds: [TR-RIDE-LAB-003]
+    testIds: [TEST-RIDE-051]
+    useCaseLocalIds: [UC-RIDE-041]
+  - frId: FR-RIDE-072
+    trIds: [TR-RIDE-LAB-004]
+    testIds: [TEST-RIDE-052]
+    useCaseLocalIds: [UC-RIDE-042]
   - frId: FR-RIDE-222
     trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
     testIds: [TEST-RIDE-028, TEST-RIDE-041]
@@ -36,9 +45,9 @@ mappings:
     testIds: [TEST-RIDE-035, TEST-RIDE-043]
     useCaseLocalIds: [UC-RIDE-025]
   - frId: FR-RIDE-041
-    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016]
-    testIds: [TEST-RIDE-025, TEST-RIDE-044]
-    useCaseLocalIds: [UC-RIDE-017]
+    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016, TR-RIDE-HW-001]
+    testIds: [TEST-RIDE-025, TEST-RIDE-044, TEST-RIDE-048]
+    useCaseLocalIds: [UC-RIDE-017, UC-RIDE-038]
   - frId: FR-RIDE-063
     trIds: [TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002]
     testIds: [TEST-RIDE-038, TEST-RIDE-040]

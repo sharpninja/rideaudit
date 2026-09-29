@@ -232,13 +232,16 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-020, FR-RIDE-021; method: system"
+    notes: "Covers FR-RIDE-020, FR-RIDE-021; method: system. Update 2026-09-29: RAES working-copy decrypt is counsel and HSM only. approval: pending Payton AGREE."
     acceptanceCriteria:
       - id: AC-TEST-016-001
         text: "Test TEST-RIDE-016 passes for happy path of covered requirements."
         isSatisfied: false
       - id: AC-TEST-016-002
         text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
+        isSatisfied: false
+      - id: AC-TEST-016-003
+        text: "Public admission does not decrypt an RAES or RIDESEAL1 envelope. Decrypt evidence is an expiring counsel working copy after HSM escrow release."
         isSatisfied: false
   - kind: test
     id: TEST-RIDE-017

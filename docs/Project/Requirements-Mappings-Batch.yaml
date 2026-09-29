@@ -161,9 +161,9 @@ mappings:
     testIds: [TEST-RIDE-024]
     useCaseLocalIds: [UC-RIDE-015]
   - frId: FR-RIDE-041
-    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016]
-    testIds: [TEST-RIDE-025, TEST-RIDE-044]
-    useCaseLocalIds: [UC-RIDE-017]
+    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016, TR-RIDE-HW-001]
+    testIds: [TEST-RIDE-025, TEST-RIDE-044, TEST-RIDE-048]
+    useCaseLocalIds: [UC-RIDE-017, UC-RIDE-038]
   - frId: FR-RIDE-042
     trIds: [TR-RIDE-VIDEO-002]
     testIds: [TEST-RIDE-025]

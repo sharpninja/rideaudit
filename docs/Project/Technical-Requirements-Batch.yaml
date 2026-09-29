@@ -443,13 +443,16 @@ records:
     area: RIDE
     subarea: GPL
     status: pending
-    notes: "Implements/supports: FR-RIDE-030"
+    notes: "Implements/supports: FR-RIDE-030. Update 2026-09-29: mount scad, README, BOM, and ARTIFACT carry GPL notices. approval: pending Payton AGREE."
     acceptanceCriteria:
       - id: AC-RIDE-GPL-002-001
         text: "LicenseMetadata attached to shared artifacts."
         isSatisfied: false
       - id: AC-RIDE-GPL-002-002
         text: "Sealed payloads remain access-controlled."
+        isSatisfied: false
+      - id: AC-RIDE-GPL-002-003
+        text: "Headrest mount scad, README, BOM, and ARTIFACT carry GPL notices."
         isSatisfied: false
   - kind: tr
     id: TR-RIDE-GPL-003

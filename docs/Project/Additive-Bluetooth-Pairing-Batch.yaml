@@ -8,13 +8,19 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Driver phone and passenger (rider-side) phone. Not Lyft Bluetooth.
+    notes: >
+      Driver phone and passenger (rider-side) phone. Not Lyft Bluetooth.
+      Update 2026-09-29 full history: pairing is RideAudit Bluetooth only.
+      approval: pending Payton AGREE for that AC. Does not close plan section 9.
     acceptanceCriteria:
       - id: AC-RIDE-053-001
         text: Phones discover peers via Bluetooth and only complete pairing when both sides confirm driver vs passenger role and shared session intent.
         isSatisfied: false
       - id: AC-RIDE-053-002
         text: Pairing fails closed if Bluetooth discovery, role confirmation, or session binding fails.
+        isSatisfied: false
+      - id: AC-RIDE-053-003
+        text: Pairing uses the RideAudit Bluetooth session only. It does not call a Lyft Bluetooth API.
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-054
@@ -47,7 +53,7 @@ records:
   - kind: tr
     id: TR-RIDE-VIDEO-010
     title: Bluetooth pairing and role protocol
-    description: Implement Bluetooth discovery, driver-rider role negotiation, and secure session binding for DualPhoneSession.
+    description: Implement RideAudit Bluetooth discovery, driver-rider role negotiation, and secure session binding for DualPhoneSession. Do not call a Lyft Bluetooth API.
     priority: high
     area: RIDE
     subarea: VIDEO
@@ -67,4 +73,14 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Covers FR-RIDE-053 FR-RIDE-054 FR-RIDE-055
+    notes: >
+      Covers FR-RIDE-053 FR-RIDE-054 FR-RIDE-055.
+      Update 2026-09-29: pairing is RideAudit Bluetooth only and does not call a Lyft Bluetooth API.
+      approval: pending Payton AGREE.
+    acceptanceCriteria:
+      - id: AC-TEST-034-001
+        text: Pairing evidence uses the RideAudit Bluetooth session and does not call a Lyft Bluetooth API.
+        isSatisfied: false
+      - id: AC-TEST-034-002
+        text: Driver phone coordinates the session. Passenger phone performs video sync and telematics overlay.
+        isSatisfied: false

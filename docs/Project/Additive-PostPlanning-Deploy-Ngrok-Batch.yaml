@@ -44,6 +44,9 @@ records:
       - id: AC-RIDE-063-003
         text: Release receipts record the Octopus instance or container and the target machine, and never claim GHCR as the distribution path or a GHCR green.
         isSatisfied: false
+      - id: AC-RIDE-063-004
+        text: PAYTON-OMARCHY compose cutover is prior interim evidence. It is not the Octopus CD green for PAYTON-DESKTOP.
+        isSatisfied: false
 
   - kind: fr
     id: FR-RIDE-064
@@ -96,6 +99,9 @@ records:
     acceptanceCriteria:
       - id: AC-UC-032-001
         text: Operator can configure the Octopus project and complete a release to PAYTON-DESKTOP with a receipt that names the instance and target and does not claim GHCR.
+        isSatisfied: false
+      - id: AC-UC-032-002
+        text: A PAYTON-OMARCHY compose cutover is not accepted as the Octopus CD green.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-063
@@ -163,6 +169,9 @@ records:
       - id: AC-RIDE-DEPLOY-002-002
         text: License exhaustion on the default Octopus container results in a new Octopus container on PAYTON-DESKTOP rather than a GHCR workaround.
         isSatisfied: false
+      - id: AC-RIDE-DEPLOY-002-003
+        text: PAYTON-OMARCHY compose cutover is recorded as prior interim and is not the Octopus deployment green.
+        isSatisfied: false
 
   - kind: tr
     id: TR-RIDE-EDGE-001
@@ -202,6 +211,9 @@ records:
         isSatisfied: false
       - id: AC-TEST-038-002
         text: Receipt names the Octopus instance or container and target machine and contains no GHCR green claim.
+        isSatisfied: false
+      - id: AC-TEST-038-003
+        text: A PAYTON-OMARCHY compose cutover receipt is not scored as the Octopus CD green.
         isSatisfied: false
 
   - kind: test
