@@ -30,31 +30,31 @@ does not yet parse storyboard headings (no README/PR syntax found); current Extr
 picks up backtick image paths for single-asset review. When storyboard UI lands, prefer this heading +
 ordered-list form.
 
-### SB-01 Pairing
+### Sequence: SB-01 Pairing
 - `WF-01-splash-role-select.svg`
 - `WF-02-bt-discover.svg`
 - `WF-03-pairing-confirm.svg`
 - `WF-08-fail-closed-errors.svg`
 
-### SB-02 Driver coordinate
+### Sequence: SB-02 Driver coordinate
 - `WF-04-driver-dashboard.svg`
 - `WF-06-seal-progress.svg`
 - `WF-07-submit-status.svg`
 - `WF-08-fail-closed-errors.svg`
 
-### SB-03 Passenger composite
+### Sequence: SB-03 Passenger composite
 - `WF-05-passenger-capture-spider.svg`
 - `WF-08-fail-closed-errors.svg`
 
-### SB-04 Seal and receipt
+### Sequence: SB-04 Seal and receipt
 - `WF-06-seal-progress.svg`
 - `WF-08-fail-closed-errors.svg`
 
-### SB-05 Submit admission
+### Sequence: SB-05 Submit admission
 - `WF-07-submit-status.svg`
 - `WF-08-fail-closed-errors.svg`
 
-### SB-06 Counsel viewer overview
+### Sequence: SB-06 Counsel viewer overview
 - `WF-R-01-splash-case-open.svg`
 - `WF-R-02-bundle-contents.svg`
 - `WF-R-03-verification-report.svg`
@@ -62,26 +62,26 @@ ordered-list form.
 - `WF-R-07-provenance-custody-ots.svg`
 - `WF-R-08-export-opposing-counsel.svg`
 
-### SB-R-01 Open bundle
+### Sequence: SB-R-01 Open bundle
 - `WF-R-01-splash-case-open.svg`
 - `WF-R-02-bundle-contents.svg`
 
-### SB-R-02 Verification gate
+### Sequence: SB-R-02 Verification gate
 - `WF-R-03-verification-report.svg`
 - `WF-R-04-fail-closed-blocking.svg`
 - `WF-R-07-provenance-custody-ots.svg`
 
-### SB-R-03 Escrow release
+### Sequence: SB-R-03 Escrow release
 - `WF-R-05-escrow-release-quorum.svg`
 
-### SB-R-04 Timeline playback
+### Sequence: SB-R-04 Timeline playback
 - `WF-R-06-synchronized-playback.svg`
 
-### SB-R-05 Multi-driver counsel bundle
+### Sequence: SB-R-05 Multi-driver counsel bundle
 - `WF-R-02-bundle-contents.svg`
 - `WF-R-03-verification-report.svg`
 - `WF-R-04-fail-closed-blocking.svg`
 
-### SB-R-06 Export disclosure
+### Sequence: SB-R-06 Export disclosure
 - `WF-R-07-provenance-custody-ots.svg`
 - `WF-R-08-export-opposing-counsel.svg`
