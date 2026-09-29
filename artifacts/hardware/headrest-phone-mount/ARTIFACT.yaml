@@ -5,7 +5,7 @@
 id: ART-RIDE-MOUNT-001
 kind: mechanical-3d
 format: openscad
-version: "1.0.0"
+version: "1.1.0"
 title: Headrest phone mount (single cradle, two post arms)
 license: GPL-2.0
 path: artifacts/hardware/headrest-phone-mount/
@@ -42,7 +42,6 @@ parameters:
   - phone_length_min
   - phone_length_max
   - phone_thickness_max
-  - camera_clearance
 physicalRelease: not-claimed
 notes: >
   Two post blocks, one per headrest post. The post passes through the block
@@ -59,8 +58,11 @@ notes: >
   comes up from below on the arm centerline, through a clearance slot in the
   cradle bottom, through that arm slot, and into the roof. Fully seated, the
   head clamps an 18 mm stack (6 mm bottom plate + 12 mm arm) and leaves 12 mm
-  of thread in the roof. Arms are 56 × 12 mm. The phone sits flush on the
-  vertical plate.
+  of thread in the 19 mm roof. Arms are 56 × 12 mm. The cradle is cut for a
+  closed Galaxy Z Fold 4 in landscape: 155.1 x 67.1 x 15.8 mm at the hinge.
+  The cover screen sits flush on the vertical plate. Primary cameras face
+  forward, out of the opening. A 12 mm hook at the USB-C end stops forward
+  slip. Camera-bump height is not published and is not modeled.
   Geometry is verified by verify-geometry.py. Not crash-rated. Not an on-vehicle
   release until the operator checklist in verification/vehicle-fit-checklist.md
   is completed. Supports RideAudit phone capture; it does not implement

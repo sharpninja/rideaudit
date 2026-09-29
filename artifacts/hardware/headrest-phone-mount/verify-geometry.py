@@ -245,7 +245,13 @@ def main() -> int:
             expect(c["pocket_x"] >= c["phone_length_max"], "pocket shorter than the longest phone")
             expect(c["pocket_y"] >= c["phone_thickness_max"], "pocket shallower than the thickest phone")
             expect(c["pocket_z"] >= c["phone_width_max"], "pocket shorter than the widest short side")
-            expect(c["camera_clearance"] >= 12, "camera window too small")
+            expect(abs(c["phone_length_max"] - 155.1) < 0.05, "length is not the Fold 4 closed height")
+            expect(abs(c["phone_width_max"] - 67.1) < 0.05, "short side is not the Fold 4 closed width")
+            expect(abs(c["phone_thickness_max"] - 15.8) < 0.05, "thickness is not the Fold 4 hinge")
+            expect(c["usb_hook_len"] <= 16, "USB-end hook is long enough to reach the camera end")
+            expect(c["phone_length_max"] - c["usb_hook_len"] >= 130, "USB-end hook reaches the camera end")
+            expect(c["front_reach"] > c["phone_thickness_max"] + 1.5, "hook is not proud of the hinge face")
+            expect(c["rail_h"] + 0.01 >= c["front_reach"], "forward overhang is steeper than 45 degrees")
             expect(c["cradle_count"] == 1, "model is not the single shared cradle")
             expect(c["slot_side_gap"] <= 1.001, "arm slot gap is over 1 mm on a side")
             expect(c["slot_side_gap"] + 0.001 >= 0.8, "arm slot does not clear the crest")
@@ -333,22 +339,60 @@ def main() -> int:
                 True,
                 "back plate is present behind the phone",
             ))
-            probes.append(classify(tray_m, (-c["win_x"], plate_y, c["win_z"]), False, "camera window is open"))
-            probes.append(classify(tray_m, (c["win_x"], plate_y, c["win_z"]), False, "opposite camera window is open"))
             probes.append(classify(
                 tray_m,
-                (0.0, plate_y, c["win_z"]),
+                (-c["pocket_x"] / 2 + 6.0, plate_y, c["z_pocket1"] - 6.0),
                 True,
-                "back plate remains between the camera windows",
+                "back plate is solid at the camera end",
             ))
-            lip_y = c["y_plate1"] + c["front_lip_t"] / 2
-            lip_z = c["z_pocket0"] + c["front_lip_h"] / 2
-            probes.append(classify(tray_m, (0.0, lip_y, lip_z), True, "front retention lip is present"))
             probes.append(classify(
                 tray_m,
-                (0.0, lip_y, c["z_pocket0"] + c["front_lip_h"] + 8),
+                (c["pocket_x"] / 2 - 6.0, plate_y, c["z_pocket1"] - 6.0),
+                True,
+                "back plate is solid at the USB end",
+            ))
+            probes.append(classify(
+                tray_m,
+                (0.0, plate_y, c["z_pocket0"] + c["pocket_z"] / 2),
+                True,
+                "back plate is solid behind the cover screen",
+            ))
+            # Primary cameras face +Y, out of the opening. The camera end is -X.
+            cam_y = c["y_plate1"] + c["phone_thickness_max"] + 1.0
+            cam_x = -c["pocket_x"] / 2 + 8.0
+            probes.append(classify(
+                tray_m,
+                (cam_x, cam_y, c["z_pocket0"] + c["phone_width_max"] / 2),
                 False,
-                "front of the cradle stays open above the lip",
+                "camera-end forward face is open",
+            ))
+            probes.append(classify(
+                tray_m,
+                (cam_x, cam_y, c["z_pocket0"] + c["phone_width_max"] - 4.0),
+                False,
+                "camera-end upper forward face is open",
+            ))
+            probes.append(classify(
+                tray_m,
+                (0.0, cam_y, c["z_pocket0"] + c["phone_width_max"] / 2),
+                False,
+                "center forward face is open",
+            ))
+            hook_x = c["pocket_x"] / 2 - c["usb_hook_len"] / 2
+            hook_y = c["y_plate1"] + c["phone_thickness_max"] + c["usb_hook_gap"] + c["usb_hook_t"] / 2
+            hook_z = c["z_pocket0"] + c["pocket_z"] / 2
+            probes.append(classify(tray_m, (hook_x, hook_y, hook_z), True, "USB-end hook stops forward slip"))
+            probes.append(classify(
+                tray_m,
+                (c["pocket_x"] / 2 - c["usb_hook_len"] - 4.0, hook_y, hook_z),
+                False,
+                "forward face beside the USB hook stays open",
+            ))
+            probes.append(classify(
+                tray_m,
+                (0.0, c["y_plate1"] + 3.0, c["z_pocket0"] - 0.6),
+                True,
+                "pocket floor supports the phone",
             ))
             lx = c["screw_x_left"]
             rx = c["screw_x_right"]
@@ -602,8 +646,9 @@ def write_report(checks: dict[str, float], stats: dict, notes: list[str]) -> Non
         f"| Clamp stack | bottom plate {c['bottom_t']:.0f} mm + arm {c['arm_thick']:.0f} mm = {c['clamp_stack']:.0f} mm; slide take-up {c['clamp_takeup']:.2f} mm |",
         f"| Thumbscrews | {c['screw_count']:.0f} modeled, head Ø {c['screw_head_d']:.0f} mm, shank {c['screw_shank_l']:.1f} mm under the face |",
         f"| Phone pocket (L × short side × thickness) | {c['pocket_x']:.1f} × {c['pocket_z']:.1f} × {c['pocket_y']:.1f} mm |",
-        f"| Phone envelope | length {c['phone_length_min']:.0f}–{c['phone_length_max']:.0f} mm, short side {c['phone_width_min']:.0f}–{c['phone_width_max']:.0f} mm, thickness ≤ {c['phone_thickness_max']:.0f} mm |",
-        f"| Camera window | {c['camera_clearance']:.0f} mm square, both upper corners, through the back plate |",
+        f"| Phone | closed Galaxy Z Fold 4, landscape, {c['phone_length_min']:.1f} × {c['phone_width_min']:.1f} × {c['phone_thickness_max']:.1f} mm hinge (thin edge {c['fold_d_min']:.1f} mm) |",
+        f"| Cameras | primary cluster faces forward, out of the opening. Back plate is solid. USB-end hook {c['usb_hook_len']:.0f} mm at +X. Camera end stays open |",
+        f"| Roof | {c['rail_h']:.2f} mm, forward reach {c['front_reach']:.2f} mm so the wedge is 45 degrees or shallower |",
         f"| Phone front from the headrest face | {c['standout_y']:.1f} mm |",
         f"| Cradle top above the block bottom | {c['z_pocket1']:.1f} mm |",
         f"| Cradles | {c['cradle_count']:.0f} shared landscape holder |",
