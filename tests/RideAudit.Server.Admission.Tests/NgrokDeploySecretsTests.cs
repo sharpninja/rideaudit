@@ -101,7 +101,7 @@ public class NgrokDeploySecretsTests
         Assert.Contains("TentacleActive", receipt, StringComparison.Ordinal);
         Assert.Contains("No GHCR push or pull", receipt, StringComparison.Ordinal);
         Assert.Contains("Not a GHCR green", receipt, StringComparison.Ordinal);
-        Assert.DoesNotContain("ghcr.io/", receipt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ghcr.io", receipt, StringComparison.OrdinalIgnoreCase);
 
         var compose = File.ReadAllText(Path.Combine(root, "deploy", "octopus", "compose.yaml"));
         Assert.Contains("192.168.0.149:28080:8080", compose, StringComparison.Ordinal);

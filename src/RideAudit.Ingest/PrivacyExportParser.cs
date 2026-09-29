@@ -4,6 +4,8 @@ using System.Text;
 
 namespace RideAudit.Ingest;
 
+public sealed record FieldGap(string Kind, string Detail);
+
 public sealed record ParsedExport(
     List<DictionarySignal> Dictionary,
     List<TripRow> Trips,
@@ -11,7 +13,8 @@ public sealed record ParsedExport(
     List<OnlineHoursRow> Hours,
     List<UnverifiedFile> Unverified,
     List<string> RejectedFalseLabels,
-    bool DictionaryPresent);
+    bool DictionaryPresent,
+    List<FieldGap> FieldGaps);
 
 public static class PrivacyExportParser
 {
@@ -25,6 +28,7 @@ public static class PrivacyExportParser
         var hours = new List<OnlineHoursRow>();
         var unverified = new List<UnverifiedFile>();
         var rejected = new List<string>();
+        var fieldGaps = new List<FieldGap>();
         var files = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         try
@@ -63,6 +67,7 @@ public static class PrivacyExportParser
             if (name.EndsWith("trips.csv", StringComparison.OrdinalIgnoreCase))
             {
                 trips.AddRange(ReadTrips(body, importId, driverId, jurisdiction));
+                NoteIncompleteTripRows(body, fieldGaps);
                 continue;
             }
             if (name.EndsWith("scores.csv", StringComparison.OrdinalIgnoreCase))
@@ -78,7 +83,21 @@ public static class PrivacyExportParser
             unverified.Add(new UnverifiedFile(importId, name, "unverified-file-type"));
         }
 
-        return new ParsedExport(dictionary, trips, scores, hours, unverified, rejected, dictionaryPresent);
+        return new ParsedExport(dictionary, trips, scores, hours, unverified, rejected, dictionaryPresent, fieldGaps);
+    }
+
+    private static void NoteIncompleteTripRows(string body, List<FieldGap> fieldGaps)
+    {
+        foreach (var row in DataRows(body))
+        {
+            var idPresent = row.Count > 0 && row[0].Trim().Length > 0;
+            var startPresent = row.Count > 1 && long.TryParse(row[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
+            var endPresent = row.Count > 2 && long.TryParse(row[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
+            var statusPresent = row.Count > 3 && row[3].Trim().Length > 0;
+            if (idPresent && startPresent && endPresent && statusPresent)
+                continue;
+            fieldGaps.Add(new FieldGap("trip", "required trip fields absent; values were not invented"));
+        }
     }
 
     private static IEnumerable<TripRow> ReadTrips(string body, string importId, string driverId, string jurisdiction)

@@ -1,0 +1,13 @@
+# Explicit AC deferrals. One id, a tab, then the BDPv4 reason. Not test source.
+AC-RIDE-222-001	Deferred BDPv4: signed reproducible Win/Linux/macOS builds need a RideAudit Authenticode identity and Apple codesign. signtool.exe is installed, but no RideAudit code-signing certificate was used. Unsigned RID publish is not this AC.
+AC-RIDE-GPL-003-001	Deferred BDPv4: Google Play listing is not claimed. A source repository URL is not a Play publication receipt.
+AC-RIDE-GPL-003-002	Deferred BDPv4: reproducible signing metadata needs a RideAudit code-signing certificate. Unrelated private-key certs on this machine were not used as a release signature.
+AC-RIDE-031-001	Deferred BDPv4: Google Play availability is not claimed. A public source repository is not a Play listing.
+AC-RIDE-031-002	Deferred BDPv4: reproducible signing metadata needs a RideAudit code-signing certificate. Unsigned RID publish is not this AC.
+AC-UC-025-001	Deferred BDPv4: Avalonia Android primary screens running requires a device or emulator session. A project reference is not that runtime proof.
+AC-RIDE-004-002	Deferred BDPv4: Concierge polling limited to organizational rides is a live partnership path. The in-tree gate does not perform that poll.
+AC-RIDE-205-001	Deferred BDPv4: UI pagination or downsampling of large GPS tracks is not proven. An index window is not that UI.
+AC-RIDE-205-002	Deferred BDPv4: a multi-year index query does not prove the UI loads without freezing.
+AC-UC-003-001	Deferred BDPv4: UC-RIDE-003 happy path is an admin-enabled Concierge poll. Refusing the call is not that happy path.
+AC-UC-003-002	Deferred BDPv4: Concierge poll caveats are not shown because the live poll is not enabled.
+AC-RIDE-206-001	Deferred BDPv4: labeling Concierge lat/lng polls as derived metrics needs those polls. Rejecting a concierge provenance score on export is not that label.

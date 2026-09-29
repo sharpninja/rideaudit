@@ -55,7 +55,7 @@ Built on the host daemon via the Tentacle `docker.sock` mount from `deploy/conta
 | `rideaudit-admission:octopus` | `sha256:17a16024c8f5772019847db3b7eed796791a62d016a0de7e73cc5e7cf4587f4e` |
 | `rideaudit-counsel:octopus` | `sha256:28a6b1e7299ca580c609f0e6bd253737bb8e038486c584ec6d4efa3214866536` |
 
-Repo digest JSON was not captured (Go template quoting on the inspect command). Absence of a `ghcr.io` repository name on `docker images` is the recorded fact. Do not invent a GHCR digest.
+Repo digest JSON was not captured (Go template quoting on the inspect command). Absence of a GHCR repository name on `docker images` is the recorded fact. Do not invent a GHCR digest.
 
 Compose project `rideaudit-octopus` (not `rideaudit-omarchy`):
 

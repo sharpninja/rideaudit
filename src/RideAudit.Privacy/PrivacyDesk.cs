@@ -98,7 +98,7 @@ public sealed class PrivacyDesk
             imports = imports.Select(row => new { row.ImportId, row.ContentHashHex, row.Version, row.ParserVersion, row.Provenance, row.Status }),
             submissions = submissions.Select(row => new { row.SubmissionId, row.CustodyState, contentHash = Ids.Hex(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).ContentHash.ToByteArray()) })
         };
-        var zip = BuildZip(manifest, subjectDriverId);
+        var zip = BuildZip(manifest, subjectDriverId, imports);
         var status = imports.Count == 0 && submissions.Count == 0 ? "no-personal-imports" : "exported";
         return new AccessExport(Ids.New("exp-"), status, zip);
     }
@@ -151,15 +151,56 @@ public sealed class PrivacyDesk
             throw new RideAuditException(ErrorCodes.TenantIsolation, "Subject role cannot access another driver.");
     }
 
-    private static byte[] BuildZip(object manifest, string driverId)
+    private static byte[] BuildZip(object manifest, string driverId, IReadOnlyList<ImportRecord> imports)
     {
         using var stream = new MemoryStream();
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Create, true))
         {
-            Write(zip, "manifest.json", JsonSerializer.Serialize(manifest));
+            var json = JsonSerializer.Serialize(manifest);
+            Write(zip, "manifest.json", json);
+            Write(zip, "provenance.json", json);
+            Write(zip, "provenance.csv", ProvenanceCsv(imports));
+            WriteBytes(zip, "summary.pdf", SummaryPdf("RideAudit audit summary. Sealed plaintext is not included. Subject " + driverId + "."));
             Write(zip, "NOTICE.txt", "GPL-2.0-only. This portable audit ZIP lists hashes and provenance. It does not contain sealed plaintext. Subject " + driverId + ".");
         }
         return stream.ToArray();
+    }
+
+    private static string ProvenanceCsv(IReadOnlyList<ImportRecord> imports)
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine("import_id,content_hash,version,parser_version,provenance,status");
+        foreach (var row in imports)
+            builder.Append(row.ImportId).Append(',').Append(row.ContentHashHex).Append(',').Append(row.Version).Append(',').Append(row.ParserVersion).Append(',').Append(row.Provenance).Append(',').Append(row.Status).AppendLine();
+        return builder.ToString();
+    }
+
+    private static byte[] SummaryPdf(string text)
+    {
+        var safe = text.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("(", "\\(", StringComparison.Ordinal).Replace(")", "\\)", StringComparison.Ordinal);
+        var content = "BT /F1 12 Tf 72 720 Td (" + safe + ") Tj ET";
+        var body = new StringBuilder();
+        body.Append("%PDF-1.4\n");
+        var offsets = new List<int>();
+        void Obj(string value)
+        {
+            offsets.Add(Encoding.ASCII.GetByteCount(body.ToString()));
+            body.Append(value);
+        }
+        Obj("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+        Obj("2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n");
+        Obj("3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n");
+        Obj("4 0 obj\n<< /Length " + content.Length + " >>\nstream\n" + content + "\nendstream\nendobj\n");
+        Obj("5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n");
+        var xrefAt = Encoding.ASCII.GetByteCount(body.ToString());
+        body.Append("xref\n0 6\n");
+        body.Append("0000000000 65535 f \n");
+        foreach (var offset in offsets)
+            body.Append(offset.ToString("0000000000", CultureInfo.InvariantCulture)).Append(" 00000 n \n");
+        body.Append("trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n");
+        body.Append(xrefAt.ToString(CultureInfo.InvariantCulture));
+        body.Append("\n%%EOF\n");
+        return Encoding.ASCII.GetBytes(body.ToString());
     }
 
     private static void Write(ZipArchive zip, string name, string text)
@@ -167,5 +208,12 @@ public sealed class PrivacyDesk
         var entry = zip.CreateEntry(name);
         using var writer = new StreamWriter(entry.Open(), Encoding.UTF8);
         writer.Write(text);
+    }
+
+    private static void WriteBytes(ZipArchive zip, string name, byte[] bytes)
+    {
+        var entry = zip.CreateEntry(name);
+        using var stream = entry.Open();
+        stream.Write(bytes, 0, bytes.Length);
     }
 }

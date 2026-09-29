@@ -1,14 +1,14 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.5 — canonical ngrok target is PAYTON-DESKTOP admission `:28080`; Omarchy `:18080` is prior interim. Octopus CD receipt is on file (`octopus-rideaudit`). Not a P11b close.  
+**Revision:** r3.6 — AC ledger missing count is 0 (401 covered / 23 deferred / 424). Deferred wins over a test-source name when the AC's own text is live third-party work. Unsigned Win/Linux/macOS publish is receipted; signed desktop builds and P11b stay open. r3.5 ngrok and Octopus notes still apply.  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
 **Process:** Byrd Dev Process v4 (BDPv4)  
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to PAYTON-DESKTOP admission `192.168.0.149:28080`. It does **not** invent a new Astra AGREE or a Payton section-8 check. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to PAYTON-DESKTOP admission `192.168.0.149:28080`. r3.6 records the Class A ledger recount (`docs/receipts/ac-coverage/20260928-ledger.md`: 401 covered / 23 deferred / 0 missing / 424) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
 **Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Those boxes remain unchecked as historical process state. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
 
@@ -1558,11 +1558,11 @@ Before the gate, only documentation, requirement YAML, plans, process records, a
 
 The boxes above remain **historically unchecked**. They are class C (Astra/Payton agreement). They are not backdated as complete. Payton 2026-09-28 authorized a post-HV **remediation loop** (iterate until opposing Sol HV AGREE). That authorization does not rewrite construction-gate history. code-hv-sol-r4 later returned READY/AGREE on product head `4f0e741` for the narrow CODE-HV gate only. That AGREE does not check these boxes and does not close P0–P11b. Rem-phase checklist: [code-hv-sol-r2-remediation-phase-checklist.md](../receipts/remediation/code-hv-sol-r2-remediation-phase-checklist.md).
 
-## 11. Closeout inventory (2026-09-29, r3.5)
+## 11. Closeout inventory (2026-09-29, r3.6)
 
 Classes: **A** implementable in this tree without a third party; **B** ops/config (ngrok, Octopus, docs); **C** blocked on a third party or on a named human/model agreement.
 
-| Item | Class | Disposition in r3.5 |
+| Item | Class | Disposition in r3.6 |
 | --- | --- | --- |
 | Canonical ngrok still aimed only at Omarchy `127.0.0.1:18080` | B | Done for this host. Receipt `docs/receipts/distribution/20260929T030643Z-ngrok-desktop-28080.md`: systemd user unit, `PROBE_HTTP=200`, public URL `https://zeugmatically-unindicative-calista.ngrok-free.dev`. |
 | Octopus CD receipt vs plan text that said the plan does not invent a live green | B | Plan cites `20260929T015822Z-octopus-payton-desktop.md`. `DistributionReceipts.OctopusDesktopOnFile` is `receipt-on-file`, not a live probe. Dev/Staging/Prod stay `not-run`. |
@@ -1575,10 +1575,10 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | Physical dual-phone Bluetooth media / production H.264 | C | Fail closed. Source container stays non-H.264. |
 | Lyft Concierge / partnership ingest | C | Stay disabled. |
 | Edge TLS via Caddy (distinct from ngrok HTTPS) | C | Omarchy/DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. ngrok HTTPS is the tunnel, not that AC. |
-| Signed reproducible desktop Win/Linux/macOS and full P11b suite | A remaining | Not closed here. P11b exit stays open. |
-| AC ledger rows still `missing` after the 424-id recount | A remaining | Ledger is 190 covered / 36 deferred / 198 missing / 424 total. The old test expected 7 files and 404 ids and was red against the post-planning batch. A named AC is not semantic closure. The 198 missing rows are not marked done. |
+| Signed reproducible desktop Win/Linux/macOS and full P11b suite | A remaining | Not closed. Receipt `docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`: framework-dependent `win-x64`, `linux-x64`, and `osx-arm64` publish exited 0; Authenticode `Status=NotSigned`; signtool `No signature found` (`SIGNTOOL_EXIT=1`); `CODESIGN_ON_PATH=False`. Unrelated code-signing certs were not used. P11b exit stays open. |
+| AC ledger rows still `missing` after the 424-id recount | A remaining | Name-or-defer recount is 401 covered / 23 deferred / 0 missing / 424 (`docs/receipts/ac-coverage/20260928-ledger.md`). Before: 190 covered / 36 deferred / 198 missing. Deferred wins over a test-source name when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live third-party work. A neighboring YAML requirement does not defer the AC. A covered row is a test-source name, not whole-AC closure. P11b still owns that closure. This row is not marked done. |
 
-No class A/B row in the unchecked plan boxes is left without this disposition. The remaining class A product gaps are the P11b suite and the unnamed AC ledger rows, and they are not marked done.
+No class A/B row in the unchecked plan boxes is left without this disposition. P11b and whole-AC acceptance beyond a test-source name remain open. They are not marked done.
 
 ## 10. Primary implementation ownership (parent phases); child homes in §0.2
 

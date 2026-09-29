@@ -1,0 +1,163 @@
+{
+    "TimestampUtc":  "2026-09-29T04:17:46Z",
+    "ValidatorIdentity":  "GrokSubagentHostile",
+    "AddProfile":  {
+                       "Excluded":  "add-profile.grok.md",
+                       "ProfileFileCount":  19,
+                       "Executed":  "yes"
+                   },
+    "WorkClass":  "project implementation scope",
+    "OverallVerdict":  "DISAGREE",
+    "AccuracyScore":  98,
+    "CompletenessScore":  96,
+    "ReceiptMarkdown":  "F:\\GitHub\\rideaudit\\docs\\receipts\\hostile-validator-20260929T041746Z.md",
+    "PassCount":  15,
+    "FailCount":  3,
+    "UnknownCount":  1,
+    "FailList":  [
+                     "A5. Receipt-reading test asserts ghcr.io/ not ghcr.io. Octopus receipt contains ghcr.io.",
+                     "B5. Honesty. A5 does not match the artifact.",
+                     "C1. AC-RIDE-031-001 and AC-RIDE-031-002 are covered live Play/signing ACs from id presence on tests that assert the live claim is false.",
+                     "HV approval gate. CompletenessScore 96 is below 98."
+                 ],
+    "UnknownList":  [
+                        "B7. MCP session log not persisted. mcpserver-box discovery error."
+                    ],
+    "Claims":  [
+                   {
+                       "Summary":  "Working-tree ledger parse 403/21/0/424 and replica MISMATCH=0.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A1"
+                   },
+                   {
+                       "Summary":  "Deferred wins before the test-name check. Three named ids stay deferred. Replica MISMATCH=0.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A2"
+                   },
+                   {
+                       "Summary":  "AC-RIDE-203-001 covered. Access_log_is_append_only asserts growth and no Clear/Remove.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A3"
+                   },
+                   {
+                       "Summary":  "AC-UC-029-001 covered. Protos_publish_gpl_notice_and_grpc_authority asserts GPL-2.0-only and grpc-protobuf authority on in-tree protos.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A4"
+                   },
+                   {
+                       "Summary":  "Receipt-reading test asserts ghcr.io/ not ghcr.io. Octopus receipt line 58 contains ghcr.io.",
+                       "Verdict":  "FAIL",
+                       "Surface":  "A",
+                       "Id":  "A5"
+                   },
+                   {
+                       "Summary":  "21 deferred ids, ID_OVERLAP=0.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A6"
+                   },
+                   {
+                       "Summary":  "dotnet test RideAudit.sln -c Release exit 0. Failed 0 Skipped 0. Host 2, Protos 5, Workflow 26, Escrow 4, Seal 8, Admission 28, Chain 16, Client 101.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A7"
+                   },
+                   {
+                       "Summary":  "P11b not closed. Unsigned receipt and re-hash, NotSigned, signtool exit 1, codesign absent. Section 11 class A remaining.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A8"
+                   },
+                   {
+                       "Summary":  "Section 9 and named Class C boxes unchecked.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A9"
+                   },
+                   {
+                       "Summary":  "Section 11 does not say the only remaining class A gap is P11b. Ledger row class A remaining.",
+                       "Verdict":  "PASS",
+                       "Surface":  "A",
+                       "Id":  "A10"
+                   },
+                   {
+                       "Summary":  "No phase checkbox marked complete. P11b not claimed closed.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B1"
+                   },
+                   {
+                       "Summary":  "Recount, hashes, signtool, and Release test are in this receipt.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B2"
+                   },
+                   {
+                       "Summary":  "No todo.yaml or requirements-store edit in git status. Sampled isSatisfied remains false.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B3"
+                   },
+                   {
+                       "Summary":  "PowerShell only. No python in the reviewed diff.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B4"
+                   },
+                   {
+                       "Summary":  "A5 does not match the Octopus receipt assertion.",
+                       "Verdict":  "FAIL",
+                       "Surface":  "B",
+                       "Id":  "B5"
+                   },
+                   {
+                       "Summary":  "No deleted src/tests/docs paths in git diff --diff-filter=D.",
+                       "Verdict":  "PASS",
+                       "Surface":  "B",
+                       "Id":  "B6"
+                   },
+                   {
+                       "Summary":  "mcpserver-box discovery failed. Session-log verdict not persisted.",
+                       "Verdict":  "UNKNOWN",
+                       "Surface":  "B",
+                       "Id":  "B7"
+                   },
+                   {
+                       "Summary":  "AC-RIDE-031-001 and AC-RIDE-031-002 covered while tests assert Play and reproducible signing are false. Siblings GPL-003 stay deferred.",
+                       "Verdict":  "FAIL",
+                       "Surface":  "C",
+                       "Id":  "C1"
+                   },
+                   {
+                       "Summary":  "Ledger, plan, and YAML isSatisfied false refuse to treat suite green as AC satisfaction.",
+                       "Verdict":  "PASS",
+                       "Surface":  "C",
+                       "Id":  "C2"
+                   },
+                   {
+                       "Summary":  "Same evidence as A8.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D1"
+                   },
+                   {
+                       "Summary":  "Same evidence as A9.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D2"
+                   },
+                   {
+                       "Summary":  "Same evidence as A10.",
+                       "Verdict":  "PASS",
+                       "Surface":  "D",
+                       "Id":  "D3"
+                   }
+               ],
+    "PriorReceipt":  "F:\\GitHub\\rideaudit\\docs\\receipts\\hostile-validator-20260929T035617Z.md",
+    "RequestJsonl":  "F:\\GitHub\\rideaudit\\docs\\receipts\\hv\\20260929T041746Z-ledger-honesty.request.jsonl",
+    "ResponseJsonl":  "F:\\GitHub\\rideaudit\\docs\\receipts\\hv\\20260929T041746Z-ledger-honesty.response.jsonl"
+}

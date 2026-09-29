@@ -35,6 +35,8 @@ public class TestRide037CompanionAuthority
     [Trait("TEST", "TEST-RIDE-037")]
     [Trait("FR", "FR-RIDE-060")]
     [Trait("AC", "AC-RIDE-060-001")]
+    [Trait("AC", "AC-RIDE-060-002")]
+    [Trait("AC", "AC-UC-029-001")]
     public void Protos_publish_gpl_notice_and_grpc_authority()
     {
         var protoRoot = Path.Combine(Root, "src/RideAudit.Protos/Protos");
@@ -57,6 +59,9 @@ public class TestRide037CompanionAuthority
     [Trait("FR", "FR-RIDE-062")]
     [Trait("TR", "TR-RIDE-SERVER-010")]
     [Trait("AC", "AC-RIDE-062-002")]
+    [Trait("AC", "AC-UC-031-001")]
+    [Trait("AC", "AC-TEST-037-001")]
+    [Trait("AC", "AC-TEST-037-002")]
     public void Conformance_binds_to_grpc_when_the_companion_disagrees()
     {
         Assert.Equal("grpc-protobuf", ContractAuthority.BindConformanceSource());
@@ -81,6 +86,13 @@ public class TestRide020LicensingPartition
     [Trait("TEST", "TEST-RIDE-020")]
     [Trait("FR", "FR-RIDE-029")]
     [Trait("AC", "AC-RIDE-029-001")]
+    [Trait("AC", "AC-RIDE-217-001")]
+    [Trait("AC", "AC-RIDE-217-002")]
+    [Trait("AC", "AC-RIDE-GPL-001-001")]
+    [Trait("AC", "AC-RIDE-GPL-001-002")]
+    [Trait("AC", "AC-RIDE-GPL-002-001")]
+    [Trait("AC", "AC-UC-013-001")]
+    [Trait("AC", "AC-TEST-020-001")]
     public void License_is_gpl_2_and_not_replaced_by_mit_or_apache()
     {
         var root = ServerWorld.RepoRoot();
@@ -107,6 +119,9 @@ public class TestRide020LicensingPartition
     [Trait("FR", "FR-RIDE-030")]
     [Trait("AC", "AC-RIDE-030-001")]
     [Trait("AC", "AC-RIDE-030-002")]
+    [Trait("AC", "AC-RIDE-GPL-002-002")]
+    [Trait("AC", "AC-UC-013-002")]
+    [Trait("AC", "AC-TEST-020-002")]
     public void Notices_state_sealed_payloads_stay_access_controlled()
     {
         var notice = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "NOTICE"));

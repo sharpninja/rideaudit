@@ -27,8 +27,8 @@ public class AcCoverageLedgerTests
             foreach (Match match in AcId.Matches(text))
             {
                 var id = match.Groups[1].Value;
-                var window = text.Substring(match.Index, Math.Min(400, text.Length - match.Index));
-                records.Add(new AcRecord(id, Path.GetFileName(file), window));
+                var acText = ExtractAcText(text, match.Index);
+                records.Add(new AcRecord(id, Path.GetFileName(file), acText));
             }
         }
 
@@ -45,25 +45,28 @@ public class AcCoverageLedgerTests
 
         var rows = unique.Select(record =>
         {
-            if (named.Contains(record.Id))
-                return (record.Id, record.Source, "covered", "Named in executable test source.");
             var deferred = ClassifyDeferred(record);
-            return deferred is null
-                ? (record.Id, record.Source, "missing", "No test source reference and no deferred live-integration reason.")
-                : (record.Id, record.Source, "deferred", deferred);
+            if (deferred is not null)
+                return (record.Id, record.Source, "deferred", deferred);
+            return named.Contains(record.Id)
+                ? (record.Id, record.Source, "covered", "Named in executable test source. Not semantic closure.")
+                : (record.Id, record.Source, "missing", "No test source reference and no deferred live-integration reason.");
         }).ToList();
 
         var covered = rows.Count(row => row.Item3 == "covered");
         var deferred = rows.Count(row => row.Item3 == "deferred");
         var missing = rows.Count(row => row.Item3 == "missing");
         Assert.True(covered >= 170, "Coverage ledger regressed below the rem-r2 named-AC count.");
+        var missingIds = rows.Where(row => row.Item3 == "missing").Select(row => row.Item1).ToArray();
+        Assert.True(missing == 0, "Uncovered AC ids remain: " + string.Join(", ", missingIds));
+        Assert.Equal(rows.Count, covered + deferred);
 
         var output = new StringBuilder();
         output.AppendLine("# RideAudit AC coverage ledger");
         output.AppendLine();
         output.AppendLine("Generated: 2026-09-28. Workspace: PAYTON-LEGION2. Not a claim that all ACs are satisfied.");
         output.AppendLine();
-        output.AppendLine("Statuses: `covered` = AC ID appears in `tests/**/*.cs`; `deferred` = live hardware/Play/HSM/partnership/Caddy-TLS proof this tree does not claim; `missing` = no test reference yet. A covered row is a name in test source, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is PAYTON-DESKTOP admission 192.168.0.149:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
+        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/partnership/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is PAYTON-DESKTOP admission 192.168.0.149:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
         output.AppendLine();
         output.AppendLine("| Status | Count |");
         output.AppendLine("| --- | ---: |");
@@ -86,15 +89,46 @@ public class AcCoverageLedgerTests
         Assert.Equal(0, rows.Count(row => string.IsNullOrWhiteSpace(row.Item4)));
     }
 
+    private static Dictionary<string, string> LoadExplicitDeferrals()
+    {
+        var path = Path.Combine(Repo.Root(), "docs", "receipts", "ac-coverage", "explicit-deferrals.txt");
+        var map = new Dictionary<string, string>(StringComparer.Ordinal);
+        if (!File.Exists(path))
+            return map;
+        foreach (var line in File.ReadAllLines(path))
+        {
+            if (line.Length == 0 || line[0] == '#')
+                continue;
+            var tab = line.IndexOf('\t');
+            if (tab <= 0)
+                continue;
+            map[line[..tab]] = line[(tab + 1)..];
+        }
+        return map;
+    }
+
+    private static string ExtractAcText(string text, int idIndex)
+    {
+        var slice = text.Substring(idIndex, Math.Min(500, text.Length - idIndex));
+        var quoted = Regex.Match(slice, "text:\\s*\"([^\"]*)\"");
+        if (quoted.Success)
+            return quoted.Groups[1].Value;
+        var plain = Regex.Match(slice, "text:\\s*([^\\r\\n]+)");
+        return plain.Success ? plain.Groups[1].Value.Trim() : string.Empty;
+    }
+
     private static string? ClassifyDeferred(AcRecord record)
     {
+        var explicitMap = LoadExplicitDeferrals();
+        if (explicitMap.TryGetValue(record.Id, out var explicitReason))
+            return explicitReason;
         var blob = record.Id + " " + record.Window;
         if (ContainsAny(blob, "Play Store", "Play publication", "published on Google Play"))
             return "Deferred: Play Store publication is not claimed in this tree.";
         if (ContainsAny(blob, "hardware HSM", "live HSM", "HSM hardware"))
             return "Deferred: hardware HSM is not integrated; in-process Shamir remains labeled.";
-        if (ContainsAny(blob, "GHCR", "CD green", "signed release", "Development/Staging/Production"))
-            return "Deferred: lab loopback is not production CD or GHCR.";
+        if (ContainsAny(blob, "CD green", "signed release", "Development/Staging/Production"))
+            return "Deferred: lab loopback is not production CD.";
         if (ContainsAny(blob, "physical dual-phone", "two physical", "Bluetooth media", "H.264"))
             return "Deferred: physical dual-phone media transport / production H.264 is not implemented.";
         if (ContainsAny(blob, "live Bitcoin", "txid", "OpenTimestamps confirmation", "confirmed Bitcoin"))
@@ -103,7 +137,7 @@ public class AcCoverageLedgerTests
             return "Deferred: public L2 refuses commit without a signer.";
         if (ContainsAny(blob, "Caddy", "edge TLS", "TLS 1.2"))
             return "Deferred: Omarchy loopback is not an edge TLS receipt.";
-        if (ContainsAny(blob, "Concierge", "Lyft private", "partnership"))
+        if (ContainsAny(blob, "Concierge", "partnership"))
             return "Deferred: Lyft partnership / Concierge live path is not enabled.";
         if (ContainsAny(blob, "vehicle-fit", "on-vehicle print", "road release"))
             return "Deferred: hardware mount road-fit is operator checklist work.";
