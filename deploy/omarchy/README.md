@@ -60,3 +60,14 @@ pwsh -NoProfile -File deploy/omarchy/Confirm-Cutover.ps1
 After merge, the coordinator may pass `-ConfirmCutover` to run compose on loopback `:18080`. Leave calendars unset to fail closed. Production refuses `documented-fixture` and `RIDEAUDIT_PLAY_INTEGRITY=fixture`. Do not `docker compose down` Octopus/SQL/Caddy. Put TLS 1.2+ on the existing Caddy edge if this host should be reachable beyond loopback.
 
 This agent does not pass `-ConfirmCutover`.
+
+## ngrok (interim public URL)
+
+Admission remains bound to Omarchy loopback `:18080`. The current public path is an ngrok tunnel started from LEGION2; the target host after Octopus CD is PAYTON-DESKTOP (FR-RIDE-063). Token via `~/.creds/ngrok.yml`, never git. See [ngrok/README.md](ngrok/README.md).
+
+```powershell
+pwsh -NoProfile -File deploy/omarchy/ngrok/Start-Ngrok.ps1
+pwsh -NoProfile -File deploy/omarchy/ngrok/Stop-Ngrok.ps1
+```
+
+No GHCR. A down tunnel is not advertised as a live URL.
