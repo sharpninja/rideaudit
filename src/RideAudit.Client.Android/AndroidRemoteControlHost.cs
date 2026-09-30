@@ -4,6 +4,7 @@
 using System.Net;
 using System.Security.Cryptography;
 using Android.Content;
+using Android.Util;
 using Avalonia.Controls;
 using Avalonia.RemoteControl.Server;
 using Avalonia.RemoteControl.Server.Bridge;
@@ -13,22 +14,26 @@ using RideAudit.Shared.Ui;
 namespace RideAudit.Client.Android;
 
 /// <summary>
-/// Debug-only loopback bridge for SharpNinja.Avalonia.RemoteControl.
+/// Debug-only loopback bridge for SharpNinja.Avalonia.RemoteControl.Runtime.
+/// The listener requests port 0. The marker records the port the OS assigned.
 /// The token is random per process and is written only to the package-private marker.
 /// </summary>
 public sealed class AndroidRemoteControlHost : IDisposable
 {
-    public const int DevicePort = 47100;
+    private const string LogTag = "RideAuditRemote";
 
     private readonly ServiceProvider serviceProvider;
     private readonly RemoteControlBridgeTcpListener listener;
+    private readonly string markerPath;
 
     private AndroidRemoteControlHost(
         ServiceProvider serviceProvider,
-        RemoteControlBridgeTcpListener listener)
+        RemoteControlBridgeTcpListener listener,
+        string markerPath)
     {
         this.serviceProvider = serviceProvider;
         this.listener = listener;
+        this.markerPath = markerPath;
     }
 
     public static Task<AndroidRemoteControlHost> StartAsync(
@@ -42,8 +47,21 @@ public sealed class AndroidRemoteControlHost : IDisposable
     public void Dispose()
     {
         // The TCP listener is IAsyncDisposable only. Sync ServiceProvider.Dispose throws.
-        listener.DisposeAsync().AsTask().GetAwaiter().GetResult();
-        serviceProvider.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        try
+        {
+            listener.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        }
+        finally
+        {
+            try
+            {
+                DeleteMarker(markerPath);
+            }
+            finally
+            {
+                serviceProvider.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            }
+        }
     }
 
     private static async Task<AndroidRemoteControlHost> StartCoreAsync(
@@ -51,12 +69,17 @@ public sealed class AndroidRemoteControlHost : IDisposable
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        var markerDirectory = context.FilesDir?.AbsolutePath
+            ?? throw new InvalidOperationException("Android package files directory is unavailable.");
+        var markerPath = Path.Combine(markerDirectory, RemoteControlBridgeEndpointMarker.FileName);
+        DeleteMarker(markerPath);
+
         var services = new ServiceCollection();
         services.AddAvaloniaRemoteControlRuntime(options =>
         {
             options.IsEnabled = true;
             options.Host = IPAddress.Loopback;
-            options.Port = DevicePort;
+            options.Port = 0;
             options.RequireAuthentication = true;
             options.AuthenticationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
             options.IsAdbTunnel = true;
@@ -73,31 +96,46 @@ public sealed class AndroidRemoteControlHost : IDisposable
         {
             var listener = provider.GetRequiredService<RemoteControlBridgeTcpListener>();
             await listener.StartAsync(cancellationToken).ConfigureAwait(false);
-            var markerDirectory = context.FilesDir?.AbsolutePath
-                ?? throw new InvalidOperationException("Android package files directory is unavailable.");
-            await listener.CreateEndpointMarker()
-                .WriteAsync(markerDirectory, cancellationToken)
-                .ConfigureAwait(false);
-            return new AndroidRemoteControlHost(provider, listener);
+            var marker = listener.CreateEndpointMarker();
+            await marker.WriteAsync(markerDirectory, cancellationToken).ConfigureAwait(false);
+            Log.Info(LogTag, "Avalonia.RemoteControl bound loopback port " + marker.DevicePort + ".");
+            return new AndroidRemoteControlHost(provider, listener, markerPath);
         }
         catch (Exception startFailure)
         {
-            Exception? disposeFailure = null;
+            Exception? cleanupFailure = null;
+            try
+            {
+                DeleteMarker(markerPath);
+            }
+            catch (Exception ex)
+            {
+                cleanupFailure = ex;
+            }
+
             try
             {
                 await provider.DisposeAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                disposeFailure = ex;
+                cleanupFailure = cleanupFailure is null ? ex : new AggregateException(cleanupFailure, ex);
             }
 
-            if (disposeFailure is not null)
+            if (cleanupFailure is not null)
             {
-                throw new AggregateException(startFailure, disposeFailure);
+                throw new AggregateException(startFailure, cleanupFailure);
             }
 
             throw;
+        }
+    }
+
+    private static void DeleteMarker(string markerPath)
+    {
+        if (File.Exists(markerPath))
+        {
+            File.Delete(markerPath);
         }
     }
 
