@@ -41,8 +41,9 @@ public sealed class AndroidRemoteControlHost : IDisposable
 
     public void Dispose()
     {
+        // The TCP listener is IAsyncDisposable only. Sync ServiceProvider.Dispose throws.
         listener.DisposeAsync().AsTask().GetAwaiter().GetResult();
-        serviceProvider.Dispose();
+        serviceProvider.DisposeAsync().AsTask().GetAwaiter().GetResult();
     }
 
     private static async Task<AndroidRemoteControlHost> StartCoreAsync(
@@ -79,9 +80,23 @@ public sealed class AndroidRemoteControlHost : IDisposable
                 .ConfigureAwait(false);
             return new AndroidRemoteControlHost(provider, listener);
         }
-        catch
+        catch (Exception startFailure)
         {
-            provider.Dispose();
+            Exception? disposeFailure = null;
+            try
+            {
+                await provider.DisposeAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                disposeFailure = ex;
+            }
+
+            if (disposeFailure is not null)
+            {
+                throw new AggregateException(startFailure, disposeFailure);
+            }
+
             throw;
         }
     }
