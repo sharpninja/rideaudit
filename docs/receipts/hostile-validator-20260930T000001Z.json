@@ -1,0 +1,139 @@
+{
+  "TimestampUtc": "2026-09-30T00:00:01Z",
+  "ValidatorIdentity": "GrokSubagentHostile",
+  "AddProfileExecuted": true,
+  "ProfileFileCount": 19,
+  "Workspace": "F:\\GitHub\\rideaudit-ui-font",
+  "Head": "418b4adaf32203b1febcf15c826420eb2445430b",
+  "WorkClass": "MIXED",
+  "AccuracyScore": 98,
+  "CompletenessScore": 94,
+  "OverallVerdict": "DISAGREE",
+  "ReceiptMarkdown": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hostile-validator-20260930T000001Z.md",
+  "RequestJsonl": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20260930T000001Z-usability-fail-transport.request.jsonl",
+  "ResponseJsonl": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20260930T000001Z-usability-fail-transport.response.jsonl",
+  "FailList": [
+    "A3 WF-04 uiautomator dump is a third failure mode on the 23:02:11Z run",
+    "B5 honesty: transport cause does not match terminal 817049.txt"
+  ],
+  "UnknownList": [
+    "Live MCP requirements store was not queried",
+    "MCP session-log turn was not persisted"
+  ],
+  "Claims": [
+    {
+      "Id": "A1",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "20:47:07Z receipt is 16 wireframe cases and 12 storyboard cases, Passed 0, withinThreshold 0"
+    },
+    {
+      "Id": "A2",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "That run is not a pixel or usability pass and is not visual AGREE"
+    },
+    {
+      "Id": "A3",
+      "Verdict": "FAIL",
+      "Surface": "A",
+      "Text": "23:02:11Z run Failed 28 Passed 0 before pixel scoring solely because of 1048576 or bridge end; no committed receipt"
+    },
+    {
+      "Id": "A4",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "418b4ad raised frame read limit; 817050 stopped before a complete catalog"
+    },
+    {
+      "Id": "A5",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "06fa781 and e9698db moved CaptureShellView toward WF-01..WF-08 without claiming pixel agreement"
+    },
+    {
+      "Id": "A6",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "Fail receipt did not mark FR-RIDE-073, FR-RIDE-074, storyboard AC, or plan section 9 satisfied"
+    },
+    {
+      "Id": "A7",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "Edge was not re-paired; 10061 was recorded; fail receipt does not treat Edge as tested"
+    },
+    {
+      "Id": "A8",
+      "Verdict": "PASS",
+      "Surface": "A",
+      "Text": "817050 has no completed Passed! or Failed! xUnit footer"
+    },
+    {
+      "Id": "B1",
+      "Verdict": "N/A",
+      "Surface": "B",
+      "Text": "Byrd phase-order not scored post-hoc; no phase-complete claim"
+    },
+    {
+      "Id": "B2",
+      "Verdict": "PASS",
+      "Surface": "B",
+      "Text": "20:47:07Z receipt hash matches results.jsonl"
+    },
+    {
+      "Id": "B3",
+      "Verdict": "PASS",
+      "Surface": "B",
+      "Text": "No direct isSatisfied true write observed"
+    },
+    {
+      "Id": "B4",
+      "Verdict": "PASS",
+      "Surface": "B",
+      "Text": "Inspected lab runs are dotnet, not Python"
+    },
+    {
+      "Id": "B5",
+      "Verdict": "FAIL",
+      "Surface": "B",
+      "Text": "Transport cause statement does not match 817049.txt WF-04"
+    },
+    {
+      "Id": "B6",
+      "Verdict": "PASS",
+      "Surface": "B",
+      "Text": "No look-before-delete violation in reviewed commits"
+    },
+    {
+      "Id": "B7",
+      "Verdict": "UNKNOWN",
+      "Surface": "B",
+      "Text": "MCP session-log turn not persisted"
+    },
+    {
+      "Id": "C1",
+      "Verdict": "PASS",
+      "Surface": "C",
+      "Text": "Named requirement records remain isSatisfied false on disk"
+    },
+    {
+      "Id": "C2",
+      "Verdict": "PASS",
+      "Surface": "C",
+      "Text": "Fail receipt does not close storyboard or plan AC"
+    },
+    {
+      "Id": "D1",
+      "Verdict": "PASS",
+      "Surface": "D",
+      "Text": "Plan section 9 boxes remain unchecked"
+    },
+    {
+      "Id": "D2",
+      "Verdict": "PASS",
+      "Surface": "D",
+      "Text": "No visual agreement or storyboard AC checkbox is checked"
+    }
+  ]
+}
