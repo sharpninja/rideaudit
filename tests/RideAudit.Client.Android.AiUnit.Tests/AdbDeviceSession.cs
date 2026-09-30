@@ -43,15 +43,8 @@ public sealed class AdbDeviceSession
             .Where(line => line.Contains(" device ", StringComparison.Ordinal) || line.EndsWith(" device", StringComparison.Ordinal))
             .Where(line => !line.StartsWith("List of devices", StringComparison.Ordinal))
             .ToList();
-        if (rows.Count == 0)
-        {
-            throw new InvalidOperationException("No adb device is attached. Device visual tests fail closed.");
-        }
-
-        var preferred = rows.FirstOrDefault(line => line.StartsWith(PreferredSerial + " ", StringComparison.Ordinal)
-            || line.StartsWith(PreferredSerial + "\t", StringComparison.Ordinal));
-        var chosen = preferred ?? rows.FirstOrDefault(line => line.Contains("motorola_edge_2024", StringComparison.OrdinalIgnoreCase))
-            ?? rows[0];
+        var requested = Environment.GetEnvironmentVariable("RIDEAUDIT_ADB_SERIAL");
+        var chosen = ChooseLine(rows, requested);
         var serial = chosen.Split([' ', '\t'], StringSplitOptions.RemoveEmptyEntries)[0];
         var model = "unknown";
         var modelMatch = Regex.Match(chosen, @"model:(\S+)");
@@ -61,6 +54,36 @@ public sealed class AdbDeviceSession
         }
 
         return new AdbDeviceSession(adb, serial, model);
+    }
+
+    public static string ChooseLine(IReadOnlyList<string> rows, string? requestedSerial)
+    {
+        if (rows.Count == 0)
+        {
+            throw new InvalidOperationException("No adb device is attached. Device visual tests fail closed.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(requestedSerial))
+        {
+            var wanted = requestedSerial.Trim();
+            var match = rows.FirstOrDefault(line =>
+                line.StartsWith(wanted + " ", StringComparison.Ordinal)
+                || line.StartsWith(wanted + "\t", StringComparison.Ordinal)
+                || string.Equals(line, wanted, StringComparison.Ordinal));
+            if (match is null)
+            {
+                throw new InvalidOperationException(
+                    "RIDEAUDIT_ADB_SERIAL '" + wanted + "' is not an attached device. Device visual tests fail closed.");
+            }
+
+            return match;
+        }
+
+        var preferred = rows.FirstOrDefault(line => line.StartsWith(PreferredSerial + " ", StringComparison.Ordinal)
+            || line.StartsWith(PreferredSerial + "\t", StringComparison.Ordinal));
+        return preferred
+            ?? rows.FirstOrDefault(line => line.Contains("motorola_edge_2024", StringComparison.OrdinalIgnoreCase))
+            ?? rows[0];
     }
 
     public void RestartApp()
