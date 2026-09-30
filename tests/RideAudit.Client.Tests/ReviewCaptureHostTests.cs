@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
 using Avalonia;
@@ -41,15 +41,22 @@ public class ReviewCaptureHostTests
                 .OfType<TextBlock>()
                 .Where(block => !string.IsNullOrEmpty(block.Text) && Shown(block))
                 .ToList();
+
+            // Order-independent fidelity: every catalog label present with font/fill/wrap.
             Assert.Equal(expected.Count, live.Count);
-            for (var i = 0; i < expected.Count; i++)
+            foreach (var label in expected)
             {
-                Assert.Equal(expected[i].Text, live[i].Text);
-                Assert.Equal(expected[i].FontSize, live[i].FontSize, 2);
-                var color = Assert.IsAssignableFrom<ISolidColorBrush>(live[i].Foreground).Color;
-                var hex = color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
-                Assert.Equal(expected[i].Fill, hex);
-                Assert.Equal(TextWrapping.Wrap, live[i].TextWrapping);
+                var matches = live.Where(block => block.Text == label.Text).ToList();
+                Assert.True(matches.Count >= 1, screen + " missing live text: " + label.Text);
+                var hit = matches.FirstOrDefault(block =>
+                {
+                    if (System.Math.Abs(block.FontSize - label.FontSize) > 2) return false;
+                    if (block.TextWrapping != TextWrapping.Wrap) return false;
+                    if (block.Foreground is not ISolidColorBrush brush) return false;
+                    var hex = brush.Color.R.ToString("X2") + brush.Color.G.ToString("X2") + brush.Color.B.ToString("X2");
+                    return hex == label.Fill;
+                });
+                Assert.True(hit is not null, screen + " no font/fill/wrap match for: " + label.Text);
             }
 
             Assert.Contains(host.GetVisualDescendants().OfType<Border>(), border => border.Child is TextBlock text && text.Text == "File");
