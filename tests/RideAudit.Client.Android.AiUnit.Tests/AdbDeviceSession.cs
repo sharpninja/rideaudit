@@ -99,15 +99,30 @@ public sealed class AdbDeviceSession
         }
 
         Thread.Sleep(800);
-        var window = Shell("dumpsys window", TimeSpan.FromSeconds(20));
-        if (!CurrentFocusIsPackage(window.Text, PackageName))
+        string? focus = null;
+        for (var attempt = 0; attempt < 8; attempt++)
         {
-            throw new InvalidOperationException(
-                "RideAudit is not the resumed window. A screenshot would not show the capture client.");
+            var window = Shell("dumpsys window", TimeSpan.FromSeconds(20));
+            focus = LastCurrentFocus(window.Text);
+            if (focus is not null && focus.Contains(PackageName, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            Thread.Sleep(1000);
         }
+
+        var shown = focus ?? "(none)";
+        if (shown.Length > 180)
+        {
+            shown = shown.Substring(0, 180);
+        }
+
+        throw new InvalidOperationException(
+            "RideAudit is not the resumed window. mCurrentFocus=" + shown);
     }
 
-    private static bool CurrentFocusIsPackage(string dumpsys, string packageName)
+    private static string? LastCurrentFocus(string dumpsys)
     {
         string? focus = null;
         foreach (var raw in dumpsys.Split('\n'))
@@ -121,7 +136,7 @@ public sealed class AdbDeviceSession
             }
         }
 
-        return focus is not null && focus.Contains(packageName, StringComparison.Ordinal);
+        return focus;
     }
 
     public string DumpUi()
