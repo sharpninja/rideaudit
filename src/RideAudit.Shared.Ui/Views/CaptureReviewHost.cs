@@ -36,7 +36,7 @@ public class CaptureReviewHost : Grid
 
     private static readonly HashSet<string> PrimaryActions = new(System.StringComparer.Ordinal)
     {
-        "Open bundle", "Quit", "Open OTS provenance", "Save report",
+        "Open bundle", "Quit", "Run verification", "Open OTS provenance", "Save report",
         "Continue to escrow", "Fail-closed history", "View full report", "Return to bundle",
         "Export fail report", "Attach CourtRelease", "Request custodian approvals", "Cancel",
         "Play", "Pause", "Verification report", "Build pack",
@@ -92,22 +92,13 @@ public class CaptureReviewHost : Grid
 
         var body = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("152,*"),
+            ColumnDefinitions = new ColumnDefinitions("148,*"),
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            ColumnSpacing = 6,
         };
-        var rail = new Border
-        {
-            Background = Brush("173E66"),
-            CornerRadius = new CornerRadius(12),
-            Margin = new Thickness(0, 0, 6, 0),
-            Padding = new Thickness(8, 10, 8, 10),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
-        Grid.SetColumn(rail, 0);
-        body.Children.Add(rail);
 
         var rowIndex = 0;
+        var hasSidebar = false;
         foreach (var row in GroupRows(labels))
         {
             // Only the top chrome strip is nav. Later "Verify"/"Escrow"/… actions share
@@ -124,15 +115,24 @@ public class CaptureReviewHost : Grid
 
             if (left.Count > 0)
             {
+                hasSidebar = true;
                 var leftStack = new StackPanel { Spacing = 4 };
                 foreach (var label in left)
                 {
                     leftStack.Children.Add(BuildSidebarChrome(label));
                 }
 
-                Grid.SetColumn(leftStack, 0);
-                Grid.SetRow(leftStack, rowIndex);
-                body.Children.Add(leftStack);
+                var leftRail = new Border
+                {
+                    Background = Brush("173E66"),
+                    CornerRadius = new CornerRadius(10),
+                    Padding = new Thickness(8, 6, 8, 6),
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Child = leftStack,
+                };
+                Grid.SetColumn(leftRail, 0);
+                Grid.SetRow(leftRail, rowIndex);
+                body.Children.Add(leftRail);
             }
 
             if (right.Count > 0)
@@ -146,13 +146,13 @@ public class CaptureReviewHost : Grid
             rowIndex++;
         }
 
-        if (rowIndex > 0)
+        if (!hasSidebar)
         {
-            Grid.SetRowSpan(rail, rowIndex);
-        }
-        else
-        {
-            body.Children.Remove(rail);
+            body.ColumnDefinitions = new ColumnDefinitions("*");
+            foreach (var child in body.Children.OfType<Control>())
+            {
+                Grid.SetColumn(child, 0);
+            }
         }
 
         root.Children.Add(body);
@@ -212,10 +212,11 @@ public class CaptureReviewHost : Grid
 
     private static Control BuildNav(IReadOnlyList<ReviewLabel> row)
     {
+        // Compact single-row StackPanel — no ScrollViewer (PART_* overlaps File/Help).
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 2,
+            Spacing = 1,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
         foreach (var label in row)
@@ -227,8 +228,8 @@ public class CaptureReviewHost : Grid
                 BorderBrush = Brush(active ? "173E66" : "C5D0DC"),
                 BorderThickness = new Thickness(0, 0, 0, active ? 2 : 1),
                 CornerRadius = new CornerRadius(6),
-                Padding = new Thickness(6, 4, 6, 4),
-                Child = MakeText(label, active ? "D5E4F2" : "F4F7FA", 72),
+                Padding = new Thickness(4, 3, 4, 3),
+                Child = MakeText(label, active ? "D5E4F2" : "F4F7FA", 52),
             });
         }
 
@@ -237,14 +238,9 @@ public class CaptureReviewHost : Grid
             Background = Brush("FFFFFF"),
             BorderBrush = Brush("C5D0DC"),
             BorderThickness = new Thickness(0, 0, 0, 1),
-            Padding = new Thickness(2, 4, 2, 4),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Child = new ScrollViewer
-            {
-                HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Disabled,
-                Content = panel,
-            },
+            Padding = new Thickness(1, 2, 1, 2),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = panel,
         };
     }
 
