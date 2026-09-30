@@ -114,8 +114,10 @@ public static class UsabilityInspector
             return new UsabilityCheck("low-contrast", "not-detectable", "No visible text bounds to sample.", "no text node");
         }
 
-        var rootWidth = nodes.Max(node => node.AbsoluteBounds.X + node.AbsoluteBounds.Width);
-        var rootHeight = nodes.Max(node => node.AbsoluteBounds.Y + node.AbsoluteBounds.Height);
+        // Invisible / off-tree pages inflate extents and mis-map crops onto chrome.
+        var visibleNodes = nodes.Where(node => EffectivelyVisible(node, byId)).ToList();
+        var rootWidth = visibleNodes.Max(node => node.AbsoluteBounds.X + node.AbsoluteBounds.Width);
+        var rootHeight = visibleNodes.Max(node => node.AbsoluteBounds.Y + node.AbsoluteBounds.Height);
         if (rootWidth < 8 || rootHeight < 8)
         {
             return new UsabilityCheck("low-contrast", "not-detectable", "Tree bounds are too small to map onto the screenshot.", "root " + rootWidth.ToString("0") + "x" + rootHeight.ToString("0"));
@@ -163,29 +165,40 @@ public static class UsabilityInspector
             }
 
             samples.Sort();
-            var dark = samples[(int)(samples.Count * 0.05)];
-            var light = samples[(int)(samples.Count * 0.95)];
-            if (light - dark < 0.02)
+            var lightPeak = samples[(int)(samples.Count * 0.95)];
+            var darkPeak = samples[(int)(samples.Count * 0.05)];
+            if (lightPeak - darkPeak < 0.02)
             {
                 continue;
             }
 
-            // Short-label and near-flat crops report a false low ratio when the
-            // 5th/95th span is only background noise. Require a real luminance
-            // gap and enough darker-than-background ink before measuring.
+            // Ink cluster: true text is substantially darker than paper. Mid chrome
+            // grays (nav/field borders ~C5D0DC) must not become the "dark" sample.
+            var inkFloor = lightPeak - 0.35;
+            var inkSamples = samples.Where(sample => sample <= inkFloor).ToList();
+            var bgSamples = samples.Where(sample => sample >= lightPeak - 0.08).ToList();
+            if (inkSamples.Count < 24 || inkSamples.Count < samples.Count * 0.08)
+            {
+                // Sparse/misfit crops (short-label dilution or mis-mapped chrome).
+                continue;
+            }
+
+            if (bgSamples.Count < 24)
+            {
+                continue;
+            }
+
+            inkSamples.Sort();
+            bgSamples.Sort();
+            var dark = inkSamples[inkSamples.Count / 2];
+            var light = bgSamples[bgSamples.Count / 2];
             if (light - dark < 0.15)
             {
                 continue;
             }
 
-            var ink = samples.Count(sample => sample <= light - 0.12);
-            if (ink < samples.Count * 0.08 || ink < 24)
-            {
-                continue;
-            }
-
             measured++;
-            var ratio = (Math.Max(light, dark) + 0.05) / (Math.Min(light, dark) + 0.05);
+            var ratio = (light + 0.05) / (dark + 0.05);
             var font = FontSize(node);
             var minimum = font >= 18 ? 3.0 : 4.5;
             if (ratio + 0.01 < minimum)
