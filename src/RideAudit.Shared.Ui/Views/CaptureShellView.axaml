@@ -257,7 +257,7 @@
           <Grid ColumnDefinitions="Auto,*">
             <controls:WireframeIcon Kind="bluetooth" MarkBrush="#173E66" VerticalAlignment="Top" />
             <StackPanel Grid.Column="1" Margin="10,0,0,0" Spacing="6">
-              <TextBlock FontWeight="Bold" FontSize="13" Text="Scanning for RideAudit peers." />
+              <TextBlock FontWeight="Bold" FontSize="13" Text="Scanning for RideAudit peers" />
               <TextBlock x:Name="PairingStatus" IsVisible="False" Text="Scanning for RideAudit peers." />
               <Border Classes="pill" Background="#E7F1FA">
                 <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="Invite 7K2M" />
@@ -411,8 +411,8 @@
         </Border>
         <CheckBox x:Name="ConfirmCheck" Margin="0,4,0,4">
           <StackPanel Spacing="0">
-            <TextBlock Text="I confirm the driver role and" />
-            <TextBlock Text="shared session intent." />
+            <TextBlock FontSize="13" Text="I confirm the driver role and" />
+            <TextBlock FontSize="13" Text="shared session intent." />
           </StackPanel>
         </CheckBox>
         <Grid ColumnDefinitions="*,12,*">
