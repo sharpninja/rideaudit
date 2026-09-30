@@ -37,6 +37,21 @@ public static class StoryboardSequence
         return PathClicks(currentScreen, step.ScreenId, role);
     }
 
+    public static string UndrivenReason(string current, StoryboardStep step)
+    {
+        if (step.ScreenId.StartsWith("WF-R-", StringComparison.Ordinal))
+        {
+            return "review screen is not hosted on the Android capture client";
+        }
+
+        if (step.AlternateBranch)
+        {
+            return "alternate branch from " + current + " to " + step.ScreenId + " is not taken on this session";
+        }
+
+        return "cannot be driven from " + current + " to " + step.ScreenId + " without leaving the session";
+    }
+
     private static IReadOnlyList<string> SameScreenClicks(StoryboardStep step, string role)
     {
         if (step.ScreenId == "WF-01" && step.Title.Contains("role", StringComparison.OrdinalIgnoreCase))
@@ -82,12 +97,17 @@ public static class StoryboardSequence
 
         if (current == "WF-01" && target == "WF-06" && role == "driver")
         {
-            return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "StartButton", "StopButton" };
+            return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "SealLinkButton" };
         }
 
         if (current == "WF-01" && target == "WF-07" && role == "driver")
         {
-            return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "StartButton", "StopButton", "SubmitButton" };
+            return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "SealLinkButton", "SubmitButton" };
+        }
+
+        if (current == "WF-01" && target == "WF-08" && role == "driver")
+        {
+            return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "StartButton" };
         }
 
         if (current == "WF-02" && target == "WF-03")
@@ -102,12 +122,17 @@ public static class StoryboardSequence
 
         if (current == "WF-04" && target == "WF-06")
         {
-            return new[] { "StartButton", "StopButton" };
+            return new[] { "SealLinkButton" };
         }
 
         if (current == "WF-04" && target == "WF-07")
         {
-            return new[] { "StartButton", "StopButton", "SubmitButton" };
+            return new[] { "SealLinkButton", "SubmitButton" };
+        }
+
+        if (current == "WF-04" && target == "WF-08")
+        {
+            return new[] { "StartButton" };
         }
 
         if (current == "WF-06" && target == "WF-07")

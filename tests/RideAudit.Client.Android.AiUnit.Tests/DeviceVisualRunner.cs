@@ -76,11 +76,7 @@ public static class DeviceVisualRunner
                     var clicks = StoryboardSequence.Clicks(current, step, role);
                     if (clicks is null)
                     {
-                        var reason = step.ScreenId.StartsWith("WF-R-", StringComparison.Ordinal)
-                            ? "review screen is not hosted on the Android capture client"
-                            : step.AlternateBranch
-                                ? "alternate branch from " + current + " to " + step.ScreenId + " is not taken on this session"
-                                : "cannot be driven from " + current + " to " + step.ScreenId + " without leaving the session";
+                        var reason = StoryboardSequence.UndrivenReason(current, step);
                         failures.Add(frameId + " " + reason + ".");
                         AppendLog(new
                         {
@@ -158,9 +154,8 @@ public static class DeviceVisualRunner
                             failures.Add(frameId + " screen was '" + (actualScreen ?? "(missing)") + "', expected " + step.ScreenId + ".");
                         }
 
-                        advisories.Add(AdvisoryPixel(frameId, pixel));
-                        AddReflectionFailures(failures, frameId, usability);
-                        AddUsabilityFailures(failures, frameId, usability);
+                        advisories.Add(FidelityVerdict.AdvisoryPixel(frameId, pixel.DifferingPixelRatio, pixel.DiffPath));
+                        failures.AddRange(FidelityVerdict.Failures(frameId, usability));
                     }
                     catch (Exception ex)
                     {
@@ -293,9 +288,8 @@ public static class DeviceVisualRunner
                             failures.Add(frameId + " screen was '" + (actualScreen ?? "(missing)") + "', expected " + screenId + ".");
                         }
 
-                        advisories.Add(AdvisoryPixel(frameId, pixel));
-                        AddReflectionFailures(failures, frameId, usability);
-                        AddUsabilityFailures(failures, frameId, usability);
+                        advisories.Add(FidelityVerdict.AdvisoryPixel(frameId, pixel.DifferingPixelRatio, pixel.DiffPath));
+                        failures.AddRange(FidelityVerdict.Failures(frameId, usability));
                     }
                     finally
                     {
@@ -321,11 +315,6 @@ public static class DeviceVisualRunner
             throw new Xunit.Sdk.XunitException(string.Join(Environment.NewLine, failures.Concat(advisories)));
         }
     }
-
-    private static string AdvisoryPixel(string frameId, PixelCompareResult pixel) =>
-        frameId + " advisory pixel ratio " + pixel.DifferingPixelRatio.ToString("0.0000")
-        + " (numeric diff is not the pass or fail bar; reference "
-        + VisualThreshold.MaxDifferingPixelRatio.ToString("0.00") + "). Diff: " + pixel.DiffPath;
 
     private static List<UsabilityCheck> TreeChecks(
         RemoteBridgeSession remote,
@@ -354,38 +343,6 @@ public static class DeviceVisualRunner
         var perceptual = CodexVisualGate.Compare(screenId, actualPath, baselinePath);
         var status = perceptual.Status == "pass" ? "pass" : "fail-closed";
         return new UsabilityCheck("aiunit-frontier", status, perceptual.Detail, "codex-subscription image attachments");
-    }
-
-    private static void AddReflectionFailures(List<string> failures, string frameId, IReadOnlyList<UsabilityCheck> checks)
-    {
-        foreach (var check in checks)
-        {
-            if (check.Id is not ("controls" or "layout" or "style"))
-            {
-                continue;
-            }
-
-            if (check.Status is "fail" or "fail-closed")
-            {
-                failures.Add(frameId + " " + check.Id + " " + check.Status + ": " + check.Detail + " Evidence: " + check.Evidence);
-            }
-        }
-    }
-
-    private static void AddUsabilityFailures(List<string> failures, string frameId, IReadOnlyList<UsabilityCheck> checks)
-    {
-        foreach (var check in checks)
-        {
-            if (check.Id is "controls" or "layout" or "style")
-            {
-                continue;
-            }
-
-            if (check.Status is "fail" or "fail-closed")
-            {
-                failures.Add(frameId + " usability " + check.Id + " " + check.Status + ": " + check.Detail + " Evidence: " + check.Evidence);
-            }
-        }
     }
 
     private static string RedactException(Exception ex)
