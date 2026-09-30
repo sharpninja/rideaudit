@@ -144,10 +144,21 @@ public static class CodexVisualGate
                 }
             }
 
+            var summary = "";
+            if (json.RootElement.TryGetProperty("summary", out var summaryNode) && summaryNode.ValueKind == JsonValueKind.String)
+            {
+                summary = summaryNode.GetString() ?? "";
+                if (summary.Length > 400)
+                {
+                    summary = summary.Substring(0, 400);
+                }
+            }
+
             var axes = "controls=" + (controls ?? "(missing)")
                 + " layout=" + (layout ?? "(missing)")
                 + " style=" + (style ?? "(missing)")
-                + " defects=" + string.Join("; ", defects);
+                + " defects=" + string.Join("; ", defects)
+                + " summary=" + summary;
             if (controls is null || layout is null || style is null)
             {
                 return new PerceptualResult("fail-closed", "Response omitted controls, layout, or style. " + axes);
