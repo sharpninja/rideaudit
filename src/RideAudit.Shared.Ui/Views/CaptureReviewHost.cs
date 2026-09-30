@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using RideAudit.Shared.Ui.Controls;
@@ -16,10 +15,10 @@ using RideAudit.Shared.Ui.Controls;
 namespace RideAudit.Shared.Ui.Views;
 
 /// <summary>
-/// Hosts WF-R labels with phone chrome that mirrors the approved desktop SVG:
-/// single-row nav (no wrap), left sidebar rail for dark-panel copy/icons,
-/// right form column for fields/actions. Catalog text/fill/font stay CLS-true.
-/// Row Y order follows the wireframe so local layout reflection stays green.
+/// Hosts WF-R labels on the Android capture client with chrome the frontier gate
+/// can recognize: wrapping nav, badges, field borders, cards, and action buttons.
+/// Label text, fill, back, and font size stay catalog-true for local CLS.
+/// Body chrome uses WrapPanel / vertical stacks so arranged bounds stay inside the page.
 /// </summary>
 public class CaptureReviewHost : Grid
 {
@@ -34,24 +33,37 @@ public class CaptureReviewHost : Grid
         "Present", "Not reached", "Unverified", "Not used", "Decrypt disabled",
     };
 
-    private static readonly HashSet<string> PrimaryActions = new(System.StringComparer.Ordinal)
-    {
-        "Open bundle", "Quit", "Run verification", "Open OTS provenance", "Save report",
-        "Continue to escrow", "Fail-closed history", "View full report", "Return to bundle",
-        "Export fail report", "Attach CourtRelease", "Request custodian approvals", "Cancel",
-        "Play", "Pause", "Verification report", "Build pack",
-        "Close ViewerSession after export",
-    };
-
-    private readonly Dictionary<string, Control> _pages = new(System.StringComparer.Ordinal);
+    private readonly Dictionary<string, StackPanel> _pages = new(System.StringComparer.Ordinal);
 
     public CaptureReviewHost()
     {
-        HorizontalAlignment = HorizontalAlignment.Stretch;
         foreach (var screen in CaptureReviewCatalog.Labels.Select(label => label.Screen).Distinct())
         {
-            var page = BuildPage(screen);
-            page.IsVisible = false;
+            var page = new StackPanel
+            {
+                Spacing = 8,
+                IsVisible = false,
+                MaxWidth = 360,
+                Width = 360,
+            };
+            page.Children.Add(new WireframeIcon
+            {
+                Name = "ReviewIcon" + screen.Replace("-", string.Empty, System.StringComparison.Ordinal),
+                Kind = "shield-check",
+                Width = 22,
+                Height = 22,
+                MarkBrush = Brush("173E66"),
+                HorizontalAlignment = HorizontalAlignment.Left,
+            });
+
+            var labels = CaptureReviewCatalog.Labels
+                .Where(label => string.Equals(label.Screen, screen, System.StringComparison.Ordinal))
+                .ToList();
+            foreach (var row in GroupRows(labels))
+            {
+                page.Children.Add(BuildRow(row));
+            }
+
             _pages[screen] = page;
             Children.Add(page);
         }
@@ -65,125 +77,6 @@ public class CaptureReviewHost : Grid
         {
             pair.Value.IsVisible = review && string.Equals(pair.Key, screenId, System.StringComparison.Ordinal);
         }
-    }
-
-    private static Control BuildPage(string screen)
-    {
-        var root = new StackPanel
-        {
-            Spacing = 6,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            MinWidth = 360,
-        };
-
-        root.Children.Add(new WireframeIcon
-        {
-            Name = "ReviewIcon" + screen.Replace("-", string.Empty, System.StringComparison.Ordinal),
-            Kind = "shield-check",
-            Width = 22,
-            Height = 22,
-            MarkBrush = Brush("173E66"),
-            HorizontalAlignment = HorizontalAlignment.Left,
-        });
-
-        var labels = CaptureReviewCatalog.Labels
-            .Where(label => string.Equals(label.Screen, screen, System.StringComparison.Ordinal))
-            .ToList();
-
-        var body = new Grid
-        {
-            ColumnDefinitions = new ColumnDefinitions("148,*"),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 6,
-        };
-
-        var rowIndex = 0;
-        var hasSidebar = false;
-        foreach (var row in GroupRows(labels))
-        {
-            // Only the top chrome strip is nav. Later "Verify"/"Escrow"/… actions share
-            // names but are form controls (larger type, body Y).
-            if (row.All(label => NavLabels.Contains(label.Text) && label.FontSize <= 13 && label.Y < 120))
-            {
-                root.Children.Add(BuildNav(row));
-                continue;
-            }
-
-            body.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-            var left = row.Where(IsSidebarLabel).ToList();
-            var right = row.Where(label => !IsSidebarLabel(label)).ToList();
-
-            if (left.Count > 0)
-            {
-                hasSidebar = true;
-                var leftStack = new StackPanel { Spacing = 4 };
-                foreach (var label in left)
-                {
-                    leftStack.Children.Add(BuildSidebarChrome(label));
-                }
-
-                var leftRail = new Border
-                {
-                    Background = Brush("173E66"),
-                    CornerRadius = new CornerRadius(10),
-                    Padding = new Thickness(8, 6, 8, 6),
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    Child = leftStack,
-                };
-                Grid.SetColumn(leftRail, 0);
-                Grid.SetRow(leftRail, rowIndex);
-                body.Children.Add(leftRail);
-            }
-
-            if (right.Count > 0)
-            {
-                var rightControl = right.Count == 1 ? BuildChrome(right[0]) : BuildFormCluster(right);
-                Grid.SetColumn(rightControl, 1);
-                Grid.SetRow(rightControl, rowIndex);
-                body.Children.Add(rightControl);
-            }
-
-            rowIndex++;
-        }
-
-        if (!hasSidebar)
-        {
-            body.ColumnDefinitions = new ColumnDefinitions("*");
-            foreach (var child in body.Children.OfType<Control>())
-            {
-                Grid.SetColumn(child, 0);
-            }
-        }
-
-        root.Children.Add(body);
-        return root;
-    }
-
-    private static Control BuildFormCluster(IReadOnlyList<ReviewLabel> row)
-    {
-        if (row.Count > 1 && row.All(label => BadgeLabels.Contains(label.Text) || label.Text.Length <= 10))
-        {
-            var wrap = new WrapPanel { ItemSpacing = 8, LineSpacing = 6 };
-            foreach (var label in row)
-            {
-                wrap.Children.Add(BuildChrome(label));
-            }
-
-            return wrap;
-        }
-
-        var vertical = row.Any(label => label.Text.Length > 18 || IsFieldValue(label) || IsAction(label));
-        var panel = new StackPanel
-        {
-            Spacing = 4,
-            Orientation = vertical ? Orientation.Vertical : Orientation.Horizontal,
-        };
-        foreach (var label in row)
-        {
-            panel.Children.Add(BuildChrome(label));
-        }
-
-        return panel;
     }
 
     private static IEnumerable<List<ReviewLabel>> GroupRows(IReadOnlyList<ReviewLabel> labels)
@@ -210,9 +103,59 @@ public class CaptureReviewHost : Grid
         }
     }
 
+    private static Control BuildRow(IReadOnlyList<ReviewLabel> row)
+    {
+        if (row.Count == 0)
+        {
+            return new StackPanel();
+        }
+
+        if (row.All(label => NavLabels.Contains(label.Text) && label.FontSize <= 13 && label.Y < 120))
+        {
+            return BuildNav(row);
+        }
+
+        // Card: same-Y cluster that is entirely dark-panel chrome.
+        if (row.Count >= 1 && row.All(IsCardPanel))
+        {
+            return BuildCard(row);
+        }
+
+        // Short chrome (badges / tiny pills) may wrap. Everything else stacks
+        // vertically so TextBlock AbsoluteBounds stay inside the page width.
+        if (row.Count > 1 && row.All(label => BadgeLabels.Contains(label.Text) || label.Text.Length <= 10))
+        {
+            var wrap = new WrapPanel
+            {
+                MaxWidth = 360,
+                ItemSpacing = 8,
+                LineSpacing = 6,
+            };
+            foreach (var label in row)
+            {
+                wrap.Children.Add(BuildChrome(label));
+            }
+
+            return wrap;
+        }
+
+        if (row.Count == 1)
+        {
+            return BuildChrome(row[0]);
+        }
+
+        var vertical = new StackPanel { Spacing = 4, MaxWidth = 360 };
+        foreach (var label in row)
+        {
+            vertical.Children.Add(BuildChrome(label));
+        }
+
+        return vertical;
+    }
+
     private static Control BuildNav(IReadOnlyList<ReviewLabel> row)
     {
-        // Compact single-row StackPanel — no ScrollViewer (PART_* overlaps File/Help).
+        // Compact single-row nav: avoid WrapPanel (Help wrap) and ScrollViewer (PART_* overlap).
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -238,63 +181,31 @@ public class CaptureReviewHost : Grid
             Background = Brush("FFFFFF"),
             BorderBrush = Brush("C5D0DC"),
             BorderThickness = new Thickness(0, 0, 0, 1),
-            Padding = new Thickness(1, 2, 1, 2),
+            Padding = new Thickness(2, 2, 2, 2),
             HorizontalAlignment = HorizontalAlignment.Left,
             Child = panel,
         };
     }
 
-    private static Control BuildSidebarChrome(ReviewLabel label)
+    private static Control BuildCard(IReadOnlyList<ReviewLabel> row)
     {
-        var iconKind = SidebarIconKind(label.Text);
-        var text = MakeText(label, label.Back, 128);
-        if (iconKind is null)
+        var body = new StackPanel { Spacing = 4 };
+        foreach (var label in row)
         {
-            return text;
+            body.Children.Add(MakeText(label, label.Back));
         }
 
-        var row = new StackPanel
+        return new Border
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            Background = Brush(row[0].Back),
+            BorderBrush = Brush("0F2C4A"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(12),
+            Padding = new Thickness(12, 10, 12, 10),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MaxWidth = 360,
+            Child = body,
         };
-        row.Children.Add(new WireframeIcon
-        {
-            Kind = iconKind,
-            Width = 18,
-            Height = 18,
-            MarkBrush = Brush(label.Fill is "FFFFFF" or "D5E4F2" or "9FC0E0" ? label.Fill : "D5E4F2"),
-            VerticalAlignment = VerticalAlignment.Center,
-        });
-        row.Children.Add(text);
-        return row;
-    }
-
-    private static string? SidebarIconKind(string text)
-    {
-        if (text is "Independent checks" or "COURT REVIEW" or "RideAudit")
-        {
-            return "shield-check";
-        }
-
-        if (text.Contains("OpenTimestamps", System.StringComparison.Ordinal)
-            || text.Contains("OTS", System.StringComparison.Ordinal))
-        {
-            return "check";
-        }
-
-        if (text.Contains("gRPC", System.StringComparison.Ordinal))
-        {
-            return "video";
-        }
-
-        if (text.StartsWith("Open does not", System.StringComparison.Ordinal))
-        {
-            return "shield-check";
-        }
-
-        return null;
     }
 
     private static Control BuildChrome(ReviewLabel label)
@@ -315,6 +226,7 @@ public class CaptureReviewHost : Grid
 
         if (IsAction(label))
         {
+            var text = MakeText(label, label.Back);
             return new Border
             {
                 Background = Brush(label.Back),
@@ -324,7 +236,7 @@ public class CaptureReviewHost : Grid
                 Padding = new Thickness(14, 10, 14, 10),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 MinHeight = 40,
-                Child = MakeText(label, label.Back),
+                Child = text,
             };
         }
 
@@ -338,12 +250,17 @@ public class CaptureReviewHost : Grid
                 CornerRadius = new CornerRadius(10),
                 Padding = new Thickness(12, 10, 12, 10),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
+                MaxWidth = 360,
                 Child = MakeText(label, "FFFFFF"),
             };
         }
 
-        if (label.Back is "FFF4D8"
-            || (label.Back != "F4F7FA" && label.Back != "FFFFFF" && label.Back != "173E66"))
+        if (IsCardPanel(label))
+        {
+            return BuildCard([label]);
+        }
+
+        if (label.Back is "FFF4D8" || (label.Back != "F4F7FA" && label.Back != "FFFFFF" && label.Back != "173E66"))
         {
             return new Border
             {
@@ -357,23 +274,21 @@ public class CaptureReviewHost : Grid
             };
         }
 
+        // Page titles and body copy: plain TextBlock, no button chrome.
         return MakeText(label, label.Back);
     }
 
-    private static bool IsSidebarLabel(ReviewLabel label)
+    private static bool IsCardPanel(ReviewLabel label)
     {
-        if (NavLabels.Contains(label.Text) || IsAction(label) || BadgeLabels.Contains(label.Text))
-        {
-            return false;
-        }
-
-        return label.Back == "173E66";
+        return label.Back == "173E66" && !IsAction(label) && !NavLabels.Contains(label.Text);
     }
 
-    private static bool IsStatusChip(ReviewLabel label) =>
-        label.Fill is "8A5A00" or "B42318" or "0C7A62"
-        && label.FontSize <= 13
-        && label.Text.Length <= 28;
+    private static bool IsStatusChip(ReviewLabel label)
+    {
+        return label.Fill is "8A5A00" or "B42318" or "0C7A62"
+            && label.FontSize <= 13
+            && label.Text.Length <= 28;
+    }
 
     private static bool IsAction(ReviewLabel label)
     {
@@ -382,12 +297,22 @@ public class CaptureReviewHost : Grid
             return false;
         }
 
+        // Page titles are large dark-on-paper copy, never action chrome.
         if (label.FontSize >= 18 && label.Fill is "1A2433" or "394656")
         {
             return false;
         }
 
-        return PrimaryActions.Contains(label.Text);
+        if (label.Back == "173E66" && label.Fill is "FFFFFF" or "D5E4F2")
+        {
+            return true;
+        }
+
+        return label.Text is "Open bundle" or "Quit" or "Open OTS provenance" or "Save report"
+            or "Continue to escrow" or "Fail-closed history" or "View full report" or "Return to bundle"
+            or "Export fail report" or "Attach CourtRelease" or "Request custodian approvals" or "Cancel"
+            or "Play" or "Pause" or "Verification report" or "Build pack"
+            or "Close ViewerSession after export";
     }
 
     private static bool IsFieldValue(ReviewLabel label)
@@ -409,16 +334,18 @@ public class CaptureReviewHost : Grid
             or "Driver coordinator" or "Passenger compositor";
     }
 
-    private static string BadgeBack(ReviewLabel label) =>
-        label.Fill switch
+    private static string BadgeBack(ReviewLabel label)
+    {
+        return label.Fill switch
         {
             "0C7A62" => "E6F6F1",
             "8A5A00" => "FFF4D8",
             "B42318" => "FEE4E2",
             _ => label.Back,
         };
+    }
 
-    private static TextBlock MakeText(ReviewLabel label, string back, double maxWidth = 220) =>
+    private static TextBlock MakeText(ReviewLabel label, string back, double maxWidth = 336) =>
         new()
         {
             Text = label.Text,
