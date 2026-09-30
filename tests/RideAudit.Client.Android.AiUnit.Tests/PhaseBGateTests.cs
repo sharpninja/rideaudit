@@ -47,13 +47,20 @@ public sealed class PhaseBGateTests
     }
 
     [Fact]
-    public void Review_screen_storyboard_step_is_undriven_rather_than_skipped()
+    public void Review_screen_storyboard_step_is_driven_on_the_capture_client()
     {
         var step = new StoryboardStep(3, "Open review", "WF-R-01.svg", "WF-R-01", AlternateBranch: false);
-        Assert.Null(StoryboardSequence.Clicks("WF-01", step, "driver"));
+        Assert.Equal(new[] { "ShowWFR01" }, StoryboardSequence.Clicks("WF-01", step, "driver"));
         var reason = StoryboardSequence.UndrivenReason("WF-01", step);
-        Assert.Contains("not hosted", reason, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("not hosted", reason, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("skip", reason, StringComparison.OrdinalIgnoreCase);
+
+        var alternate = new StoryboardStep(5, "Fail-closed branch", "WF-R-04.svg", "WF-R-04", AlternateBranch: true);
+        Assert.Null(StoryboardSequence.Clicks("WF-R-03", alternate, "driver"));
+        var alternateReason = StoryboardSequence.UndrivenReason("WF-R-03", alternate);
+        Assert.Contains("alternate", alternateReason, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("skip", alternateReason, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("not hosted", alternateReason, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

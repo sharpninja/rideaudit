@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Avalonia.RemoteControl.Protocol.V1;
 using SharpNinja.AiUnit.Strategy;
 using SharpNinja.AiUnit.Xunit;
@@ -45,7 +47,9 @@ public sealed class VisualCatalogTests
         var reviewSteps = VisualAssetCatalog.ParseSteps(review.MarkdownPath);
         Assert.NotEmpty(reviewSteps);
         Assert.All(reviewSteps, step => Assert.StartsWith("WF-R-", step.ScreenId, StringComparison.Ordinal));
-        Assert.Null(StoryboardSequence.Clicks("WF-01", reviewSteps[0], "driver"));
+        Assert.Equal(
+            new[] { "Show" + reviewSteps[0].ScreenId.Replace("-", string.Empty, StringComparison.Ordinal) },
+            StoryboardSequence.Clicks("WF-01", reviewSteps[0], "driver"));
     }
 }
 
@@ -367,6 +371,49 @@ public sealed class WireframeReflectionTests
         finally
         {
             File.Delete(svg);
+        }
+    }
+
+    [Fact]
+    public void Review_catalog_matches_wireframe_reflection_order()
+    {
+        var root = VisualAssetCatalog.RepoRoot();
+        var catalogPath = Path.Combine(root, "src", "RideAudit.Shared.Ui", "Views", "CaptureReviewCatalog.cs");
+        var catalog = File.ReadAllText(catalogPath);
+        var rows = Regex.Matches(
+            catalog,
+            "new\\(\"(?<screen>WF-R-\\d+)\", \"(?<text>(?:\\\\.|[^\"\\\\])*)\", (?<y>[0-9.]+), (?<font>[0-9.]+), \"(?<fill>[0-9A-Fa-f]*)\"");
+        Assert.True(rows.Count > 0, "CaptureReviewCatalog has no review labels.");
+        var byScreen = new Dictionary<string, List<(string Text, double Font, string Fill)>>(StringComparer.Ordinal);
+        foreach (Match row in rows)
+        {
+            var screen = row.Groups["screen"].Value;
+            if (!byScreen.TryGetValue(screen, out var list))
+            {
+                list = new List<(string, double, string)>();
+                byScreen[screen] = list;
+            }
+
+            var text = Regex.Unescape(row.Groups["text"].Value);
+            var font = double.Parse(row.Groups["font"].Value, CultureInfo.InvariantCulture);
+            list.Add((text, font, row.Groups["fill"].Value.ToUpperInvariant()));
+        }
+
+        var wireframes = Directory.GetFiles(Path.Combine(root, "docs", "ux", "assets", "wireframes"), "WF-R-*.svg");
+        Assert.Equal(8, wireframes.Length);
+        foreach (var path in wireframes)
+        {
+            var screen = VisualAssetCatalog.ScreenIdFromPath(path);
+            var expected = WireframeReflection.LabelsFor(path);
+            Assert.True(byScreen.TryGetValue(screen, out var actual), screen + " is missing from the review catalog.");
+            Assert.Equal(expected.Count, actual!.Count);
+            for (var i = 0; i < expected.Count; i++)
+            {
+                var fill = expected[i].Fill.Trim().TrimStart('#').ToUpperInvariant();
+                Assert.Equal(expected[i].Text, actual[i].Text);
+                Assert.Equal(expected[i].FontSize, actual[i].Font, 2);
+                Assert.Equal(fill, actual[i].Fill);
+            }
         }
     }
 

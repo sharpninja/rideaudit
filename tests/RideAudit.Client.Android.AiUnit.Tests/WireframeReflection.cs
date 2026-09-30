@@ -7,6 +7,8 @@ using Avalonia.RemoteControl.Protocol.V1;
 
 namespace RideAudit.Client.Android.AiUnit.Tests;
 
+public sealed record WireframeLabel(string Text, double Y, double FontSize, string Fill);
+
 public static class WireframeReflection
 {
     private static readonly Regex TextElement = new(
@@ -199,6 +201,13 @@ public static class WireframeReflection
 
         labels.Sort((left, right) => left.Y.CompareTo(right.Y));
         return labels;
+    }
+
+    public static IReadOnlyList<WireframeLabel> LabelsFor(string svgPath)
+    {
+        return ReadLabels(svgPath)
+            .Select(label => new WireframeLabel(label.Text, label.Y, label.FontSize, label.Fill))
+            .ToList();
     }
 
     private static string Decode(string value) =>

@@ -24,7 +24,7 @@ public static class StoryboardSequence
 
     public static IReadOnlyList<string>? Clicks(string currentScreen, StoryboardStep step, string role)
     {
-        if (step.AlternateBranch || step.ScreenId.StartsWith("WF-R-", StringComparison.Ordinal))
+        if (step.AlternateBranch)
         {
             return null;
         }
@@ -39,11 +39,6 @@ public static class StoryboardSequence
 
     public static string UndrivenReason(string current, StoryboardStep step)
     {
-        if (step.ScreenId.StartsWith("WF-R-", StringComparison.Ordinal))
-        {
-            return "review screen is not hosted on the Android capture client";
-        }
-
         if (step.AlternateBranch)
         {
             return "alternate branch from " + current + " to " + step.ScreenId + " is not taken on this session";
@@ -54,6 +49,11 @@ public static class StoryboardSequence
 
     private static IReadOnlyList<string> SameScreenClicks(StoryboardStep step, string role)
     {
+        if (step.ScreenId.StartsWith("WF-R-", StringComparison.Ordinal))
+        {
+            return Array.Empty<string>();
+        }
+
         if (step.ScreenId == "WF-01" && step.Title.Contains("role", StringComparison.OrdinalIgnoreCase))
         {
             return new[] { role == "passenger" ? "PassengerButton" : "DriverButton" };
@@ -74,6 +74,11 @@ public static class StoryboardSequence
 
     private static IReadOnlyList<string>? PathClicks(string current, string target, string role)
     {
+        if (target.StartsWith("WF-R-", StringComparison.Ordinal))
+        {
+            return new[] { "Show" + target.Replace("-", string.Empty, StringComparison.Ordinal) };
+        }
+
         var roleButton = role == "passenger" ? "PassengerButton" : "DriverButton";
         if (current == "WF-01" && target == "WF-02")
         {

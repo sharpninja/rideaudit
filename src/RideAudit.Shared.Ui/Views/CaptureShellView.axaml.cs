@@ -53,6 +53,14 @@ public partial class CaptureShellView : UserControl
         BackDashboardButton.Click += OnBackDashboard;
         ScreenAboutButton.Click += OnAbout;
         ReturnButton.Click += OnReturn;
+        ShowWFR01.Click += (_, _) => Show("WF-R-01");
+        ShowWFR02.Click += (_, _) => Show("WF-R-02");
+        ShowWFR03.Click += (_, _) => Show("WF-R-03");
+        ShowWFR04.Click += (_, _) => Show("WF-R-04");
+        ShowWFR05.Click += (_, _) => Show("WF-R-05");
+        ShowWFR06.Click += (_, _) => Show("WF-R-06");
+        ShowWFR07.Click += (_, _) => Show("WF-R-07");
+        ShowWFR08.Click += (_, _) => Show("WF-R-08");
         PaintRole();
         Show("WF-01");
         if (productionEntry && !_bus.RadioAvailable)
@@ -289,6 +297,7 @@ public partial class CaptureShellView : UserControl
         SealPage.IsVisible = screenId == "WF-06";
         SubmitPage.IsVisible = screenId == "WF-07";
         FailPage.IsVisible = screenId == "WF-08";
+        ReviewHost.Apply(screenId);
         ScreenChanged?.Invoke(this, screenId);
     }
 }

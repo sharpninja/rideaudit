@@ -262,6 +262,11 @@ public sealed class AdbDeviceSession
             case "ABOUT":
                 return new[] { "AboutButton" };
             default:
+                if (screenId.StartsWith("WF-R-", StringComparison.Ordinal))
+                {
+                    return new[] { "Show" + screenId.Replace("-", string.Empty, StringComparison.Ordinal) };
+                }
+
                 return Array.Empty<string>();
         }
     }

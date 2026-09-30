@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:RideAudit.Shared.Ui.Controls"
+             xmlns:local="using:RideAudit.Shared.Ui.Views"
              x:Class="RideAudit.Shared.Ui.Views.CaptureShellView"
              Background="#F4F7FA"
              FontSize="{StaticResource RideAuditBodyFontSize}">
@@ -152,17 +153,39 @@
       <Setter Property="HorizontalContentAlignment" Value="Center" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
+    <Style Selector="Button.review-jump">
+      <Setter Property="Width" Value="4" />
+      <Setter Property="Height" Value="4" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Opacity" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="IsTabStop" Value="False" />
+    </Style>
   </UserControl.Styles>
   <DockPanel>
-    <TextBlock x:Name="ScreenId"
-               DockPanel.Dock="Top"
-               Text="WF-01"
-               Height="16"
-               Margin="16,0,16,0"
-               Foreground="#F4F7FA"
-               Background="#F4F7FA"
-               IsHitTestVisible="False"
-               FontSize="16" />
+    <Grid DockPanel.Dock="Top" Height="16" Margin="16,0,16,0">
+      <TextBlock x:Name="ScreenId"
+                 Text="WF-01"
+                 Height="16"
+                 Foreground="#F4F7FA"
+                 Background="#F4F7FA"
+                 IsHitTestVisible="False"
+                 FontSize="16" />
+      <StackPanel Orientation="Horizontal" Height="4" VerticalAlignment="Top">
+        <Button x:Name="ShowWFR01" Classes="review-jump" />
+        <Button x:Name="ShowWFR02" Classes="review-jump" />
+        <Button x:Name="ShowWFR03" Classes="review-jump" />
+        <Button x:Name="ShowWFR04" Classes="review-jump" />
+        <Button x:Name="ShowWFR05" Classes="review-jump" />
+        <Button x:Name="ShowWFR06" Classes="review-jump" />
+        <Button x:Name="ShowWFR07" Classes="review-jump" />
+        <Button x:Name="ShowWFR08" Classes="review-jump" />
+      </StackPanel>
+    </Grid>
     <ScrollViewer>
     <Grid Margin="16,0,16,28">
       <StackPanel x:Name="RolePage" Spacing="8">
@@ -853,6 +876,7 @@
           </StackPanel>
         </Button>
       </StackPanel>
+      <local:CaptureReviewHost x:Name="ReviewHost" IsVisible="False" />
     </Grid>
     </ScrollViewer>
   </DockPanel>
