@@ -237,6 +237,41 @@ public sealed class UsabilityInspectorTests
         var strongCheck = UsabilityInspector.InspectContrast(strong, [node], Path.GetTempPath(), "strong");
         Assert.Equal("pass", strongCheck.Status);
     }
+
+    [Fact]
+    public void Tall_scrolled_tree_does_not_sample_offscreen_text_as_low_contrast()
+    {
+        var onScreen = new TreeNode
+        {
+            Id = "on",
+            TypeName = "TextBlock",
+            Name = "OnScreen",
+            IsVisible = true,
+            AbsoluteBounds = new Rect { X = 0, Y = 0, Width = 40, Height = 20 },
+            Properties = { new PropertyValue { Name = "Text", Value = "Case" }, new PropertyValue { Name = "FontSize", Value = "13" } },
+        };
+        var offScreen = new TreeNode
+        {
+            Id = "off",
+            TypeName = "TextBlock",
+            Name = "OffScreen",
+            IsVisible = true,
+            AbsoluteBounds = new Rect { X = 0, Y = 800, Width = 40, Height = 20 },
+            Properties = { new PropertyValue { Name = "Text", Value = "Footer" }, new PropertyValue { Name = "FontSize", Value = "12" } },
+        };
+        using var bitmap = new SkiaSharp.SKBitmap(80, 40);
+        bitmap.Erase(SkiaSharp.SKColors.White);
+        for (var y = 0; y < 20; y++)
+        {
+            for (var x = 0; x < 40; x++)
+            {
+                bitmap.SetPixel(x, y, SkiaSharp.SKColors.Black);
+            }
+        }
+
+        var check = UsabilityInspector.InspectContrast(bitmap, [onScreen, offScreen], Path.GetTempPath(), "tall");
+        Assert.Equal("pass", check.Status);
+    }
 }
 
 public sealed class WireframeReflectionTests

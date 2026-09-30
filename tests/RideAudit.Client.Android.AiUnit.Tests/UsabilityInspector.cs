@@ -123,14 +123,29 @@ public static class UsabilityInspector
 
         var scaleX = bitmap.Width / rootWidth;
         var scaleY = bitmap.Height / rootHeight;
+        // A scrolled page is taller than the screenshot. Compressing that height
+        // maps on-screen text onto the wrong pixels and clamps off-screen text
+        // into the bitmap. Width still matches the window, so use it for both axes.
+        if (scaleY > 0 && (scaleX / scaleY > 1.15 || scaleY / scaleX > 1.15))
+        {
+            scaleY = scaleX;
+        }
+
         var measured = 0;
         string? failDetail = null;
         string? evidence = null;
         foreach (var node in texts)
         {
             var bounds = node.AbsoluteBounds;
-            var x = (int)Math.Clamp(bounds.X * scaleX, 0, bitmap.Width - 1);
-            var y = (int)Math.Clamp(bounds.Y * scaleY, 0, bitmap.Height - 1);
+            var mappedY = bounds.Y * scaleY;
+            var mappedX = bounds.X * scaleX;
+            if (mappedY >= bitmap.Height || mappedX >= bitmap.Width)
+            {
+                continue;
+            }
+
+            var x = (int)Math.Clamp(mappedX, 0, bitmap.Width - 1);
+            var y = (int)Math.Clamp(mappedY, 0, bitmap.Height - 1);
             var width = (int)Math.Clamp(bounds.Width * scaleX, 1, bitmap.Width - x);
             var height = (int)Math.Clamp(bounds.Height * scaleY, 1, bitmap.Height - y);
             if (width < 4 || height < 4)
