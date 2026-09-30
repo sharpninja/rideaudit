@@ -172,14 +172,13 @@ public static class UsabilityInspector
                 continue;
             }
 
-            // Ink cluster: true text is substantially darker than paper. Mid chrome
-            // grays (nav/field borders ~C5D0DC) must not become the "dark" sample.
-            var inkFloor = lightPeak - 0.35;
-            var inkSamples = samples.Where(sample => sample <= inkFloor).ToList();
+            // Ink cluster: true text (slate/amber < ~0.13 WCAG) vs paper.
+            // Field/nav border gray C5D0DC (~0.62) must never become the dark sample.
+            var inkSamples = samples.Where(sample => sample <= 0.35).ToList();
             var bgSamples = samples.Where(sample => sample >= lightPeak - 0.08).ToList();
             if (inkSamples.Count < 24 || inkSamples.Count < samples.Count * 0.08)
             {
-                // Sparse/misfit crops (short-label dilution or mis-mapped chrome).
+                // Sparse/misfit crops (short-label dilution or chrome-only mis-map).
                 continue;
             }
 
@@ -192,7 +191,7 @@ public static class UsabilityInspector
             bgSamples.Sort();
             var dark = inkSamples[inkSamples.Count / 2];
             var light = bgSamples[bgSamples.Count / 2];
-            if (light - dark < 0.15)
+            if (dark > 0.32 || light - dark < 0.15)
             {
                 continue;
             }

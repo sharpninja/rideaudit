@@ -263,6 +263,31 @@ public sealed class UsabilityInspectorTests
     }
 
     [Fact]
+    public void Chrome_only_border_crop_is_not_a_contrast_fail()
+    {
+        var node = new TreeNode
+        {
+            Id = "field",
+            TypeName = "TextBlock",
+            Name = "FieldValue",
+            IsVisible = true,
+            AbsoluteBounds = new Rect { Width = 40, Height = 20 },
+            Properties = { new PropertyValue { Name = "Text", Value = "RB-77821" }, new PropertyValue { Name = "FontSize", Value = "14" } },
+        };
+        using var bitmap = new SkiaSharp.SKBitmap(40, 20);
+        bitmap.Erase(SkiaSharp.SKColors.White);
+        // Mimic a mis-mapped field crop: paper + C5D0DC border, no slate ink.
+        for (var y = 0; y < 20; y++)
+        {
+            bitmap.SetPixel(0, y, new SkiaSharp.SKColor(0xC5, 0xD0, 0xDC));
+            bitmap.SetPixel(39, y, new SkiaSharp.SKColor(0xC5, 0xD0, 0xDC));
+        }
+
+        var check = UsabilityInspector.InspectContrast(bitmap, [node], Path.GetTempPath(), "chrome");
+        Assert.Equal("not-detectable", check.Status);
+    }
+
+    [Fact]
     public void Tall_scrolled_tree_does_not_sample_offscreen_text_as_low_contrast()
     {
         var onScreen = new TreeNode
