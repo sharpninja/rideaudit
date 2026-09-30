@@ -97,6 +97,31 @@ public sealed class AdbDeviceSession
         {
             throw new InvalidOperationException("am start failed: " + start.Text);
         }
+
+        Thread.Sleep(800);
+        var window = Shell("dumpsys window", TimeSpan.FromSeconds(20));
+        if (!CurrentFocusIsPackage(window.Text, PackageName))
+        {
+            throw new InvalidOperationException(
+                "RideAudit is not the resumed window. A screenshot would not show the capture client.");
+        }
+    }
+
+    private static bool CurrentFocusIsPackage(string dumpsys, string packageName)
+    {
+        string? focus = null;
+        foreach (var raw in dumpsys.Split('\n'))
+        {
+            var line = raw.Trim();
+            var marker = "mCurrentFocus=";
+            var index = line.IndexOf(marker, StringComparison.Ordinal);
+            if (index >= 0)
+            {
+                focus = line.Substring(index + marker.Length);
+            }
+        }
+
+        return focus is not null && focus.Contains(packageName, StringComparison.Ordinal);
     }
 
     public string DumpUi()
