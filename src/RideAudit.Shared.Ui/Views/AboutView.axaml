@@ -7,6 +7,7 @@
     <StackPanel Margin="20,16,20,24" Spacing="12">
       <TextBlock x:Name="ScreenId" Text="ABOUT" />
       <TextBlock x:Name="AboutTitle" Text="About" FontSize="{StaticResource RideAuditTitleFontSize}" FontWeight="Bold" />
+      <TextBlock x:Name="EdgeProbeText" TextWrapping="Wrap" TextTrimming="None" IsVisible="False" Foreground="#173E66" />
       <TextBlock FontWeight="SemiBold" Text="Copyright" />
       <TextBlock x:Name="CopyrightText" TextWrapping="Wrap" TextTrimming="None" />
       <TextBlock FontWeight="SemiBold" Text="Third-party attributions" />

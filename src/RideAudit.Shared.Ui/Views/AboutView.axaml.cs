@@ -42,6 +42,18 @@ public partial class AboutView : UserControl
         AboutBackButton.Click += (_, _) => close?.Invoke();
     }
 
+    public void SetEdgeProbe(string? line)
+    {
+        if (string.IsNullOrWhiteSpace(line))
+        {
+            EdgeProbeText.IsVisible = false;
+            return;
+        }
+
+        EdgeProbeText.Text = line;
+        EdgeProbeText.IsVisible = true;
+    }
+
     private static TextBlock Wrapped(string name, string text, FontWeight weight) =>
         new()
         {

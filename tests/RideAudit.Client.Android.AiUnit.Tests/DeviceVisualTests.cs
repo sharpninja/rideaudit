@@ -299,6 +299,48 @@ public sealed class WireframeReflectionTests
         }
     }
 
+    [Fact]
+    public void Text_inside_a_hidden_page_is_not_an_extra_control()
+    {
+        var svg = Path.Combine(Path.GetTempPath(), "rideaudit-reflection-" + Guid.NewGuid().ToString("N") + ".svg");
+        File.WriteAllText(
+            svg,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\">"
+            + "<text x=\"230\" y=\"184\" fill=\"#1A2433\" font-size=\"28\">RideAudit</text>"
+            + "<text x=\"130\" y=\"318\" fill=\"#1A2433\" font-size=\"16\">Driver</text>"
+            + "</svg>");
+        try
+        {
+            var nodes = new List<TreeNode>
+            {
+                new()
+                {
+                    Id = "role",
+                    TypeName = "StackPanel",
+                    IsVisible = false,
+                    AbsoluteBounds = new Rect { Width = 400, Height = 800 },
+                },
+                new()
+                {
+                    Id = "hidden-label",
+                    ParentId = "role",
+                    TypeName = "TextBlock",
+                    IsVisible = true,
+                    AbsoluteBounds = new Rect { X = 16, Y = 300, Width = 200, Height = 24 },
+                    Properties = { new PropertyValue { Name = "Text", Value = "Passenger" } },
+                },
+                Text("title", "RideAudit", 40, "28", "#1A2433"),
+                Text("driver", "Driver", 200, "16", "#1A2433"),
+            };
+            var checks = WireframeReflection.Judge(svg, nodes);
+            Assert.Equal("pass", checks.Single(check => check.Id == "controls").Status);
+        }
+        finally
+        {
+            File.Delete(svg);
+        }
+    }
+
     private static TreeNode Text(string id, string text, double y, string fontSize, string foreground) =>
         new()
         {

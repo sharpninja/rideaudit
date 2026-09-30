@@ -98,7 +98,7 @@ public partial class CaptureShellView : UserControl
     public void ShowEdgeTls(string message)
     {
         EdgeTlsText.Text = message;
-        EdgeTlsText.IsVisible = true;
+        EdgeTlsText.IsVisible = false;
     }
 
     private void OnDriver(object? sender, RoutedEventArgs e)

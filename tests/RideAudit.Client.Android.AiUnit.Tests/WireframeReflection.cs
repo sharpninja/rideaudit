@@ -39,8 +39,9 @@ public static class WireframeReflection
             return Unavailable("fail-closed", "The wireframe SVG has no content labels to compare.", svgPath);
         }
 
+        var byId = nodes.ToDictionary(node => node.Id, node => node);
         var live = nodes
-            .Where(node => node.IsVisible && node.TypeName.Contains("TextBlock", StringComparison.Ordinal))
+            .Where(node => node.TypeName.Contains("TextBlock", StringComparison.Ordinal) && EffectivelyVisible(node, byId))
             .Select(node => new LiveLabel(TextOf(node).Trim(), node))
             .Where(item => item.Text.Length > 0)
             .ToList();
@@ -224,6 +225,26 @@ public static class WireframeReflection
         }
 
         return hex.ToUpperInvariant();
+    }
+
+    private static bool EffectivelyVisible(TreeNode node, IReadOnlyDictionary<string, TreeNode> byId)
+    {
+        var current = node;
+        var guard = 0;
+        while (current is not null && guard++ < 32)
+        {
+            if (!current.IsVisible)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(current.ParentId) || !byId.TryGetValue(current.ParentId, out current))
+            {
+                return true;
+            }
+        }
+
+        return true;
     }
 
     private static string TextOf(TreeNode node) => Prop(node, "Text");

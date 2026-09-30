@@ -37,7 +37,9 @@ public partial class MainView : UserControl
 
     public void OpenAbout()
     {
-        Body.Content = new AboutView(ShowShell);
+        var about = new AboutView(ShowShell);
+        about.SetEdgeProbe(App.CaptureRuntime?.EdgeTlsLine);
+        Body.Content = about;
     }
 
     public void ShowShell()
