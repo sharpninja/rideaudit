@@ -235,6 +235,86 @@ public sealed class UsabilityInspectorTests
     }
 }
 
+public sealed class WireframeReflectionTests
+{
+    [Fact]
+    public void Missing_label_and_inverted_order_fail_controls_and_layout()
+    {
+        var svg = Path.Combine(Path.GetTempPath(), "rideaudit-reflection-" + Guid.NewGuid().ToString("N") + ".svg");
+        File.WriteAllText(
+            svg,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\">"
+            + "<text x=\"54\" y=\"57\" fill=\"#1A2433\" font-size=\"13\">12:56</text>"
+            + "<text x=\"230\" y=\"184\" fill=\"#1A2433\" font-size=\"28\">RideAudit</text>"
+            + "<text x=\"130\" y=\"318\" fill=\"#1A2433\" font-size=\"16\">Driver</text>"
+            + "<text x=\"130\" y=\"426\" fill=\"#1A2433\" font-size=\"16\">Passenger</text>"
+            + "</svg>");
+        try
+        {
+            var nodes = new List<TreeNode>
+            {
+                Text("title", "RideAudit", 200, "28", "#1A2433"),
+                Text("passenger", "Passenger", 40, "16", "#1A2433"),
+                Text("extra", "Live check pending", 120, "13", "#5C6B7C"),
+            };
+            var checks = WireframeReflection.Judge(svg, nodes);
+            Assert.Equal("fail", checks.Single(check => check.Id == "controls").Status);
+            Assert.Contains("Driver", checks.Single(check => check.Id == "controls").Detail, StringComparison.Ordinal);
+            Assert.Contains("Live check pending", checks.Single(check => check.Id == "controls").Detail, StringComparison.Ordinal);
+            Assert.Equal("fail", checks.Single(check => check.Id == "layout").Status);
+            Assert.Equal("pass", checks.Single(check => check.Id == "style").Status);
+        }
+        finally
+        {
+            File.Delete(svg);
+        }
+    }
+
+    [Fact]
+    public void Shared_labels_in_wireframe_order_pass_when_type_matches()
+    {
+        var svg = Path.Combine(Path.GetTempPath(), "rideaudit-reflection-" + Guid.NewGuid().ToString("N") + ".svg");
+        File.WriteAllText(
+            svg,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\">"
+            + "<text x=\"230\" y=\"184\" fill=\"#1A2433\" font-size=\"28\">RideAudit</text>"
+            + "<text x=\"130\" y=\"318\" fill=\"#1A2433\" font-size=\"16\">Driver</text>"
+            + "</svg>");
+        try
+        {
+            var nodes = new List<TreeNode>
+            {
+                Text("title", "RideAudit", 40, "28", "#1A2433"),
+                Text("driver", "Driver", 200, "16", "#1A2433"),
+                Text("screen", "WF-01", 0, "16", "#F4F7FA"),
+            };
+            var checks = WireframeReflection.Judge(svg, nodes);
+            Assert.Equal("pass", checks.Single(check => check.Id == "controls").Status);
+            Assert.Equal("pass", checks.Single(check => check.Id == "layout").Status);
+            Assert.Equal("pass", checks.Single(check => check.Id == "style").Status);
+        }
+        finally
+        {
+            File.Delete(svg);
+        }
+    }
+
+    private static TreeNode Text(string id, string text, double y, string fontSize, string foreground) =>
+        new()
+        {
+            Id = id,
+            TypeName = "TextBlock",
+            IsVisible = true,
+            AbsoluteBounds = new Rect { X = 16, Y = y, Width = 200, Height = 24 },
+            Properties =
+            {
+                new PropertyValue { Name = "Text", Value = text },
+                new PropertyValue { Name = "FontSize", Value = fontSize },
+                new PropertyValue { Name = "Foreground", Value = foreground },
+            },
+        };
+}
+
 public sealed class CodexSubscriptionProfileTests
 {
     [Fact]

@@ -5,9 +5,9 @@ namespace RideAudit.Client.Android.AiUnit.Tests;
 
 /// <summary>
 /// SharpNinja.aiUnit 3.0.0 does not expose a pixel or perceptual numeric threshold.
-/// These constants are the RideAudit harness gate. A frame fails closed when the
-/// scaled baseline and the device screenshot differ by more than the ratio below.
-/// Channel delta is the per-channel absolute difference that counts as a mismatch.
+/// The ratio below is advisory. A high value does not fail a frame, and a low value
+/// does not pass one. Channel delta is the per-channel absolute difference that
+/// counts toward that advisory ratio.
 /// </summary>
 public static class VisualThreshold
 {

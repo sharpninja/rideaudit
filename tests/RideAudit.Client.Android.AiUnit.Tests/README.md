@@ -20,7 +20,11 @@ Storyboards: one theory case per `docs/ux/**/storyboards/SB-*.md` and `SB-R-*.md
 
 If RemoteControl does not attach, the storyboard fails closed and no frame is compared. An alternate fail-closed branch, a review screen (`WF-R-*`), or any other step that cannot be reached without leaving the session fails that step and is not screenshot-compared. The harness does not press Return to jump back. Hidden pages are not treated as overlapping controls. `ConfirmCheck` is set with RemoteControl `SetProperty` `IsChecked=true`. A click on that checkbox did not leave it checked, and pairing confirm then fail-closed.
 
-Usability runs on every wireframe screenshot and every driven storyboard frame, in addition to the pixel compare. A pixel match does not pass a frame that has a usability defect. Each frame records pass, fail, fail-closed, or not-detectable for:
+Usability runs on every wireframe screenshot and every driven storyboard frame. The pass bar is control, layout, and style agreement with the wireframe, plus the usability checks below. A numeric pixel ratio does not pass or fail a frame. Each frame records pass, fail, fail-closed, or not-detectable for:
+
+- `controls`: wireframe labels are present on the device, and the device does not show extra labels. Phone status-bar text in the SVG is not an app control.
+- `layout`: shared labels keep the wireframe's top-to-bottom order.
+- `style`: shared labels keep the wireframe font size within 2px, and hex foreground when the live tree exposes one.
 
 - `clipped-text`: font taller than the box, or single-line text wider than the arranged width
 - `truncated-text`: `TextTrimming` other than None
@@ -34,16 +38,11 @@ Usability runs on every wireframe screenshot and every driven storyboard frame, 
 
 Undriven storyboard steps record those checks as `not-run`. They are not a usability pass. Wireframe cases attach RemoteControl after the single-screen navigation so the tree checks can run. If that attach fails, the tree checks fail closed.
 
-## Threshold
+## Advisory pixel ratio
 
-`SharpNinja.aiUnit` 3.0.0 has no pixel-threshold type. Its visual path attaches images to the active frontier strategy. This harness adds a fail-closed pixel gate:
+`SharpNinja.aiUnit` 3.0.0 has no pixel-threshold type. Its visual path attaches images to the active frontier strategy. This harness still rasterizes the SVG, scales it to the screenshot, and writes a diff PNG under `artifacts/aiunit-device/<id>/`. A pixel counts toward the ratio when any RGB channel differs by more than `VisualThreshold.ChannelDelta` (24). `VisualThreshold.MaxDifferingPixelRatio` (0.08) is only a reference number in the log. A ratio above it does not fail the frame. A ratio below it does not pass the frame. The diff still shows where the bezel and the app pixels differ.
 
-- Scale the rasterized SVG to the screenshot size.
-- A pixel mismatches when any RGB channel differs by more than `VisualThreshold.ChannelDelta` (24).
-- The frame fails when the differing-pixel ratio is above `VisualThreshold.MaxDifferingPixelRatio` (0.08).
-- The diff PNG paints mismatched pixels red. Paths are under `artifacts/aiunit-device/<id>/`.
-
-The codex-subscription call runs for every compared wireframe and every driven storyboard frame. It is the `aiunit-frontier` check. A usability defect from that call fails the test even when the pixel ratio is inside 0.08. A missing client fails closed. It is not a skip.
+The codex-subscription call runs for every compared wireframe and every driven storyboard frame. It is the `aiunit-frontier` check. It must return controls, layout, and style as agree or disagree. A disagree, a usability defect, a timeout, or a missing client fails closed. Pixel similarity is not that verdict.
 
 Review wireframes (`WF-R-*`) are desktop review screens. The Android capture client does not open them. A wireframe case still captures the device and fails closed when `ScreenId` does not match. Review storyboards (`SB-R-*`, and `SB-06`) fail closed because those steps cannot be driven. They are not compared as capture-shell screenshots.
 

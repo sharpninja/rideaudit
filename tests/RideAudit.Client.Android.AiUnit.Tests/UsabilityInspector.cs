@@ -37,7 +37,12 @@ public static class UsabilityInspector
             id,
             "fail-closed",
             "AvaloniaRemote did not attach, so this check has no visual tree.",
-            "no tree")).ToList();
+            "no tree"))
+            .Concat(WireframeReflection.Unavailable(
+                "fail-closed",
+                "AvaloniaRemote did not attach, so controls, layout, and style were not compared.",
+                "no tree"))
+            .ToList();
     }
 
     public static IReadOnlyList<UsabilityCheck> NotDriven()
@@ -46,7 +51,12 @@ public static class UsabilityInspector
             id,
             "not-run",
             "The storyboard step was not driven, so no frame was captured.",
-            "no navigation")).ToList();
+            "no navigation"))
+            .Concat(WireframeReflection.Unavailable(
+                "not-run",
+                "The storyboard step was not driven, so controls, layout, and style were not compared.",
+                "no navigation"))
+            .ToList();
     }
 
     public static IReadOnlyList<UsabilityCheck> InspectTree(

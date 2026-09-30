@@ -37,6 +37,7 @@ public static class DeviceVisualRunner
         CodexVisualGate.RequireCodexSubscriptionProfile();
         ResetLogOnce();
         List<string> failures;
+        var advisories = new List<string>();
         lock (Gate)
         {
             AdbDeviceSession session;
@@ -157,13 +158,8 @@ public static class DeviceVisualRunner
                             failures.Add(frameId + " screen was '" + (actualScreen ?? "(missing)") + "', expected " + step.ScreenId + ".");
                         }
 
-                        if (!pixel.WithinThreshold)
-                        {
-                            failures.Add(frameId + " differing pixel ratio " + pixel.DifferingPixelRatio.ToString("0.0000")
-                                + " exceeds " + VisualThreshold.MaxDifferingPixelRatio.ToString("0.00")
-                                + ". Diff: " + pixel.DiffPath);
-                        }
-
+                        advisories.Add(AdvisoryPixel(frameId, pixel));
+                        AddReflectionFailures(failures, frameId, usability);
                         AddUsabilityFailures(failures, frameId, usability);
                     }
                     catch (Exception ex)
@@ -205,7 +201,7 @@ public static class DeviceVisualRunner
 
         if (failures.Count > 0)
         {
-            throw new Xunit.Sdk.XunitException(string.Join(Environment.NewLine, failures));
+            throw new Xunit.Sdk.XunitException(string.Join(Environment.NewLine, failures.Concat(advisories)));
         }
     }
 
@@ -214,6 +210,7 @@ public static class DeviceVisualRunner
         CodexVisualGate.RequireCodexSubscriptionProfile();
         ResetLogOnce();
         List<string> failures;
+        var advisories = new List<string>();
         lock (Gate)
         {
             AdbDeviceSession session;
@@ -289,13 +286,8 @@ public static class DeviceVisualRunner
                             failures.Add(frameId + " screen was '" + (actualScreen ?? "(missing)") + "', expected " + screenId + ".");
                         }
 
-                        if (!pixel.WithinThreshold)
-                        {
-                            failures.Add(frameId + " differing pixel ratio " + pixel.DifferingPixelRatio.ToString("0.0000")
-                                + " exceeds " + VisualThreshold.MaxDifferingPixelRatio.ToString("0.00")
-                                + ". Diff: " + pixel.DiffPath);
-                        }
-
+                        advisories.Add(AdvisoryPixel(frameId, pixel));
+                        AddReflectionFailures(failures, frameId, usability);
                         AddUsabilityFailures(failures, frameId, usability);
                     }
                     finally
@@ -319,9 +311,14 @@ public static class DeviceVisualRunner
 
         if (failures.Count > 0)
         {
-            throw new Xunit.Sdk.XunitException(string.Join(Environment.NewLine, failures));
+            throw new Xunit.Sdk.XunitException(string.Join(Environment.NewLine, failures.Concat(advisories)));
         }
     }
+
+    private static string AdvisoryPixel(string frameId, PixelCompareResult pixel) =>
+        frameId + " advisory pixel ratio " + pixel.DifferingPixelRatio.ToString("0.0000")
+        + " (numeric diff is not the pass or fail bar; reference "
+        + VisualThreshold.MaxDifferingPixelRatio.ToString("0.00") + "). Diff: " + pixel.DiffPath;
 
     private static List<UsabilityCheck> TreeChecks(
         RemoteBridgeSession remote,
@@ -341,6 +338,7 @@ public static class DeviceVisualRunner
             .Where(check => check.Id != "low-contrast")
             .ToList();
         checks.Add(UsabilityInspector.InspectContrastPng(png, tree, directory, frameId));
+        checks.AddRange(WireframeReflection.Judge(svgPath, tree));
         return checks;
     }
 
@@ -351,10 +349,31 @@ public static class DeviceVisualRunner
         return new UsabilityCheck("aiunit-frontier", status, perceptual.Detail, "codex-subscription image attachments");
     }
 
+    private static void AddReflectionFailures(List<string> failures, string frameId, IReadOnlyList<UsabilityCheck> checks)
+    {
+        foreach (var check in checks)
+        {
+            if (check.Id is not ("controls" or "layout" or "style"))
+            {
+                continue;
+            }
+
+            if (check.Status is "fail" or "fail-closed")
+            {
+                failures.Add(frameId + " " + check.Id + " " + check.Status + ": " + check.Detail + " Evidence: " + check.Evidence);
+            }
+        }
+    }
+
     private static void AddUsabilityFailures(List<string> failures, string frameId, IReadOnlyList<UsabilityCheck> checks)
     {
         foreach (var check in checks)
         {
+            if (check.Id is "controls" or "layout" or "style")
+            {
+                continue;
+            }
+
             if (check.Status is "fail" or "fail-closed")
             {
                 failures.Add(frameId + " usability " + check.Id + " " + check.Status + ": " + check.Detail + " Evidence: " + check.Evidence);

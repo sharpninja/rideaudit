@@ -95,7 +95,7 @@ public static class CodexVisualGate
         }
 
         var request = new FrontierRequest(
-            "You compare a RideAudit wireframe baseline with a device screenshot. Return only JSON with keys screenId, match, usabilityDefects, summary. usabilityDefects lists cut-off or clipped text, truncated text, missing or empty icons, overlapping controls, text outside its bounds, low-contrast labels, and layout that breaks the named screen. match is false when any of those defects is present. A pixel-similar image with a usability defect is not a match.",
+            "You judge how accurately a RideAudit device screenshot reflects the wireframe. Return only JSON with keys screenId, controls, layout, style, usabilityDefects, summary. controls, layout, and style are each the string agree or the string disagree. controls covers which controls are present, their roles, and their placement. layout covers structure, hierarchy, and spacing intent. style covers theme, typography, colors, and visual language. usabilityDefects lists cut-off or clipped text, truncated text, missing or empty icons, overlapping controls, text outside its bounds, and low-contrast labels. A numeric pixel difference is not a reason to agree or disagree.",
             "screenId: " + screenId + ". First image attachment is the wireframe baseline. Second image attachment is the device screenshot.",
             Attachments:
             [
@@ -128,7 +128,9 @@ public static class CodexVisualGate
         try
         {
             using var json = JsonDocument.Parse(ExtractJson(response.Text));
-            var match = json.RootElement.TryGetProperty("match", out var matchNode) && matchNode.ValueKind == JsonValueKind.True;
+            var controls = Axis(json.RootElement, "controls");
+            var layout = Axis(json.RootElement, "layout");
+            var style = Axis(json.RootElement, "style");
             var defects = new List<string>();
             if (json.RootElement.TryGetProperty("usabilityDefects", out var defectNode) && defectNode.ValueKind == JsonValueKind.Array)
             {
@@ -141,17 +143,37 @@ public static class CodexVisualGate
                 }
             }
 
-            if (!match || defects.Count > 0)
+            var axes = "controls=" + (controls ?? "(missing)")
+                + " layout=" + (layout ?? "(missing)")
+                + " style=" + (style ?? "(missing)")
+                + " defects=" + string.Join("; ", defects);
+            if (controls is null || layout is null || style is null)
             {
-                return new PerceptualResult("fail-closed", "match=" + match + " defects=" + string.Join("; ", defects));
+                return new PerceptualResult("fail-closed", "Response omitted controls, layout, or style. " + axes);
             }
 
-            return new PerceptualResult("pass", "codex-subscription reported match with no usability defects.");
+            if (controls != "agree" || layout != "agree" || style != "agree" || defects.Count > 0)
+            {
+                return new PerceptualResult("fail-closed", axes);
+            }
+
+            return new PerceptualResult("pass", "codex-subscription agreed on controls, layout, and style with no usability defects.");
         }
         catch (JsonException ex)
         {
             return new PerceptualResult("fail-closed", "Response was not the required JSON: " + ex.Message);
         }
+    }
+
+    private static string? Axis(JsonElement root, string name)
+    {
+        if (!root.TryGetProperty(name, out var node) || node.ValueKind != JsonValueKind.String)
+        {
+            return null;
+        }
+
+        var value = node.GetString();
+        return value is "agree" or "disagree" ? value : null;
     }
 
     private static string ExtractJson(string text)
