@@ -239,6 +239,30 @@ public sealed class UsabilityInspectorTests
     }
 
     [Fact]
+    public void Diluted_short_label_crop_is_not_a_contrast_fail()
+    {
+        var node = new TreeNode
+        {
+            Id = "case",
+            TypeName = "TextBlock",
+            Name = "Case",
+            IsVisible = true,
+            AbsoluteBounds = new Rect { X = 0, Y = 0, Width = 81, Height = 37 },
+            Properties = { new PropertyValue { Name = "Text", Value = "Case" }, new PropertyValue { Name = "FontSize", Value = "13" } },
+        };
+        using var bitmap = new SkiaSharp.SKBitmap(81, 37);
+        bitmap.Erase(new SkiaSharp.SKColor(0xF4, 0xF7, 0xFA));
+        // ~83 ink pixels of locked slate on a mostly-background crop (receipt Case 2.35).
+        for (var i = 0; i < 83; i++)
+        {
+            bitmap.SetPixel(i % 81, i / 81, new SkiaSharp.SKColor(0x39, 0x46, 0x56));
+        }
+
+        var check = UsabilityInspector.InspectContrast(bitmap, [node], Path.GetTempPath(), "dilute");
+        Assert.Equal("not-detectable", check.Status);
+    }
+
+    [Fact]
     public void Tall_scrolled_tree_does_not_sample_offscreen_text_as_low_contrast()
     {
         var onScreen = new TreeNode

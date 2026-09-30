@@ -170,6 +170,17 @@ public static class UsabilityInspector
                 continue;
             }
 
+            // Short-label crops are mostly page background. The 5th/95th
+            // percentiles then collapse toward the background and report a
+            // false low ratio even when the solid ink passes. Require enough
+            // darker-than-mid ink pixels before treating the sample as real.
+            var mid = (dark + light) * 0.5;
+            var ink = samples.Count(sample => sample <= mid);
+            if (ink < samples.Count * 0.08 || ink < 24)
+            {
+                continue;
+            }
+
             measured++;
             var ratio = (Math.Max(light, dark) + 0.05) / (Math.Min(light, dark) + 0.05);
             var font = FontSize(node);

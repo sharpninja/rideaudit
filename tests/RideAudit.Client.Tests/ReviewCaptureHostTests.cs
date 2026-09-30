@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+﻿// SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
 using Avalonia;
@@ -36,7 +36,11 @@ public class ReviewCaptureHostTests
             Assert.Equal(screen, shell.FindControl<TextBlock>("ScreenId")!.Text);
 
             var expected = CaptureReviewCatalog.Labels.Where(label => label.Screen == screen).ToList();
-            var live = VisibleText(shell).Where(block => block.Name != "ScreenId").ToList();
+            var host = shell.FindControl<CaptureReviewHost>("ReviewHost")!;
+            var live = host.GetVisualDescendants()
+                .OfType<TextBlock>()
+                .Where(block => !string.IsNullOrEmpty(block.Text) && Shown(block))
+                .ToList();
             Assert.Equal(expected.Count, live.Count);
             for (var i = 0; i < expected.Count; i++)
             {
@@ -47,6 +51,12 @@ public class ReviewCaptureHostTests
                 Assert.Equal(expected[i].Fill, hex);
                 Assert.Equal(TextWrapping.Wrap, live[i].TextWrapping);
             }
+
+            Assert.Contains(host.GetVisualDescendants().OfType<Border>(), border => border.Child is TextBlock text && text.Text == "File");
+            Assert.Contains(host.GetVisualDescendants().OfType<Border>(), border =>
+                border.CornerRadius.TopLeft >= 10
+                && border.Child is TextBlock action
+                && action.FontSize >= 14);
         }
     }
 
