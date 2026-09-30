@@ -132,5 +132,19 @@ static string? FindRealCodex()
         }
     }
 
+    var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    foreach (var relative in new[]
+             {
+                 Path.Combine(".codex", ".sandbox-bin", "codex.exe"),
+                 Path.Combine(".codex", "plugins", ".plugin-appserver", "codex.exe"),
+             })
+    {
+        var fallback = Path.Combine(home, relative);
+        if (File.Exists(fallback))
+        {
+            return fallback;
+        }
+    }
+
     return null;
 }

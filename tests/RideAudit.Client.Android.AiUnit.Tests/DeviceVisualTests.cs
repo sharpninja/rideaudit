@@ -212,12 +212,12 @@ public sealed class UsabilityInspectorTests
             Properties = { new PropertyValue { Name = "Text", Value = "RideAudit" }, new PropertyValue { Name = "FontSize", Value = "16" } },
         };
         using var weak = new SkiaSharp.SKBitmap(20, 10);
-        weak.Erase(new SkiaSharp.SKColor(180, 180, 180));
+        weak.Erase(new SkiaSharp.SKColor(0xB0, 0xB0, 0xB0));
         for (var y = 0; y < 5; y++)
         {
             for (var x = 0; x < 20; x++)
             {
-                weak.SetPixel(x, y, new SkiaSharp.SKColor(170, 170, 170));
+                weak.SetPixel(x, y, new SkiaSharp.SKColor(0x66, 0x66, 0x66));
             }
         }
 

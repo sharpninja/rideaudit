@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+﻿// SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
 using System.Collections.Generic;
@@ -16,8 +16,9 @@ namespace RideAudit.Shared.Ui.Views;
 
 /// <summary>
 /// Hosts WF-R labels on the Android capture client with chrome the frontier gate
-/// can recognize: horizontal nav, bordered fields, badges, and action buttons.
-/// Label text, fill, and font size stay catalog-true for local CLS reflection.
+/// can recognize: horizontal nav, badges, field borders, and action buttons.
+/// Label text, fill, back, and font size stay catalog-true for local CLS.
+/// Long body copy stays vertical so arranged bounds do not overflow.
 /// </summary>
 public class CaptureReviewHost : Grid
 {
@@ -42,6 +43,7 @@ public class CaptureReviewHost : Grid
             {
                 Spacing = 8,
                 IsVisible = false,
+                MaxWidth = 360,
             };
             page.Children.Add(new WireframeIcon
             {
@@ -112,19 +114,9 @@ public class CaptureReviewHost : Grid
             return BuildNav(row);
         }
 
-        if (row.Count >= 2 && row.Any(label => BadgeLabels.Contains(label.Text))
-            && row.Any(label => label.Text.Length > 18 || label.Text.Contains("ciphertext", System.StringComparison.OrdinalIgnoreCase)
-                || label.Text.Contains("ots", System.StringComparison.OrdinalIgnoreCase)
-                || label.Text.Contains("Attestation", System.StringComparison.OrdinalIgnoreCase)
-                || label.Text.Contains("Verification", System.StringComparison.OrdinalIgnoreCase)
-                || label.Text.Contains("SyncClock", System.StringComparison.OrdinalIgnoreCase)
-                || label.Text.Contains("Decrypted", System.StringComparison.OrdinalIgnoreCase)
-                || label.Text.Contains("working copy", System.StringComparison.OrdinalIgnoreCase)))
-        {
-            return BuildOptionRow(row);
-        }
-
-        if (row.Count > 1)
+        // Only pack short chrome into a horizontal row. Long copy stays vertical
+        // so text bounds remain inside the page StackPanel.
+        if (row.Count > 1 && row.All(label => label.Text.Length <= 24 || IsAction(label) || BadgeLabels.Contains(label.Text)))
         {
             var panel = new StackPanel
             {
@@ -139,7 +131,18 @@ public class CaptureReviewHost : Grid
             return panel;
         }
 
-        return BuildChrome(row[0]);
+        if (row.Count == 1)
+        {
+            return BuildChrome(row[0]);
+        }
+
+        var vertical = new StackPanel { Spacing = 4 };
+        foreach (var label in row)
+        {
+            vertical.Children.Add(BuildChrome(label));
+        }
+
+        return vertical;
     }
 
     private static Control BuildNav(IReadOnlyList<ReviewLabel> row)
@@ -150,7 +153,6 @@ public class CaptureReviewHost : Grid
             BorderBrush = Brush("C5D0DC"),
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(4, 6, 4, 6),
-            CornerRadius = new CornerRadius(0),
             Child = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 },
         };
         var panel = (StackPanel)bar.Child!;
@@ -163,9 +165,8 @@ public class CaptureReviewHost : Grid
                 BorderBrush = Brush(active ? "173E66" : "C5D0DC"),
                 BorderThickness = new Thickness(0, 0, 0, active ? 2 : 1),
                 CornerRadius = new CornerRadius(8),
-                Padding = new Thickness(10, 6, 10, 6),
-                Margin = new Thickness(0, 0, 2, 0),
-                Child = MakeText(label),
+                Padding = new Thickness(8, 6, 8, 6),
+                Child = MakeText(label, active ? "D5E4F2" : "F4F7FA"),
             };
             panel.Children.Add(cell);
         }
@@ -173,41 +174,9 @@ public class CaptureReviewHost : Grid
         return bar;
     }
 
-    private static Control BuildOptionRow(IReadOnlyList<ReviewLabel> row)
-    {
-        var panel = new Border
-        {
-            Background = Brush("FFFFFF"),
-            BorderBrush = Brush("C5D0DC"),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(10, 8, 10, 8),
-            Child = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 8,
-            },
-        };
-        var stack = (StackPanel)panel.Child!;
-        var badge = row.First(label => BadgeLabels.Contains(label.Text));
-        var checkedState = badge.Text is "Default" or "Pass" or "Approved" or "Valid" or "Present";
-        stack.Children.Add(new CheckBox
-        {
-            IsChecked = checkedState,
-            IsEnabled = false,
-            VerticalAlignment = VerticalAlignment.Center,
-        });
-        foreach (var label in row)
-        {
-            stack.Children.Add(BuildChrome(label));
-        }
-
-        return panel;
-    }
-
     private static Control BuildChrome(ReviewLabel label)
     {
-        var text = MakeText(label);
+        var text = MakeText(label, label.Back);
         if (BadgeLabels.Contains(label.Text))
         {
             return new Border
@@ -218,7 +187,7 @@ public class CaptureReviewHost : Grid
                 CornerRadius = new CornerRadius(10),
                 Padding = new Thickness(8, 2, 8, 2),
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Child = text,
+                Child = MakeText(label, BadgeBack(label)),
             };
         }
 
@@ -247,7 +216,7 @@ public class CaptureReviewHost : Grid
                 CornerRadius = new CornerRadius(10),
                 Padding = new Thickness(12, 10, 12, 10),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                Child = text,
+                Child = MakeText(label, "FFFFFF"),
             };
         }
 
@@ -318,19 +287,19 @@ public class CaptureReviewHost : Grid
         };
     }
 
-    private static TextBlock MakeText(ReviewLabel label)
+    private static TextBlock MakeText(ReviewLabel label, string back)
     {
         return new TextBlock
         {
             Text = label.Text,
             FontSize = label.FontSize,
             Foreground = Brush(label.Fill),
-            Background = Brushes.Transparent,
+            Background = Brush(back),
             FontWeight = Weight(label.Weight),
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.None,
             HorizontalAlignment = HorizontalAlignment.Left,
-            MaxWidth = 360,
+            MaxWidth = 340,
             VerticalAlignment = VerticalAlignment.Center,
         };
     }
