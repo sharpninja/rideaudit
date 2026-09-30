@@ -124,7 +124,6 @@ public partial class CaptureShellView : UserControl
         LocalRoleLine.Text = "Passenger, compositor";
         PeerRoleLine.Text = "Driver, coordinator";
         AdvertiseStatus.Text = "RideAudit-Passenger";
-        SpiderGraph.Text = "Spider graph armed for telematics overlay";
         PaintRole();
         if (ScreenId.Text != "WF-01")
         {
@@ -154,6 +153,7 @@ public partial class CaptureShellView : UserControl
 
         Show("WF-02");
         PairingStatus.Text = "RideAudit Bluetooth discovery on " + _bus.TransportKind + ". No Lyft private API.";
+        PairingStatus.IsVisible = false;
     }
 
     private void OnPeer(object? sender, RoutedEventArgs e)
