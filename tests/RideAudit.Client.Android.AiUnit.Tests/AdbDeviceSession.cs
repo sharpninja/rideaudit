@@ -89,6 +89,8 @@ public sealed class AdbDeviceSession
     public void RestartApp()
     {
         Shell("am force-stop " + PackageName, TimeSpan.FromSeconds(15));
+        // Loopback 47100 can remain bound for a moment after the process exits.
+        Thread.Sleep(1500);
         Shell("run-as " + PackageName + " rm -f files/avalonia-remote-control.json", TimeSpan.FromSeconds(15));
         var start = Shell("am start -n " + Activity, TimeSpan.FromSeconds(20));
         if (start.ExitCode != 0 || start.Text.Contains("Error", StringComparison.OrdinalIgnoreCase))
