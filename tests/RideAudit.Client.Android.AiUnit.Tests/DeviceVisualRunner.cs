@@ -232,7 +232,7 @@ public static class DeviceVisualRunner
                 var screenId = VisualAssetCatalog.ScreenIdFromPath(svg);
                 try
                 {
-                    session.Navigate(screenId);
+                    session.RestartApp();
                     Thread.Sleep(1500);
                     RemoteBridgeSession? remote = null;
                     try
@@ -245,6 +245,13 @@ public static class DeviceVisualRunner
                         {
                             failures.Add(frameId + " RemoteControl did not attach for usability: " + RedactException(attachEx));
                         }
+
+                        if (remote is not null)
+                        {
+                            session.Drive(remote, screenId);
+                        }
+
+                        Thread.Sleep(1500);
 
                         var xml = session.DumpUi();
                         var actualScreen = session.ScreenId(xml);

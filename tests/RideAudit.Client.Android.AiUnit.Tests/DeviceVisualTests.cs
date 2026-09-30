@@ -341,6 +341,35 @@ public sealed class WireframeReflectionTests
         }
     }
 
+    [Fact]
+    public void Repeated_labels_pair_in_vertical_order()
+    {
+        var svg = Path.Combine(Path.GetTempPath(), "rideaudit-reflection-" + Guid.NewGuid().ToString("N") + ".svg");
+        File.WriteAllText(
+            svg,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\">"
+            + "<text x=\"54\" y=\"275\" fill=\"#173E66\" font-size=\"11\">OTS stamped</text>"
+            + "<text x=\"54\" y=\"334\" fill=\"#1A2433\" font-size=\"14\">passenger-composite</text>"
+            + "<text x=\"54\" y=\"361\" fill=\"#173E66\" font-size=\"11\">OTS stamped</text>"
+            + "</svg>");
+        try
+        {
+            var nodes = new List<TreeNode>
+            {
+                Text("ots1", "OTS stamped", 100, "11", "#173E66"),
+                Text("name", "passenger-composite", 180, "14", "#1A2433"),
+                Text("ots2", "OTS stamped", 220, "11", "#173E66"),
+            };
+            var checks = WireframeReflection.Judge(svg, nodes);
+            Assert.Equal("pass", checks.Single(check => check.Id == "layout").Status);
+            Assert.Equal("pass", checks.Single(check => check.Id == "controls").Status);
+        }
+        finally
+        {
+            File.Delete(svg);
+        }
+    }
+
     private static TreeNode Text(string id, string text, double y, string fontSize, string foreground) =>
         new()
         {

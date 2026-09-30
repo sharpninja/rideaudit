@@ -65,15 +65,18 @@ public static class WireframeReflection
             ? new UsabilityCheck("controls", "pass", controlDetail, svgPath)
             : new UsabilityCheck("controls", "fail", controlDetail, svgPath);
 
+        var used = new HashSet<string>(StringComparer.Ordinal);
         var shared = new List<(SvgLabel Label, LiveLabel Live)>();
         foreach (var label in expected)
         {
             var match = live
-                .Where(item => string.Equals(item.Text, label.Text, StringComparison.Ordinal))
+                .Where(item => !used.Contains(item.Node.Id)
+                    && string.Equals(item.Text, label.Text, StringComparison.Ordinal))
                 .OrderBy(item => item.Node.AbsoluteBounds.Y)
                 .FirstOrDefault();
             if (match is not null)
             {
+                used.Add(match.Node.Id);
                 shared.Add((label, match));
             }
         }

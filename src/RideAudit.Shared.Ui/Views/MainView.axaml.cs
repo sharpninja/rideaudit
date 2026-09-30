@@ -30,6 +30,7 @@ public partial class MainView : UserControl
         if (_shell is CaptureShellView capture)
         {
             capture.AboutRequested += (_, _) => OpenAbout();
+            capture.ScreenChanged += (_, screen) => AboutDock.IsVisible = screen == "WF-01";
         }
 
         ShowShell();

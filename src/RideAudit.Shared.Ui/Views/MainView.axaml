@@ -7,7 +7,7 @@
     <StackPanel DockPanel.Dock="Top" IsVisible="False">
       <TextBlock x:Name="TitleText" Text="RideAudit" FontSize="{StaticResource RideAuditTitleFontSize}" />
     </StackPanel>
-    <Border DockPanel.Dock="Bottom" Background="#FFFFFF" BorderBrush="#D5DEE8" BorderThickness="0,1,0,0" Padding="16,0,16,4">
+    <Border x:Name="AboutDock" DockPanel.Dock="Bottom" Background="#FFFFFF" BorderBrush="#D5DEE8" BorderThickness="0,1,0,0" Padding="16,0,16,4">
       <Button x:Name="AboutButton"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Center"

@@ -165,58 +165,39 @@ public sealed class AdbDeviceSession
         return bytes;
     }
 
-    public void Navigate(string screenId)
+    public void Drive(RemoteBridgeSession remote, string screenId)
     {
-        RestartApp();
-        Thread.Sleep(1200);
+        foreach (var name in ClicksFor(screenId))
+        {
+            remote.Click(name);
+            Thread.Sleep(500);
+        }
+    }
+
+    private static IReadOnlyList<string> ClicksFor(string screenId)
+    {
         switch (screenId)
         {
             case "WF-01":
-                return;
+                return Array.Empty<string>();
             case "WF-02":
-                TapResource("DriverButton", 0);
-                TapResource("ContinueButton", 2);
-                return;
+                return new[] { "DriverButton", "ContinueButton" };
             case "WF-03":
-                TapResource("DriverButton", 0);
-                TapResource("ContinueButton", 2);
-                TapResource("PeerButton", 2);
-                return;
+                return new[] { "DriverButton", "ContinueButton", "PeerButton" };
             case "WF-04":
-                TapResource("DriverButton", 0);
-                TapResource("ContinueButton", 2);
-                TapResource("PeerButton", 2);
-                TapResource("ConfirmCheck", 2);
-                TapResource("ConfirmPairButton", 2);
-                return;
+                return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton" };
             case "WF-05":
-                TapResource("PassengerButton", 0);
-                TapResource("ContinueButton", 2);
-                TapResource("PeerButton", 2);
-                TapResource("ConfirmCheck", 2);
-                TapResource("ConfirmPairButton", 2);
-                return;
+                return new[] { "PassengerButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton" };
             case "WF-06":
-                Navigate("WF-04");
-                TapResource("SealLinkButton", 4);
-                return;
+                return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "SealLinkButton" };
             case "WF-07":
-                Navigate("WF-06");
-                TapResource("SubmitButton", 4);
-                return;
-            case "ABOUT":
-                TapResource("AboutButton", 2);
-                return;
+                return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "SealLinkButton", "SubmitButton" };
             case "WF-08":
-                TapResource("DriverButton", 0);
-                TapResource("ContinueButton", 2);
-                TapResource("PeerButton", 2);
-                TapResource("ConfirmCheck", 2);
-                TapResource("ConfirmPairButton", 2);
-                TapResource("StartButton", 4);
-                return;
+                return new[] { "DriverButton", "ContinueButton", "PeerButton", "ConfirmCheck", "ConfirmPairButton", "StartButton" };
+            case "ABOUT":
+                return new[] { "AboutButton" };
             default:
-                return;
+                return Array.Empty<string>();
         }
     }
 

@@ -276,6 +276,8 @@ public partial class CaptureShellView : UserControl
         PairRole.Text = label;
     }
 
+    public event EventHandler<string>? ScreenChanged;
+
     private void Show(string screenId)
     {
         ScreenId.Text = screenId;
@@ -287,5 +289,6 @@ public partial class CaptureShellView : UserControl
         SealPage.IsVisible = screenId == "WF-06";
         SubmitPage.IsVisible = screenId == "WF-07";
         FailPage.IsVisible = screenId == "WF-08";
+        ScreenChanged?.Invoke(this, screenId);
     }
 }
