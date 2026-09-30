@@ -31,8 +31,8 @@ public static class UiLicense
         new("Google.Protobuf", "3.36.1", "BSD-3-Clause", "Google Inc. Copyright 2015, Google Inc."),
         new("Xamarin.AndroidX.Core.SplashScreen", "1.0.1.15", "MIT AND Apache-2.0", "Microsoft. Bindings in the package are MIT."),
         new("Xamarin.AndroidX.AppCompat", "1.7.1.3", "MIT AND Apache-2.0", "Microsoft. Pulled in by Avalonia.Android."),
-        new("SharpNinja.Avalonia.RemoteControl.Runtime", "0.7.4", "MIT", "Sharp Ninja. Debug builds only. Release omits this package."),
-        new("Microsoft.Extensions.DependencyInjection", "10.0.8", "MIT", "Microsoft. Debug builds only. Release omits this package."),
+        new("SharpNinja.Avalonia.RemoteControl.Runtime", "0.8.0", "MIT", "Sharp Ninja. Debug builds only. Release omits this package."),
+        new("Microsoft.Extensions.DependencyInjection", "10.0.9", "MIT", "Microsoft. Debug builds only. Release omits this package."),
     ];
 
     public static string Attributions =>

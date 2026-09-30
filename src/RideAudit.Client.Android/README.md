@@ -12,9 +12,9 @@ Debug builds bake `rideaudit-lab.env` and `caddy-lab-root.pem`. The admission ad
 
 ## Debug visual tree
 
-Debug builds reference `SharpNinja.Avalonia.RemoteControl.Runtime` 0.7.4 and listen on device loopback port 47100. Release builds do not. The bearer token is random per process and is written only to the package-private marker `files/avalonia-remote-control.json`. This is not a Play publication.
+Debug builds reference `SharpNinja.Avalonia.RemoteControl.Runtime` 0.8.0 from nuget.org and request loopback port 0. The marker `files/avalonia-remote-control.json` records the port the OS assigned in `devicePort`. A stale marker is removed at startup, on bind failure, and when the host stops. Release builds do not include the package. The bearer token is random per process and is written only to that package-private marker. This is not a Play publication.
 
-Desktop side, after `dotnet tool install --global SharpNinja.Avalonia.RemoteControl.Tool --version 0.7.4`:
+Desktop side, after `dotnet tool install --global SharpNinja.Avalonia.RemoteControl.Tool --version 0.8.0`:
 
 ```powershell
 avalonia-remote adb connect --serial <device-serial> --package org.rideaudit.app --keep-forward
