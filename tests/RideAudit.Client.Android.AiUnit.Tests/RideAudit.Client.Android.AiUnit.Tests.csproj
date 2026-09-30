@@ -23,4 +23,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <Target Name="CopyCodexShim" AfterTargets="Build">
+    <MSBuild Projects="$(MSBuildThisFileDirectory)..\RideAudit.CodexShim\RideAudit.CodexShim.csproj" Targets="Restore;Build" Properties="Configuration=$(Configuration)" />
+    <ItemGroup>
+      <CodexShimFiles Include="$(MSBuildThisFileDirectory)..\RideAudit.CodexShim\bin\$(Configuration)\net10.0\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CodexShimFiles)" DestinationFiles="@(CodexShimFiles->'$(OutputPath)codex-shim\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
+using System.Diagnostics;
 using System.Text.Json;
 using Xunit;
 
@@ -129,5 +130,50 @@ public sealed class PhaseBGateTests
             .GetProperty("TimeoutSeconds")
             .GetInt32();
         Assert.True(seconds >= 180, "TimeoutSeconds is " + seconds + ". The 60 second budget expired before codex returned.");
+    }
+
+    [Fact]
+    public void Codex_shim_inserts_the_hook_trust_bypass_and_answers_a_probe()
+    {
+        CodexCliStdin.PrepareForExec();
+        var path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        Assert.StartsWith(CodexCliStdin.ShimDirectory + Path.PathSeparator, path, StringComparison.OrdinalIgnoreCase);
+
+        var dump = RunShim(
+            "--shim-dump",
+            "exec",
+            "--skip-git-repo-check",
+            "Image attachment (pixel.png): C:\\temp\\pixel.png");
+        Assert.Equal(0, dump.ExitCode);
+        Assert.Contains("--dangerously-bypass-hook-trust", dump.Stdout, StringComparison.Ordinal);
+        Assert.Contains("--dangerously-bypass-approvals-and-sandbox", dump.Stdout, StringComparison.Ordinal);
+        Assert.Contains("features.hooks=false", dump.Stdout, StringComparison.Ordinal);
+        Assert.Contains("-i" + Environment.NewLine + "C:\\temp\\pixel.png", dump.Stdout, StringComparison.Ordinal);
+
+        var probe = RunShim("--shim-probe");
+        Assert.Equal(0, probe.ExitCode);
+        Assert.Equal("rideaudit-codex-shim", probe.Stdout.Trim());
+    }
+
+    private static (int ExitCode, string Stdout) RunShim(params string[] args)
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName = "codex",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+        };
+        foreach (var arg in args)
+        {
+            psi.ArgumentList.Add(arg);
+        }
+
+        using var process = Process.Start(psi);
+        Assert.NotNull(process);
+        var stdout = process.StandardOutput.ReadToEnd();
+        process.WaitForExit();
+        return (process.ExitCode, stdout);
     }
 }

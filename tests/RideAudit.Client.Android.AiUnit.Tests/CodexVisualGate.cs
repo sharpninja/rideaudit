@@ -108,6 +108,7 @@ public static class CodexVisualGate
         FrontierResponse response;
         try
         {
+            CodexCliStdin.PrepareForExec();
             response = fixture.Client.SendAsync(request, CancellationToken.None).GetAwaiter().GetResult();
         }
         catch (Exception ex)
