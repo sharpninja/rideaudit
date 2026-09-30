@@ -14,6 +14,11 @@ public sealed class RemoteBridgeSession : IDisposable
     // Package 0.7.4 defaults to 1 MiB. The wireframe-aligned tree serializes above that.
     private const int MaxAcceptedFrameLength = 8 * 1024 * 1024;
 
+    // Connect and frame reads have no socket timeout in the protocol package.
+    // A wireless forward that never answers must fail closed instead of hanging the run.
+    private const int ConnectTimeoutMs = 8000;
+    private const int ReadTimeoutMs = 20000;
+
     private readonly string token;
 
     private RemoteBridgeSession(string token)
@@ -154,13 +159,34 @@ public sealed class RemoteBridgeSession : IDisposable
         };
 
         using var tcp = new TcpClient();
-        tcp.Connect("127.0.0.1", 47100);
+        var connect = tcp.ConnectAsync("127.0.0.1", 47100);
+        if (!connect.Wait(ConnectTimeoutMs))
+        {
+            tcp.Close();
+            throw new TimeoutException("RemoteControl bridge connect exceeded " + ConnectTimeoutMs + " ms.");
+        }
+
+        connect.GetAwaiter().GetResult();
         using var stream = tcp.GetStream();
-        BridgeFrameCodec.WriteAsync(stream, request).GetAwaiter().GetResult();
-        var response = BridgeFrameCodec.ReadAsync(
+        var write = BridgeFrameCodec.WriteAsync(stream, request).AsTask();
+        if (!write.Wait(ConnectTimeoutMs))
+        {
+            tcp.Close();
+            throw new TimeoutException("RemoteControl bridge write exceeded " + ConnectTimeoutMs + " ms.");
+        }
+
+        write.GetAwaiter().GetResult();
+        var read = BridgeFrameCodec.ReadAsync(
             stream,
             BridgeResponse.Parser,
-            maxFrameLength: MaxAcceptedFrameLength).GetAwaiter().GetResult();
+            maxFrameLength: MaxAcceptedFrameLength).AsTask();
+        if (!read.Wait(ReadTimeoutMs))
+        {
+            tcp.Close();
+            throw new TimeoutException("RemoteControl bridge read exceeded " + ReadTimeoutMs + " ms.");
+        }
+
+        var response = read.GetAwaiter().GetResult();
         if (response.Status != BridgeStatus.Ok)
         {
             throw new InvalidOperationException("Bridge " + method + " status " + response.Status + ": " + Redact(response.ErrorMessage));
