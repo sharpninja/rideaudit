@@ -1,0 +1,174 @@
+{
+  "TimestampUtc": "2026-10-03T14:03:09Z",
+  "RequestStampUtc": "2026-10-03T13:47:06Z",
+  "ValidatorIdentity": "GrokSubagentHostile",
+  "AddProfile": "yes",
+  "ProfileFileCount": 21,
+  "WorkClass": "Project documentation design-phase gate for PLAN-RIDEPIPE-001",
+  "Workspace": "F:\\GitHub\\rideaudit-ui-font",
+  "McpWorkspace": "F:\\GitHub\\rideaudit",
+  "Branch": "cursor/dual-phone-fold-moto-8aa2",
+  "Commit": "973b570be32f87399195d12021429007c8f55d6a",
+  "OverallVerdict": "DISAGREE",
+  "Accuracy": 90,
+  "Completeness": 84,
+  "PassCount": 19,
+  "FailCount": 2,
+  "UnknownCount": 0,
+  "FailList": [
+    "A7. The design is not sufficient to implement later without inventing missing signatures. Camera facing selection names CameraCaptureRequest.Facing and does not define the allowed facing tokens or the Camera2 lens-facing map. Frame payload names SourceStream.Payload and does not define encoding, frame count, or packing. The existing Windows camera path stores one JPEG with width 0, height 0, and a single TimeSpan.Zero timestamp, and the Android design neither adopts that layout nor defines a different one. H.264 annex-B is a byte array named AnnexB and is stated to stay out of CompositeSourceContainer, but H264CompositePackage.Codec and IProductionH264Encoder.CodecKind have no required literal in the design file, while MCP TODO PLAN-RIDEPIPE-001 says CodecKind is h264. Proposed AC-RIDE-223-001 says the encoder returns no package when either stream has zero frame timestamps, and Encode returns a non-nullable H264CompositePackage, so the empty-frame result is not a signature. Accelerometer axes are named, and the sensor is written as linear or raw, so the sensor type is not locked. A missing accelerometer throws fail-closed with no exception type, code, or requirement id. GPS left null until a future agreed requirement is specified and is not part of this fail. OverlayManifest is an Encode input with no rule for how it enters AnnexB. Width and Height on H264CompositePackage have no source rule. Telematics SourceKind is unbound in the design file and is android-telematics only in the TODO.",
+    "D3. PLAN-RIDEPIPE-001, the design file under review, does not specify a complete signature set for Camera2 encode, a production H.264 composite that does not replace the not-h264 canonical container, and an Android telematics source. Module boundaries for RideAudit.Video, RideAudit.Client.Android, and RideAudit.Capture are named, and the container stays not-h264. The holes that remain are the facing token domain, the frame payload layout, the H.264 codec literal split between the design file and the TODO, the zero-timestamp encoder result, the accelerometer sensor choice, the telematics failure signature, the telematics SourceKind literal, the overlay-to-annex-B rule, and the H.264 width and height source. Those holes are design incompleteness. The plan stays done false. This fail does not treat phase 2 tests or phase 3 product code as required at this gate."
+  ],
+  "Claims": [
+    {
+      "Id": "A1",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "Commit 973b570 is pushed on cursor/dual-phone-fold-moto-8aa2 and contains only the plan and the stop receipt.",
+      "Evidence": "git ls-remote matched 973b570be32f87399195d12021429007c8f55d6a. diff-tree added only the two markdown paths. src and tests porcelain is empty."
+    },
+    {
+      "Id": "A2",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "AndroidCameraSource.Capture throws CAMERA_UNAVAILABLE / FR-RIDE-041 with the unimplemented sentence when CameraAvailable is true.",
+      "Evidence": "AndroidCameraSource.cs lines 42-56. ErrorCodes.CameraUnavailable is CAMERA_UNAVAILABLE."
+    },
+    {
+      "Id": "A3",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "The design names ICameraSource.Capture, IProductionH264Encoder.Encode, ITelematicsSource.Read, and the three module boundaries.",
+      "Evidence": "PLAN-RIDEPIPE-001.md module section and the three interface blocks."
+    },
+    {
+      "Id": "A4",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "CompositeSourceContainer stays not-h264 and the design does not replace PassengerCompositor.",
+      "Evidence": "VideoPipeline.cs CodecId and media line. Design says it does not replace them. Commit does not edit them."
+    },
+    {
+      "Id": "A5",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "FR-RIDE-041 and FR-RIDE-055 stay pending and their descriptions match the wiki. FR-RIDE-223 and FR-RIDE-224 were not created. FR-RIDE-202 was not rewritten.",
+      "Evidence": "getFr results and wiki Functional-Requirements.md. 223 and 224 returned not_found."
+    },
+    {
+      "Id": "A6",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "PLAN-RIDEPIPE-001 exists, done false, tasks done false. This draft did not mark FR, AC, or TODO done.",
+      "Evidence": "todo.get done false and six task done false. Named AC isSatisfied false. Older PR24 tasks A and B were already done true."
+    },
+    {
+      "Id": "A7",
+      "Surface": "A",
+      "Result": "FAIL",
+      "Text": "The design is not sufficient to implement later without inventing missing signatures.",
+      "Evidence": "Facing tokens, payload layout, codec literal, zero-timestamp result, accelerometer sensor, telematics error contract, overlay rule, and width/height source are unspecified in the design file."
+    },
+    {
+      "Id": "A8",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "android.permission.CAMERA is already in the Android manifest. The design does not add a permission.",
+      "Evidence": "AndroidManifest.xml line 4. Commit does not edit the manifest."
+    },
+    {
+      "Id": "A9",
+      "Surface": "A",
+      "Result": "PASS",
+      "Text": "This gate does not claim device frames, tests, or implementation.",
+      "Evidence": "Design phases 2-5 not started. Stop receipt says device not run."
+    },
+    {
+      "Id": "B1",
+      "Surface": "B",
+      "Result": "PASS",
+      "Text": "Byrd design phase only. No implementation-done claim and no new pipeline product code.",
+      "Evidence": "Phase table says none are done. diff-tree has no C# files."
+    },
+    {
+      "Id": "B2",
+      "Surface": "B",
+      "Result": "PASS",
+      "Text": "The stop receipt is in the commit and matches the live throw and the live FR reads.",
+      "Evidence": "20261003T134349Z-ridepipe-design-stop.md re-read against source and getFr."
+    },
+    {
+      "Id": "B3",
+      "Surface": "B",
+      "Result": "PASS",
+      "Text": "MCP plugin wrapper was used. No raw REST and no on-disk store edit in the commit.",
+      "Evidence": "pwsh repl-invoke.ps1 against F:\\GitHub\\mcpserver-grok-plugin with MCP_WORKSPACE_PATH F:\\GitHub\\rideaudit."
+    },
+    {
+      "Id": "B4",
+      "Surface": "B",
+      "Result": "PASS",
+      "Text": "PowerShell only. No Python for this review or in the design commit.",
+      "Evidence": "Commit is markdown. Queries were pwsh."
+    },
+    {
+      "Id": "B5",
+      "Surface": "B",
+      "Result": "PASS",
+      "Text": "Design statements about the throw, container, manifest, and uncreated drafts match artifacts.",
+      "Evidence": "Sufficiency overclaim is A7 and D3, not a fabricated SHA or test count."
+    },
+    {
+      "Id": "B6",
+      "Surface": "B",
+      "Result": "PASS",
+      "Text": "The new design doc and stop receipt have no em dashes and no en dashes.",
+      "Evidence": "U+2014 count 0 and U+2013 count 0."
+    },
+    {
+      "Id": "C1",
+      "Surface": "C",
+      "Result": "PASS",
+      "Text": "Approved FR-RIDE-041, FR-RIDE-055, and FR-RIDE-202 description text matches the live read and was not rewritten.",
+      "Evidence": "getFr description equals wiki export. status pending."
+    },
+    {
+      "Id": "C2",
+      "Surface": "C",
+      "Result": "PASS",
+      "Text": "FR-RIDE-223 and FR-RIDE-224 were not created and are not treated as agreed.",
+      "Evidence": "getFr not_found. Design says proposed and not stored."
+    },
+    {
+      "Id": "C3",
+      "Surface": "C",
+      "Result": "PASS",
+      "Text": "The design does not claim AC satisfied. Live AC flags are false.",
+      "Evidence": "isSatisfied false on the read FRs. Design says unsatisfied."
+    },
+    {
+      "Id": "D1",
+      "Surface": "D",
+      "Result": "PASS",
+      "Text": "PLAN-RIDEPIPE-001 stays done false and its tasks stay done false.",
+      "Evidence": "workflow.todo.get. This review did not update the TODO."
+    },
+    {
+      "Id": "D2",
+      "Surface": "D",
+      "Result": "PASS",
+      "Text": "The design does not claim a plan task complete.",
+      "Evidence": "Phase table says none are done. Android task F done false. PR24 parent done false."
+    },
+    {
+      "Id": "D3",
+      "Surface": "D",
+      "Result": "FAIL",
+      "Text": "The design does not fully specify Camera2, separate H.264, and telematics signatures.",
+      "Evidence": "Same contract holes as A7. Container separation and module names are present and do not close the holes."
+    }
+  ],
+  "SessionId": "GrokCode-20260927T202356Z-plugin-session",
+  "TurnRequestId": "req-20261003T134706Z-hv-design",
+  "ReceiptMarkdown": "# Hostile validator receipt\r\n\r\nTimestampUtc: 2026-10-03T14:03:09Z\r\n\r\nRequestStampUtc: 2026-10-03T13:47:06Z\r\n\r\nValidatorIdentity: GrokSubagentHostile\r\n\r\nWorkspace: F:\\GitHub\\rideaudit-ui-font\r\n\r\nMcpWorkspace: F:\\GitHub\\rideaudit\r\n\r\nBranch: cursor/dual-phone-fold-moto-8aa2\r\n\r\nCommit: 973b570be32f87399195d12021429007c8f55d6a\r\n\r\nWorkClass: Project documentation. Design-phase gate for PLAN-RIDEPIPE-001. This is not an implementation-complete claim and not a lab ops action. Byrd v4 applies to the design document. Red tests and product code are not required at this gate because the design says those phases were not started.\r\n\r\nadd-profile: yes. Profile file count: 21. Skill ports add-profile.md and add-profile.grok.md were excluded. Files read in full: PROFILE.md, user-payton-byrd.md, accuracy-first-verify-sources.md, approve-before-execute.md, philosophical-dialogue-mode.md, log-decisions-as-conclusions.md, session-turn-title-summary.md, never-skip-explicit-actions.md, adversarial-review-global.md, hv-jsonl-and-session-log.md, bring-the-receipts.md, hostile-on-goal-state.md, hostile-ops-vs-requirements.md, hostile-phase-gates.md, kill-assumption-iteration.md, lab-authorization.md, no-attitude-honesty-tell.md, no-python-lab.md, no-shortcuts-precision-over-convenience.md, requirement-change-plan-first.md, wireframe-app-visual-fidelity.md.\r\n\r\nOverallVerdict: DISAGREE\r\n\r\nAccuracy: 90\r\n\r\nCompleteness: 84\r\n\r\nPassCount: 19\r\n\r\nFailCount: 2\r\n\r\nUnknownCount: 0\r\n\r\nThis gate does not authorize done. PLAN-RIDEPIPE-001 stays done false. No FR, AC, or TODO was marked done by this review.\r\n\r\n## Fail list\r\n\r\n1. A7. The design is not sufficient to implement later without inventing missing signatures. Camera facing selection names CameraCaptureRequest.Facing and does not define the allowed facing tokens or the Camera2 lens-facing map. Frame payload names SourceStream.Payload and does not define encoding, frame count, or packing. The existing Windows camera path stores one JPEG with width 0, height 0, and a single TimeSpan.Zero timestamp, and the Android design neither adopts that layout nor defines a different one. H.264 annex-B is a byte array named AnnexB and is stated to stay out of CompositeSourceContainer, but H264CompositePackage.Codec and IProductionH264Encoder.CodecKind have no required literal in the design file, while MCP TODO PLAN-RIDEPIPE-001 says CodecKind is h264. Proposed AC-RIDE-223-001 says the encoder returns no package when either stream has zero frame timestamps, and Encode returns a non-nullable H264CompositePackage, so the empty-frame result is not a signature. Accelerometer axes are named, and the sensor is written as linear or raw, so the sensor type is not locked. A missing accelerometer throws fail-closed with no exception type, code, or requirement id. GPS left null until a future agreed requirement is specified and is not part of this fail. OverlayManifest is an Encode input with no rule for how it enters AnnexB. Width and Height on H264CompositePackage have no source rule. Telematics SourceKind is unbound in the design file and is android-telematics only in the TODO.\r\n\r\n2. D3. PLAN-RIDEPIPE-001, the design file under review, does not specify a complete signature set for Camera2 encode, a production H.264 composite that does not replace the not-h264 canonical container, and an Android telematics source. Module boundaries for RideAudit.Video, RideAudit.Client.Android, and RideAudit.Capture are named, and the container stays not-h264. The holes that remain are the facing token domain, the frame payload layout, the H.264 codec literal split between the design file and the TODO, the zero-timestamp encoder result, the accelerometer sensor choice, the telematics failure signature, the telematics SourceKind literal, the overlay-to-annex-B rule, and the H.264 width and height source. Those holes are design incompleteness. The plan stays done false. This fail does not treat phase 2 tests or phase 3 product code as required at this gate.\r\n\r\n## A. Requested validation\r\n\r\nA1. PASS. Commit 973b570be32f87399195d12021429007c8f55d6a is HEAD of cursor/dual-phone-fold-moto-8aa2. git ls-remote origin refs/heads/cursor/dual-phone-fold-moto-8aa2 returned that same SHA. git diff-tree --name-status -r shows only two additions: docs/plans/PLAN-RIDEPIPE-001.md and docs/receipts/android/20261003T134349Z-ridepipe-design-stop.md. 171 insertions, no other paths. git status --porcelain -- src tests is empty. git grep of IProductionH264Encoder, AndroidH264Encoder, AndroidTelematicsSource, and ITelematicsSource on HEAD hits only the plan markdown, not C# source.\r\n\r\nA2. PASS. src/RideAudit.Client.Android/AndroidCameraSource.cs Capture returns no frames. When CameraAvailable is false it throws RideAuditFailClosedException with ErrorCodes.CameraUnavailable, FR-RIDE-041, and a probe message. When CameraAvailable is true it still throws RideAuditFailClosedException with ErrorCodes.CameraUnavailable, FR-RIDE-041, and the sentence Android Camera2 frame pipeline is not implemented. Refusing fixture frames. src/RideAudit.Contracts/ErrorCodes.cs sets CameraUnavailable to CAMERA_UNAVAILABLE.\r\n\r\nA3. PASS. The design names ICameraSource.Capture(CameraCaptureRequest) as the camera signature, IProductionH264Encoder.Encode(H264CompositeRequest) as a separate H.264 package, and ITelematicsSource.Read(TimeSpan) as the telematics signature. The module section names RideAudit.Video, RideAudit.Client.Android, and RideAudit.Capture. Naming is not the same claim as sufficiency. Sufficiency is A7.\r\n\r\nA4. PASS. CompositeSourceContainer.CodecId is rideaudit-composite-source-container-v2. Encode writes media=source-payload-container;not-h264;not-bt-transport. PassengerCompositor.CodecId uses that container id and CompressionId is none-canonical. The design says replacing PassengerCompositor or CompositeSourceContainer with H.264 would change that contract and that this plan does not do so. The commit does not edit those types.\r\n\r\nA5. PASS. Live workflow.requirements.getFr on workspace F:\\GitHub\\rideaudit: FR-RIDE-041 status pending, description Support two approved phones collecting video for the same authorized vehicle/session, retaining each source stream device identity, app attestation, camera metadata, and capture timestamps. That sentence matches docs/Project/wiki/github/Functional-Requirements.md. AC-RIDE-041-001 through AC-RIDE-041-006 are isSatisfied false. FR-RIDE-055 status pending, description matches the wiki sentence about passenger sync, join, and accelerometer spider graph. AC-RIDE-055-001 and AC-RIDE-055-002 are isSatisfied false. FR-RIDE-202 status pending, description matches the wiki geolocation masking sentence. AC-RIDE-202-001 and AC-RIDE-202-002 are isSatisfied false. FR-RIDE-045 and FR-RIDE-221 descriptions also match the wiki and stay pending with isSatisfied false. The design does not paste replacement bodies for those FRs. getFr FR-RIDE-223 returned not_found. getFr FR-RIDE-224 returned not_found. Observation, not a rewrite finding: a second getFr of FR-RIDE-041 moved createdAt and updatedAt from 2026-10-03T13:58:35Z to 2026-10-03T13:59:37Z while the description text stayed the same. Those stamps follow the read. They are not evidence that the description was edited.\r\n\r\nA6. PASS. workflow.todo.get PLAN-RIDEPIPE-001 returned done false. All six implementation tasks, phase 0 through phase 5, are done false. Named FR acceptance criteria above are isSatisfied false. PLAN-RIDEAUDIT-ANDROID-001 is done false and task F is done false. PLAN-PR24FOLD-001 parent done is false. Its tasks A and B are done true from the 2026-09-30 inventory and headless test notes. Tasks C, D, E, and F are done false. This design update did not flip those historical A and B flags, and this review did not mark any FR, AC, or TODO done. The sentence that this draft marked nothing done holds. It does not mean the older PR24 tasks A and B are open.\r\n\r\nA7. FAIL. See fail list item 1. The design states several of the behaviors and still leaves contracts an implementer must invent. Fail-closed camera permission is specified: Capture throws RideAuditFailClosedException with CAMERA_UNAVAILABLE and FR-RIDE-041 when the camera cannot be opened or CAMERA is not granted. GPS null until a future agreed requirement is specified. Those two parts do not make the whole sufficiency claim true.\r\n\r\nA8. PASS. src/RideAudit.Client.Android/Properties/AndroidManifest.xml line 4 declares android.permission.CAMERA. The same file already declares ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION. The design says it adds no further camera permission. The commit does not edit the manifest.\r\n\r\nA9. PASS. The design says implementation does not start in this revision, phases 2 through 5 are not started, and there is no pass, done, green, or complete claim for these pipelines. The stop receipt says device not run, no product code for the three pipelines, and hostile validation was not run. This gate does not claim device frames, tests, or implementation.\r\n\r\n## B. Workspace rules\r\n\r\nB1. PASS. Byrd v4 design phase. The design lists phases 0 through 5 and says none are done. It stops before new FR text is treated as agreed, before red tests, and before implementation. This review does not fail the absence of red tests or Camera2 product code. The design does not claim implementation is done. The commit adds no Camera2, H.264, or telematics product source.\r\n\r\nB2. PASS. The stop receipt docs/receipts/android/20261003T134349Z-ridepipe-design-stop.md is in the commit and was re-read. Its statements about the unimplemented Capture throw, pending FR-RIDE-041 and FR-RIDE-055, and absent FR-RIDE-223 and FR-RIDE-224 match the live code and the live plugin reads. This hostile receipt is a new file. It is not an implementer self-check.\r\n\r\nB3. PASS. TODO and requirement reads used pwsh -NoProfile -File against F:\\GitHub\\mcpserver-grok-plugin\\lib\\repl-invoke.ps1 with MCP_PLUGIN_HOST=grok, MCP_AGENT_NAME=GrokCode, PLUGIN_AGENT_NAME=GrokCode, MCP_PLUGIN_ROOT and GROK_PLUGIN_ROOT set to that plugin, and MCP_WORKSPACE_PATH=F:\\GitHub\\rideaudit. No raw REST. The design commit does not edit a todo store or a requirements store on disk.\r\n\r\nB4. PASS. The design commit is two markdown files. This review used PowerShell only. No Python was used to build JSON, query MCP, or inspect git.\r\n\r\nB5. PASS. The design document's factual statements about the current throw, the not-h264 container, the manifest permission, and the uncreated draft ids match the artifacts. The overclaim that the design is already sufficient is scored as A7 and D3. It is not a fabricated test result or a false commit SHA.\r\n\r\nB6. PASS. PLAN-RIDEPIPE-001.md and the stop receipt contain zero U+2014 em dashes and zero U+2013 en dashes. rideaudit-ui-font has no AGENTS.md. Workspace rules were taken from F:\\GitHub\\rideaudit\\AGENTS-README-FIRST.yaml and the operator profile. MCP bootstrap returned initialized true.\r\n\r\n## C. Requirements\r\n\r\nC1. PASS. Approved description text for FR-RIDE-041, FR-RIDE-055, and FR-RIDE-202 matches the live plugin read and the wiki export cited under A5. Status stays pending. The design says do not rewrite those bodies.\r\n\r\nC2. PASS. FR-RIDE-223 and FR-RIDE-224 were not created. The design calls them proposed drafts, not stored, not agreed. A missing draft id is not a missing-FR fail for a design that stops for approval. The design does not treat those drafts as agreed.\r\n\r\nC3. PASS. The design says proposed criteria are unsatisfied and not stored until Payton agrees, and that no FR, AC, or TODO is marked done. Live acceptance criteria on FR-RIDE-041, FR-RIDE-045, FR-RIDE-055, FR-RIDE-202, and FR-RIDE-221 are isSatisfied false. This review did not set any AC satisfied.\r\n\r\n## D. Current plan\r\n\r\nD1. PASS. PLAN-RIDEPIPE-001 exists, done false, and every implementation task is done false. This review did not set done true.\r\n\r\nD2. PASS. The design says none of its phases are done. It does not claim a plan task complete. PLAN-RIDEAUDIT-ANDROID-001 task F stays done false. PLAN-PR24FOLD-001 stays done false. Historical tasks A and B on that older plan stay done true and are not a completion claim for this design.\r\n\r\nD3. FAIL. See fail list item 2.\r\n\r\n## Scores\r\n\r\nAccuracy 90. Equal weight across 21 applicable claims: 19 pass and 2 fail. 19 divided by 21 is about 90.5, recorded as the integer 90. The passing claims were re-checked against git, source, and live MCP. The two failures are the sufficiency claim and the plan signature gap. They are enough to block agreement.\r\n\r\nCompleteness 84. The design does name module boundaries and the three method signatures, and it correctly leaves the canonical container on not-h264. It does not lock facing tokens, payload layout, H.264 codec literals, the empty-frame encoder result, the accelerometer sensor, the telematics error contract, overlay handling, or H.264 width and height. Those are holes in the design itself, so completeness stays below 98. Phase 2 tests and phase 3 code were not scored as missing, because this gate is design only.\r\n\r\nOverallVerdict is DISAGREE because A7 and D3 fail and because both scores are below 98.\r\n\r\n## Session log\r\n\r\nBootstrap workflow.sessionlog.bootstrap returned initialized true, requestId req-20261003T135611Z-ae42. The prior local turn req-20261003T134339Z-ridepipe-design was already status completed, so it was not completed again. beginTurn for req-20261003T134706Z-hv-design returned persisted true on session GrokCode-20260927T202356Z-plugin-session. completeTurn for that request also returned persisted true. Marker path on the cache file is F:\\GitHub\\rideaudit\\AGENTS-README-FIRST.yaml. Local status after that complete is completed. That first write stored only the heading line, because a blank line in the verdict was not indented and the plugin YAML reader stopped there.\r\n\r\nA follow-up turn req-20261003T140900Z-hv-design-body on the same session stored the full verdict in padded chunks. beginTurn, appendDialog, appendActions, and completeTurn each returned persisted true. client.SessionLog.QueryAsync agent GrokCode limit 2 returned both request ids and the strings OverallVerdict: DISAGREE, Accuracy: 90, Completeness: 84, A7. The design is not sufficient, and D3. PLAN-RIDEPIPE-001. queryHistory on the same session shows lastUpdated 2026-10-03T14:06:33Z and turnCount 32 before the follow-up. The follow-up is the body proof.\r\n\r\n## Evidence paths\r\n\r\nRequest jsonl: F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20261003T134706Z-ridepipe-design.request.jsonl\r\n\r\nResponse jsonl: F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20261003T134706Z-ridepipe-design.response.jsonl\r\n\r\nLive captures: F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\_evidence-20261003T134706Z\\\r\n\r\nDesign: F:\\GitHub\\rideaudit-ui-font\\docs\\plans\\PLAN-RIDEPIPE-001.md\r\n\r\nStop receipt: F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\android\\20261003T134349Z-ridepipe-design-stop.md\r\n"
+}

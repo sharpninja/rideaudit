@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>RideAudit.Client.Android.AiUnit.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="SharpNinja.aiUnit" />
+    <PackageReference Include="SharpNinja.Avalonia.RemoteControl.Protocol" />
+    <PackageReference Include="Svg.Skia" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.aiunit.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="CopyCodexShim" AfterTargets="Build">
+    <MSBuild Projects="$(MSBuildThisFileDirectory)..\RideAudit.CodexShim\RideAudit.CodexShim.csproj" Targets="Restore;Build" Properties="Configuration=$(Configuration)" />
+    <ItemGroup>
+      <CodexShimFiles Include="$(MSBuildThisFileDirectory)..\RideAudit.CodexShim\bin\$(Configuration)\net10.0\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CodexShimFiles)" DestinationFiles="@(CodexShimFiles->'$(OutputPath)codex-shim\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

@@ -1,0 +1,154 @@
+{
+  "TimestampUtc": "2026-09-29T16:10:00Z",
+  "VerificationObservedUtc": "2026-09-29T16:16:16Z",
+  "ValidatorIdentity": "GrokSubagentHostile",
+  "Workspace": "F:\\GitHub\\rideaudit-ui-font",
+  "Host": "PAYTON-LEGION2",
+  "Branch": "cursor/dual-phone-fold-moto-8aa2",
+  "Head": "d3a5ca079033338037d6bac4b51cb10090a18b0b",
+  "Parent": "a57f1d3daa0d40d1f8905f895fb512799c47cf7b",
+  "WorkClass": "MIXED",
+  "AddProfileExecuted": true,
+  "AddProfileFileCount": 19,
+  "OverallVerdict": "AGREE",
+  "AccuracyScore": 100,
+  "CompletenessScore": 100,
+  "PassCount": 18,
+  "FailCount": 0,
+  "UnknownCount": 0,
+  "FailList": [],
+  "UnknownList": [],
+  "Claims": [
+    {
+      "Id": "A1",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Both phones have APK SHA256 67669B76A27139BBB215E8D777D5519650E749182BDF2C9732070A4FEC539869 and 47523889 bytes.",
+      "Evidence": "Host apk re-hashed at d3a5ca0. Length and digest match. Commit does not change the apk."
+    },
+    {
+      "Id": "A2",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Fold WF-01 heights match.",
+      "Evidence": "fold-01-wf01.xml re-parsed. Heights 115, 89, 89, 124."
+    },
+    {
+      "Id": "A3",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Edge WF-01 heights match.",
+      "Evidence": "moto-01-wf01.xml re-parsed. Heights 122, 95, 95, 132."
+    },
+    {
+      "Id": "A4",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Fold driver strings match, including the camera and attestation FailClosedText.",
+      "Evidence": "fold-02, fold-03, fold-04 XmlDocument attributes."
+    },
+    {
+      "Id": "A5",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Edge passenger strings match.",
+      "Evidence": "moto-02, moto-03, moto-04-screen, moto-04-fail XmlDocument attributes."
+    },
+    {
+      "Id": "A6",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Receipt does not claim pair, BLE peer, Play, OTS, Caddy, HSM closure, or AC satisfaction.",
+      "Evidence": "Lines 73-81. isSatisfied true count 0."
+    },
+    {
+      "Id": "A7",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "Fold pngs 904x2316 and Edge pngs 1080x2400.",
+      "Evidence": "PNG IHDR re-read on all 8 png files."
+    },
+    {
+      "Id": "A8",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Claim": "U+2013 and U+2014 counts are 0.",
+      "Evidence": "Receipt length 4969. Both counts 0. Deferral line both counts 0."
+    },
+    {
+      "Id": "B1",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Claim": "Byrd v4 is not violated on the applicable docs slice.",
+      "Evidence": "Class 2 redeploy is outside Byrd. No phase-complete claim."
+    },
+    {
+      "Id": "B2",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Claim": "Measured claims were re-read at HEAD d3a5ca0.",
+      "Evidence": "XML, PNG, apk hash, ledger equality, yaml isSatisfied."
+    },
+    {
+      "Id": "B3",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Claim": "Requirements yaml was not edited and isSatisfied stays false.",
+      "Evidence": "Use-Cases-Batch.yaml lines 675-677. Absent from the diff."
+    },
+    {
+      "Id": "B4",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Claim": "d3a5ca0 does not add Python.",
+      "Evidence": "Only the android receipt markdown changed."
+    },
+    {
+      "Id": "B5",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Claim": "The corrected banner sentence matches the XML.",
+      "Evidence": "fold-04 FailClosedText is the camera string. fold-01-launch.xml still has PRODUCTION_UNAVAILABLE. This pass xml dir has zero banner phrases."
+    },
+    {
+      "Id": "B6",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Claim": ".version is not in a57f1d3 or d3a5ca0.",
+      "Evidence": "git ls-tree count 0 for both commits."
+    },
+    {
+      "Id": "C1",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Claim": "AC-UC-025-001 isSatisfied is false.",
+      "Evidence": "Use-Cases-Batch.yaml line 677. Class 2 font FR gap is N/A."
+    },
+    {
+      "Id": "C2",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Claim": "Ledger row stays deferred and matches the deferral line.",
+      "Evidence": "status deferred. Body equality length 460. d3a5ca0 does not edit those files."
+    },
+    {
+      "Id": "D1",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Claim": "Plan files were not edited.",
+      "Evidence": "git diff a57f1d3^ d3a5ca0 -- docs/plans is empty."
+    },
+    {
+      "Id": "D2",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Claim": "These commits do not check plan boxes.",
+      "Evidence": "No plan path in either commit. This review did not check a box."
+    }
+  ],
+  "PriorVerdict": "DISAGREE on B5 only. Closed by d3a5ca0.",
+  "ReceiptMarkdownPath": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hostile-validator-20260929T161000Z.md",
+  "RequestJsonl": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20260929T161000Z-dual-font-recheck.request.jsonl",
+  "ResponseJsonl": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20260929T161000Z-dual-font-recheck.response.jsonl",
+  "VerdictMarkdown": "# Hostile validator receipt\r\n\r\nTimestampUtc: 2026-09-29T16:10:00Z\r\nVerificationObservedUtc: 2026-09-29T16:16:16Z\r\nValidatorIdentity: GrokSubagentHostile\r\nWorkspace: F:\\GitHub\\rideaudit-ui-font\r\nHost: PAYTON-LEGION2\r\nBranch: cursor/dual-phone-fold-moto-8aa2\r\nHEAD: d3a5ca079033338037d6bac4b51cb10090a18b0b\r\nHEAD subject: docs(android): drop unsaved banner claim\r\nParent: a57f1d3daa0d40d1f8905f895fb512799c47cf7b\r\nImplementerReceipt: docs/receipts/android/20260929T154510Z-dual-font-both.md\r\nEvidenceDir: docs/receipts/android/dual-font-20260929/\r\nWorkClass: MIXED\r\nClass2Lab: adb install and taps on the already paired Fold 4 and Edge. Surface C is N/A for a new font FR on that redeploy.\r\nClass1Docs: deferral reason and ledger row for AC-UC-025-001. Scored on the AC staying false and deferred.\r\nadd-profile: executed yes. Profile file count read: 19. Excluded skill port add-profile.grok.md. This recheck read those 19 files again before scoring.\r\nOverallVerdict: AGREE\r\nAccuracyScore: 100\r\nCompletenessScore: 100\r\nPassCount: 18\r\nFailCount: 0\r\nUnknownCount: 0\r\n\r\nThis AGREE does not satisfy AC-UC-025-001. It does not check a plan box. It does not authorize a later done-state change by itself. Both scores are at least 98.\r\n\r\nPrior verdict hostile-validator-20260929T160000Z was DISAGREE only on B5. That FAIL is closed on this HEAD. The corrected sentence matches the committed XML.\r\n\r\n## FAIL list\r\n\r\nNone.\r\n\r\n## UNKNOWN list\r\n\r\nNone.\r\n\r\n## add-profile files read\r\n\r\n19 non-skill markdown files, read in full on this recheck: PROFILE.md, user-payton-byrd.md, accuracy-first-verify-sources.md, approve-before-execute.md, philosophical-dialogue-mode.md, log-decisions-as-conclusions.md, session-turn-title-summary.md, never-skip-explicit-actions.md, adversarial-review-global.md, hv-jsonl-and-session-log.md, bring-the-receipts.md, hostile-on-goal-state.md, hostile-ops-vs-requirements.md, hostile-phase-gates.md, lab-authorization.md, no-attitude-honesty-tell.md, no-python-lab.md, no-shortcuts-precision-over-convenience.md, requirement-change-plan-first.md. Skill port add-profile.grok.md was excluded.\r\n\r\n## Correction under attack\r\n\r\nCommit d3a5ca079033338037d6bac4b51cb10090a18b0b has parent a57f1d3daa0d40d1f8905f895fb512799c47cf7b. `git show --name-status` lists only `docs/receipts/android/20260929T154510Z-dual-font-both.md`.\r\n\r\nThe on-disk sentence at line 70 is: \"The committed Fold start dump replaces that control with the camera and attestation string above. This pass does not include a saved dump of the earlier production unavailable banner. That banner remains in `docs/receipts/android/dual-20260929/fold-01-launch.xml` from the previous session.\"\r\n\r\n`fold-04-start.xml` has one `FailClosedText` node. Text is `CAMERA_UNAVAILABLE: CAMERA_UNAVAILABLE: Android Camera2 frame pipeline is not implemented. Refusing fixture frames. | ATTESTATION_FAILED: Attestation token is missing.` PRODUCTION_UNAVAILABLE is absent. A phrase scan of every xml file in `dual-font-20260929` found zero hits for PRODUCTION_UNAVAILABLE, canonical admission, Play Integrity, and hardware HSM.\r\n\r\n`docs/receipts/android/dual-20260929/fold-01-launch.xml` has one `FailClosedText` node. Text starts `PRODUCTION_UNAVAILABLE: UnavailablePlayIntegrityClient: Play Integrity API was not called.` and includes `UnavailableHsmEscrow: hardware HSM is not configured.` and `CanonicalAdmission: Canonical admission requires tenant and driver identity.`\r\n\r\nReceipt length 4969. U+2013 count 0. U+2014 count 0.\r\n\r\n## A. Requested validation\r\n\r\n### A1. Both phones have the stated APK. PASS\r\n\r\nHost file `src/RideAudit.Client.Android/bin/Release/net10.0-android/org.rideaudit.app-Signed.apk` re-hashed at this HEAD. Length 47523889. SHA256 67669B76A27139BBB215E8D777D5519650E749182BDF2C9732070A4FEC539869. d3a5ca0 does not change the apk. The prior live pull of both base.apk files matched this digest and the dumpsys lastUpdateTime lines. This commit does not alter that evidence.\r\n\r\n### A2. Fold WF-01 heights. PASS\r\n\r\nRe-parsed `fold-01-wf01.xml`. TitleText height 115, y 119-234. FrameworkNotice Avalonia UI 12 height 89, y 878-967. ScreenId WF-01 height 89, y 1031-1120. DriverButton height 124, y 1382-1506.\r\n\r\n### A3. Edge WF-01 heights. PASS\r\n\r\nRe-parsed `moto-01-wf01.xml`. TitleText height 122, y 139-261. FrameworkNotice height 95, y 945-1040. ScreenId WF-01 height 95, y 1107-1202. DriverButton height 132, y 1386-1518.\r\n\r\n### A4. Fold driver strings. PASS\r\n\r\nfold-02-role.xml ScreenId WF-04 and PairingStatus `Role confirmed: driver coordinator`. fold-03-discover.xml ScreenId WF-02 and PairingStatus `RideAudit Bluetooth discovery on android-ble. No Lyft private API.` fold-04-start.xml ScreenId WF-08, StartButton enabled false, ClockText `Session clock not started`, FailClosedText the camera and attestation string above.\r\n\r\n### A5. Edge passenger strings. PASS\r\n\r\nmoto-02-role.xml ScreenId WF-05 and PairingStatus `Role confirmed: passenger compositor`. moto-03-discover.xml ScreenId WF-02 and the same discovery string. moto-04-screen.xml ScreenId WF-08 and StartButton enabled false. moto-04-fail.xml FailClosedText `Only the driver phone may start the session.` SpiderGraph `Spider graph armed for telematics overlay`. SubmitStatus `No submission`.\r\n\r\n### A6. Receipt does not claim a new pair, a BLE peer, Play publication, OTS, Caddy, or HSM closure, and does not mark AC-UC-025-001 satisfied. PASS\r\n\r\nLines 73-81 still deny those closures. `isSatisfied: true` count 0. `adb pair` count 0. `pair succeeded` count 0. The two `satisfied` hits are the line 5 denial and the substring inside `isSatisfied`.\r\n\r\n### A7. PNG sizes. PASS\r\n\r\nIHDR: four Fold pngs 904x2316. Four Edge pngs 1080x2400.\r\n\r\n### A8. U+2013 and U+2014 counts are 0. PASS\r\n\r\nNew receipt length 4969. Both counts 0. AC-UC-025-001 deferral line both counts 0.\r\n\r\n### B5 correction. PASS\r\n\r\nThe sentence that previously claimed the production banner was in this pass's Fold tree is gone. The replacement sentence matches fold-04-start.xml and the prior fold-01-launch.xml. Prior B5 FAIL is not still open.\r\n\r\n## B. Workspace rules\r\n\r\n### B1. Byrd v4 on the applicable slice. PASS\r\n\r\nClass 2 redeploy stays outside Byrd. The docs commits do not claim a phase complete or a plan checkbox.\r\n\r\n### B2. Receipts for the measured claims. PASS\r\n\r\nHeights, strings, png sizes, apk hash, banner texts, ledger equality, and yaml isSatisfied were re-read at HEAD d3a5ca0.\r\n\r\n### B3. MCP-only requirements storage. PASS\r\n\r\n`docs/Project/Use-Cases-Batch.yaml` is not in the diff from a57f1d3 parent through d3a5ca0. isSatisfied stays false.\r\n\r\n### B4. PowerShell only, no Python, for this slice. PASS\r\n\r\nd3a5ca0 changes one markdown file. No Python file is in the commit.\r\n\r\n### B5. Honesty. PASS\r\n\r\nThe corrected banner sentence matches the two XML files named above. The camera string and the prior PRODUCTION_UNAVAILABLE string were re-read from the nodes.\r\n\r\n### B6. Other standing rules. PASS\r\n\r\nHost is PAYTON-LEGION2. `.version` is absent from both a57f1d3 and d3a5ca0 (`git ls-tree` count 0). Working tree still shows `?? .version`, which is outside both commits.\r\n\r\n## C. Requirements\r\n\r\nClass 2 redeploy: N/A. Missing a new font FR is not a FAIL.\r\n\r\n### C1. AC-UC-025-001 isSatisfied false. PASS\r\n\r\n`docs/Project/Use-Cases-Batch.yaml` lines 675-677: id AC-UC-025-001, isSatisfied false. That file is not in either commit's change set versus a57f1d3 parent.\r\n\r\n### C2. Ledger row stays deferred and matches explicit-deferrals.txt. PASS\r\n\r\nStatus cell `deferred`. Deferral body equals the ledger reason cell. Both length 460. d3a5ca0 does not edit those files.\r\n\r\n## D. Plan\r\n\r\n### D1. Plan files were not edited by a57f1d3 or d3a5ca0. PASS\r\n\r\n`git diff --name-only a57f1d3^ d3a5ca0 -- docs/plans` is empty.\r\n\r\n### D2. These commits do not check plan boxes. PASS\r\n\r\nNeither commit lists a plan path. The receipt still says AC-UC-025-001 stays deferred. This review did not check a box.\r\n\r\n## Score\r\n\r\n18 claims scored: A1 A2 A3 A4 A5 A6 A7 A8, B1 B2 B3 B4 B5 B6, C1 C2, D1 D2. 18 PASS. 0 FAIL. 0 UNKNOWN. AccuracyScore 100. CompletenessScore 100. OverallVerdict AGREE.\r\n\r\nRequestJsonl: docs/receipts/hv/20260929T161000Z-dual-font-recheck.request.jsonl\r\nResponseJsonl: docs/receipts/hv/20260929T161000Z-dual-font-recheck.response.jsonl\r\n"
+}

@@ -1,19 +1,883 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="RideAudit.Shared.Ui.Views.CaptureShellView">
-  <StackPanel Spacing="12">
-    <TextBlock x:Name="ScreenId" Text="WF-01" />
-    <TextBlock Text="Select your role for session" />
-    <Button x:Name="DriverButton" Content="DRIVER  Session coordinator" />
-    <Button x:Name="PassengerButton" Content="PASSENGER  Video compositor" />
-    <TextBlock x:Name="PairingStatus" Text="Bluetooth discovery idle" />
-    <Button x:Name="DiscoverButton" Content="Discover RideAudit peer" />
-    <TextBlock x:Name="ClockText" Text="Session clock not started" />
-    <Button x:Name="StartButton" Content="Start session" />
-    <Button x:Name="StopButton" Content="Stop session" IsEnabled="False" />
-    <TextBlock x:Name="SpiderGraph" Text="Spider graph idle" />
-    <TextBlock x:Name="SealStatus" Text="Seal not started" />
-    <TextBlock x:Name="FailClosedText" IsVisible="False" />
-    <TextBlock x:Name="SubmitStatus" Text="No submission" />
-  </StackPanel>
+             xmlns:controls="using:RideAudit.Shared.Ui.Controls"
+             xmlns:local="using:RideAudit.Shared.Ui.Views"
+             x:Class="RideAudit.Shared.Ui.Views.CaptureShellView"
+             Background="#F4F7FA"
+             FontSize="{StaticResource RideAuditBodyFontSize}">
+  <UserControl.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="TextTrimming" Value="None" />
+    </Style>
+    <Style Selector="TextBlock.center">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="#394656" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="TextBlock.wordmark">
+      <Setter Property="FontSize" Value="28" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.screen-title">
+      <Setter Property="FontSize" Value="17" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="BorderBrush" Value="#D5DEE8" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="14" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+    <Style Selector="Border.pill">
+      <Setter Property="CornerRadius" Value="13" />
+      <Setter Property="Padding" Value="8,4" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    <Style Selector="Border.role-icon">
+      <Setter Property="Width" Value="48" />
+      <Setter Property="Height" Value="48" />
+      <Setter Property="CornerRadius" Value="24" />
+      <Setter Property="Background" Value="#E8EEF5" />
+    </Style>
+    <Style Selector="Button.selected Border.role-icon">
+      <Setter Property="Background" Value="#E7F1FA" />
+    </Style>
+    <Style Selector="Border.accent">
+      <Setter Property="Width" Value="4" />
+      <Setter Property="Height" Value="68" />
+      <Setter Property="CornerRadius" Value="2" />
+      <Setter Property="Background" Value="#173E66" />
+      <Setter Property="IsVisible" Value="False" />
+      <Setter Property="Margin" Value="0,0,8,0" />
+    </Style>
+    <Style Selector="Button.selected Border.accent">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="controls|WireframeIcon.radio-on">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Button.selected controls|WireframeIcon.radio-off">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Button.selected controls|WireframeIcon.radio-on">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="Button.card">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="Foreground" Value="#1A2433" />
+      <Setter Property="BorderBrush" Value="#D5DEE8" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="12,10" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+      <Setter Property="MinHeight" Value="78" />
+    </Style>
+    <Style Selector="Button.selected">
+      <Setter Property="BorderBrush" Value="#173E66" />
+      <Setter Property="BorderThickness" Value="2" />
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="#173E66" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="12,10" />
+      <Setter Property="MinHeight" Value="48" />
+    </Style>
+    <Style Selector="Button.primary TextBlock">
+      <Setter Property="Foreground" Value="#FFFFFF" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.primary controls|WireframeIcon">
+      <Setter Property="MarkBrush" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button.primary:disabled">
+      <Setter Property="Background" Value="#E6ECF1" />
+      <Setter Property="Foreground" Value="#3D4A5A" />
+    </Style>
+    <Style Selector="Button.primary:disabled TextBlock">
+      <Setter Property="Foreground" Value="#3D4A5A" />
+    </Style>
+    <Style Selector="Button.primary:disabled controls|WireframeIcon">
+      <Setter Property="MarkBrush" Value="#3D4A5A" />
+    </Style>
+    <Style Selector="Button.secondary">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="Foreground" Value="#1A2433" />
+      <Setter Property="BorderBrush" Value="#C5D0DC" />
+      <Setter Property="BorderThickness" Value="1.25" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="12,10" />
+      <Setter Property="MinHeight" Value="46" />
+    </Style>
+    <Style Selector="Button.secondary TextBlock">
+      <Setter Property="Foreground" Value="#1A2433" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.outline">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="Foreground" Value="#173E66" />
+      <Setter Property="BorderBrush" Value="#173E66" />
+      <Setter Property="BorderThickness" Value="1.5" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="12,10" />
+      <Setter Property="MinHeight" Value="44" />
+    </Style>
+    <Style Selector="Button.outline TextBlock">
+      <Setter Property="Foreground" Value="#173E66" />
+      <Setter Property="FontSize" Value="16" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.icon">
+      <Setter Property="Width" Value="40" />
+      <Setter Property="Height" Value="40" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.review-jump">
+      <Setter Property="Width" Value="4" />
+      <Setter Property="Height" Value="4" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Opacity" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="IsTabStop" Value="False" />
+    </Style>
+  </UserControl.Styles>
+  <DockPanel>
+    <Grid DockPanel.Dock="Top" Height="16" Margin="16,0,16,0">
+      <TextBlock x:Name="ScreenId"
+                 Text="WF-01"
+                 Height="16"
+                 Foreground="#F4F7FA"
+                 Background="#F4F7FA"
+                 IsHitTestVisible="False"
+                 FontSize="16" />
+      <StackPanel Orientation="Horizontal" Height="4" VerticalAlignment="Top">
+        <Button x:Name="ShowWFR01" Classes="review-jump" />
+        <Button x:Name="ShowWFR02" Classes="review-jump" />
+        <Button x:Name="ShowWFR03" Classes="review-jump" />
+        <Button x:Name="ShowWFR04" Classes="review-jump" />
+        <Button x:Name="ShowWFR05" Classes="review-jump" />
+        <Button x:Name="ShowWFR06" Classes="review-jump" />
+        <Button x:Name="ShowWFR07" Classes="review-jump" />
+        <Button x:Name="ShowWFR08" Classes="review-jump" />
+      </StackPanel>
+    </Grid>
+    <ScrollViewer>
+    <Grid Margin="16,0,16,28">
+      <StackPanel x:Name="RolePage" Spacing="8">
+        <TextBlock x:Name="EdgeTlsText" TextWrapping="Wrap" IsVisible="False" Foreground="#173E66" />
+        <Border Width="64" Height="64" CornerRadius="32" Background="#173E66" HorizontalAlignment="Center" Margin="0,4,0,4">
+          <controls:WireframeIcon Kind="shield-check" Width="34" Height="34" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <TextBlock Classes="wordmark" Text="RideAudit" />
+        <TextBlock Classes="muted center" Text="Dual-phone telematics audit" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8" Margin="0,4,0,0">
+          <Border Classes="pill" Background="#FFF4D8">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="scale" MarkBrush="#8A5A00" />
+              <TextBlock Foreground="#8A5A00" FontSize="12" FontWeight="SemiBold" Text="GPL-2.0" VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+          <Border Classes="pill" Background="#E5F6F1">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="shield-check" MarkBrush="#0C7A62" />
+              <TextBlock x:Name="IntegrityBadge" Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Play Integrity OK" VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <TextBlock Classes="muted center" FontWeight="SemiBold" Margin="0,8,0,4" Text="Select your role for this session" />
+        <Button x:Name="DriverButton" Classes="card">
+          <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+            <Border Classes="accent" />
+            <Border Grid.Column="1" Classes="role-icon" Margin="0,0,12,0">
+              <controls:WireframeIcon Kind="steering" MarkBrush="#173E66" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+              <TextBlock FontWeight="Bold" Text="Driver" />
+              <TextBlock FontSize="13" Text="Session coordinator" />
+              <TextBlock Classes="muted" Text="Clock master and sealed submit" />
+            </StackPanel>
+            <Panel Grid.Column="3" Width="22" Height="22" VerticalAlignment="Center">
+              <controls:WireframeIcon Classes="radio-off" Kind="radio" MarkBrush="#3D4A5A" />
+              <controls:WireframeIcon Classes="radio-on" Kind="radio-on" MarkBrush="#173E66" />
+            </Panel>
+          </Grid>
+        </Button>
+        <Button x:Name="PassengerButton" Classes="card">
+          <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+            <Border Classes="accent" />
+            <Border Grid.Column="1" Classes="role-icon" Margin="0,0,12,0">
+              <controls:WireframeIcon Kind="video" MarkBrush="#1A2433" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+              <TextBlock FontWeight="Bold" Text="Passenger" />
+              <TextBlock FontSize="13" Text="Video sync and composite" />
+              <TextBlock Classes="muted" Text="Telematics overlay" />
+            </StackPanel>
+            <Panel Grid.Column="3" Width="22" Height="22" VerticalAlignment="Center">
+              <controls:WireframeIcon Classes="radio-off" Kind="radio" MarkBrush="#3D4A5A" />
+              <controls:WireframeIcon Classes="radio-on" Kind="radio-on" MarkBrush="#173E66" />
+            </Panel>
+          </Grid>
+        </Button>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Margin="0,4,0,0" Text="Vehicle" />
+        <Border Classes="card" Padding="12,8" MinHeight="44">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <controls:WireframeIcon Kind="car" MarkBrush="#394656" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Margin="8,0" VerticalAlignment="Center" Text="VA-1042" />
+            <controls:WireframeIcon Grid.Column="2" Kind="chevron-down" MarkBrush="#394656" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+        <Button x:Name="ContinueButton" Classes="primary">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <controls:WireframeIcon Kind="bluetooth" />
+            <TextBlock Text="Continue to Bluetooth pairing" />
+          </StackPanel>
+        </Button>
+        <Button x:Name="ScreenAboutButton" Classes="outline">
+          <TextBlock Text="About" />
+        </Button>
+      </StackPanel>
+
+      <StackPanel x:Name="DiscoverPage" Spacing="8" IsVisible="False">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,4">
+          <Button x:Name="DiscoverBackButton" Classes="icon">
+            <controls:WireframeIcon Kind="chevron-left" MarkBrush="#1A2433" />
+          </Button>
+          <TextBlock Grid.Column="1" Classes="screen-title" Margin="4,0" Text="Bluetooth discover" />
+          <Border Grid.Column="2" Classes="pill" Background="#E7F1FA" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="steering" MarkBrush="#173E66" />
+              <TextBlock x:Name="DiscoverRole" Foreground="#173E66" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="Role" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <Border Classes="card">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:WireframeIcon Kind="bluetooth" MarkBrush="#173E66" VerticalAlignment="Top" />
+            <StackPanel Grid.Column="1" Margin="10,0,0,0" Spacing="6">
+              <TextBlock FontWeight="Bold" FontSize="13" Text="Scanning for RideAudit peers" />
+              <TextBlock x:Name="PairingStatus" IsVisible="False" Text="Scanning for RideAudit peers." />
+              <Border Classes="pill" Background="#E7F1FA">
+                <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="Invite 7K2M" />
+              </Border>
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Grid Height="8">
+          <Border Background="#E1E8EF" CornerRadius="4" />
+          <Border Background="#173E66" CornerRadius="4" HorizontalAlignment="Left" Width="148" />
+        </Grid>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="Nearby peers" />
+        <Button x:Name="PeerButton" Classes="card" MinHeight="78">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <Border Classes="role-icon" Background="#E7F1FA" Margin="0,0,10,0">
+              <controls:WireframeIcon Kind="phone" MarkBrush="#173E66" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock FontWeight="Bold" Text="Pixel-7a" />
+                <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+                  <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Passenger" />
+                </Border>
+              </StackPanel>
+              <WrapPanel Orientation="Horizontal">
+                <controls:WireframeIcon Kind="signal" MarkBrush="#0C7A62" Margin="0,0,6,0" />
+                <TextBlock FontSize="13" FontWeight="SemiBold" Margin="0,0,6,0" Text="-42 dBm" />
+                <controls:WireframeIcon Kind="check" MarkBrush="#0C7A62" Margin="0,0,6,0" />
+                <TextBlock Foreground="#0C7A62" FontSize="13" Text="Code hint 7K2M" />
+              </WrapPanel>
+            </StackPanel>
+            <controls:WireframeIcon Grid.Column="2" Kind="chevron-right" MarkBrush="#3D4A5A" VerticalAlignment="Center" />
+          </Grid>
+        </Button>
+        <Border Classes="card" MinHeight="78">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <Border Classes="role-icon" Background="#E7F1FA" Margin="0,0,10,0">
+              <controls:WireframeIcon Kind="phone" MarkBrush="#173E66" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock FontWeight="Bold" Text="SM-S911" />
+                <Border Classes="pill" Background="#FFF4D8" Padding="6,2">
+                  <TextBlock Foreground="#8A5A00" FontSize="12" FontWeight="SemiBold" Text="Unknown" />
+                </Border>
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:WireframeIcon Kind="signal" MarkBrush="#394656" />
+                <TextBlock FontSize="13" FontWeight="SemiBold" Text="-71 dBm" />
+                <TextBlock Classes="muted" Text="Code hint none" />
+              </StackPanel>
+            </StackPanel>
+            <controls:WireframeIcon Grid.Column="2" Kind="chevron-right" MarkBrush="#3D4A5A" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <TextBlock Classes="muted" FontWeight="SemiBold" Text="Advertising as" />
+            <TextBlock x:Name="AdvertiseStatus" FontWeight="Bold" Text="RideAudit-Driver" />
+            <TextBlock FontSize="13" Text="Vehicle VA-1042" />
+          </StackPanel>
+        </Border>
+        <Grid ColumnDefinitions="*,12,*">
+          <Button x:Name="CancelDiscoverButton" Grid.Column="0" Classes="secondary">
+            <TextBlock Text="Cancel" />
+          </Button>
+          <Button x:Name="DiscoverButton" Grid.Column="2" Classes="primary">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+              <controls:WireframeIcon Kind="refresh" />
+              <TextBlock Text="Rescan" />
+            </StackPanel>
+          </Button>
+        </Grid>
+        <Border Background="#E7F1FA" CornerRadius="12" Padding="12" Margin="0,8,0,0">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:WireframeIcon Kind="info" MarkBrush="#173E66" VerticalAlignment="Top" />
+            <StackPanel Grid.Column="1" Margin="8,0,0,0" Spacing="2">
+              <TextBlock Foreground="#1F568C" FontWeight="SemiBold" FontSize="13" Text="Both phones must confirm roles." />
+              <TextBlock Foreground="#1F568C" FontSize="13" Text="This is RideAudit pairing, not Lyft." />
+            </StackPanel>
+          </Grid>
+        </Border>
+      </StackPanel>
+
+      <StackPanel x:Name="PairPage" Spacing="8" IsVisible="False">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,4">
+          <Button x:Name="PairBackButton" Classes="icon">
+            <controls:WireframeIcon Kind="chevron-left" MarkBrush="#1A2433" />
+          </Button>
+          <TextBlock Grid.Column="1" Classes="screen-title" Margin="4,0" Text="Confirm pairing" />
+          <Border Grid.Column="2" Classes="pill" Background="#E7F1FA" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="steering" MarkBrush="#173E66" />
+              <TextBlock x:Name="PairRole" Foreground="#173E66" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="Role" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="Session draft" />
+        <Border Classes="card">
+          <StackPanel Spacing="8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="link" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Session" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="DS-20260927-A1" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="car" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Vehicle" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="VA-1042" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="bluetooth" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Invite" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="7K2M" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="This phone" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:WireframeIcon Kind="phone" MarkBrush="#173E66" />
+              <TextBlock FontSize="13" FontWeight="Bold" VerticalAlignment="Center" Text="Pixel-Fold" />
+            </StackPanel>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="muted" Text="Role" />
+              <TextBlock x:Name="LocalRoleLine" Grid.Column="1" FontSize="12" FontWeight="SemiBold" Text="Driver, coordinator" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="muted" Text="Play Integrity" />
+              <TextBlock Grid.Column="1" FontSize="12" Foreground="#0C7A62" FontWeight="Bold" Text="OK" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="Peer phone" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:WireframeIcon Kind="phone" MarkBrush="#173E66" />
+              <TextBlock FontSize="13" FontWeight="Bold" VerticalAlignment="Center" Text="Pixel-7a" />
+            </StackPanel>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="muted" Text="Role" />
+              <TextBlock x:Name="PeerRoleLine" Grid.Column="1" FontSize="12" FontWeight="SemiBold" Text="Passenger, compositor" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="muted" Text="Play Integrity" />
+              <TextBlock Grid.Column="1" FontSize="12" Foreground="#0C7A62" FontWeight="Bold" Text="OK" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <CheckBox x:Name="ConfirmCheck" Margin="0,4,0,4">
+          <StackPanel Spacing="0">
+            <TextBlock FontSize="13" Text="I confirm the driver role and" />
+            <TextBlock FontSize="13" Text="shared session intent." />
+          </StackPanel>
+        </CheckBox>
+        <Grid ColumnDefinitions="*,12,*">
+          <Button x:Name="RejectPairButton" Grid.Column="0" Classes="secondary">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+              <controls:WireframeIcon Kind="ban" MarkBrush="#1A2433" />
+              <TextBlock Text="Reject" />
+            </StackPanel>
+          </Button>
+          <Button x:Name="ConfirmPairButton" Grid.Column="2" Classes="primary">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+              <controls:WireframeIcon Kind="check" />
+              <TextBlock Text="Confirm pair" />
+            </StackPanel>
+          </Button>
+        </Grid>
+      </StackPanel>
+
+      <StackPanel x:Name="DriverPage" Spacing="8" IsVisible="False">
+        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,4">
+          <TextBlock Classes="screen-title" Text="Driver dashboard" />
+          <Border Grid.Column="1" Classes="pill" Background="#E7F1FA">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="steering" MarkBrush="#173E66" />
+              <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="Driver" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <TextBlock FontSize="13" FontWeight="SemiBold" Text="DS-20260927-A1" />
+          <controls:WireframeIcon Kind="car" MarkBrush="#173E66" />
+          <TextBlock FontSize="13" FontWeight="SemiBold" Text="VA-1042" />
+        </StackPanel>
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+          <controls:WireframeIcon Kind="phone" MarkBrush="#173E66" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="Pixel-7a" />
+          <TextBlock Grid.Column="2" Margin="8,0" FontSize="11" Foreground="#0C7A62" FontWeight="Bold" VerticalAlignment="Center" Text="Link OK" />
+          <TextBlock Grid.Column="3" FontSize="12" Foreground="#394656" FontWeight="SemiBold" VerticalAlignment="Center" Text="12 ms" />
+        </Grid>
+        <TextBlock x:Name="LinkStatus" Classes="muted" IsVisible="False" Text="Peer link: not a live radio peer" />
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="Readiness" />
+        <Border Classes="card">
+          <StackPanel Spacing="8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+                <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Bluetooth pair" />
+              <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Text="OK" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+                <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Passenger compositor ready" />
+              <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Text="OK" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+                <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Play Integrity" />
+              <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Text="OK" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+                <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Seal module" />
+              <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Text="OK" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+                <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Storage" />
+              <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Text="OK" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:WireframeIcon Kind="clock" MarkBrush="#173E66" />
+              <TextBlock FontSize="13" FontWeight="Bold" VerticalAlignment="Center" Text="Clock master (this phone)" />
+            </StackPanel>
+            <TextBlock x:Name="ClockText" FontSize="12" Foreground="#1A2433" Text="2026-09-27T17:56:00Z" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="muted" FontSize="12" Text="SyncClockOffset (peer)" />
+              <TextBlock Grid.Column="1" FontSize="12" Foreground="#0C7A62" FontWeight="SemiBold" Text="+3.2 ms" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Border Classes="pill" Background="#E5F6F1">
+            <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Paired" />
+          </Border>
+          <Border Classes="pill" Background="#E7F1FA">
+            <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="Idle" />
+          </Border>
+          <TextBlock Classes="muted" FontSize="12" VerticalAlignment="Center" Text="Elapsed  --:--:--" />
+        </StackPanel>
+        <Button x:Name="StartButton" Classes="primary">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <controls:WireframeIcon Kind="play" />
+            <TextBlock FontSize="15" Text="Start session" />
+          </StackPanel>
+        </Button>
+        <Button x:Name="StopButton" Classes="primary" IsEnabled="False">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <controls:WireframeIcon Kind="stop" />
+            <TextBlock FontSize="15" Foreground="#3D4A5A" Text="Stop" />
+          </StackPanel>
+        </Button>
+        <Button x:Name="SealLinkButton" Classes="outline">
+          <TextBlock FontSize="13" Foreground="#1F568C" Text="View seal / submit status" />
+        </Button>
+      </StackPanel>
+
+      <StackPanel x:Name="PassengerPage" Spacing="8" IsVisible="False">
+        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,4">
+          <TextBlock Classes="screen-title" Text="Passenger capture" />
+          <Border Grid.Column="1" Classes="pill" Background="#E5F6F1">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="video" MarkBrush="#0C7A62" />
+              <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="Passenger" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Foreground="#B42318" FontWeight="Bold" FontSize="13" Text="REC" />
+          <TextBlock FontWeight="SemiBold" FontSize="13" Text="DS-20260927-A1" />
+          <Border Classes="pill" Background="#E7F1FA" Padding="6,2">
+            <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="+3.2 ms" />
+          </Border>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+            <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Clock slave" />
+          </Border>
+          <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+            <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Link OK" />
+          </Border>
+          <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+            <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Integrity OK" />
+          </Border>
+        </StackPanel>
+        <Border Height="176" CornerRadius="16" Background="#1B2633" Margin="0,0,0,4">
+          <Grid>
+            <controls:WireframeIcon Kind="camera" MarkBrush="#C5D3E2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Text="LOCAL CAMERA  &#183;  composite L" Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="12,0,12,22" />
+            <TextBlock Text="17:56:03.200" Foreground="#D5DEE8" FontSize="10" VerticalAlignment="Bottom" Margin="12,0,12,8" />
+            <Border Width="112" Height="72" CornerRadius="10" Background="#121A24" BorderBrush="#8AA0B8" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+              <StackPanel Margin="8,6" Spacing="2">
+                <controls:WireframeIcon Kind="video" MarkBrush="#C5D3E2" />
+                <TextBlock Text="DRIVER" Foreground="#FFFFFF" FontSize="12" FontWeight="Bold" />
+                <TextBlock Text="PIP / join" Foreground="#B7C6D6" FontSize="12" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </Border>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="Telematics overlay (realtime)" />
+        <Border Classes="card">
+          <StackPanel Spacing="6">
+            <Canvas Width="280" Height="140" HorizontalAlignment="Center">
+              <Path Stroke="#D5DEE8" StrokeThickness="1" Data="M140,28 L168,44 L168,76 L140,92 L112,76 L112,44 Z" />
+              <Path Stroke="#D5DEE8" StrokeThickness="1" Data="M140,16 L184,40 L184,88 L140,112 L96,88 L96,40 Z" />
+              <Path Stroke="#D5DEE8" StrokeThickness="1" Data="M140,4 L200,36 L200,100 L140,132 L80,100 L80,36 Z" />
+              <Path Stroke="#0C7A62" StrokeThickness="1.8" Fill="#0C7A62" Opacity="0.85" Data="M140,36 L176,48 L164,84 L140,92 L116,86 L124,46 Z" />
+              <TextBlock Canvas.Left="118" Canvas.Top="4" FontSize="10" Foreground="#394656" Text="+Az" />
+              <TextBlock Canvas.Left="8" Canvas.Top="36" FontSize="10" Foreground="#394656" Text="-Ay" />
+              <TextBlock Canvas.Left="230" Canvas.Top="36" FontSize="10" Foreground="#394656" Text="+Ax" />
+              <TextBlock Canvas.Left="8" Canvas.Top="88" FontSize="10" Foreground="#394656" Text="-Ax" />
+              <TextBlock Canvas.Left="230" Canvas.Top="88" FontSize="10" Foreground="#394656" Text="+Ay" />
+              <TextBlock Canvas.Left="118" Canvas.Top="116" FontSize="10" Foreground="#394656" Text="-Az" />
+            </Canvas>
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="|a| = 0.42 g" />
+              <TextBlock FontSize="11" Foreground="#0C7A62" VerticalAlignment="Center" Text="Current sample" />
+            </StackPanel>
+            <TextBlock x:Name="SpiderGraph" Classes="muted" FontSize="12" Text="ax / ay / az window" />
+          </StackPanel>
+        </Border>
+        <Grid ColumnDefinitions="*,8,*,8,*">
+          <Border Classes="card" Padding="8" Margin="0">
+            <StackPanel Spacing="2">
+              <controls:WireframeIcon Kind="gauge" MarkBrush="#173E66" />
+              <TextBlock FontWeight="Bold" FontSize="13" Text="31 mph" />
+              <TextBlock Classes="muted" Text="Speed" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="2" Classes="card" Padding="8" Margin="0">
+            <StackPanel Spacing="2">
+              <controls:WireframeIcon Kind="clock" MarkBrush="#173E66" />
+              <TextBlock FontWeight="Bold" FontSize="13" Text="178" />
+              <TextBlock Classes="muted" Text="Heading" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="4" Classes="card" Padding="8" Margin="0">
+            <StackPanel Spacing="2">
+              <controls:WireframeIcon Kind="radio-on" MarkBrush="#0C7A62" />
+              <TextBlock FontWeight="Bold" FontSize="13" Text="FIX" />
+              <TextBlock Classes="muted" Text="GPS" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock FontSize="11" Foreground="#B42318" FontWeight="SemiBold" Text="Compositing" />
+          <TextBlock FontSize="11" Foreground="#0C7A62" FontWeight="SemiBold" Text="Active" />
+        </StackPanel>
+        <TextBlock Classes="muted" FontSize="12" Text="Stop is owned by the driver phone." />
+        <Button Classes="secondary" IsEnabled="False">
+          <TextBlock FontSize="15" Foreground="#1A2433" Text="Signal fault to driver" />
+        </Button>
+      </StackPanel>
+
+      <StackPanel x:Name="SealPage" Spacing="8" IsVisible="False">
+        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,4">
+          <TextBlock Classes="screen-title" Text="Seal at collect" />
+          <Border Grid.Column="1" Classes="pill" Background="#E7F1FA">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="lock" MarkBrush="#173E66" />
+              <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="Seal" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <TextBlock FontSize="13" FontWeight="SemiBold" Text="DS-20260927-A1" />
+        <TextBlock FontSize="11" Foreground="#1A2433" Text="passenger-composite-01" />
+        <TextBlock x:Name="SealStatus" FontWeight="SemiBold" IsVisible="False" Text="Seal not started" />
+        <StackPanel Spacing="6" Margin="0,4,0,0">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+              <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Freeze buffers" />
+            <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="13" Text="Done" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <Border Width="20" Height="20" CornerRadius="10" Background="#0C7A62">
+              <controls:WireframeIcon Kind="check" Width="12" Height="12" MarkBrush="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock Grid.Column="1" Margin="8,0" FontSize="13" VerticalAlignment="Center" Text="Hash payload" />
+            <TextBlock Grid.Column="2" Foreground="#0C7A62" FontWeight="Bold" FontSize="13" Text="Done" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*">
+            <Border Width="20" Height="20" CornerRadius="10" Background="#173E66">
+              <TextBlock Text="3" Foreground="#FFFFFF" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Grid.Column="1" Margin="8,0,0,0" Spacing="4">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock FontSize="13" FontWeight="SemiBold" Text="Encrypt (session key)" />
+                <TextBlock Grid.Column="1" Foreground="#173E66" FontWeight="Bold" FontSize="13" Text="62%" />
+              </Grid>
+              <Grid Height="6">
+                <Border Background="#E1E8EF" CornerRadius="3" />
+                <Border Background="#173E66" CornerRadius="3" HorizontalAlignment="Left" Width="180" />
+              </Grid>
+            </StackPanel>
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*">
+            <Border Width="20" Height="20" CornerRadius="10" Background="#FFFFFF" BorderBrush="#C5D0DC" BorderThickness="1.5">
+              <TextBlock Text="4" Foreground="#3D4A5A" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Assemble custody receipt" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*">
+            <Border Width="20" Height="20" CornerRadius="10" Background="#FFFFFF" BorderBrush="#C5D0DC" BorderThickness="1.5">
+              <TextBlock Text="5" Foreground="#3D4A5A" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Bind Play Integrity digest" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*">
+            <Border Width="20" Height="20" CornerRadius="10" Background="#FFFFFF" BorderBrush="#C5D0DC" BorderThickness="1.5">
+              <TextBlock Text="6" Foreground="#3D4A5A" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="OTS stamp (Bitcoin)" />
+          </Grid>
+        </StackPanel>
+        <Border Classes="card">
+          <StackPanel Spacing="6">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="link" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="chain_id" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="btc-ots" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="stamp" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Receipt" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="Pending" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="shield-check" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="Attest" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="OK" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:WireframeIcon Kind="clock" MarkBrush="#173E66" />
+              <TextBlock Grid.Column="1" Margin="8,0" Classes="muted" VerticalAlignment="Center" Text="SyncClockOffset" />
+              <TextBlock Grid.Column="2" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Text="+3.2 ms" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <Border Background="#FFF4D8" CornerRadius="12" Padding="12">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:WireframeIcon Kind="alert" MarkBrush="#8A5A00" VerticalAlignment="Top" />
+            <StackPanel Grid.Column="1" Margin="8,0,0,0" Spacing="2">
+              <TextBlock Foreground="#8A5A00" FontWeight="SemiBold" FontSize="13" Text="Do not power off." />
+              <TextBlock Foreground="#8A5A00" FontSize="13" Text="Unsealed data will not be uploaded." />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button x:Name="SubmitButton" Classes="secondary" Margin="0,4,0,0" Background="#FFFFFF" BorderBrush="#B42318">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <controls:WireframeIcon Kind="lock" MarkBrush="#B42318" />
+            <TextBlock FontSize="15" Foreground="#B42318" Text="Cancel seal" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+
+      <StackPanel x:Name="SubmitPage" Spacing="8" IsVisible="False">
+        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,4">
+          <TextBlock Classes="screen-title" Text="Sealed submit" />
+          <Border Grid.Column="1" Classes="pill" Background="#E7F1FA">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:WireframeIcon Kind="steering" MarkBrush="#173E66" />
+              <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Text="Driver" />
+            </StackPanel>
+          </Border>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <controls:WireframeIcon Kind="lock" MarkBrush="#173E66" />
+          <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="Public server admission" />
+        </StackPanel>
+        <TextBlock Classes="muted" Text="driver@example" />
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="Packages" />
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:WireframeIcon Kind="activity" MarkBrush="#173E66" />
+              <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="driver-telematics" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+                <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Sealed" />
+              </Border>
+              <Border Classes="pill" Background="#E7F1FA" Padding="6,2">
+                <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="OTS stamped" />
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:WireframeIcon Kind="video" MarkBrush="#173E66" />
+              <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="passenger-composite" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+                <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Sealed" />
+              </Border>
+              <Border Classes="pill" Background="#E7F1FA" Padding="6,2">
+                <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="OTS stamped" />
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:WireframeIcon Kind="stamp" MarkBrush="#173E66" />
+              <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="custody-receipts" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Border Classes="pill" Background="#E5F6F1" Padding="6,2">
+                <TextBlock Foreground="#0C7A62" FontSize="12" FontWeight="SemiBold" Text="Ready" />
+              </Border>
+              <Border Classes="pill" Background="#E7F1FA" Padding="6,2">
+                <TextBlock Foreground="#173E66" FontSize="12" FontWeight="SemiBold" Text="btc-ots" />
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <Border Background="#E7F1FA" CornerRadius="12" Padding="12">
+          <StackPanel Spacing="2">
+            <TextBlock Foreground="#1F568C" FontWeight="SemiBold" FontSize="13" Text="Server accepts sealed ciphertext only." />
+            <TextBlock Foreground="#1F568C" FontSize="13" Text="No decrypt at ingest." />
+          </StackPanel>
+        </Border>
+        <Button x:Name="SubmitPackagesButton" Classes="primary">
+          <TextBlock Text="Submit sealed packages" />
+        </Button>
+        <Border Classes="card">
+          <StackPanel Spacing="4">
+            <TextBlock Classes="muted" FontWeight="SemiBold" Text="Last result" />
+            <TextBlock x:Name="SubmitStatus" FontSize="13" Foreground="#1A2433" Text="(none)" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="muted" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" Text="Submission id" />
+              <TextBlock Grid.Column="1" FontSize="13" Foreground="#3D4A5A" VerticalAlignment="Center" Text="--" />
+            </Grid>
+          </StackPanel>
+        </Border>
+        <Button x:Name="BackDashboardButton" Classes="secondary">
+          <TextBlock Text="Back to dashboard" FontSize="13" Foreground="#1F568C" />
+        </Button>
+      </StackPanel>
+
+      <StackPanel x:Name="FailPage" Spacing="8" IsVisible="False">
+        <TextBlock Classes="screen-title" Margin="0,4,0,8" Text="Action blocked" />
+        <controls:WireframeIcon Kind="alert" MarkBrush="#B42318" HorizontalAlignment="Center" />
+        <TextBlock Classes="center" FontWeight="Bold" FontSize="20" Foreground="#B42318" Text="NOT ADMISSIBLE" />
+        <Border Classes="card" BorderBrush="#E7B4B4" Background="#FDECEC">
+          <TextBlock x:Name="FailClosedText" TextWrapping="Wrap" />
+        </Border>
+        <TextBlock Classes="muted" FontWeight="SemiBold" Text="What you can do" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <controls:WireframeIcon Kind="shield-check" MarkBrush="#173E66" />
+          <TextBlock FontSize="13" VerticalAlignment="Center" Text="Use an approved Play build" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <controls:WireframeIcon Kind="refresh" MarkBrush="#173E66" />
+          <TextBlock FontSize="13" VerticalAlignment="Center" Text="Re-run attestation" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <controls:WireframeIcon Kind="bluetooth" MarkBrush="#173E66" />
+          <TextBlock FontSize="13" VerticalAlignment="Center" Text="Pair again after device fix" />
+        </StackPanel>
+        <Border Background="#FDECEC" CornerRadius="12" Padding="12">
+          <StackPanel Spacing="2">
+            <TextBlock Foreground="#B42318" FontWeight="SemiBold" FontSize="13" Text="Evidence was not uploaded." />
+            <TextBlock Foreground="#B42318" FontSize="13" Text="Unsealed buffers wait for seal or purge." />
+          </StackPanel>
+        </Border>
+        <Button x:Name="ReturnButton" Classes="primary">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <controls:WireframeIcon Kind="shield-check" />
+            <TextBlock Text="Return to safe screen" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+      <local:CaptureReviewHost x:Name="ReviewHost" IsVisible="False" />
+    </Grid>
+    </ScrollViewer>
+  </DockPanel>
 </UserControl>

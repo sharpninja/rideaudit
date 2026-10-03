@@ -13,6 +13,8 @@ public partial class CaptureShellView : UserControl
     private readonly RideAudit.Shared.Ui.CaptureRuntime? _runtime;
     private string? _role;
 
+    public event EventHandler? AboutRequested;
+
     public CaptureShellView()
         : this(new UnavailableDiscoveryBus(), productionEntry: false)
     {
@@ -35,9 +37,32 @@ public partial class CaptureShellView : UserControl
         InitializeComponent();
         DriverButton.Click += OnDriver;
         PassengerButton.Click += OnPassenger;
+        ContinueButton.Click += OnContinue;
         DiscoverButton.Click += OnDiscover;
+        DiscoverBackButton.Click += OnDiscoverBack;
+        CancelDiscoverButton.Click += OnDiscoverBack;
+        PeerButton.Click += OnPeer;
+        PairBackButton.Click += OnPairBack;
+        RejectPairButton.Click += OnPairBack;
+        ConfirmPairButton.Click += OnConfirmPair;
         StartButton.Click += OnStart;
         StopButton.Click += OnStop;
+        SubmitButton.Click += OnSubmit;
+        SubmitPackagesButton.Click += OnSubmit;
+        SealLinkButton.Click += OnSealLink;
+        BackDashboardButton.Click += OnBackDashboard;
+        ScreenAboutButton.Click += OnAbout;
+        ReturnButton.Click += OnReturn;
+        ShowWFR01.Click += (_, _) => Show("WF-R-01");
+        ShowWFR02.Click += (_, _) => Show("WF-R-02");
+        ShowWFR03.Click += (_, _) => Show("WF-R-03");
+        ShowWFR04.Click += (_, _) => Show("WF-R-04");
+        ShowWFR05.Click += (_, _) => Show("WF-R-05");
+        ShowWFR06.Click += (_, _) => Show("WF-R-06");
+        ShowWFR07.Click += (_, _) => Show("WF-R-07");
+        ShowWFR08.Click += (_, _) => Show("WF-R-08");
+        PaintRole();
+        Show("WF-01");
         if (productionEntry && !_bus.RadioAvailable)
         {
             ShowFailClosed(
@@ -65,7 +90,7 @@ public partial class CaptureShellView : UserControl
 
     public void ShowFailClosed(string message)
     {
-        ScreenId.Text = "WF-08";
+        Show("WF-08");
         FailClosedText.IsVisible = true;
         FailClosedText.Text = message;
         StartButton.IsEnabled = false;
@@ -78,24 +103,50 @@ public partial class CaptureShellView : UserControl
         FailClosedText.Text = message;
     }
 
+    public void ShowEdgeTls(string message)
+    {
+        EdgeTlsText.Text = message;
+        EdgeTlsText.IsVisible = false;
+    }
+
     private void OnDriver(object? sender, RoutedEventArgs e)
     {
         _role = "driver";
-        ScreenId.Text = "WF-04";
-        PairingStatus.Text = "Role confirmed: driver coordinator";
+        DriverButton.Classes.Add("selected");
+        PassengerButton.Classes.Remove("selected");
+        LocalRoleLine.Text = "Driver, coordinator";
+        PeerRoleLine.Text = "Passenger, compositor";
+        AdvertiseStatus.Text = "RideAudit-Driver";
+        PaintRole();
+        if (ScreenId.Text != "WF-01")
+        {
+            Show("WF-01");
+        }
     }
 
     private void OnPassenger(object? sender, RoutedEventArgs e)
     {
         _role = "passenger";
-        ScreenId.Text = "WF-05";
-        PairingStatus.Text = "Role confirmed: passenger compositor";
-        SpiderGraph.Text = "Spider graph armed for telematics overlay";
+        PassengerButton.Classes.Add("selected");
+        DriverButton.Classes.Remove("selected");
+        LocalRoleLine.Text = "Passenger, compositor";
+        PeerRoleLine.Text = "Driver, coordinator";
+        AdvertiseStatus.Text = "RideAudit-Passenger";
+        PaintRole();
+        if (ScreenId.Text != "WF-01")
+        {
+            Show("WF-01");
+        }
     }
+
+    private void OnContinue(object? sender, RoutedEventArgs e) => OnDiscover(sender, e);
+
+    private void OnDiscoverBack(object? sender, RoutedEventArgs e) => Show("WF-01");
+
+    private void OnPairBack(object? sender, RoutedEventArgs e) => Show("WF-02");
 
     private void OnDiscover(object? sender, RoutedEventArgs e)
     {
-        ScreenId.Text = "WF-02";
         if (_role is null)
         {
             ShowFailClosed("Confirm a role before Bluetooth pairing.");
@@ -108,7 +159,38 @@ public partial class CaptureShellView : UserControl
             return;
         }
 
+        Show("WF-02");
         PairingStatus.Text = "RideAudit Bluetooth discovery on " + _bus.TransportKind + ". No Lyft private API.";
+        PairingStatus.IsVisible = false;
+    }
+
+    private void OnPeer(object? sender, RoutedEventArgs e)
+    {
+        if (_role is null)
+        {
+            ShowFailClosed("Confirm a role before Bluetooth pairing.");
+            return;
+        }
+
+        Show("WF-03");
+    }
+
+    private void OnConfirmPair(object? sender, RoutedEventArgs e)
+    {
+        if (ConfirmCheck.IsChecked != true)
+        {
+            ShowFailClosed("PAIR_ROLE_MISMATCH: Confirm the role checkbox before pairing.");
+            return;
+        }
+
+        if (_role == "passenger")
+        {
+            Show("WF-05");
+            return;
+        }
+
+        Show("WF-04");
+        PairingStatus.Text = "Role confirmed: driver coordinator";
     }
 
     private void OnStart(object? sender, RoutedEventArgs e)
@@ -128,7 +210,7 @@ public partial class CaptureShellView : UserControl
                 return;
             }
 
-            ScreenId.Text = "WF-04";
+            Show("WF-04");
             ClockText.Text = "Driver session clock master";
             StartButton.IsEnabled = false;
             StopButton.IsEnabled = true;
@@ -136,7 +218,7 @@ public partial class CaptureShellView : UserControl
             return;
         }
 
-        ScreenId.Text = "WF-04";
+        Show("WF-04");
         ClockText.Text = "Driver session clock master";
         StartButton.IsEnabled = false;
         StopButton.IsEnabled = true;
@@ -154,7 +236,7 @@ public partial class CaptureShellView : UserControl
         if (_runtime is not null)
         {
             var result = _runtime.StopAndSubmit();
-            ScreenId.Text = "WF-06";
+            Show("WF-06");
             StopButton.IsEnabled = false;
             if (!result.Ok)
             {
@@ -167,9 +249,55 @@ public partial class CaptureShellView : UserControl
             return;
         }
 
-        ScreenId.Text = "WF-06";
+        Show("WF-06");
         StopButton.IsEnabled = false;
         SealStatus.Text = "Seal-at-collect in progress";
         SubmitStatus.Text = "Driver coordinates sealed submission";
+    }
+
+    private void OnSubmit(object? sender, RoutedEventArgs e)
+    {
+        Show("WF-07");
+        if (string.IsNullOrWhiteSpace(SubmitStatus.Text) || SubmitStatus.Text is "No submission" or "(none)")
+        {
+            SubmitStatus.Text = "(none)";
+        }
+    }
+
+    private void OnSealLink(object? sender, RoutedEventArgs e) => Show("WF-06");
+
+    private void OnBackDashboard(object? sender, RoutedEventArgs e) => Show("WF-04");
+
+    private void OnAbout(object? sender, RoutedEventArgs e) => AboutRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnReturn(object? sender, RoutedEventArgs e) => Show("WF-01");
+
+    private void PaintRole()
+    {
+        var label = _role switch
+        {
+            "driver" => "Driver",
+            "passenger" => "Passenger",
+            _ => "Role",
+        };
+        DiscoverRole.Text = label;
+        PairRole.Text = label;
+    }
+
+    public event EventHandler<string>? ScreenChanged;
+
+    private void Show(string screenId)
+    {
+        ScreenId.Text = screenId;
+        RolePage.IsVisible = screenId == "WF-01";
+        DiscoverPage.IsVisible = screenId == "WF-02";
+        PairPage.IsVisible = screenId == "WF-03";
+        DriverPage.IsVisible = screenId == "WF-04";
+        PassengerPage.IsVisible = screenId == "WF-05";
+        SealPage.IsVisible = screenId == "WF-06";
+        SubmitPage.IsVisible = screenId == "WF-07";
+        FailPage.IsVisible = screenId == "WF-08";
+        ReviewHost.Apply(screenId);
+        ScreenChanged?.Invoke(this, screenId);
     }
 }

@@ -15,5 +15,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/RideAudit.Client.Tests/RideAudit.Client.Tests.csproj" />
+    <Project Path="tests/RideAudit.Client.Android.AiUnit.Tests/RideAudit.Client.Android.AiUnit.Tests.csproj" />
   </Folder>
 </Solution>

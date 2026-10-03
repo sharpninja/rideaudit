@@ -77,14 +77,53 @@ public sealed class CaptureRuntime
 
     public IReadOnlyList<string> Attempted => _attempted;
 
+    private readonly object _edgeGate = new();
+    private string? _edgeTlsLine;
+    private CaptureShellView? _shell;
+
+    public string? EdgeTlsLine
+    {
+        get
+        {
+            lock (_edgeGate)
+            {
+                return _edgeTlsLine;
+            }
+        }
+    }
+
+    public void ReportEdgeTls(string line)
+    {
+        CaptureShellView? shell;
+        lock (_edgeGate)
+        {
+            _edgeTlsLine = line;
+            shell = _shell;
+        }
+
+        shell?.ShowEdgeTls(line);
+    }
+
     public CaptureShellView CreateShell()
     {
         var view = new CaptureShellView(this);
+        string? edge;
+        lock (_edgeGate)
+        {
+            _shell = view;
+            edge = _edgeTlsLine;
+        }
+
         if (!Graph.ProductionReady)
         {
             var reasons = Graph.UnavailableSeams.Concat(Graph.FixtureSeams);
             view.ShowUnavailableBanner(
                 "PRODUCTION_UNAVAILABLE: " + string.Join(" | ", reasons));
+        }
+
+        if (edge is not null)
+        {
+            view.ShowEdgeTls(edge);
         }
 
         return view;

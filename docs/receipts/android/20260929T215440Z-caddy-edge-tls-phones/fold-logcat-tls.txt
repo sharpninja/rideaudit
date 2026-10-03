@@ -1,0 +1,2 @@
+﻿RideAuditTls: probe start address=https://192.168.0.149:28443 counsel=not-configured
+RideAuditTls: EDGE_TLS TLS_OK https://192.168.0.149:28443 trust=caddy-local-root grpc=Internal gRPC Internal Request protocol 'HTTP/1.1' is not supported. accepted=True custom-root-built peer=

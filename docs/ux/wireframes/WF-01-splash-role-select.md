@@ -47,7 +47,7 @@ Realistic SVG mock with inline icon paths. The ASCII block below stays the struc
 |                                      |
 |   [ Continue to Bluetooth pairing ]  |
 |                                      |
-|   About / source  |  Privacy notice  |
+|   [ About                          ] |
 +--------------------------------------+
 ```
 
@@ -56,3 +56,4 @@ Realistic SVG mock with inline icon paths. The ASCII block below stays the struc
 - Role required before Continue.
 - Play Integrity FAIL disables Continue and routes to WF-08.
 - GPL-2.0 badge links to license text.
+- The bottom panel About control opens the About view. Copyright is on that view.

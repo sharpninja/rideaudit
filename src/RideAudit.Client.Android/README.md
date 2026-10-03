@@ -6,6 +6,37 @@ Avalonia UI 12 dual-phone capture client (FR-RIDE-056).
 - Passenger phone: video sync, compositing, spider-graph telematics overlay.
 - Pairing is RideAudit Bluetooth device pairing. There is no Lyft private API.
 
+## Debug lab TLS
+
+Debug builds bake `rideaudit-lab.env` and `caddy-lab-root.pem`. The admission address is `https://192.168.0.149:28443`. The capture client has no counsel endpoint, so port 28444 is not called. At startup the app calls admission `Health` through `CaptureAdmissionChannel`. Trust is the Caddy local root in that PEM, plus the Caddy intermediate when the platform chain stops early. A certificate that does not verify to that root fails the handshake. An unrelated certificate is rejected. The bearer `lab-caddy-probe` only satisfies the client guard. `Health` does not authenticate it. Release builds omit the env file and the PEM. This is not a public-trust certificate and it does not close the Caddy edge.
+
+## Debug visual tree
+
+Debug builds reference `SharpNinja.Avalonia.RemoteControl.Runtime` 0.8.0 from nuget.org and request loopback port 0. The marker `files/avalonia-remote-control.json` records the port the OS assigned in `devicePort`. A stale marker is removed at startup, on bind failure, and when the host stops. Release builds do not include the package. The bearer token is random per process and is written only to that package-private marker. This is not a Play publication.
+
+Desktop side, after `dotnet tool install --global SharpNinja.Avalonia.RemoteControl.Tool --version 0.8.0`:
+
+```powershell
+avalonia-remote adb connect --serial <device-serial> --package org.rideaudit.app --keep-forward
+avalonia-remote
+```
+
+Use a second `--host-port` when two phones are forwarded at once. The transport is `arc-protobuf-v1`. Cleanup with `avalonia-remote adb cleanup --serial <device-serial> --host-port <port>`.
+
+On PAYTON-LEGION2 the USB Fold forward completed GetCapabilities (frames and input supported). The motorola edge 2024 wireless forward reached the device port and did not complete GetCapabilities. That lab note is `docs/receipts/android/20260929T164101Z-android-remote-control.md`.
+
+## Device visual tests
+
+`RideAudit.Client.Android` references `SharpNinja.aiUnit` 3.0.0 from nuget.org. Runtime assets are excluded from the APK. The runner is `tests/RideAudit.Client.Android.AiUnit.Tests`. That project selects the package profile `codex-subscription` (`ActiveStrategy` and `AIUNIT_STRATEGY`). Another profile fails closed.
+
+On PAYTON-LEGION2, with adb and a phone attached:
+
+```powershell
+dotnet test tests/RideAudit.Client.Android.AiUnit.Tests/RideAudit.Client.Android.AiUnit.Tests.csproj
+```
+
+The suite prefers USB serial `RFCW7078MVZ`. If that phone is absent it uses the motorola edge 2024 wireless serial. A missing device fails the device tests. It does not skip them. Wireframe cases are one screen each and still attach RemoteControl for usability. Storyboard cases drive each beat in order. A static screenshot is not storyboard coverage. A pixel match does not pass when a usability check fails. See that test project's README for the checks and the pixel threshold.
+
 ## Build
 
 The Android head targets `net10.0-android` and needs the .NET Android workload. On PAYTON-LEGION2 (2026-09-28) the workload, Android SDK platform 36, build-tools 36.0.0, and Microsoft OpenJDK 17 were present. `dotnet build -c Release` produced an APK. `adb devices` listed no device, so the APK was not installed. That is not a Play Store receipt.

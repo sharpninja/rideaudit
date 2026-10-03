@@ -1,0 +1,8 @@
+﻿
+Source        Destination     IPV4Address      IPV6Address                              Bytes    Time(ms) 
+------        -----------     -----------      -----------                              -----    -------- 
+PAYTON-LEG... 192.168.0.137                                                             32       309      
+PAYTON-LEG... 192.168.0.137                                                             32       144      
+
+
+

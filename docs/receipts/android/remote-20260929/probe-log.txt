@@ -1,0 +1,47 @@
+﻿UTC 2026-09-29T16:39:57.4176722Z
+TOOL
+avalonia-remote.exe : Unsupported command. Run 'avalonia-remote --help' for available commands.
+At C:\Users\kingd\AppData\Local\Temp\ps-script-b5abedee-2b87-4bcc-a6f6-a1fca0501a71.ps1:147 char:9
++ $tool = & avalonia-remote --version 2>&1 | Out-String
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Unsupported com...lable commands.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+TOOL_LINE sharpninja.avalonia.remotecontrol.tool      0.7.4                                   avalonia-remote
+CLEAN_STALE
+
+FORWARDS_AFTER_CLEAN 
+DEVICE fold
+PID 12390
+PKG flags=0x0 || codePath=/data/app/~~n0QM38OrfHXA0nr8g0i0sQ==/org.rideaudit.app-K6rPEjwARIUf5SLiUZrcNg== || versionCode=1 minSdk=23 targetSdk=36 || versionName=0.1.0 || flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ] || privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ] || lastUpdateTime=2026-09-29 11:31:48 || pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ] || privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ] || User 0: ceDataInode=72132 deDataInode=9134 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false || android.permission.ACCESS_FINE_LOCATION: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.BLUETOOTH_CONNECT: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.ACCESS_COARSE_LOCATION: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.CAMERA: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.BLUETOOTH_ADVERTISE: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.BLUETOOTH_SCAN: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+MARKER_LEN 152
+TCP_B7FC 2: 0100007F:B7FC 00000000:0000 0A 00000000:00000000 00:00000000 00000000 10380        0 723303 1 0000000000000000 100 0 0 10 0
+NC NC:True
+LOGCAT_BYTES 0
+DEVICE edge
+PID 20550
+PKG flags=0x0 || codePath=/data/app/~~4Y36yQdFEeUPSx7MRdLNkw==/org.rideaudit.app-Grbj1xWAQJRhEh_Ztq-aRw== || versionCode=1 minSdk=23 targetSdk=36 || versionName=0.1.0 || flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ] || privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ] || lastUpdateTime=2026-09-29 11:31:58 || pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ] || privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ] || User 0: ceDataInode=480864 deDataInode=246795 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false || android.permission.ACCESS_FINE_LOCATION: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.BLUETOOTH_CONNECT: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.ACCESS_COARSE_LOCATION: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.CAMERA: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.BLUETOOTH_ADVERTISE: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED] || android.permission.BLUETOOTH_SCAN: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+MARKER_LEN 152
+TCP_B7FC 0: 0100007F:B7FC 00000000:0000 0A 00000000:00000000 00:00000000 00000000 10323        0 6073679 1 0000000000000000 100 0 0 10 0
+NC adb.exe : nc: Timeout
+At C:\Users\kingd\AppData\Local\Temp\ps-script-b5abedee-2b87-4bcc-a6f6-a1fca0501a71.ps1:173 char:9
++   $nc = & $adb -s $serial shell "toybox nc -w 2 -z 127.0.0.1 47100; e ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (nc: Timeout:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+NC:True
+LOGCAT_BYTES 0
+APK_BYTES 79070201
+APK_SHA256 44906182FE4B0513A2FAD875112BA07C7D5EF9A109ACC69DA154641A3E36E518
+APK_UTC 2026-09-29T16:31:30.6448521Z
+FOLD_CONNECT_BEGIN
+FOLD_EXIT 0
+EDGE_CONNECT_BEGIN
+EDGE_EXIT 1
+FORWARDS_AFTER_PROBE RFCW7078MVZ tcp:47100 tcp:47100
+adb-ZD222QH58Q-DiWqEr._adb-tls-connect._tcp tcp:47101 tcp:47100
+CLEANUP
+CLEAN_FOLD ADB forward tcp:47100 removed for RFCW7078MVZ. EXIT 0
+CLEAN_EDGE ADB forward tcp:47101 removed for adb-ZD222QH58Q-DiWqEr._adb-tls-connect._tcp. EXIT 0
+FORWARDS_FINAL 
+UTC_END 2026-09-29T16:41:01.3374964Z

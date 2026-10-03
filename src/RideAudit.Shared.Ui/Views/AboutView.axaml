@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="RideAudit.Shared.Ui.Views.AboutView"
+             Background="#F4F7FA"
+             FontSize="{StaticResource RideAuditBodyFontSize}">
+  <ScrollViewer x:Name="AboutScroll">
+    <StackPanel Margin="20,16,20,24" Spacing="12">
+      <TextBlock x:Name="ScreenId" Text="ABOUT" />
+      <TextBlock x:Name="AboutTitle" Text="About" FontSize="{StaticResource RideAuditTitleFontSize}" FontWeight="Bold" />
+      <TextBlock x:Name="EdgeProbeText" TextWrapping="Wrap" TextTrimming="None" IsVisible="False" Foreground="#173E66" />
+      <TextBlock FontWeight="SemiBold" Text="Copyright" />
+      <TextBlock x:Name="CopyrightText" TextWrapping="Wrap" TextTrimming="None" />
+      <TextBlock FontWeight="SemiBold" Text="Third-party attributions" />
+      <TextBlock x:Name="AttributionScope" TextWrapping="Wrap" TextTrimming="None" />
+      <StackPanel x:Name="AttributionList" Spacing="10" />
+      <Button x:Name="AboutBackButton" Content="Back" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MinHeight="48" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

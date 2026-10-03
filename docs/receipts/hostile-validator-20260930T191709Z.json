@@ -1,0 +1,245 @@
+{
+  "TimestampUtc": "2026-09-30T19:17:09Z",
+  "ReceiptStamp": "20260930T191709Z",
+  "ValidatorIdentity": "GrokSubagentHostile",
+  "Model": "grok-4.7-xhigh",
+  "AddProfile": {
+    "Executed": "yes",
+    "ProfileFileCount": 21,
+    "ExcludedSkillPorts": [
+      "add-profile.grok.md"
+    ],
+    "DirectoryMdCount": 22
+  },
+  "Classification": "MIXED",
+  "Class2": "User-directed lab ops: Fold and Edge device scoring, logcat, adb forward, force-stop of other packages. Surface C is N/A for the absence of a new FR for those actions.",
+  "Class1": "Honesty slice: receipts, no FR/AC satisfied, PLAN-PR24FOLD-001 stays open. Byrd v4 applies only to that slice. No green device suite, visual AGREE, or Byrd phase exit is claimed.",
+  "ProductTree": "F:\\GitHub\\rideaudit-ui-font",
+  "Branch": "cursor/dual-phone-fold-moto-8aa2",
+  "Head": "f513ddb3e0636fe366a49bf6d0aa6950209c7aa2",
+  "ParentTurn": "req-20260930T173200Z-phase-cde",
+  "RequestJsonl": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20260930T185500Z-phase-cde.request.jsonl",
+  "ResponseJsonl": "F:\\GitHub\\rideaudit-ui-font\\docs\\receipts\\hv\\20260930T185500Z-phase-cde.response.jsonl",
+  "Claims": [
+    {
+      "Id": "A1",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "HEAD f513ddb on cursor/dual-phone-fold-moto-8aa2 adds only the Edge scored receipt. Parent is b6c5586. The Fold receipt is already on the branch from bdb3c3b.",
+      "Evidence": "git rev-parse HEAD f513ddb3e0636fe366a49bf6d0aa6950209c7aa2; branch cursor/dual-phone-fold-moto-8aa2; parent b6c55861d08701dba4e92b8728fb018026402033; diff-tree name-status A docs/receipts/android/20260930T184947Z-edge-scored.md only; bdb3c3b is an ancestor and is the commit that added docs/receipts/android/20260930T180300Z-fold-scored.md."
+    },
+    {
+      "Id": "A2",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Edge wireframes on the named serial, model motorola_edge_2024, ended 2026-09-30T18:32:39Z. Failed 8, Passed 0, exit 1, elapsed 332995 ms.",
+      "Evidence": "F:\\GitHub\\rideaudit\\.tmp-pr24fold-reqs\\edge-wf-run3.txt line 1 serial=adb-ZD222QH58Q-DiWqEr._adb-tls-connect._tcp; line 100 Failed 8 Passed 0 Total 8; line 101 end=2026-09-30T18:32:39.0257460Z exit=1 elapsed-ms=332995. All 8 rows in edge-wf-results.jsonl have Model motorola_edge_2024 and that serial."
+    },
+    {
+      "Id": "A3",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "On the eight Edge wireframe rows, local controls, layout, style, and low-contrast pass for WF-01 through WF-07. WF-08 controls fail on the six named labels plus one extra live sentence. WF-08 layout, style, and low-contrast pass.",
+      "Evidence": "edge-wf-results.jsonl usability status. WF-08 controls detail: missing 6: Code; PI_ATTESTATION_FAILED; Play Integrity did not pass.; Sealed submit is blocked.; View details; Dismiss. extra 1 is the CAMERA_UNAVAILABLE | ATTESTATION_FAILED sentence. layout pass for 9 labels, style pass for 9 samples, low-contrast pass for 10 regions."
+    },
+    {
+      "Id": "A4",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Frontier axes in the wireframe jsonl match the receipt table. Single-axis agrees only on WF-01 style, WF-03 controls, and WF-04 layout. This is not a suite agree. xUnit failed closed.",
+      "Evidence": "perceptualDetail and aiunit-frontier on all eight rows. WF-01 controls=disagree layout=disagree style=agree. WF-03 controls=agree layout=disagree style=disagree. WF-04 controls=disagree layout=agree style=disagree. WF-02, WF-05, WF-06, WF-07, and WF-08 are disagree on all three. Receipt table in docs/receipts/android/20260930T184947Z-edge-scored.md matches that order. xUnit exit 1."
+    },
+    {
+      "Id": "A5",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "DifferingPixelRatio WithinThreshold is false on all eight Edge wireframe rows. Pixel did not decide the cases. Ratios are about 0.1941 to 0.3425.",
+      "Evidence": "Top-level WithinThreshold False on WF-01 through WF-08. Exact ratios 0.2964440586419753, 0.23183603395061728, 0.19408680555555555, 0.2752920524691358, 0.34252777777777776, 0.2773800154320988, 0.253772762345679, 0.2592168209876543. Rounded span 0.1941 to 0.3425. perceptual is fail-closed, not the pixel bar."
+    },
+    {
+      "Id": "A6",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "Edge storyboards ended 2026-09-30T18:42:34Z. Failed 6, Passed 0, elapsed 544080 ms. 38 rows. SB-06 has eight undriven beats because the review screen is not hosted. SB-05-b04-f06 has the same reason. SB-02-b03-f04 actual screen is WF-08. No phone review host was added. SB-R was not re-run on the Edge. The Fold receipt records 28 SB-R beats with the same reason.",
+      "Evidence": "edge-sb-run.txt end=2026-09-30T18:42:34.2258817Z exit=1 elapsed-ms=544080 Failed 6 Passed 0. edge-sb-results.jsonl 38 lines, assets SB-01 through SB-06, zero SB-R. SB-06 eight rows driven=False reason=review screen is not hosted on the Android capture client. SB-05-b04-f06 same reason, current WF-07. SB-02-b03-f04 actualScreen WF-08. git diff 851bcb3..f513ddb -- src is only AndroidRemoteControlHost.cs dispose path, not a review host. fold-sbr-results.jsonl 28 lines, all that reason. Fold receipt beat counts 3+6+5+5+5+4."
+    },
+    {
+      "Id": "A7",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "edge-after-install.txt has the pid 31589 EDGE_TLS line with TLS_OK, the named URL, caddy-local-root, grpc Internal, accepted True, custom-root-built, and HTTP/1.1 not supported. Health OK is not in that line. f513ddb did not edit the live Caddyfile. adb pair is not part of that commit.",
+      "Evidence": "Line: 09-30 13:17:58.092 I/RideAuditTls(31589): EDGE_TLS TLS_OK https://192.168.0.149:28443 trust=caddy-local-root grpc=Internal gRPC Internal Request protocol HTTP/1.1 is not supported. accepted=True custom-root-built peer=. No Health token on that line. Commit f513ddb name-status is only the Edge receipt markdown."
+    },
+    {
+      "Id": "A8",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "127.0.0.1:47100 listened as uid 10656, package ninja.thesharp.drivermate. RideAudit is uid 10323. Foreground at 2026-09-30T18:23:28Z was com.tech.gm.pegasusdriver Dashboard. Contaminated WF-03 ratio is about 0.9589 and its frontier summary describes a Current Shift dashboard. That file is not the scored table.",
+      "Evidence": "edge-port.txt ss LISTEN 127.0.0.1:47100 and proc uid 10656 on 0100007F:B7FC. edge-uid.txt 10656 ninja.thesharp.drivermate and 10323 org.rideaudit.app. edge-foreground.txt end=2026-09-30T18:23:28.4962590Z mCurrentFocus com.tech.gm.pegasusdriver activity.Dashboard. edge-wf-contaminated.jsonl WF-03 DifferingPixelRatio 0.958891975308642 and summary text Current Shift dashboard. Scored ratios are the 0.19 to 0.34 set in edge-wf-results.jsonl."
+    },
+    {
+      "Id": "A9",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "AndroidRemoteControlHost.cs at f513ddb still sets options.Port from DevicePort 47100. The src diff 851bcb3..f513ddb is only that host file.",
+      "Evidence": "git show f513ddb of the host file: const DevicePort = 47100 and options.Port = DevicePort. git diff --name-status 851bcb3..f513ddb -- src is only M src/RideAudit.Client.Android/AndroidRemoteControlHost.cs. The hunk changes async dispose, not the port assignment. The wider tree diff also changes tests and receipts; the src path does not."
+    },
+    {
+      "Id": "A10",
+      "Surface": "A",
+      "Verdict": "PASS",
+      "Text": "The implementer does not claim FR or AC satisfaction, Play publication, OTS closure, Caddy closure, hardware HSM closure, or plan section 9. isSatisfied stays false. PLAN-PR24FOLD-001 parent stays done false. Device xUnit remains red.",
+      "Evidence": "Edge receipt lines 9 and 27 state no FR/AC satisfaction and no Caddy closure. Live workflow.requirements.getFr/getTr/getTest for the named IDs returned status pending and isSatisfied false. workflow.todo.get PLAN-PR24FOLD-001 done false. Wireframe xUnit exit 1 and storyboard xUnit exit 1."
+    },
+    {
+      "Id": "B1",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Honesty: the scored receipt matches the cited logs and jsonl. xUnit red is stated as red.",
+      "Evidence": "Re-read of edge-wf-results.jsonl, edge-sb-results.jsonl, edge-wf-run3.txt, edge-sb-run.txt, and docs/receipts/android/20260930T184947Z-edge-scored.md. Frontier triples, label counts, rounded ratios, WF-08 missing labels, and storyboard exceptions match."
+    },
+    {
+      "Id": "B2",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Receipts: the done-or-red claims cite files that exist and were re-read. The device suite was not re-run because the cited files were present and did not contradict the claims.",
+      "Evidence": "File hashes recorded for the request jsonl pair (same SHA256 8E2090120096CDA72271AC5A80E9940C8282499EEE3B179F7BB9B3332AB0F27F), edge logs, and both scored receipts."
+    },
+    {
+      "Id": "B3",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "MCP-only storage: this commit does not edit todo or requirements files. Live state was read through the grok plugin wrapper.",
+      "Evidence": "git diff-tree f513ddb is one markdown receipt. Queries used pwsh and F:\\github\\mcpserver-grok-plugin\\lib\\repl-invoke.ps1 with MCP_AGENT_NAME=GrokCode and MCP_WORKSPACE_PATH=F:\\GitHub\\rideaudit. No todo yaml hand edit in this validation."
+    },
+    {
+      "Id": "B4",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Lab automation for this slice is PowerShell and dotnet xUnit. No Python files or python invocations were found in the phase scripts.",
+      "Evidence": "Get-ChildItem F:\\GitHub\\rideaudit\\.tmp-pr24fold-reqs *.py count 0. Select-String python across those ps1 files returned no matches. edge-sb-run.txt launches RideAudit.Client.Android.AiUnit.Tests.dll and RideAudit.CodexShim."
+    },
+    {
+      "Id": "B5",
+      "Surface": "B",
+      "Verdict": "PASS",
+      "Text": "Look-before-delete: other packages were identified, then force-stopped. They were not uninstalled by the cited scripts.",
+      "Evidence": "edge-port.txt, edge-uid.txt, and edge-foreground.txt identify uid 10656 and the Pegasus focus before the scored run. edge-*.ps1 matches are am force-stop. No pm uninstall and no Remove-Item in those matches. The Edge receipt says ninja.thesharp.drivermate was not uninstalled."
+    },
+    {
+      "Id": "B6",
+      "Surface": "B",
+      "Verdict": "N/A",
+      "Text": "Byrd phase-order is not scored on this run. The implementer does not claim a phase exit or a green device suite.",
+      "Evidence": "Locked scope. Inter-phase timestamp archaeology was not used. Device xUnit exit 1 is the stated result, not a hidden green exit."
+    },
+    {
+      "Id": "C0",
+      "Surface": "C",
+      "Verdict": "N/A",
+      "Text": "Class 2 lab slice: Fold and Edge scoring, logcat, adb forward, and force-stop of other packages do not require a new FR.",
+      "Evidence": "Locked classification. Surface C is not failed for the absence of an FR for those lab actions."
+    },
+    {
+      "Id": "C1",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Text": "FR-RIDE-073, FR-RIDE-074, FR-RIDE-075, FR-RIDE-076, TR-RIDE-VIDEO-017, TR-RIDE-VIEW-007, TEST-RIDE-054, and TEST-RIDE-055 stay status pending. Every acceptance criterion on those records is isSatisfied false.",
+      "Evidence": "workflow.requirements.getFr/getTr/getTest via repl-invoke on 2026-09-30. Saved under F:\\GitHub\\rideaudit\\.tmp-pr24fold-reqs\\hv-mcp. A second scan of those files found zero isSatisfied true and zero status completed."
+    },
+    {
+      "Id": "C2",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Text": "AC-UC-025-001 stays isSatisfied false.",
+      "Evidence": "git show f513ddb:docs/Project/Use-Cases-Batch.yaml around line 677 isSatisfied false. Ledger row at that commit is deferred. f513ddb does not edit that yaml."
+    },
+    {
+      "Id": "C3",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Text": "UC-RIDE-043 is MCP useCaseId 170. It is not status completed and the use-case DTO has no isSatisfied true.",
+      "Evidence": "Operator capture receipt maps UC-RIDE-043 to useCaseId 170. client.UseCases.GetAsync useCaseId 170 returned approvalStatus Approved and no isSatisfied field. ListByProductAsync productKey UC-RIDE-043 returned an empty list. Numeric ids 43 and 44 were not found. FR-RIDE-073 criteria that this use case realizes stay isSatisfied false. Approved text is not isSatisfied true."
+    },
+    {
+      "Id": "C4",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Text": "UC-RIDE-044 is MCP useCaseId 171. approvalStatus is Draft. It is not status completed.",
+      "Evidence": "About draft receipt maps UC-RIDE-044 to useCaseId 171. client.UseCases.GetAsync useCaseId 171 returned approvalStatus Draft. FR-RIDE-074, TR-RIDE-VIEW-007, and TEST-RIDE-055 stay pending with isSatisfied false."
+    },
+    {
+      "Id": "C5",
+      "Surface": "C",
+      "Verdict": "PASS",
+      "Text": "FR-RIDE-075 and FR-RIDE-076 notes contain Payton AGREE. That note is not isSatisfied true.",
+      "Evidence": "getFr notes include approval Payton AGREE 2026-09-30 and the sentence that they do not mark any AC satisfied. All four criteria on each FR are isSatisfied false. status pending."
+    },
+    {
+      "Id": "D1",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "PLAN-PR24FOLD-001 parent stays done false. The new receipt is not plan completion.",
+      "Evidence": "workflow.todo.get id PLAN-PR24FOLD-001 result.done false. Commit f513ddb does not touch the plan file. Remaining prose is still the earlier frontier-probe wording and says the Edge visual score was not captured. That prose is stale relative to the Edge receipt. It does not set parent done true."
+    },
+    {
+      "Id": "D2",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "MCP TODO phase C is not done true as a visual-agree or suite-green exit.",
+      "Evidence": "implementationTasks task C done false. Task text still says the Edge visual score was not captured. xUnit exit codes are 1."
+    },
+    {
+      "Id": "D3",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "MCP TODO phase D is not done true as a visual-agree or suite-green exit.",
+      "Evidence": "implementationTasks task D done false."
+    },
+    {
+      "Id": "D4",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "MCP TODO phase E is not done true as a visual-agree or suite-green exit.",
+      "Evidence": "implementationTasks task E done false. This hostile run does not mark that task done."
+    },
+    {
+      "Id": "D5",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "Section 9 of the product plan stays unchecked.",
+      "Evidence": "F:\\GitHub\\rideaudit-ui-font\\docs\\plans\\PLAN-RIDEAUDIT-001-implementation.md lines 1564-1567 are four unchecked boxes. section9 checked count 0. git diff --name-only 851bcb3..f513ddb -- docs/plans is empty."
+    },
+    {
+      "Id": "D6",
+      "Surface": "D",
+      "Verdict": "PASS",
+      "Text": "Phases A and B are done true from earlier gates. That is not a phase C, D, or E visual-agree exit, and the parent remains open.",
+      "Evidence": "implementationTasks A done true and B done true. Parent done false. The fail condition in this brief is C, D, or E done true as a visual-agree or suite-green exit."
+    }
+  ],
+  "OverallVerdict": "AGREE",
+  "FailList": [],
+  "UnknownList": [],
+  "NaList": [
+    "B6",
+    "C0"
+  ],
+  "PassCount": 26,
+  "FailCount": 0,
+  "UnknownCount": 0,
+  "NaCount": 2,
+  "AccuracyScore": 99,
+  "CompletenessScore": 99,
+  "AccuracyJustification": "Every attacked A, B, C, and D claim was re-read from git, logs, jsonl, the product plan, or a live MCP get. The TLS sentence in A7 is a token paraphrase of a longer log line, and the TODO remaining prose is stale, but neither fact makes a stated claim false.",
+  "CompletenessJustification": "Surfaces A through D were expanded beyond the ten implementer sentences: workspace rules, the named requirement IDs, section 9, and phases C through E. The device suite was not re-run because the cited files existed and agreed with the claims. completeTurn was not called because the brief forbids it.",
+  "Observation": "PLAN-PR24FOLD-001 remaining text still says the Edge visual score was not captured. Phases C, D, and E remain done false. That lag is not a visual-agree exit.",
+  "AppendDialog": {
+    "Method": "workflow.sessionlog.appendDialog",
+    "RequestId": "req-20260930T173200Z-phase-cde",
+    "Success": true,
+    "Persisted": true,
+    "OutcomePath": "F:\\GitHub\\rideaudit\\.mcpServer\\grok\\session-verb-outcome.yaml",
+    "CompleteTurnCalled": false
+  }
+}
