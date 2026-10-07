@@ -260,12 +260,12 @@ Verify protos and schemas publish under GPL-2.0 and that OpenAPI is marked non-a
 
 ### TEST-RIDE-038
 
-A documented Octopus dry-run or release receipt proves RideAudit images were built and deployed to PAYTON-DESKTOP through Octopus, names the instance or container and target machine, and does not claim GHCR.
+A documented Octopus dry-run or release receipt proves RideAudit images were built and deployed to LAB-OMARCHY through Octopus, names the instance or container and target machine, and does not claim GHCR.
 
 **Acceptance Criteria:**
-- [ ] Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP.
+- [ ] Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to LAB-OMARCHY.
 - [ ] Receipt names the Octopus instance or container and target machine and contains no GHCR green claim.
-- [ ] A PAYTON-OMARCHY compose cutover receipt is not scored as the Octopus CD green.
+- [ ] A LAB-OMARCHY compose cutover receipt is not scored as the Octopus CD green.
 
 ### TEST-RIDE-039
 

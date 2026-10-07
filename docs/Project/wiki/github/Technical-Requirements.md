@@ -106,14 +106,14 @@ Scope: layer-1+
 
 ## TR-RIDE-DEPLOY-002
 
-**Octopus agent and license fallback on PAYTON-DESKTOP** — Run an Octopus deployment agent (or equivalent tentacle/worker) on PAYTON-DESKTOP so releases land on that target. If the default Octopus container is out of licenses, provision a new Octopus container on PAYTON-DESKTOP and point the RideAudit project at that instance.
+**Octopus agent and license fallback on LAB-OMARCHY** — Run an Octopus deployment agent (or equivalent tentacle/worker) on LAB-OMARCHY so releases land on that target. If the default Octopus container is out of licenses, provision a new Octopus container on LAB-OMARCHY and point the RideAudit project at that instance.
 **Covered by:** FR: FR-RIDE-063; TEST: TEST-RIDE-038, TEST-RIDE-040
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
-- [ ] PAYTON-DESKTOP is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
-- [ ] License exhaustion on the default Octopus container results in a new Octopus container on PAYTON-DESKTOP rather than a GHCR workaround.
-- [ ] PAYTON-OMARCHY compose cutover is recorded as prior interim and is not the Octopus deployment green.
+- [ ] LAB-OMARCHY is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
+- [ ] License exhaustion on the default Octopus container results in a new Octopus container on LAB-OMARCHY rather than a GHCR workaround.
+- [ ] LAB-OMARCHY compose cutover is recorded as prior interim and is not the Octopus deployment green.
 
 ## TR-RIDE-EDGE-001
 

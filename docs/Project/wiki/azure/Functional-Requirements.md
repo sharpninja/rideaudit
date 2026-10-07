@@ -496,24 +496,24 @@ Scope: layer-1+
 - [ ] Documentation and ARTIFACT metadata state that OpenAPI is non-authoritative versus gRPC protos.
 - [ ] Client and server conformance tests bind to gRPC contracts, not OpenAPI, when they disagree.
 
-## FR-RIDE-063 Octopus Deploy CD to PAYTON-DESKTOP
+## FR-RIDE-063 Octopus Deploy CD to LAB-OMARCHY
 
-Build RideAudit admission, counsel, and related container images through Octopus Deploy and deploy those images to PAYTON-DESKTOP. Octopus is the container build and deploy path. GitHub Container Registry is not the distribution path. If the default Octopus container is out of licenses, provision a new Octopus container on PAYTON-DESKTOP and continue from that instance. Release receipts must name the Octopus instance or container and the target machine. Receipts must never claim GHCR greens.
+Build RideAudit admission, counsel, and related container images through Octopus Deploy and deploy those images to LAB-OMARCHY. Octopus is the container build and deploy path. GitHub Container Registry is not the distribution path. If the default Octopus container is out of licenses, provision a new Octopus container on LAB-OMARCHY and continue from that instance. Release receipts must name the Octopus instance or container and the target machine. Receipts must never claim GHCR greens.
 Scope: layer-1+
 **Acceptance Criteria:**
-- [ ] Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to PAYTON-DESKTOP.
-- [ ] If the default Octopus container is out of licenses, a new Octopus container is provisioned on PAYTON-DESKTOP and subsequent releases use that instance.
+- [ ] Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to LAB-OMARCHY.
+- [ ] If the default Octopus container is out of licenses, a new Octopus container is provisioned on LAB-OMARCHY and subsequent releases use that instance.
 - [ ] Release receipts record the Octopus instance or container and the target machine, and never claim GHCR as the distribution path or a GHCR green.
-- [ ] PAYTON-OMARCHY compose cutover is prior interim evidence. It is not the Octopus CD green for PAYTON-DESKTOP.
+- [ ] LAB-OMARCHY compose cutover is prior interim evidence. It is not the Octopus CD green for LAB-OMARCHY.
 
 ## FR-RIDE-064 ngrok ingress for RideAudit service
 
-The running RideAudit public service (admission and any documented companion HTTP or gRPC front doors) must be reachable through a configured ngrok tunnel. Checked-in deploy docs and scripts describe the tunnel. The ngrok auth token and related secrets come from a secret store or environment variable and are never committed. If ngrok is misconfigured or the tunnel is not live, the system fails closed and does not advertise a public URL. Docs must state which host currently terminates the tunnel. The canonical tunnel target is PAYTON-DESKTOP admission 192.168.0.149:28080 after the Octopus path in FR-RIDE-063. Omarchy loopback 127.0.0.1:18080 is the prior interim and may remain bound.
+The running RideAudit public service (admission and any documented companion HTTP or gRPC front doors) must be reachable through a configured ngrok tunnel. Checked-in deploy docs and scripts describe the tunnel. The ngrok auth token and related secrets come from a secret store or environment variable and are never committed. If ngrok is misconfigured or the tunnel is not live, the system fails closed and does not advertise a public URL. Docs must state which host currently terminates the tunnel. The canonical tunnel target is LAB-OMARCHY admission 192.168.1.182:28080 after the Octopus path in FR-RIDE-063. Omarchy loopback 127.0.0.1:18080 is the prior interim and may remain bound.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.
 - [ ] ngrok token and related secrets are supplied from a secret store or environment and are not committed to git.
-- [ ] Misconfigured or non-live ngrok does not advertise a public URL. Docs name the current tunnel host and distinguish Omarchy loopback interim from PAYTON-DESKTOP target.
+- [ ] Misconfigured or non-live ngrok does not advertise a public URL. Docs name the current tunnel host and distinguish Omarchy loopback interim from LAB-OMARCHY target.
 
 ## FR-RIDE-065 Caddy edge TLS distinct from ngrok
 
