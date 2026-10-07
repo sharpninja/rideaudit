@@ -10,11 +10,11 @@ Copyright (C) 2026 RideAudit contributors. GPL-2.0-or-later. See [LICENSE](LICEN
 
 ## Purpose
 
-One landscape phone, held on a vertical plate. Two post blocks, one per post. Each block is one round collar, 25.5 mm outside and 33 mm thick along the post. The bore is the measured post plus 0.2–0.5 mm. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. The rear of the collar is tangent to the headrest pad. Each collar carries a 200 mm arm in a horizontal plane. The arm shares the collar's bottom face, and short blends rise into the 33 mm collar so the arm moment enters the tube around the post. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot 10 mm wide, 1 mm clear of the M8 crest on each side, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M8×1.25 thumbscrew comes up from below, on that arm's centerline, through a slot in the cradle bottom, through that arm slot, and into a tap hole in the receiver roof. Fully seated, the head face clamps the bottom plate and the arm.
+One landscape phone, held on a vertical plate. Two post blocks, one per post. Each block is one round collar, 25.5 mm outside and 33 mm thick along the post. The bore is the measured post plus 0.2-0.5 mm. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. The rear of the collar is tangent to the headrest pad. Each collar carries a 200 mm arm in a horizontal plane. The arm shares the collar's bottom face, and short blends rise into the 33 mm collar so the arm moment enters the tube around the post. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot 10 mm wide, 1 mm clear of the M8 crest on each side, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M8×1.25 thumbscrew comes up from below, on that arm's centerline, through a slot in the cradle bottom, through that arm slot, and into a tap hole in the receiver roof. Fully seated, the head face clamps the bottom plate and the arm.
 
 The phone sits flush on the forward face of the vertical plate. Nothing in this package is a second cradle, a shared rail, a sliding clip, or an arm that rises toward the phone.
 
-The blocks are independent. Set `post_spacing` to the measured center distance (120–170 mm; 130, 150, and 160 mm are common) and re-export so each arm's tap hole sits on that arm. The longitudinal slot is only the depth lock: it is too tight to reach a neighboring hole. Set `post_od` to the measured post (presets 10, 12, 12.7, 13.8, and 14 mm) and reprint the coupon with the blocks.
+The blocks are independent. Set `post_spacing` to the measured center distance (120-170 mm; 130, 150, and 160 mm are common) and re-export so each arm's tap hole sits on that arm. The longitudinal slot is only the depth lock: it is too tight to reach a neighboring hole. Set `post_od` to the measured post (presets 10, 12, 12.7, 13.8, and 14 mm) and reprint the coupon with the blocks.
 
 ![Complete assembly](verification/previews/assembly.png)
 
@@ -75,7 +75,7 @@ The receiver roof carries the M8 threads. Holes are modeled at the M8×1.25 tap-
 1. **Post spacing.** Center-to-center of the two posts, from 120 mm to 170 mm. Common published centers are 130, 150, and 160 mm. Set `post_spacing` and re-export. Each cradle is cut for one spacing: the arm slot has only 1 mm of side clearance, so it cannot slide onto a different hole.
 2. **Post diameter.** Set `post_od` to the measured post, from 10 mm to 14 mm, and `post_clearance` from 0.2 mm to 0.5 mm. Bore = `post_od + post_clearance`. The default is 14 mm with 0.5 mm clearance (bore 14.5 mm). A post larger than 14 mm does not enter this collar. Sources, presets, and the model chart are in [dimensions.md](dimensions.md).
 3. **Print `fit-coupon.stl`.** Slide it onto the post. The headrest may have to come out of the seat if the posts are captive. It should start by hand on a post that matches `post_od`. Reprint the coupon when `post_od` or the clearance changes. The pinch screw stops rotation on the finished block.
-4. **Phone, landscape.** Long edge is `phone_length_*` (140–172 mm). Short edge, the vertical one, is `phone_width_*` (70–85 mm). Thickness including a slim case is `phone_thickness_max` (up to 12 mm).
+4. **Phone, landscape.** Long edge is `phone_length_*` (140-172 mm). Short edge, the vertical one, is `phone_width_*` (70-85 mm). Thickness including a slim case is `phone_thickness_max` (up to 12 mm).
 5. **Camera.** 18 mm square windows in both upper corners of the back plate. If the phone cameras face the pad, put those windows at the edge of the cushion so the lenses are not buried in foam. If the cameras face outward, the windows keep a corner camera bump off the plastic.
 6. **Airbag / headrest.** The mount bears on the posts and on the headrest face at the back of each collar. It may not bear on an airbag cover. Keep the 222.2 mm forward reach and the 114.0 mm height off airbag covers, the driver, and the height lock.
 
@@ -143,7 +143,7 @@ openscad -o exports/post-block.stl --export-format binstl -D 'part="block"' head
 Check the geometry (pocket, camera windows, default 14 mm post and 14.5 mm bore, 33 mm collar, rear entry, tight arm slots, root blends, cradle-bottom slots, modeled thumbscrews, flush heels, no arm interference):
 
 ```text
-python3 verify-geometry.py
+dotnet run --project ../../../tools/RideAudit.HeadrestGeometry -- --root .
 ```
 
 That rewrites [verification/geometry-report.md](verification/geometry-report.md). OpenSCAD 2021 or newer is required. A failing assert in the `.scad` file means the parameters cannot satisfy the mount constraints.

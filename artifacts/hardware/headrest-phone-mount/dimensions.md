@@ -4,7 +4,7 @@ Copyright (C) 2026 RideAudit contributors
 License: GPL-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).  
 Not Apache-2.0. Not MIT.
 
-All figures are millimetres. Defaults are the customizer values in `headrest-phone-mount.scad`. Derived sizes are what `verify-geometry.py` measures for those defaults; they change when you edit the parameters and re-export.
+All figures are millimetres. Defaults are the customizer values in `headrest-phone-mount.scad`. Derived sizes are what `dotnet run --project tools/RideAudit.HeadrestGeometry` measures for those defaults; they change when you edit the parameters and re-export.
 
 The mount is two identical post blocks and one cradle. Each post goes through one round collar, 33 mm thick along the post. Both 200 mm arms lie in a horizontal plane, join that collar through short blends into the collar body, and enter one receiver from the rear. A longitudinal slot in each arm lets the cradle slide to set depth. The slot is 1 mm clear of the M8 crest on each side. There is no beam and no sideways hole row.
 
@@ -12,11 +12,11 @@ The mount is two identical post blocks and one cradle. Each post goes through on
 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `post_spacing_min` | 120 | Narrow end of the usual 120–170 mm center range |
+| `post_spacing_min` | 120 | Narrow end of the usual 120-170 mm center range |
 | `post_spacing_max` | 170 | Wide end of that range |
 | `post_spacing` | 150 | Preview center distance. 130 and 160 mm are also common. Re-export for the measured spacing |
-| `post_od` | 14 | Measured post diameter, 10–14 mm. Presets: 10, 12, 12.7, 13.8, 14 |
-| `post_clearance` | 0.5 | Diametral clearance, 0.2–0.5 mm |
+| `post_od` | 14 | Measured post diameter, 10-14 mm. Presets: 10, 12, 12.7, 13.8, 14 |
+| `post_clearance` | 0.5 | Diametral clearance, 0.2-0.5 mm |
 | `bore_id` | 14.5 | Derived: `post_od + post_clearance`. Default is 14 + 0.5 |
 | `block_od` | 25.5 | Outer diameter of the same collar |
 | `block_t` | 33 | Axial thickness of that collar, along the post |
@@ -84,8 +84,8 @@ The pinch screw is an M5 through the outboard wall at mid-height of the collar, 
 
 ## How to measure
 
-1. **Post spacing.** Center-to-center of the two vertical posts. The CAD range is 120–170 mm. Published centers are often 130, 150, or 160 mm. Set `post_spacing` and re-export. The cradle is cut for that spacing. Cradle depth is the slide along the longitudinal slot.
-2. **Post diameter.** Measure the post and set `post_od` (10–14 mm) and `post_clearance` (0.2–0.5 mm). The bore is `post_od + post_clearance` on both the block and the fit coupon. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. Reprint the coupon when either parameter changes. Many 2013 and later generations are absent from the charts below; measure those posts and set `post_od`.
+1. **Post spacing.** Center-to-center of the two vertical posts. The CAD range is 120-170 mm. Published centers are often 130, 150, or 160 mm. Set `post_spacing` and re-export. The cradle is cut for that spacing. Cradle depth is the slide along the longitudinal slot.
+2. **Post diameter.** Measure the post and set `post_od` (10-14 mm) and `post_clearance` (0.2-0.5 mm). The bore is `post_od + post_clearance` on both the block and the fit coupon. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. Reprint the coupon when either parameter changes. Many 2013 and later generations are absent from the charts below; measure those posts and set `post_od`.
 3. **Phone, landscape.** Long edge → `phone_length_*`. Short edge, the vertical one → `phone_width_*`. Thickness including the case → `phone_thickness_max`.
 4. **Camera.** The windows are `camera_clearance` squares in both upper corners and pass through the back plate.
 5. **Airbag and headrest.** The fixture bears on the posts and on the headrest face at the rear of each collar. Keep the 222.2 mm forward reach and the 114.0 mm height off airbag covers, the driver, the headliner, and the headrest height lock.
@@ -97,17 +97,17 @@ The pinch screw is an M5 through the outboard wall at mid-height of the collar, 
 - On a post that matches `post_od` it should start by hand and then hold.
 - The pinch screw is what locks rotation on the real block.
 - If it will not start, the post is larger than `post_od`, or the clearance is tighter than the post allows. The design maximum is 14 mm. A larger post does not enter this collar.
-- If it rattles, set `post_od` to the measured diameter (clearance stays inside 0.2–0.5 mm), reprint the coupon and the blocks, and tighten the radial pinch screw.
+- If it rattles, set `post_od` to the measured diameter (clearance stays inside 0.2-0.5 mm), reprint the coupon and the blocks, and tighten the radial pinch screw.
 
 Print the arms only after the coupon fits.
 
 ## Headrest post diameters
 
-The documented common range across Chevrolet, Ford, Hyundai, Honda, Toyota, and Nissan compact SUVs is about 10–14 mm. The sizes that appear most often in Rosen fitment for about 2005–2012 are 10, 12, 12.7, and 14 mm. The design maximum is 14 mm. The collar stays 25.5 mm outside and 33 mm thick along the post; only the bore follows the post.
+The documented common range across Chevrolet, Ford, Hyundai, Honda, Toyota, and Nissan compact SUVs is about 10-14 mm. The sizes that appear most often in Rosen fitment for about 2005-2012 are 10, 12, 12.7, and 14 mm. The design maximum is 14 mm. The collar stays 25.5 mm outside and 33 mm thick along the post; only the bore follows the post.
 
 `post_od` is a customizer spinbox from 10 to 14 mm in 0.1 mm steps, so a measured size that is not one of the presets still works. Presets: **10, 12, 12.7, 13.8, 14**. `post_clearance` runs from 0.2 to 0.5 mm. Bore = `post_od + post_clearance`. The shipped preview uses the maximum: 14 mm post, 0.5 mm clearance, 14.5 mm bore. A smaller preset changes the bore only. The arm and the blends stay on the 25.5 × 33 mm collar.
 
-Center spacing in the same fitment notes is often 120–170 mm, commonly 130, 150, or 160 mm. The CAD range matches that span. The preview is 150 mm.
+Center spacing in the same fitment notes is often 120-170 mm, commonly 130, 150, or 160 mm. The CAD range matches that span. The preview is 150 mm.
 
 ### Model examples
 
@@ -115,20 +115,20 @@ Rosen AV7500 headrest-availability sheet, dated 12.01.11.
 
 | Vehicle | Years | Post OD |
 | --- | --- | --- |
-| Chevy Equinox | 2006–2008 | 10 mm |
-| Chevy Equinox | 2010–2012 | 14 mm |
-| Chevy Trailblazer | 2005–2009 | 10 mm |
-| Ford Escape | 2008–2009 | 10 mm |
-| Ford Escape Hybrid | 2009–2011 | 12.7 mm |
-| Ford Escape | 2011–2012 | 12.7 mm |
-| Hyundai Santa Fe | 2010–2012 | 10 mm |
-| Hyundai Tucson | 2011–2012 | 12.7 mm |
-| Honda CR-V | 2007–2011 | 12.7 mm |
-| Honda Pilot | 2006–2008 | 10 mm |
-| Honda Pilot | 2009–2012 | 12.7 mm |
-| Toyota RAV4 | 2006–2012 | 12 mm |
-| Toyota, some platforms | — | 14 mm |
-| Nissan Rogue | 2008–2012 | 12.7 mm |
+| Chevy Equinox | 2006-2008 | 10 mm |
+| Chevy Equinox | 2010-2012 | 14 mm |
+| Chevy Trailblazer | 2005-2009 | 10 mm |
+| Ford Escape | 2008-2009 | 10 mm |
+| Ford Escape Hybrid | 2009-2011 | 12.7 mm |
+| Ford Escape | 2011-2012 | 12.7 mm |
+| Hyundai Santa Fe | 2010-2012 | 10 mm |
+| Hyundai Tucson | 2011-2012 | 12.7 mm |
+| Honda CR-V | 2007-2011 | 12.7 mm |
+| Honda Pilot | 2006-2008 | 10 mm |
+| Honda Pilot | 2009-2012 | 12.7 mm |
+| Toyota RAV4 | 2006-2012 | 12 mm |
+| Toyota, some platforms | - | 14 mm |
+| Nissan Rogue | 2008-2012 | 12.7 mm |
 
 ### Make-level chart
 
@@ -139,7 +139,7 @@ Philips JENHR1D vehicle preparation lists factory posts by make. Use it beside t
 | Chevrolet / GM | 10, 11, 12, and 14 mm | Philips JENHR1D vehicle-preparation chart |
 | Ford / Lincoln | 10, 12, and 12.7 mm | same chart |
 | Honda / Acura | 10 and 12.7 mm | same chart |
-| Hyundai | Santa Fe 2010–2012 is 10 mm; Tucson 2011–2012 is 12.7 mm | Rosen AV7500, 12.01.11 (Hyundai is absent from the Philips make chart) |
+| Hyundai | Santa Fe 2010-2012 is 10 mm; Tucson 2011-2012 is 12.7 mm | Rosen AV7500, 12.01.11 (Hyundai is absent from the Philips make chart) |
 | Toyota / Lexus | 12 and 13.88 mm | Philips JENHR1D vehicle-preparation chart |
 | Nissan / Infiniti | 12.7 mm | same chart |
 

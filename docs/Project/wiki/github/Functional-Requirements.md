@@ -589,12 +589,12 @@ Scope: layer-1+
 
 ## FR-RIDE-072 Lab conduct for RideAudit work
 
-RideAudit lab work prefers accuracy over convenience and keeps a receipt for the path and the result. Paths are not silently substituted. Python is not used in the lab toolchain. Committed lab text does not use em or en dashes. Execution waits for approval, except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
+RideAudit lab work prefers accuracy over convenience and keeps a receipt for the path and the result. Paths are not silently substituted. Python is not used in the committed in-repo lab toolchain (for example artifacts/hardware/headrest-phone-mount and its docs); this FR does not constrain languages installed on a physical LAB-OMARCHY host. Committed lab text does not use em or en dashes. Execution waits for approval, except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Lab work records a receipt for the path taken and the result, and prefers an accurate receipt over a convenient substitute.
 - [ ] A required path is not silently replaced with a different path.
-- [ ] The RideAudit lab toolchain does not use Python.
+- [ ] The committed in-repo RideAudit lab toolchain (artifacts/hardware and related lab docs that invoke it) does not use Python.
 - [ ] Committed lab text does not contain em dashes or en dashes.
 - [ ] Execution waits for approval, except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
 

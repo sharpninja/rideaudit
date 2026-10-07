@@ -390,11 +390,11 @@ Verify the Class A ledger names or defers every AC, that an explicit deferral wi
 
 ### TEST-RIDE-052
 
-Verify a lab change includes a receipt, does not silently substitute paths, does not add Python lab tooling, and does not add em or en dashes. Confirm go-by-default is limited to PAYTON-DESKTOP and PAYTON-LEGION2.
+Verify the committed in-repo lab toolchain under artifacts/hardware includes a receipt reference, does not silently substitute paths, does not use Python lab tooling, and does not contain em or en dashes. Confirm go-by-default is limited to PAYTON-DESKTOP and PAYTON-LEGION2. Scope is in-repo lab artifacts (for example headrest-phone-mount), not languages on a physical LAB-OMARCHY host.
 
 **Acceptance Criteria:**
-- [ ] A scan of the lab change finds a receipt reference and no em or en dash characters.
-- [ ] The change does not add Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for PAYTON-DESKTOP and PAYTON-LEGION2.
+- [ ] A scan of the committed lab tree under artifacts/hardware finds a receipt reference and no em or en dash characters.
+- [ ] The committed lab toolchain under artifacts/hardware does not use Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for PAYTON-DESKTOP and PAYTON-LEGION2.
 
 ### TEST-RIDE-053
 
