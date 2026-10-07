@@ -37,7 +37,7 @@ public class AcCoverageLedgerTests
             .Select(group => group.First())
             .OrderBy(record => record.Id, StringComparer.Ordinal)
             .ToList();
-        Assert.Equal(550, unique.Count);
+        Assert.Equal(549, unique.Count);
 
         var testText = string.Join('\n', Directory.GetFiles(Path.Combine(root, "tests"), "*.cs", SearchOption.AllDirectories)
             .Select(File.ReadAllText));
@@ -85,7 +85,7 @@ public class AcCoverageLedgerTests
         var dest = Path.Combine(destDir, "20260928-ledger.md");
         File.WriteAllText(dest, output.ToString());
         Assert.True(File.Exists(dest));
-        Assert.Equal(550, rows.Count);
+        Assert.Equal(549, rows.Count);
         Assert.Equal(0, rows.Count(row => string.IsNullOrWhiteSpace(row.Item4)));
     }
 
@@ -145,8 +145,6 @@ public class AcCoverageLedgerTests
             return "Deferred: Concierge OAuth live partnership is not enabled.";
         if (record.Id is "AC-RIDE-CHAIN-001-002")
             return "Deferred B07: public OTS confirmation / live txid is not claimed; fixture anchors stay labeled.";
-        if (record.Id.StartsWith("AC-RIDE-STORE-003", StringComparison.Ordinal))
-            return "Deferred B08: jurisdiction retention timers are not a lab loopback receipt.";
         return null;
     }
 

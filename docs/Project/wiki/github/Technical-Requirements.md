@@ -551,8 +551,6 @@ Scope: layer-1+
 **Covered by:** FR: FR-RIDE-010; TEST: TEST-RIDE-010
 **Status:** pending
 Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Per-jurisdiction retention timers apply.
 
 ## TR-RIDE-VIDEO-001
 

@@ -5,14 +5,14 @@
 
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
-**Revision:** r3.9: Payton 2026-09-29 directed that Section 9 Astra/Payton plan-acceptance boxes are not open work. That direction does not close product Class C items. r3.8: A live OpenTimestamps calendar submit on PAYTON-LEGION2 is receipted as pending only (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`). No Bitcoin txid. Confirmation stays open. r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust and full P11b stay open. r3.10: AC ledger recounted 2026-10-07 after operator-capture + About + BDPv4 rows (`docs/receipts/ac-coverage/20260928-ledger.md` regenerated; 550 distinct AC IDs (386 covered / 164 deferred)). Prior r3.6 424-count is historical. Unsigned publish note still applies.  
+**Revision:** r3.9: Payton 2026-09-29 directed that Section 9 Astra/Payton plan-acceptance boxes are not open work. That direction does not close product Class C items. r3.8: A live OpenTimestamps calendar submit on PAYTON-LEGION2 is receipted as pending only (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`). No Bitcoin txid. Confirmation stays open. r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust and full P11b stay open. r3.10: AC ledger recounted 2026-10-07 after operator-capture + About + BDPv4 rows (`docs/receipts/ac-coverage/20260928-ledger.md` regenerated; 549 distinct AC IDs (386 covered / 163 deferred) after the AC-RIDE-STORE-003-001 kill). Prior r3.6 424-count is historical. Unsigned publish note still applies.  
 **Workspace:** `F:\GitHub\rideaudit` → https://github.com/sharpninja/rideaudit  
 **Branch track:** `origin/master`  
 **Author (git):** Sharp Ninja `<ninja@thesharp.ninja>`  
 **Process:** Byrd Dev Process v4 (BDPv4)  
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to LAB-OMARCHY admission `192.168.1.182:28080`. r3.6 recorded Class A ledger 401/23/0/424; r3.10 regenerates that file for 550 ACs (386 covered / 164 deferred; name-or-defer; not semantic closure) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. r3.7 records the lab self-signed win-x64 path (`docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`): signtool sees a signature, `verify /pa` exits 1, and the result is Signed but not Public Trust. That receipt does not close P11b. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to LAB-OMARCHY admission `192.168.1.182:28080`. r3.6 recorded Class A ledger 401/23/0/424; r3.10 regenerates that file for 549 ACs (386 covered / 163 deferred; name-or-defer; not semantic closure) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. r3.7 records the lab self-signed win-x64 path (`docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`): signtool sees a signature, `verify /pa` exits 1, and the result is Signed but not Public Trust. That receipt does not close P11b. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
 **Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Payton 2026-09-29 directed that the Section 9 plan-acceptance boxes are not open work. That direction does not rewrite the pre-PR history and does not close product Class C items. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
 
@@ -248,7 +248,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TR-RIDE-INGEST-006 | INGEST | Honesty provenance tagging | AC-RIDE-INGEST-006-001 | FR-RIDE-001, FR-RIDE-005, FR-RIDE-006 |
 | TR-RIDE-STORE-001 | STORE | Sealed immutable blob store | AC-RIDE-STORE-001-001, AC-RIDE-STORE-001-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
 | TR-RIDE-STORE-002 | STORE | Versioned correction events | AC-RIDE-STORE-002-001, AC-RIDE-STORE-002-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
-| TR-RIDE-STORE-003 | STORE | Jurisdiction retention engine | AC-RIDE-STORE-003-001, AC-RIDE-STORE-003-002 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
+| TR-RIDE-STORE-003 | STORE | Jurisdiction retention engine | none (AC-RIDE-STORE-003-001 jurisdiction timers killed 2026-10-07, conflicts with FR-RIDE-078; AC-RIDE-STORE-003-002 legal-hold killed 2026-10-07; TR row left for Payton) | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
 | TR-RIDE-ANAL-001 | ANAL | Authorized working-copy analysis | AC-RIDE-ANAL-001-001, AC-RIDE-ANAL-001-002 | FR-RIDE-020, FR-RIDE-021 |
 | TR-RIDE-ANAL-002 | ANAL | Coverage matrix generator | AC-RIDE-ANAL-002-001, AC-RIDE-ANAL-002-002 | FR-RIDE-007, FR-RIDE-209 |
 | TR-RIDE-ANAL-003 | ANAL | Online-hours policy engine | AC-RIDE-ANAL-003-001, AC-RIDE-ANAL-003-002 | FR-RIDE-008 |
@@ -424,8 +424,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
 | AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
 | AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
-| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
-| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
+| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | KILLED | Jurisdiction retention timers killed 2026-10-07 (conflicts with FR-RIDE-078) |
+| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | KILLED | Legal-hold AC killed 2026-10-07 |
 | AC-RIDE-ANAL-001-001 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 |
 | AC-RIDE-ANAL-001-002 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 |
 | AC-RIDE-ANAL-002-001 | TR-RIDE-ANAL-002 | FR-RIDE-007, FR-RIDE-209 |
@@ -846,8 +846,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
 | AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
 | AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
-| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
-| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
+| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010 | P10 | P11b | KILLED | Jurisdiction retention timers killed 2026-10-07 (conflicts with FR-RIDE-078) |
+| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010 | P10 | P11b | KILLED | Legal-hold AC killed 2026-10-07 |
 | AC-RIDE-ANAL-001-001 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 | P8 | P11b | TEST-RIDE-016 |
 | AC-RIDE-ANAL-001-002 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 | P8 | P11b | TEST-RIDE-016 |
 | AC-RIDE-ANAL-002-001 | TR-RIDE-ANAL-002 | FR-RIDE-007, FR-RIDE-209 | P8, P9 | P11b | TEST-RIDE-007 |

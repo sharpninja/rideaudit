@@ -85,7 +85,6 @@ AC-RIDE-LAB-003-002	Deferred BDPv4: lab toolchain / RemoteControl worker validat
 AC-RIDE-LAB-004-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
 AC-RIDE-LAB-004-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
 AC-RIDE-SEC-001-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
-AC-RIDE-STORE-003-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
 AC-RIDE-VIDEO-013-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
 AC-RIDE-VIDEO-013-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
 AC-RIDE-VIDEO-014-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.

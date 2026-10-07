@@ -9,17 +9,6 @@ using RideAudit.Server.Counsel;
 
 namespace RideAudit.Privacy;
 
-/// <summary>Retention timers (FR-RIDE-078): driver evidentiary data is not third-party CA 30/180 frames. CA default 365d else 730d. Locations are not swept under FR-RIDE-078 (precise geo stays retained by omitting Locations from SweepRetention).</summary>
-public static class RetentionPolicy
-{
-    public static TimeSpan For(string jurisdiction)
-    {
-        var california = string.Equals(jurisdiction, "US-CA", StringComparison.OrdinalIgnoreCase);
-        return california ? TimeSpan.FromDays(365) : TimeSpan.FromDays(730);
-    }
-}
-
-
 /// <summary>Unmasked precise location presentation (FR-RIDE-077). Not a masking transform.</summary>
 public sealed record PresentedLocation(string SampleId, string Latitude, string Longitude, bool Precise);
 
@@ -90,22 +79,6 @@ public sealed class PrivacyDesk
     {
         Authorize(actorId, driverId, "view-location");
         return _store.Locations.Where(row => row.DriverId == driverId).Select(row => GeoPresent.Present(row)).ToList();
-    }
-
-    public int SweepRetention()
-    {
-        var now = _clock.UtcNow;
-        var removed = 0;
-        // Locations are intentionally not swept (FR-RIDE-078 precise-geo retention by omission).
-        removed += _store.Trips.RemoveAll(row => Expired(row.Jurisdiction, row.StartedUnixMillis, now));
-        _store.TripIndex.RemoveAll(row => !_store.Trips.Contains(row));
-        return removed;
-    }
-
-    private bool Expired(string jurisdiction, long observedUnixMillis, DateTimeOffset now)
-    {
-        var age = now - DateTimeOffset.FromUnixTimeMilliseconds(observedUnixMillis);
-        return age > RetentionPolicy.For(jurisdiction);
     }
 
     private void Authorize(string actorId, string driverId, string action)

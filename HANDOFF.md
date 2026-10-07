@@ -308,7 +308,7 @@ No more RideAudit application or feature code until requirements are correct and
 - Disk docs/Project batch YAML: synced this pass to remove stale kill-list id blocks. Receipt: docs/receipts/requirements/ (latest *-invalid-rows-disk-sync.md).
 - Wiki regenerate from MCP: see same session notes / receipt.
 - FR-RIDE-074 still pending Draft in MCP - needs Payton AGREE before About UI code.
-- PrivacyDesk still has GeoMask/MaskedLocation type names and RetentionPolicy 365/730 day timers (precise-geo exempt per prior HV). App code freeze: do not edit until requirements accepted.
+- PrivacyDesk still has GeoMask/MaskedLocation type names and RetentionPolicy 365/730 day timers (precise-geo exempt per prior HV). App code freeze: do not edit until requirements accepted. Update 2026-10-07 (PR #26 step E): RetentionPolicy 365/730 timers and SweepRetention removed; AC-RIDE-STORE-003-001 killed (conflicts with FR-RIDE-078).
 - Plans (PLAN-RIDEAUDIT-001-*) and some UC markdown may still cite kill-list IDs. Treat as stale maps, not SoT.
 - Do not invent replacement FR/TR/TEST text without an approved BDPv4 sentence from Payton.
 

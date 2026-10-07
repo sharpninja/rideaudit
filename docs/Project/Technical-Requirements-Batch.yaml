@@ -118,10 +118,6 @@ records:
     subarea: STORE
     status: pending
     notes: "Implements/supports: FR-RIDE-010"
-    acceptanceCriteria:
-      - id: AC-RIDE-STORE-003-001
-        text: "Per-jurisdiction retention timers apply."
-        isSatisfied: false
   - kind: tr
     id: TR-RIDE-ANAL-001
     title: "Authorized working-copy analysis"

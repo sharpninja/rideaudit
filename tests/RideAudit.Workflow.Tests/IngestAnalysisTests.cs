@@ -479,7 +479,6 @@ public class TestRide010012029031032
         Assert.Equal(37.7749.ToString("G17", CultureInfo.InvariantCulture), ownView.Latitude);
         Assert.Equal((-122.4194).ToString("G17", CultureInfo.InvariantCulture), ownView.Longitude);
         Assert.Throws<RideAuditException>(() => world.App.Privacy.ViewLocations(driver.DriverId, other.DriverId));
-        Assert.Equal(0, world.App.Privacy.SweepRetention());
         Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "loc-1");
     }
 
@@ -552,23 +551,21 @@ public class TestRide010012029031032
 
     [Fact]
     [Trait("FR", "FR-RIDE-078")]
-    [Trait("NOTE", "killed-TEST-032-FR-208-replaced-by-FR-078")]
+    [Trait("NOTE", "killed-TEST-032-FR-208-replaced-by-FR-078; jurisdiction-retention-timers-removed")]
     public void Retention_does_not_remove_location_rows()
     {
         var world = ServerWorld.Create();
         var now = world.Clock.UtcNow;
-        var old = now.AddDays(-31).ToUnixTimeMilliseconds();
+        var old = now.AddDays(-800).ToUnixTimeMilliseconds();
         var recent = now.AddDays(-10).ToUnixTimeMilliseconds();
         var driver = world.Register();
         world.App.Imports.Locations.Add(new LocationRow("ca-old", "imp", driver.DriverId, "US-CA", old, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
         world.App.Imports.Locations.Add(new LocationRow("ca-new", "imp", driver.DriverId, "US-CA", recent, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
         world.App.Imports.Locations.Add(new LocationRow("ny-old", "imp", driver.DriverId, "US-NY", old, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
 
-        var removed = world.App.Privacy.SweepRetention();
-        Assert.Equal(0, removed);
-        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "ca-old");
-        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "ca-new");
-        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "ny-old");
+        // Jurisdiction retention timers were removed 2026-10-07 because they conflict with FR-RIDE-078.
+        Assert.Null(typeof(PrivacyDesk).GetMethod("SweepRetention"));
+        Assert.Null(typeof(PrivacyDesk).Assembly.GetType("RideAudit.Privacy.RetentionPolicy"));
 
         var viewed = world.App.Privacy.ViewLocations(driver.DriverId, driver.DriverId);
         Assert.Equal(3, viewed.Count);
