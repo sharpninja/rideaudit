@@ -89,6 +89,56 @@ public class AcCoverageLedgerTests
         Assert.Equal(0, rows.Count(row => string.IsNullOrWhiteSpace(row.Item4)));
     }
 
+    [Fact]
+    [Trait("FR", "FR-RIDE-060")]
+    public void Ac_text_extraction_takes_only_the_acs_own_text()
+    {
+        const string lf =
+            "    acceptanceCriteria:\n" +
+            "    - id: AC-XLEDGER-001-001\n" +
+            "      text: Plain own text without keywords.\n" +
+            "      isSatisfied: false\n" +
+            "    - id: AC-XLEDGER-001-002\n" +
+            "      text: \"Neighbor quoted text with a Bitcoin txid.\"\n" +
+            "      isSatisfied: false\n";
+        Assert.Equal("Plain own text without keywords.", ExtractAt(lf, "AC-XLEDGER-001-001"));
+        Assert.Equal("Neighbor quoted text with a Bitcoin txid.", ExtractAt(lf, "AC-XLEDGER-001-002"));
+
+        var crlf = lf.Replace("\n", "\r\n", StringComparison.Ordinal);
+        Assert.Equal("Plain own text without keywords.", ExtractAt(crlf, "AC-XLEDGER-001-001"));
+        Assert.Equal("Neighbor quoted text with a Bitcoin txid.", ExtractAt(crlf, "AC-XLEDGER-001-002"));
+
+        const string missingText =
+            "      - id: AC-XLEDGER-002-001\n" +
+            "        isSatisfied: false\n" +
+            "      - id: AC-XLEDGER-002-002\n" +
+            "        text: \"Neighbor quoted text with a Bitcoin txid.\"\n" +
+            "        isSatisfied: false\n" +
+            "  - kind: tr\n" +
+            "    text: \"Parent-level text is not this AC's text.\"\n";
+        Assert.Equal(string.Empty, ExtractAt(missingText, "AC-XLEDGER-002-001"));
+        Assert.Equal("Neighbor quoted text with a Bitcoin txid.", ExtractAt(missingText, "AC-XLEDGER-002-002"));
+    }
+
+    [Fact]
+    [Trait("FR", "FR-RIDE-060")]
+    public void Ac_uc_009_002_reads_its_own_text_not_the_next_acs_ots_text()
+    {
+        // Regression: the old 500-character window preferred the first quoted text, so this unquoted
+        // AC picked up the next AC's quoted OTS/txid text and was keyword-deferred as public OTS.
+        var yaml = File.ReadAllText(Path.Combine(Repo.Root(), "docs", "Project", "Use-Cases-Batch.yaml"));
+        var extracted = ExtractAt(yaml, "AC-UC-009-002");
+        Assert.Equal("Unverified caveats from source requirements remain visible where applicable.", extracted);
+        Assert.DoesNotContain("txid", extracted, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("OpenTimestamps", extracted, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string ExtractAt(string yaml, string id)
+    {
+        var match = AcId.Matches(yaml).Single(candidate => candidate.Groups[1].Value == id);
+        return ExtractAcText(yaml, match.Index);
+    }
+
     private static Dictionary<string, string> LoadExplicitDeferrals()
     {
         var path = Path.Combine(Repo.Root(), "docs", "receipts", "ac-coverage", "explicit-deferrals.txt");
@@ -107,14 +157,51 @@ public class AcCoverageLedgerTests
         return map;
     }
 
-    private static string ExtractAcText(string text, int idIndex)
+    /// <summary>
+    /// Returns only this AC's own <c>text:</c> value (quoted or plain). The search is bounded to the
+    /// AC's own YAML list item: it stops at the first non-blank line indented at or left of the
+    /// item's dash, so a later AC's text is never borrowed.
+    /// </summary>
+    internal static string ExtractAcText(string text, int idIndex)
     {
-        var slice = text.Substring(idIndex, Math.Min(500, text.Length - idIndex));
-        var quoted = Regex.Match(slice, "text:\\s*\"([^\"]*)\"");
-        if (quoted.Success)
-            return quoted.Groups[1].Value;
-        var plain = Regex.Match(slice, "text:\\s*([^\\r\\n]+)");
-        return plain.Success ? plain.Groups[1].Value.Trim() : string.Empty;
+        var lineStart = idIndex == 0 ? 0 : text.LastIndexOf('\n', idIndex - 1) + 1;
+        var prefix = text[lineStart..idIndex];
+        var dash = prefix.IndexOf('-');
+        var hasDash = dash >= 0 && prefix[..dash].Trim().Length == 0 && prefix[(dash + 1)..].Trim().Length == 0;
+        var itemColumn = hasDash ? dash : idIndex - lineStart;
+        var lineEnd = text.IndexOf('\n', idIndex);
+        var position = lineEnd < 0 ? text.Length : lineEnd + 1;
+        while (position < text.Length)
+        {
+            var next = text.IndexOf('\n', position);
+            var line = (next < 0 ? text[position..] : text[position..next]).TrimEnd('\r');
+            position = next < 0 ? text.Length : next + 1;
+            var body = line.TrimStart(' ');
+            if (body.Length == 0)
+                continue;
+            var indent = line.Length - body.Length;
+            if (hasDash ? indent <= itemColumn : indent < itemColumn)
+                break;
+            if (!body.StartsWith("text:", StringComparison.Ordinal))
+                continue;
+            var value = body["text:".Length..].Trim();
+            if (!value.StartsWith('"'))
+                return value;
+            var builder = new StringBuilder();
+            for (var i = 1; i < value.Length; i++)
+            {
+                if (value[i] == '\\' && i + 1 < value.Length)
+                {
+                    builder.Append(value[++i]);
+                    continue;
+                }
+                if (value[i] == '"')
+                    break;
+                builder.Append(value[i]);
+            }
+            return builder.ToString();
+        }
+        return string.Empty;
     }
 
     private static string? ClassifyDeferred(AcRecord record)
