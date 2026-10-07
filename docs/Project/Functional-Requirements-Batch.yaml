@@ -1,4 +1,4 @@
-# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+﻿# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
 records:
   - kind: fr
     id: FR-RIDE-001
@@ -157,13 +157,10 @@ records:
     priority: critical
     area: RIDE
     status: pending
-    notes: "Original FR-10."
+    notes: "Original FR-10. AC-RIDE-010-002 (legal hold) removed 2026-10-07 per Payton legal-hold kill order."
     acceptanceCriteria:
       - id: AC-RIDE-010-001
         text: "Subject can request access export of audit-held data."
-        isSatisfied: false
-      - id: AC-RIDE-010-002
-        text: "Deletion honors legal holds and documents custody impact."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-011
@@ -209,21 +206,6 @@ records:
         isSatisfied: false
       - id: AC-RIDE-013-002
         text: "Audit reports display integrity status."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-014
-    title: "Role-based access"
-    description: "Role-based access: auditor, subject (driver), admin; least privilege for precise location views."
-    priority: critical
-    area: RIDE
-    status: pending
-    notes: "Original FR-14."
-    acceptanceCriteria:
-      - id: AC-RIDE-014-001
-        text: "Roles auditor, subject, and admin exist with least-privilege defaults."
-        isSatisfied: false
-      - id: AC-RIDE-014-002
-        text: "Precise location views require authorized roles."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-015
@@ -489,11 +471,11 @@ records:
   - kind: fr
     id: FR-RIDE-030
     title: "GPL2 notices on artifacts"
-    description: "Attach a GPL2 license/version and source-commit notice to shared software, schema, receipt, attestation, and verification artifacts, while ensuring that crowdsourced evidence payloads remain sealed and subject to consent, privacy controls, access policy, and legal holds rather than being exposed merely because the code is open source."
+    description: "Attach a GPL2 license/version and source-commit notice to shared software, schema, receipt, attestation, and verification artifacts, while ensuring that crowdsourced evidence payloads remain sealed and subject to consent, privacy controls, access policy rather than being exposed merely because the code is open source."
     priority: high
     area: RIDE
     status: pending
-    notes: "Original FR-30. Update 2026-09-29 full history: headrest mount scad, README, BOM, and ARTIFACT carry GPL notices (HW-AC-MOUNT-003 and HW-AC-MOUNT-004). approval: Payton AGREE 2026-09-29. UI copyright placement is FR-RIDE-074, which stays Draft until a separate AGREE. This pointer does not withdraw the AGREE on this row."
+    notes: "Original FR-30. Update 2026-09-29 full history: headrest mount scad, README, BOM, and ARTIFACT carry GPL notices (HW-AC-MOUNT-003 and HW-AC-MOUNT-004). approval: Payton AGREE 2026-09-29. UI copyright placement is FR-RIDE-074 (approval: Payton AGREE 2026-10-07). This pointer does not withdraw the AGREE on this row."
     acceptanceCriteria:
       - id: AC-RIDE-030-001
         text: "Shared software/schema/receipt/attestation/verification artifacts carry GPL2 and commit notice."
@@ -868,33 +850,6 @@ records:
         text: "Secrets stored in vault; no plaintext API tokens in logs."
         isSatisfied: false
   - kind: fr
-    id: FR-RIDE-202
-    title: "Geolocation sensitive masking"
-    description: "Privacy-by-design: precise geolocation fields classified as sensitive; default UI masks exact coordinates except for authorized roles."
-    priority: critical
-    area: RIDE
-    status: pending
-    notes: "Original NFR-2. Mapped into FR namespace as FR-RIDE-202 per MCP entity conventions."
-    acceptanceCriteria:
-      - id: AC-RIDE-202-001
-        text: "Precise geolocation classified as sensitive PI."
-        isSatisfied: false
-      - id: AC-RIDE-202-002
-        text: "Default UI masks exact coordinates except authorized roles."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-203
-    title: "Append-only access logs"
-    description: "Auditability: immutable append-only access logs for views/exports of sensitive location and identity data."
-    priority: critical
-    area: RIDE
-    status: pending
-    notes: "Original NFR-3. Mapped into FR namespace as FR-RIDE-203 per MCP entity conventions."
-    acceptanceCriteria:
-      - id: AC-RIDE-203-001
-        text: "Views/exports of sensitive location and identity write append-only access logs."
-        isSatisfied: false
-  - kind: fr
     id: FR-RIDE-204
     title: "Concierge ingestion resilience"
     description: "Reliability: Concierge ingestion must tolerate API rate limits and partial outages without corrupting stored rides."
@@ -952,21 +907,6 @@ records:
         text: "Export produces ZIP with CSV, PDF summary, and provenance JSON."
         isSatisfied: false
   - kind: fr
-    id: FR-RIDE-208
-    title: "Per-state retention config"
-    description: "Compliance config: per-state retention and deletion timers; California sensitive-PI handling as default strict profile."
-    priority: high
-    area: RIDE
-    status: pending
-    notes: "Original NFR-8. Mapped into FR namespace as FR-RIDE-208 per MCP entity conventions."
-    acceptanceCriteria:
-      - id: AC-RIDE-208-001
-        text: "Retention/deletion timers are per-state configurable."
-        isSatisfied: false
-      - id: AC-RIDE-208-002
-        text: "CA sensitive-PI strict profile is default."
-        isSatisfied: false
-  - kind: fr
     id: FR-RIDE-209
     title: "In-product API gap notice"
     description: "Documentation: in-product API gap notice stating Lyft does not offer a public driver telematics API (as of research date)."
@@ -977,18 +917,6 @@ records:
     acceptanceCriteria:
       - id: AC-RIDE-209-001
         text: "In-product notice states no public driver telematics API as of research date 2026-09-27."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-210
-    title: "Legal hold suspends deletion"
-    description: "Legal hold: ability to suspend deletion for designated cases under counsel instruction."
-    priority: critical
-    area: RIDE
-    status: pending
-    notes: "Original NFR-10. Mapped into FR namespace as FR-RIDE-210 per MCP entity conventions."
-    acceptanceCriteria:
-      - id: AC-RIDE-210-001
-        text: "Counsel can designate legal hold that suspends deletion for a case."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-211
@@ -1119,7 +1047,7 @@ records:
   - kind: fr
     id: FR-RIDE-219
     title: "Video storage and bandwidth quotas"
-    description: "Video storage and bandwidth: define per-driver/session quotas and maximum composite/raw-stream sizes; use documented lossless or approved lossy compression, resumable chunked transfer, integrity-checked chunks, retention tiers, lifecycle deletion/legal holds, and separate capacity budgets for composite output and optional raw streams."
+    description: "Video storage and bandwidth: define per-driver/session quotas and maximum composite/raw-stream sizes; use documented lossless or approved lossy compression, resumable chunked transfer, integrity-checked chunks, retention tiers, lifecycle deletion, and separate capacity budgets for composite output and optional raw streams."
     priority: high
     area: RIDE
     status: pending
@@ -1188,3 +1116,20 @@ records:
       - id: AC-RIDE-222-005
         text: "macOS codesign is deferred. Current desktop publish scope is Windows only. Linux Authenticode does not apply. AC-RIDE-222-001 remains unsatisfied."
         isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-077
+    title: "Functional rule: unmasked capture; accel + precise location in H.264 SEI per picture"
+    description: "Precise location and other capture data stay unmasked; accelerometer and precise location are embedded in the H.264 stream as real-time per-picture SEI for certifiable legal data."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "approval: Payton AGREE 2026-10-07. BDPv4 Candidate A. Replaces killed FR-RIDE-014/202, TR-RIDE-PRIV-002/SEC-002. Source: docs/receipts/requirements/20261007-bdpv4-candidates-for-agree.md. No mask/RBAC/legal-hold. No invented AC."
+  - kind: fr
+    id: FR-RIDE-078
+    title: "Functional rule: driver-collected evidentiary retention is not third-party retention"
+    description: "Retention does not treat the driver as a third party; do not apply California 30-day or 180-day location third-party deletion frames to driver-collected evidentiary data in their own vehicle."
+    priority: high
+    area: RIDE
+    status: pending
+    notes: "approval: Payton AGREE 2026-10-07. BDPv4 Candidate B. Replaces killed FR-RIDE-208. Source: docs/receipts/requirements/20261007-bdpv4-candidates-for-agree.md. No third-party/legal-hold invent. No invented AC."

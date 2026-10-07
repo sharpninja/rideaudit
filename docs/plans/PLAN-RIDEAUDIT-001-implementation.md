@@ -1,4 +1,6 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
+> **OBSOLETE-CITES-SCRUB 2026-10-07:** Kill-list invent cites (mask/RBAC/legal-hold/FR-014/202/203/208/210, TR-PRIV-002/SEC-002/SEC-003, TEST-012/032) marked obsolete. Replacements where AGREEd: **FR-RIDE-077** / **TR-RIDE-VIDEO-007** (unmasked + H.264 SEI); **FR-RIDE-078** / **TR-RIDE-PRIV-004** (driver not third-party retention). Do not implement killed invent. Legitimate court/counsel product FRs (e.g. FR-047) unchanged.
+
 
 **Plan ID:** PLAN-RIDEAUDIT-001  
 **Revision:** r3.9: Payton 2026-09-29 directed that Section 9 Astra/Payton plan-acceptance boxes are not open work. That direction does not close product Class C items. r3.8: A live OpenTimestamps calendar submit on PAYTON-LEGION2 is receipted as pending only (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`). No Bitcoin txid. Confirmation stays open. r3.7: Lab self-signed Authenticode for framework-dependent win-x64 on PAYTON-LEGION2 is receipted (`CN=RideAudit Lab Self-Signed`). Commercial OV/IV + cloud HSM is deferred (real certs later). Public Trust and full P11b stay open. r3.6 ledger counts and the unsigned publish note still apply.  
@@ -8,13 +10,13 @@
 **Process:** Byrd Dev Process v4 (BDPv4)  
 **Generator:** Grok (executor) — docs split only  
 **Hostile plan reviewer (parent body):** Codex / **gpt-6-astra** at **xhigh**  
-**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`) and retargets the canonical ngrok tunnel to PAYTON-DESKTOP admission `192.168.0.149:28080`. r3.6 records the Class A ledger recount (`docs/receipts/ac-coverage/20260928-ledger.md`: 401 covered / 23 deferred / 0 missing / 424) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. r3.7 records the lab self-signed win-x64 path (`docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`): signtool sees a signature, `verify /pa` exits 1, and the result is Signed but not Public Trust. That receipt does not close P11b. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
+**Status:** Parent body Astra AGREE **R7** (confidence/accuracy/completeness 98) on r3.3. r3.4 recorded operator CD direction. r3.5 records the Octopus receipt already on master (`dc88997`, `docs/receipts/distribution/20260929T015822Z-octopus-LAB-OMARCHY.md`) and retargets the canonical ngrok tunnel to LAB-OMARCHY admission `192.168.1.182:28080`. r3.6 records the Class A ledger recount (`docs/receipts/ac-coverage/20260928-ledger.md`: 401 covered / 23 deferred / 0 missing / 424) and the unsigned desktop publish blocker (`docs/receipts/distribution/20260929T033731Z-unsigned-desktop-rid-publish.md`). A named row is not whole-AC closure. It does **not** invent a new Astra AGREE or a Payton section-8 check. r3.7 records the lab self-signed win-x64 path (`docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`): signtool sees a signature, `verify /pa` exits 1, and the result is Signed but not Public Trust. That receipt does not close P11b. P11b is not closed. Child plans do **not** inherit Astra AGREE until separately reviewed if process requires.  
 **Operator remediation authorization (2026-09-28):** Payton ordered iterate-until-HV-agree after code-hv-sol-r1 NOT-READY/DISAGREE@99 (master `dadde67`). After rem r1, code-hv-sol-r2 returned NOT-READY/DISAGREE@99 (`bf8f6ac`, PR #10). This is **not** a historical claim that the section 8 / P0 / Payton AGREE boxes were checked before PRs #3–#7. Payton 2026-09-29 directed that the Section 9 plan-acceptance boxes are not open work. That direction does not rewrite the pre-PR history and does not close product Class C items. The authorized rem loop is the active gate; CODE-HV READY is defined in [code-hv-ready-remediation-loop-20260928.md](../process/code-hv-ready-remediation-loop-20260928.md). Per-phase opposing HV remains required before claiming phase completion. See [operator-remediation-authorization-20260928.md](../receipts/remediation/operator-remediation-authorization-20260928.md).
 **Created:** 2026-09-27 (America/Chicago)
 
-> **Operator CD direction (2026-09-28, binding):** Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
+> **Operator CD direction (2026-09-28, binding):** Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR.
 >
-> That direction is FR-RIDE-063. Plans must cite it and must not weaken it. GitHub Actions container registry and GHCR are not the distribution path. Octopus license exhaustion is not deferral and not out of scope: provision a new Octopus container on PAYTON-DESKTOP. The recorded CD path is `octopus-rideaudit` on PAYTON-DESKTOP (`20260929T015822Z-octopus-payton-desktop.md`). The canonical ngrok target is that admission bind `192.168.0.149:28080` (FR-RIDE-064). Omarchy loopback `127.0.0.1:18080` is the prior interim. Authoritative batch: [Additive-PostPlanning-Deploy-Ngrok-Batch.yaml](../Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml).
+> That direction is FR-RIDE-063. Plans must cite it and must not weaken it. GitHub Actions container registry and GHCR are not the distribution path. Octopus license exhaustion is not deferral and not out of scope: provision a new Octopus container on LAB-OMARCHY. The recorded CD path is `octopus-rideaudit` on LAB-OMARCHY (`20260929T015822Z-octopus-LAB-OMARCHY.md`). The canonical ngrok target is that admission bind `192.168.1.182:28080` (FR-RIDE-064). Omarchy loopback `127.0.0.1:18080` is the prior interim. Authoritative batch: [Additive-PostPlanning-Deploy-Ngrok-Batch.yaml](../Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml).
 
 > **HARD GATE (section 8):** No Avalonia/gRPC application implementation, skeletons, application test projects, or generated application bindings until P0 docs repair is complete, Astra returns READY/AGREE with accuracy/completeness/confidence ≥98 on the reviewed portfolio revision, and Payton explicitly agrees. No waivers.
 
@@ -36,7 +38,7 @@
 | --- | ---: | --- |
 | BRACKET | 3 | FR-RIDE-029, FR-RIDE-030, FR-RIDE-041 |
 | ANDROID | 31 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-025, FR-RIDE-026, FR-RIDE-027, FR-RIDE-029, FR-RIDE-030, FR-RIDE-031, FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045, FR-RIDE-046, FR-RIDE-047, FR-RIDE-048, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-053, FR-RIDE-054, FR-RIDE-055, FR-RIDE-056, FR-RIDE-057, FR-RIDE-058, FR-RIDE-215, FR-RIDE-219, FR-RIDE-220, FR-RIDE-221, FR-RIDE-222 |
-| SERVER | 58 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-014, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-063, FR-RIDE-064, FR-RIDE-201, FR-RIDE-202, FR-RIDE-203, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, FR-RIDE-208, FR-RIDE-209, FR-RIDE-210, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
+| SERVER | 58 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, ~~FR-RIDE-014~~, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-063, FR-RIDE-064, FR-RIDE-201, ~~FR-RIDE-202~~, ~~FR-RIDE-203~~, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, ~~FR-RIDE-208~~, FR-RIDE-209, ~~FR-RIDE-210~~, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
 
 Union covers all **86** parent FRs after the 2026-09-28 post-planning additive (shared FR-029/030/026 appear in more than one child with role notes). The Astra R7 parent body covered **84** FRs. FR-RIDE-063 and FR-RIDE-064 are additive and do not rewrite that AGREE. Detailed FR→UC→AC→TEST rows live in each child; the pre-additive 404-row AC ledger remains in **§2.7**; post-planning ACs are in **§2.8**.
 
@@ -54,9 +56,9 @@ Union covers all **86** parent FRs after the 2026-09-28 post-planning additive (
 | P7 desktop viewer | ANDROID (A4) |
 | P8 counsel/analysis services | SERVER (S5); viewer UX ANDROID |
 | P9 ingest | SERVER (S6) |
-| P10 privacy/RBAC | SERVER (S7) |
+| P10 privacy/retention (~~RBAC/mask/legal-hold invent killed~~; see FR-077/078) | SERVER (S7) |
 | P11a alternate chain | SERVER (S8) |
-| P11b integrated release | Portfolio + all children. Server CD portion is FR-RIDE-063 (Octopus to PAYTON-DESKTOP, no GHCR) plus FR-RIDE-064 (ngrok; Omarchy interim) |
+| P11b integrated release | Portfolio + all children. Server CD portion is FR-RIDE-063 (Octopus to LAB-OMARCHY, no GHCR) plus FR-RIDE-064 (ngrok; Omarchy interim) |
 | HW0–HW2 mount | BRACKET |
 
 ---
@@ -75,7 +77,7 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 4. Opposing-model HV with durable receipts under `docs/receipts/hv/` **and** canonical pairs under `docs/reviews/hv-pairs/`.
 5. Keep implementers from writing app code until Astra + Payton AGREE on the reviewed portfolio revision.
 6. **Portfolio split:** execution detail for Bracket / Android clients / Server lives in the three child plans above.
-7. **Container CD:** Octopus Deploy builds images and deploys them to PAYTON-DESKTOP (FR-RIDE-063). No GHCR. License exhaustion on the default Octopus container means create a new Octopus container on PAYTON-DESKTOP. Omarchy plus ngrok is interim admission hosting (FR-RIDE-064).
+7. **Container CD:** Octopus Deploy builds images and deploys them to LAB-OMARCHY (FR-RIDE-063). No GHCR. License exhaustion on the default Octopus container means create a new Octopus container on LAB-OMARCHY. Omarchy plus ngrok is interim admission hosting (FR-RIDE-064).
 
 ### 1.3 Non-goals
 
@@ -85,7 +87,7 @@ RideAudit is a rideshare telematics audit system: dual-phone capture, seal-at-co
 - Claiming Play Store publication complete without receipts.
 - Using GHCR or a GitHub Actions container registry as the image distribution path.
 - Treating Octopus license exhaustion as deferral or out of scope.
-- Inventing a live Octopus green without a receipt that names the Octopus instance or container and PAYTON-DESKTOP.
+- Inventing a live Octopus green without a receipt that names the Octopus instance or container and LAB-OMARCHY.
 - Committing secrets, `AGENTS-README-FIRST.yaml`, or `mcp.db`.
 - Treating interim OpenAPI as authoritative wire contract.
 - Private/permissioned chain as sole custody ledger.
@@ -154,11 +156,11 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-007 | high | Coverage matrix | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-007-001, AC-RIDE-007-002 | P8 |
 | FR-RIDE-008 | high | Online-hours policy audit | TR-RIDE-ANAL-003 | TEST-RIDE-008 | UC-RIDE-006 | AC-RIDE-008-001, AC-RIDE-008-002, AC-RIDE-008-003 | P8 |
 | FR-RIDE-009 | high | Time-window incident report | TR-RIDE-ANAL-004 | TEST-RIDE-009 | UC-RIDE-007 | AC-RIDE-009-001, AC-RIDE-009-002 | P8 |
-| FR-RIDE-010 | critical | Data subject access and deletion | TR-RIDE-STORE-003, TR-RIDE-PRIV-001, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | AC-RIDE-010-001, AC-RIDE-010-002 | P10 |
+| FR-RIDE-010 | critical | Data subject access and deletion | TR-RIDE-STORE-003, TR-RIDE-PRIV-001, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | AC-RIDE-010-001 (AC-002 legal-hold killed) | P10 |
 | FR-RIDE-011 | critical | No undocumented Lyft private APIs | TR-RIDE-INGEST-001, TR-RIDE-INGEST-002 | TEST-RIDE-004 | UC-RIDE-003, UC-RIDE-020 | AC-RIDE-011-001, AC-RIDE-011-002 | P9 |
 | FR-RIDE-012 | medium | Admin partnership gates | TR-RIDE-INGEST-004 | TEST-RIDE-004 | UC-RIDE-003, UC-RIDE-020 | AC-RIDE-012-001, AC-RIDE-012-002 | P9 |
 | FR-RIDE-013 | high | Hash and version raw imports | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-011 | UC-RIDE-001 | AC-RIDE-013-001, AC-RIDE-013-002 | P9 |
-| FR-RIDE-014 | critical | Role-based access | TR-RIDE-PRIV-002, TR-RIDE-SEC-002 | TEST-RIDE-012 | UC-RIDE-020 | AC-RIDE-014-001, AC-RIDE-014-002 | P10 |
+| FR-RIDE-014 | ~~critical~~ | **OBSOLETE (killed invent)** Role-based access / RBAC — see **FR-RIDE-077** | ~~TR-PRIV-002/SEC-002~~ | ~~TEST-012~~ | UC-RIDE-020 | OBSOLETE | P10 |
 | FR-RIDE-015 | critical | Seal and encrypt at collection | TR-RIDE-STORE-001, TR-RIDE-STORE-002, TR-RIDE-SEAL-001 | TEST-RIDE-013 | UC-RIDE-009 | AC-RIDE-015-001, AC-RIDE-015-002 | P3 |
 | FR-RIDE-016 | critical | Per-session or per-sample keys | TR-RIDE-SEAL-002 | TEST-RIDE-013 | UC-RIDE-009 | AC-RIDE-016-001, AC-RIDE-016-002, AC-RIDE-016-003 | P3 |
 | FR-RIDE-017 | critical | Custody receipt content | TR-RIDE-CHAIN-001 | TEST-RIDE-014 | UC-RIDE-009 | AC-RIDE-017-001, AC-RIDE-017-002 | P3 |
@@ -198,15 +200,15 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-051 | high | Synchronized timeline display | TR-RIDE-VIEW-003 | TEST-RIDE-028 | UC-RIDE-019 | AC-RIDE-051-001, AC-RIDE-051-002 | P7 |
 | FR-RIDE-052 | critical | ViewerSession and VerificationReport | TR-RIDE-VIEW-004 | TEST-RIDE-028 | UC-RIDE-019 | AC-RIDE-052-001, AC-RIDE-052-002 | P7 |
 | FR-RIDE-201 | critical | TLS and secrets vault | TR-RIDE-SEC-001 | TEST-RIDE-029 | UC-RIDE-009 | AC-RIDE-201-001, AC-RIDE-201-002 | P2 |
-| FR-RIDE-202 | critical | Geolocation sensitive masking | TR-RIDE-PRIV-002 | TEST-RIDE-012 | UC-RIDE-008, UC-RIDE-020 | AC-RIDE-202-001, AC-RIDE-202-002 | P10 |
-| FR-RIDE-203 | critical | Append-only access logs | TR-RIDE-SEC-003 | TEST-RIDE-029 | UC-RIDE-008 | AC-RIDE-203-001 | P10 |
+| FR-RIDE-202 | ~~critical~~ | **OBSOLETE (killed invent)** Geolocation sensitive masking — precise location stays unmasked; see **FR-RIDE-077** / **TR-RIDE-VIDEO-007** | ~~TR-PRIV-002~~ | ~~TEST-012~~ | UC-RIDE-008 | OBSOLETE | P10 |
+| FR-RIDE-203 | ~~critical~~ | **OBSOLETE (killed invent)** Append-only access logs (mask/RBAC cluster) — no AGREEd replacement yet | ~~TR-SEC-003~~ | TEST-RIDE-029 | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-204 | high | Concierge ingestion resilience | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-030 | UC-RIDE-003 | AC-RIDE-204-001, AC-RIDE-204-002 | P9 |
 | FR-RIDE-205 | high | Scale multi-year histories | TR-RIDE-PERF-002 | TEST-RIDE-031 | UC-RIDE-021 | AC-RIDE-205-001, AC-RIDE-205-002 | P10 |
 | FR-RIDE-206 | critical | No false Smooth Cruiser labeling | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-030 | UC-RIDE-003 | AC-RIDE-206-001, AC-RIDE-206-002 | P9 |
 | FR-RIDE-207 | high | Portable audit ZIP export | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-031 | UC-RIDE-007, UC-RIDE-021 | AC-RIDE-207-001 | P10 |
-| FR-RIDE-208 | high | Per-state retention config | TR-RIDE-STORE-003 | TEST-RIDE-032 | UC-RIDE-008 | AC-RIDE-208-001, AC-RIDE-208-002 | P10 |
+| FR-RIDE-208 | ~~high~~ | **OBSOLETE (killed invent)** Per-state / CA third-party retention frames — see **FR-RIDE-078** / **TR-RIDE-PRIV-004** | TR-RIDE-STORE-003 | ~~TEST-032~~ | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-209 | medium | In-product API gap notice | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-209-001 | P9 |
-| FR-RIDE-210 | critical | Legal hold suspends deletion | TR-RIDE-STORE-003, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | AC-RIDE-210-001 | P10 |
+| FR-RIDE-210 | ~~critical~~ | **OBSOLETE (killed invent)** Legal hold suspends deletion — no legal-hold SoT | TR-RIDE-STORE-003, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-211 | high | Cryptographic agility | TR-RIDE-SEAL-003 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-211-001, AC-RIDE-211-002 | P3 |
 | FR-RIDE-212 | high | Configurable public chain | TR-RIDE-CHAIN-002 | TEST-RIDE-014 | UC-RIDE-009 | AC-RIDE-212-001, AC-RIDE-212-002, AC-RIDE-212-003 | P3 (OTS default) + P11a (alternate profiles) |
 | FR-RIDE-213 | high | Seal/receipt latency budget | TR-RIDE-PERF-001 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-213-001, AC-RIDE-213-002 | P3 |
@@ -229,7 +231,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-053 | high | Bluetooth driver-rider phone pairing | TR-RIDE-VIDEO-010 | TEST-RIDE-034 | UC-RIDE-022 | AC-RIDE-053-001, AC-RIDE-053-002 | P6 |
 | FR-RIDE-054 | high | Driver phone session coordination | TR-RIDE-VIDEO-011 | TEST-RIDE-034 | UC-RIDE-023 | AC-RIDE-054-001, AC-RIDE-054-002 | P6 |
 | FR-RIDE-055 | high | Passenger phone video sync join and telematics overlay | TR-RIDE-VIDEO-011 | TEST-RIDE-034 | UC-RIDE-024 | AC-RIDE-055-001, AC-RIDE-055-002 | P6 |
-| FR-RIDE-063 | high | Octopus Deploy CD to PAYTON-DESKTOP | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 | AC-RIDE-063-001, AC-RIDE-063-002, AC-RIDE-063-003 | P11b |
+| FR-RIDE-063 | high | Octopus Deploy CD to LAB-OMARCHY | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 | AC-RIDE-063-001, AC-RIDE-063-002, AC-RIDE-063-003 | P11b |
 | FR-RIDE-064 | high | ngrok ingress for RideAudit service | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 | AC-RIDE-064-001, AC-RIDE-064-002, AC-RIDE-064-003 | P11b |
 
 ### 2.4 TR inventory
@@ -244,7 +246,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TR-RIDE-INGEST-006 | INGEST | Honesty provenance tagging | AC-RIDE-INGEST-006-001 | FR-RIDE-001, FR-RIDE-005, FR-RIDE-006 |
 | TR-RIDE-STORE-001 | STORE | Sealed immutable blob store | AC-RIDE-STORE-001-001, AC-RIDE-STORE-001-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
 | TR-RIDE-STORE-002 | STORE | Versioned correction events | AC-RIDE-STORE-002-001, AC-RIDE-STORE-002-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
-| TR-RIDE-STORE-003 | STORE | Jurisdiction retention engine | AC-RIDE-STORE-003-001, AC-RIDE-STORE-003-002 | FR-RIDE-010, FR-RIDE-208, FR-RIDE-210 |
+| TR-RIDE-STORE-003 | STORE | Jurisdiction retention engine | AC-RIDE-STORE-003-001, AC-RIDE-STORE-003-002 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
 | TR-RIDE-ANAL-001 | ANAL | Authorized working-copy analysis | AC-RIDE-ANAL-001-001, AC-RIDE-ANAL-001-002 | FR-RIDE-020, FR-RIDE-021 |
 | TR-RIDE-ANAL-002 | ANAL | Coverage matrix generator | AC-RIDE-ANAL-002-001, AC-RIDE-ANAL-002-002 | FR-RIDE-007, FR-RIDE-209 |
 | TR-RIDE-ANAL-003 | ANAL | Online-hours policy engine | AC-RIDE-ANAL-003-001, AC-RIDE-ANAL-003-002 | FR-RIDE-008 |
@@ -283,11 +285,11 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TR-RIDE-VIEW-003 | VIEW | Synchronized RideBundle timeline | AC-RIDE-VIEW-003-001, AC-RIDE-VIEW-003-002 | FR-RIDE-051 |
 | TR-RIDE-VIEW-004 | VIEW | ViewerSession and VerificationReport | AC-RIDE-VIEW-004-001, AC-RIDE-VIEW-004-002 | FR-RIDE-052 |
 | TR-RIDE-PRIV-001 | PRIV | Consent and purpose binding | AC-RIDE-PRIV-001-001 | FR-RIDE-006, FR-RIDE-010 |
-| TR-RIDE-PRIV-002 | PRIV | Sensitive geolocation masking | AC-RIDE-PRIV-002-001, AC-RIDE-PRIV-002-002 | FR-RIDE-014, FR-RIDE-202 |
-| TR-RIDE-PRIV-003 | PRIV | DSAR access and deletion | AC-RIDE-PRIV-003-001, AC-RIDE-PRIV-003-002 | FR-RIDE-010, FR-RIDE-210 |
+| TR-RIDE-PRIV-002 | PRIV | **OBSOLETE** Sensitive geolocation masking — see **TR-RIDE-VIDEO-007** / **FR-RIDE-077** | OBSOLETE | ~~FR-014/202~~ |
+| TR-RIDE-PRIV-003 | PRIV | DSAR access and deletion | AC-RIDE-PRIV-003-001, AC-RIDE-PRIV-003-002 | FR-RIDE-010 (~~FR-210 legal-hold killed~~) |
 | TR-RIDE-SEC-001 | SEC | TLS and vault secrets | AC-RIDE-SEC-001-001, AC-RIDE-SEC-001-002 | FR-RIDE-201 |
-| TR-RIDE-SEC-002 | SEC | RBAC least privilege | AC-RIDE-SEC-002-001, AC-RIDE-SEC-002-002 | FR-RIDE-014 |
-| TR-RIDE-SEC-003 | SEC | Append-only sensitive access logs | AC-RIDE-SEC-003-001 | FR-RIDE-203 |
+| TR-RIDE-SEC-002 | SEC | **OBSOLETE** RBAC least privilege — killed with FR-014; see **FR-RIDE-077** | OBSOLETE | ~~FR-014~~ |
+| TR-RIDE-SEC-003 | SEC | **OBSOLETE** Append-only sensitive access logs — killed with FR-203; no AGREEd replacement | OBSOLETE | ~~FR-203~~ |
 | TR-RIDE-PERF-001 | PERF | Seal/receipt latency monitoring | AC-RIDE-PERF-001-001, AC-RIDE-PERF-001-002 | FR-RIDE-213 |
 | TR-RIDE-PERF-002 | PERF | Large history UI pagination | AC-RIDE-PERF-002-001 | FR-RIDE-205 |
 | TR-RIDE-PERF-003 | PERF | Video performance gates | AC-RIDE-PERF-003-001, AC-RIDE-PERF-003-002 | FR-RIDE-220 |
@@ -301,7 +303,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TR-RIDE-VIDEO-010 | VIDEO | Bluetooth pairing and role protocol | (inherits mapped FR ACs; additive without independent AC array) | FR-RIDE-053 |
 | TR-RIDE-VIDEO-011 | VIDEO | Driver coordinator and passenger compositor split | (inherits mapped FR ACs; additive without independent AC array) | FR-RIDE-054, FR-RIDE-055 |
 | TR-RIDE-DEPLOY-001 | DEPLOY | Octopus project and image build process | AC-RIDE-DEPLOY-001-001, AC-RIDE-DEPLOY-001-002 | FR-RIDE-063 |
-| TR-RIDE-DEPLOY-002 | DEPLOY | Octopus agent and license fallback on PAYTON-DESKTOP | AC-RIDE-DEPLOY-002-001, AC-RIDE-DEPLOY-002-002 | FR-RIDE-063 |
+| TR-RIDE-DEPLOY-002 | DEPLOY | Octopus agent and license fallback on LAB-OMARCHY | AC-RIDE-DEPLOY-002-001, AC-RIDE-DEPLOY-002-002 | FR-RIDE-063 |
 | TR-RIDE-EDGE-001 | EDGE | ngrok tunnel config and host service wrapper | AC-RIDE-EDGE-001-001, AC-RIDE-EDGE-001-002 | FR-RIDE-064 |
 
 ### 2.5 TEST inventory
@@ -317,9 +319,9 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-007 | Coverage matrix and API-gap notice | AC-TEST-007-001, AC-TEST-007-002 | FR-RIDE-007, FR-RIDE-209 |
 | TEST-RIDE-008 | Online-hours policy evaluation | AC-TEST-008-001, AC-TEST-008-002 | FR-RIDE-008 |
 | TEST-RIDE-009 | Incident time-window export | AC-TEST-009-001, AC-TEST-009-002 | FR-RIDE-009 |
-| TEST-RIDE-010 | DSAR access deletion and legal hold | AC-TEST-010-001, AC-TEST-010-002 | FR-RIDE-010, FR-RIDE-210 |
+| TEST-RIDE-010 | DSAR access export (legal-hold invent removed) | AC-TEST-010-001, AC-TEST-010-002 | FR-RIDE-010 (~~FR-210 killed~~) |
 | TEST-RIDE-011 | Hash version integrity on imports | AC-TEST-011-001, AC-TEST-011-002 | FR-RIDE-013 |
-| TEST-RIDE-012 | RBAC least privilege location | AC-TEST-012-001, AC-TEST-012-002 | FR-RIDE-014, FR-RIDE-202 |
+| TEST-RIDE-012 | **OBSOLETE** RBAC least privilege location — killed invent | OBSOLETE | ~~FR-014/202~~ |
 | TEST-RIDE-013 | Seal-at-collect boundary | AC-TEST-013-001, AC-TEST-013-002 | FR-RIDE-015, FR-RIDE-016 |
 | TEST-RIDE-014 | Custody receipt and chain write | AC-TEST-014-001, AC-TEST-014-002 | FR-RIDE-017, FR-RIDE-018, FR-RIDE-212 |
 | TEST-RIDE-015 | Chain failure non-admission | AC-TEST-015-001, AC-TEST-015-002 | FR-RIDE-019 |
@@ -336,10 +338,10 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-026 | Composite seal optional raw and metadata | AC-TEST-026-001, AC-TEST-026-002 | FR-RIDE-045, FR-RIDE-046, FR-RIDE-048 |
 | TEST-RIDE-027 | Counsel composite playback verification | AC-TEST-027-001, AC-TEST-027-002 | FR-RIDE-047, FR-RIDE-221 |
 | TEST-RIDE-028 | Desktop viewer fail-closed timeline | AC-TEST-028-001, AC-TEST-028-002 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
-| TEST-RIDE-029 | Security TLS vault and access logs | AC-TEST-029-001, AC-TEST-029-002 | FR-RIDE-201, FR-RIDE-203, FR-RIDE-214 |
+| TEST-RIDE-029 | Security TLS vault and access logs | AC-TEST-029-001, AC-TEST-029-002 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
 | TEST-RIDE-030 | Concierge resilience and accuracy labeling | AC-TEST-030-001, AC-TEST-030-002 | FR-RIDE-204, FR-RIDE-206 |
 | TEST-RIDE-031 | Scalability pagination and portable export | AC-TEST-031-001, AC-TEST-031-002 | FR-RIDE-205, FR-RIDE-207 |
-| TEST-RIDE-032 | Retention crypto agility latency | AC-TEST-032-001, AC-TEST-032-002 | FR-RIDE-208, FR-RIDE-211, FR-RIDE-213 |
+| TEST-RIDE-032 | **OBSOLETE as killed invent** (retention/crypto/latency bundle) — ~~FR-208~~ killed; FR-211/213 remapping TBD | OBSOLETE | FR-RIDE-211, FR-RIDE-213 (~~208 killed~~) |
 | TEST-RIDE-033 | Video quotas and performance gates | AC-TEST-033-001, AC-TEST-033-002 | FR-RIDE-219, FR-RIDE-220 |
 | TEST-RIDE-035 | Avalonia UI 12 clients and GPL share | (inherits mapped FR ACs) | FR-RIDE-056, FR-RIDE-057, FR-RIDE-058 |
 | TEST-RIDE-036 | gRPC .NET 10 sealed fail-closed admission | (inherits mapped FR ACs) | FR-RIDE-059, FR-RIDE-061 |
@@ -360,7 +362,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | UC-RIDE-005 | Generate coverage matrix | yes | AC-UC-005-001, AC-UC-005-002 | FR-RIDE-007, FR-RIDE-209 |  |
 | UC-RIDE-006 | Online-hours policy check | yes | AC-UC-006-001, AC-UC-006-002 | FR-RIDE-008 |  |
 | UC-RIDE-007 | Build incident time-window package | yes | AC-UC-007-001, AC-UC-007-002 | FR-RIDE-009, FR-RIDE-038, FR-RIDE-207 |  |
-| UC-RIDE-008 | Data subject access or deletion | yes | AC-UC-008-001, AC-UC-008-002 | FR-RIDE-010, FR-RIDE-202, FR-RIDE-203, FR-RIDE-208, FR-RIDE-210 |  |
+| UC-RIDE-008 | Data subject access or deletion | yes | AC-UC-008-001, AC-UC-008-002 | FR-RIDE-010 (~~202/203/208/210 killed~~); see also **FR-RIDE-078** |  |
 | UC-RIDE-009 | Seal-at-collect with chain receipt | yes | AC-UC-009-001, AC-UC-009-002 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 |  |
 | UC-RIDE-010 | Counsel verification and decrypt path | yes | AC-UC-010-001, AC-UC-010-002 | FR-RIDE-020, FR-RIDE-021, FR-RIDE-028, FR-RIDE-214 |  |
 | UC-RIDE-011 | Escrow key and court release | yes | AC-UC-011-001, AC-UC-011-002 | FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-214, FR-RIDE-216 |  |
@@ -372,7 +374,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | UC-RIDE-017 | Dual-phone composite evidence | yes | AC-UC-017-001, AC-UC-017-002 | FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045, FR-RIDE-046, FR-RIDE-048, FR-RIDE-219, FR-RIDE-220 |  |
 | UC-RIDE-018 | Counsel composite playback | yes | AC-UC-018-001, AC-UC-018-002 | FR-RIDE-047, FR-RIDE-048, FR-RIDE-050, FR-RIDE-221 |  |
 | UC-RIDE-019 | Desktop court viewer review | yes | AC-UC-019-001, AC-UC-019-002 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |  |
-| UC-RIDE-020 | Admin RBAC and partnership gates | yes | AC-UC-020-001, AC-UC-020-002 | FR-RIDE-011, FR-RIDE-012, FR-RIDE-014, FR-RIDE-202 |  |
+| UC-RIDE-020 | Admin partnership gates (~~RBAC invent killed~~) | yes | AC-UC-020-001, AC-UC-020-002 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) |  |
 | UC-RIDE-021 | Cross-cutting compliance and quality gates | yes | AC-UC-021-001, AC-UC-021-002 | FR-RIDE-205, FR-RIDE-207 |  |
 | UC-RIDE-022 | Pair driver and passenger phones over Bluetooth | yes | none declared | FR-RIDE-053 | AC-RIDE-053-001/002 + TEST-RIDE-034 |
 | UC-RIDE-023 | Driver coordinates dual-phone session | yes | none declared | FR-RIDE-054 | AC-RIDE-054-001/002 + TEST-RIDE-034 |
@@ -384,7 +386,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | UC-RIDE-029 | Consume published GPL-2.0 gRPC protos | yes | AC-UC-029-001 | FR-RIDE-060 |  |
 | UC-RIDE-030 | Fail-closed gRPC admission | yes | AC-UC-030-001 | FR-RIDE-061 |  |
 | UC-RIDE-031 | Prefer gRPC over interim OpenAPI companion | yes | AC-UC-031-001 | FR-RIDE-062 |  |
-| UC-RIDE-032 | Operator releases RideAudit via Octopus to PAYTON-DESKTOP | yes (additive batch) | AC-UC-032-001 | FR-RIDE-063 |  |
+| UC-RIDE-032 | Operator releases RideAudit via Octopus to LAB-OMARCHY | yes (additive batch) | AC-UC-032-001 | FR-RIDE-063 |  |
 | UC-RIDE-033 | Operator configures ngrok and probes admission health | yes (additive batch) | AC-UC-033-001 | FR-RIDE-064 |  |
 
 ### 2.7 Complete acceptance-criteria closure
@@ -420,8 +422,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
 | AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
 | AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
-| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, FR-RIDE-208, FR-RIDE-210 |
-| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, FR-RIDE-208, FR-RIDE-210 |
+| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
+| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
 | AC-RIDE-ANAL-001-001 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 |
 | AC-RIDE-ANAL-001-002 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 |
 | AC-RIDE-ANAL-002-001 | TR-RIDE-ANAL-002 | FR-RIDE-007, FR-RIDE-209 |
@@ -497,15 +499,15 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-RIDE-VIEW-004-001 | TR-RIDE-VIEW-004 | FR-RIDE-052 |
 | AC-RIDE-VIEW-004-002 | TR-RIDE-VIEW-004 | FR-RIDE-052 |
 | AC-RIDE-PRIV-001-001 | TR-RIDE-PRIV-001 | FR-RIDE-006, FR-RIDE-010 |
-| AC-RIDE-PRIV-002-001 | TR-RIDE-PRIV-002 | FR-RIDE-014, FR-RIDE-202 |
-| AC-RIDE-PRIV-002-002 | TR-RIDE-PRIV-002 | FR-RIDE-014, FR-RIDE-202 |
-| AC-RIDE-PRIV-003-001 | TR-RIDE-PRIV-003 | FR-RIDE-010, FR-RIDE-210 |
-| AC-RIDE-PRIV-003-002 | TR-RIDE-PRIV-003 | FR-RIDE-010, FR-RIDE-210 |
+| AC-RIDE-PRIV-002-001 | ~~TR-PRIV-002~~ | **OBSOLETE** ~~FR-014/202~~ — see FR-077 |
+| AC-RIDE-PRIV-002-002 | ~~TR-PRIV-002~~ | **OBSOLETE** ~~FR-014/202~~ — see FR-077 |
+| AC-RIDE-PRIV-003-001 | TR-RIDE-PRIV-003 | FR-RIDE-010 (~~FR-210 killed~~) |
+| AC-RIDE-PRIV-003-002 | TR-RIDE-PRIV-003 | FR-RIDE-010 (~~FR-210 killed~~) |
 | AC-RIDE-SEC-001-001 | TR-RIDE-SEC-001 | FR-RIDE-201 |
 | AC-RIDE-SEC-001-002 | TR-RIDE-SEC-001 | FR-RIDE-201 |
-| AC-RIDE-SEC-002-001 | TR-RIDE-SEC-002 | FR-RIDE-014 |
-| AC-RIDE-SEC-002-002 | TR-RIDE-SEC-002 | FR-RIDE-014 |
-| AC-RIDE-SEC-003-001 | TR-RIDE-SEC-003 | FR-RIDE-203 |
+| AC-RIDE-SEC-002-001 | ~~TR-SEC-002~~ | **OBSOLETE** ~~FR-014~~ |
+| AC-RIDE-SEC-002-002 | ~~TR-SEC-002~~ | **OBSOLETE** ~~FR-014~~ |
+| AC-RIDE-SEC-003-001 | ~~TR-SEC-003~~ | **OBSOLETE** ~~FR-203~~ |
 | AC-RIDE-PERF-001-001 | TR-RIDE-PERF-001 | FR-RIDE-213 |
 | AC-RIDE-PERF-001-002 | TR-RIDE-PERF-001 | FR-RIDE-213 |
 | AC-RIDE-PERF-002-001 | TR-RIDE-PERF-002 | FR-RIDE-205 |
@@ -534,12 +536,12 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-TEST-008-002 | TEST-RIDE-008 | FR-RIDE-008 |
 | AC-TEST-009-001 | TEST-RIDE-009 | FR-RIDE-009 |
 | AC-TEST-009-002 | TEST-RIDE-009 | FR-RIDE-009 |
-| AC-TEST-010-001 | TEST-RIDE-010 | FR-RIDE-010, FR-RIDE-210 |
-| AC-TEST-010-002 | TEST-RIDE-010 | FR-RIDE-010, FR-RIDE-210 |
+| AC-TEST-010-001 | TEST-RIDE-010 | FR-RIDE-010 (~~FR-210 killed~~) |
+| AC-TEST-010-002 | TEST-RIDE-010 | FR-RIDE-010 (~~FR-210 killed~~) |
 | AC-TEST-011-001 | TEST-RIDE-011 | FR-RIDE-013 |
 | AC-TEST-011-002 | TEST-RIDE-011 | FR-RIDE-013 |
-| AC-TEST-012-001 | TEST-RIDE-012 | FR-RIDE-014, FR-RIDE-202 |
-| AC-TEST-012-002 | TEST-RIDE-012 | FR-RIDE-014, FR-RIDE-202 |
+| AC-TEST-012-001 | ~~TEST-012~~ | **OBSOLETE** ~~FR-014/202~~ |
+| AC-TEST-012-002 | ~~TEST-012~~ | **OBSOLETE** ~~FR-014/202~~ |
 | AC-TEST-013-001 | TEST-RIDE-013 | FR-RIDE-015, FR-RIDE-016 |
 | AC-TEST-013-002 | TEST-RIDE-013 | FR-RIDE-015, FR-RIDE-016 |
 | AC-TEST-014-001 | TEST-RIDE-014 | FR-RIDE-017, FR-RIDE-018, FR-RIDE-212 |
@@ -572,14 +574,14 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-TEST-027-002 | TEST-RIDE-027 | FR-RIDE-047, FR-RIDE-221 |
 | AC-TEST-028-001 | TEST-RIDE-028 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
 | AC-TEST-028-002 | TEST-RIDE-028 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
-| AC-TEST-029-001 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-203, FR-RIDE-214 |
-| AC-TEST-029-002 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-203, FR-RIDE-214 |
+| AC-TEST-029-001 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
+| AC-TEST-029-002 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
 | AC-TEST-030-001 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 |
 | AC-TEST-030-002 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 |
 | AC-TEST-031-001 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 |
 | AC-TEST-031-002 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 |
-| AC-TEST-032-001 | TEST-RIDE-032 | FR-RIDE-208, FR-RIDE-211, FR-RIDE-213 |
-| AC-TEST-032-002 | TEST-RIDE-032 | FR-RIDE-208, FR-RIDE-211, FR-RIDE-213 |
+| AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD |
+| AC-TEST-032-002 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD |
 | AC-TEST-033-001 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 |
 | AC-TEST-033-002 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 |
 
@@ -601,8 +603,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-UC-006-002 | UC-RIDE-006 | FR-RIDE-008 |
 | AC-UC-007-001 | UC-RIDE-007 | FR-RIDE-009, FR-RIDE-038, FR-RIDE-207 |
 | AC-UC-007-002 | UC-RIDE-007 | FR-RIDE-009, FR-RIDE-038, FR-RIDE-207 |
-| AC-UC-008-001 | UC-RIDE-008 | FR-RIDE-010, FR-RIDE-202, FR-RIDE-203, FR-RIDE-208, FR-RIDE-210 |
-| AC-UC-008-002 | UC-RIDE-008 | FR-RIDE-010, FR-RIDE-202, FR-RIDE-203, FR-RIDE-208, FR-RIDE-210 |
+| AC-UC-008-001 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** |
+| AC-UC-008-002 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** |
 | AC-UC-009-001 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 |
 | AC-UC-009-002 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 |
 | AC-UC-010-001 | UC-RIDE-010 | FR-RIDE-020, FR-RIDE-021, FR-RIDE-028, FR-RIDE-214 |
@@ -625,8 +627,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-UC-018-002 | UC-RIDE-018 | FR-RIDE-047, FR-RIDE-048, FR-RIDE-050, FR-RIDE-221 |
 | AC-UC-019-001 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
 | AC-UC-019-002 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
-| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012, FR-RIDE-014, FR-RIDE-202 |
-| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012, FR-RIDE-014, FR-RIDE-202 |
+| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) |
+| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) |
 | AC-UC-021-001 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 |
 | AC-UC-021-002 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 |
 | AC-UC-025-001 | UC-RIDE-025 | FR-RIDE-056 |
@@ -675,8 +677,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-012-002 | FR-RIDE-012 | FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
 | AC-RIDE-013-001 | FR-RIDE-013 | FR-RIDE-013 | P9 | P11b | TEST-RIDE-011 |
 | AC-RIDE-013-002 | FR-RIDE-013 | FR-RIDE-013 | P9 | P11b | TEST-RIDE-011 |
-| AC-RIDE-014-001 | FR-RIDE-014 | FR-RIDE-014 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-014-002 | FR-RIDE-014 | FR-RIDE-014 | P10 | P11b | TEST-RIDE-012 |
+| AC-RIDE-014-001 | ~~FR-014~~ | **OBSOLETE** | P10 | — | ~~TEST-012~~ |
+| AC-RIDE-014-002 | ~~FR-014~~ | **OBSOLETE** | P10 | — | ~~TEST-012~~ |
 | AC-RIDE-015-001 | FR-RIDE-015 | FR-RIDE-015 | P3 | P11b | TEST-RIDE-013 |
 | AC-RIDE-015-002 | FR-RIDE-015 | FR-RIDE-015 | P3 | P11b | TEST-RIDE-013 |
 | AC-RIDE-016-001 | FR-RIDE-016 | FR-RIDE-016 | P3 | P11b | TEST-RIDE-013 |
@@ -766,9 +768,9 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-052-002 | FR-RIDE-052 | FR-RIDE-052 | P7 | P11b | TEST-RIDE-028 |
 | AC-RIDE-201-001 | FR-RIDE-201 | FR-RIDE-201 | P2 | P11b | TEST-RIDE-029 |
 | AC-RIDE-201-002 | FR-RIDE-201 | FR-RIDE-201 | P2 | P11b | TEST-RIDE-029 |
-| AC-RIDE-202-001 | FR-RIDE-202 | FR-RIDE-202 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-202-002 | FR-RIDE-202 | FR-RIDE-202 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-203-001 | FR-RIDE-203 | FR-RIDE-203 | P10 | P11b | TEST-RIDE-029 |
+| AC-RIDE-202-001 | ~~FR-202~~ | **OBSOLETE** — see **FR-077** | P10 | — | ~~TEST-012~~ |
+| AC-RIDE-202-002 | ~~FR-202~~ | **OBSOLETE** — see **FR-077** | P10 | — | ~~TEST-012~~ |
+| AC-RIDE-203-001 | ~~FR-203~~ | **OBSOLETE** | P10 | — | TEST-RIDE-029 |
 | AC-RIDE-204-001 | FR-RIDE-204 | FR-RIDE-204 | P9 | P11b | TEST-RIDE-030 |
 | AC-RIDE-204-002 | FR-RIDE-204 | FR-RIDE-204 | P9 | P11b | TEST-RIDE-030 |
 | AC-RIDE-205-001 | FR-RIDE-205 | FR-RIDE-205 | P10 | P11b | TEST-RIDE-031 |
@@ -776,10 +778,10 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-206-001 | FR-RIDE-206 | FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
 | AC-RIDE-206-002 | FR-RIDE-206 | FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
 | AC-RIDE-207-001 | FR-RIDE-207 | FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
-| AC-RIDE-208-001 | FR-RIDE-208 | FR-RIDE-208 | P10 | P11b | TEST-RIDE-032 |
-| AC-RIDE-208-002 | FR-RIDE-208 | FR-RIDE-208 | P10 | P11b | TEST-RIDE-032 |
+| AC-RIDE-208-001 | ~~FR-208~~ | **OBSOLETE** — see **FR-RIDE-078** | P10 | — | ~~TEST-032~~ |
+| AC-RIDE-208-002 | ~~FR-208~~ | **OBSOLETE** — see **FR-RIDE-078** | P10 | — | ~~TEST-032~~ |
 | AC-RIDE-209-001 | FR-RIDE-209 | FR-RIDE-209 | P9 | P11b | TEST-RIDE-007 |
-| AC-RIDE-210-001 | FR-RIDE-210 | FR-RIDE-210 | P10 | P11b | TEST-RIDE-010 |
+| AC-RIDE-210-001 | ~~FR-210~~ | **OBSOLETE** legal-hold | P10 | — | TEST-RIDE-010 |
 | AC-RIDE-211-001 | FR-RIDE-211 | FR-RIDE-211 | P3 | P11b | TEST-RIDE-032 |
 | AC-RIDE-211-002 | FR-RIDE-211 | FR-RIDE-211 | P3 | P11b | TEST-RIDE-032 |
 | AC-RIDE-212-001 | FR-RIDE-212 | FR-RIDE-212 | P3, P11a | P11b | TEST-RIDE-014 |
@@ -842,8 +844,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
 | AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
 | AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
-| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, FR-RIDE-208, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
-| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, FR-RIDE-208, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
+| AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
+| AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
 | AC-RIDE-ANAL-001-001 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 | P8 | P11b | TEST-RIDE-016 |
 | AC-RIDE-ANAL-001-002 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 | P8 | P11b | TEST-RIDE-016 |
 | AC-RIDE-ANAL-002-001 | TR-RIDE-ANAL-002 | FR-RIDE-007, FR-RIDE-209 | P8, P9 | P11b | TEST-RIDE-007 |
@@ -919,15 +921,15 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-VIEW-004-001 | TR-RIDE-VIEW-004 | FR-RIDE-052 | P7 | P11b | TEST-RIDE-028 |
 | AC-RIDE-VIEW-004-002 | TR-RIDE-VIEW-004 | FR-RIDE-052 | P7 | P11b | TEST-RIDE-028 |
 | AC-RIDE-PRIV-001-001 | TR-RIDE-PRIV-001 | FR-RIDE-006, FR-RIDE-010 | P9, P10 | P11b | TEST-RIDE-006, TEST-RIDE-010 |
-| AC-RIDE-PRIV-002-001 | TR-RIDE-PRIV-002 | FR-RIDE-014, FR-RIDE-202 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-PRIV-002-002 | TR-RIDE-PRIV-002 | FR-RIDE-014, FR-RIDE-202 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-PRIV-003-001 | TR-RIDE-PRIV-003 | FR-RIDE-010, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010 |
-| AC-RIDE-PRIV-003-002 | TR-RIDE-PRIV-003 | FR-RIDE-010, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010 |
+| AC-RIDE-PRIV-002-001 | ~~TR-PRIV-002~~ | **OBSOLETE** ~~FR-014/202~~ — see FR-077 | P10 | P11b | TEST-RIDE-012 |
+| AC-RIDE-PRIV-002-002 | ~~TR-PRIV-002~~ | **OBSOLETE** ~~FR-014/202~~ — see FR-077 | P10 | P11b | TEST-RIDE-012 |
+| AC-RIDE-PRIV-003-001 | TR-RIDE-PRIV-003 | FR-RIDE-010 (~~FR-210 killed~~) | P10 | P11b | TEST-RIDE-010 |
+| AC-RIDE-PRIV-003-002 | TR-RIDE-PRIV-003 | FR-RIDE-010 (~~FR-210 killed~~) | P10 | P11b | TEST-RIDE-010 |
 | AC-RIDE-SEC-001-001 | TR-RIDE-SEC-001 | FR-RIDE-201 | P2 | P11b | TEST-RIDE-029 |
 | AC-RIDE-SEC-001-002 | TR-RIDE-SEC-001 | FR-RIDE-201 | P2 | P11b | TEST-RIDE-029 |
-| AC-RIDE-SEC-002-001 | TR-RIDE-SEC-002 | FR-RIDE-014 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-SEC-002-002 | TR-RIDE-SEC-002 | FR-RIDE-014 | P10 | P11b | TEST-RIDE-012 |
-| AC-RIDE-SEC-003-001 | TR-RIDE-SEC-003 | FR-RIDE-203 | P10 | P11b | TEST-RIDE-029 |
+| AC-RIDE-SEC-002-001 | TR-RIDE-SEC-002 | ~~FR-014~~ **OBSOLETE** | P10 | P11b | TEST-RIDE-012 |
+| AC-RIDE-SEC-002-002 | TR-RIDE-SEC-002 | ~~FR-014~~ **OBSOLETE** | P10 | P11b | TEST-RIDE-012 |
+| AC-RIDE-SEC-003-001 | TR-RIDE-SEC-003 | ~~FR-203~~ **OBSOLETE** | P10 | P11b | TEST-RIDE-029 |
 | AC-RIDE-PERF-001-001 | TR-RIDE-PERF-001 | FR-RIDE-213 | P3 | P11b | TEST-RIDE-032 |
 | AC-RIDE-PERF-001-002 | TR-RIDE-PERF-001 | FR-RIDE-213 | P3 | P11b | TEST-RIDE-032 |
 | AC-RIDE-PERF-002-001 | TR-RIDE-PERF-002 | FR-RIDE-205 | P10 | P11b | TEST-RIDE-031 |
@@ -951,12 +953,12 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-TEST-008-002 | TEST-RIDE-008 | FR-RIDE-008 | P8 | P11b | TEST-RIDE-008 |
 | AC-TEST-009-001 | TEST-RIDE-009 | FR-RIDE-009 | P8 | P11b | TEST-RIDE-009 |
 | AC-TEST-009-002 | TEST-RIDE-009 | FR-RIDE-009 | P8 | P11b | TEST-RIDE-009 |
-| AC-TEST-010-001 | TEST-RIDE-010 | FR-RIDE-010, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010 |
-| AC-TEST-010-002 | TEST-RIDE-010 | FR-RIDE-010, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010 |
+| AC-TEST-010-001 | TEST-RIDE-010 | FR-RIDE-010 (~~FR-210 killed~~) | P10 | P11b | TEST-RIDE-010 |
+| AC-TEST-010-002 | TEST-RIDE-010 | FR-RIDE-010 (~~FR-210 killed~~) | P10 | P11b | TEST-RIDE-010 |
 | AC-TEST-011-001 | TEST-RIDE-011 | FR-RIDE-013 | P9 | P11b | TEST-RIDE-011 |
 | AC-TEST-011-002 | TEST-RIDE-011 | FR-RIDE-013 | P9 | P11b | TEST-RIDE-011 |
-| AC-TEST-012-001 | TEST-RIDE-012 | FR-RIDE-014, FR-RIDE-202 | P10 | P11b | TEST-RIDE-012 |
-| AC-TEST-012-002 | TEST-RIDE-012 | FR-RIDE-014, FR-RIDE-202 | P10 | P11b | TEST-RIDE-012 |
+| AC-TEST-012-001 | ~~TEST-012~~ | **OBSOLETE** ~~FR-014/202~~ | P10 | P11b | ~~TEST-012~~ |
+| AC-TEST-012-002 | ~~TEST-012~~ | **OBSOLETE** ~~FR-014/202~~ | P10 | P11b | ~~TEST-012~~ |
 | AC-TEST-013-001 | TEST-RIDE-013 | FR-RIDE-015, FR-RIDE-016 | P3 | P11b | TEST-RIDE-013 |
 | AC-TEST-013-002 | TEST-RIDE-013 | FR-RIDE-015, FR-RIDE-016 | P3 | P11b | TEST-RIDE-013 |
 | AC-TEST-014-001 | TEST-RIDE-014 | FR-RIDE-017, FR-RIDE-018, FR-RIDE-212 | P3, P11a | P11b | TEST-RIDE-014 |
@@ -989,14 +991,14 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-TEST-027-002 | TEST-RIDE-027 | FR-RIDE-047, FR-RIDE-221 | P7 | P11b | TEST-RIDE-027 |
 | AC-TEST-028-001 | TEST-RIDE-028 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P7 | P11b | TEST-RIDE-028 |
 | AC-TEST-028-002 | TEST-RIDE-028 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P7 | P11b | TEST-RIDE-028 |
-| AC-TEST-029-001 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-203, FR-RIDE-214 | P2, P5, P10 | P11b | TEST-RIDE-029 |
-| AC-TEST-029-002 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-203, FR-RIDE-214 | P2, P5, P10 | P11b | TEST-RIDE-029 |
+| AC-TEST-029-001 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) | P2, P5, P10 | P11b | TEST-RIDE-029 |
+| AC-TEST-029-002 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) | P2, P5, P10 | P11b | TEST-RIDE-029 |
 | AC-TEST-030-001 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
 | AC-TEST-030-002 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
 | AC-TEST-031-001 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-TEST-031-002 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
-| AC-TEST-032-001 | TEST-RIDE-032 | FR-RIDE-208, FR-RIDE-211, FR-RIDE-213 | P3, P10 | P11b | TEST-RIDE-032 |
-| AC-TEST-032-002 | TEST-RIDE-032 | FR-RIDE-208, FR-RIDE-211, FR-RIDE-213 | P3, P10 | P11b | TEST-RIDE-032 |
+| AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD | P3, P10 | P11b | TEST-RIDE-032 |
+| AC-TEST-032-002 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD | P3, P10 | P11b | TEST-RIDE-032 |
 | AC-TEST-033-001 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 | P6 | P11b | TEST-RIDE-033 |
 | AC-TEST-033-002 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 | P6 | P11b | TEST-RIDE-033 |
 | AC-UC-001-001 | UC-RIDE-001 | FR-RIDE-001, FR-RIDE-003, FR-RIDE-006, FR-RIDE-013 | P9 | P11b | TEST-RIDE-001, TEST-RIDE-003, TEST-RIDE-006, TEST-RIDE-011 |
@@ -1013,8 +1015,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-UC-006-002 | UC-RIDE-006 | FR-RIDE-008 | P8 | P11b | TEST-RIDE-008 |
 | AC-UC-007-001 | UC-RIDE-007 | FR-RIDE-009, FR-RIDE-038, FR-RIDE-207 | P8, P10 | P11b | TEST-RIDE-009, TEST-RIDE-023, TEST-RIDE-031 |
 | AC-UC-007-002 | UC-RIDE-007 | FR-RIDE-009, FR-RIDE-038, FR-RIDE-207 | P8, P10 | P11b | TEST-RIDE-009, TEST-RIDE-023, TEST-RIDE-031 |
-| AC-UC-008-001 | UC-RIDE-008 | FR-RIDE-010, FR-RIDE-202, FR-RIDE-203, FR-RIDE-208, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-032 |
-| AC-UC-008-002 | UC-RIDE-008 | FR-RIDE-010, FR-RIDE-202, FR-RIDE-203, FR-RIDE-208, FR-RIDE-210 | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-032 |
+| AC-UC-008-001 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-032 |
+| AC-UC-008-002 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-032 |
 | AC-UC-009-001 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 | P2, P3, P11a | P11b | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-029, TEST-RIDE-032 |
 | AC-UC-009-002 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 | P2, P3, P11a | P11b | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-029, TEST-RIDE-032 |
 | AC-UC-010-001 | UC-RIDE-010 | FR-RIDE-020, FR-RIDE-021, FR-RIDE-028, FR-RIDE-214 | P5, P8 | P11b | TEST-RIDE-016, TEST-RIDE-018, TEST-RIDE-029 |
@@ -1037,8 +1039,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-UC-018-002 | UC-RIDE-018 | FR-RIDE-047, FR-RIDE-048, FR-RIDE-050, FR-RIDE-221 | P6, P7 | P11b | TEST-RIDE-026, TEST-RIDE-027, TEST-RIDE-028 |
 | AC-UC-019-001 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P5, P7 | P11b | TEST-RIDE-018, TEST-RIDE-028 |
 | AC-UC-019-002 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P5, P7 | P11b | TEST-RIDE-018, TEST-RIDE-028 |
-| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012, FR-RIDE-014, FR-RIDE-202 | P9, P10 | P11b | TEST-RIDE-004, TEST-RIDE-012 |
-| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012, FR-RIDE-014, FR-RIDE-202 | P9, P10 | P11b | TEST-RIDE-004, TEST-RIDE-012 |
+| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) | P9, P10 | P11b | TEST-RIDE-004, TEST-RIDE-012 |
+| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) | P9, P10 | P11b | TEST-RIDE-004, TEST-RIDE-012 |
 | AC-UC-021-001 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-UC-021-002 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-UC-025-001 | UC-RIDE-025 | FR-RIDE-056 | P6 | P11b | TEST-RIDE-035 |
@@ -1053,9 +1055,9 @@ Ledger row count: **404** (must equal the pre-additive planning AC inventory).
 
 ### 2.8 Post-planning Octopus + ngrok AC ledger (2026-09-28)
 
-Operator direction is binding and is not weakened here: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
+Operator direction is binding and is not weakened here: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR.
 
-FR-RIDE-063 owns that CD path. License exhaustion is a provision step, not a deferral. GitHub Container Registry is not an allowed fallback. Octopus-built images are recorded on PAYTON-DESKTOP (`octopus-rideaudit`, admission `192.168.0.149:28080`, counsel `192.168.0.149:28081`). The canonical ngrok target is that admission bind. Omarchy loopback `127.0.0.1:18080` is the prior interim. These rows are not a P11b close: Play publication, live OTS/L2/HSM, and the historical section 8 boxes stay open.
+FR-RIDE-063 owns that CD path. License exhaustion is a provision step, not a deferral. GitHub Container Registry is not an allowed fallback. Octopus-built images are recorded on LAB-OMARCHY (`octopus-rideaudit`, admission `192.168.1.182:28080`, counsel `192.168.1.182:28081`). The canonical ngrok target is that admission bind. Omarchy loopback `127.0.0.1:18080` is the prior interim. These rows are not a P11b close: Play publication, live OTS/L2/HSM, and the historical section 8 boxes stay open.
 
 Source: `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`.
 
@@ -1311,11 +1313,11 @@ Phase numbering does not authorize bypassing a dependency.
 
 ### P10 — Privacy, RBAC, retention, portability NFRs
 
-**Goal:** DSAR, legal hold, RBAC, retention, portable ZIP, TLS/vault, access logs
+**Goal:** DSAR (access export), retention (**FR-RIDE-078**), portable ZIP, TLS/vault — ~~legal hold / RBAC / mask invent killed~~; unmasked capture/SEI is **FR-RIDE-077**
 
 | Field | Value |
 | --- | --- |
-| FR IDs (implementation ownership) | FR-RIDE-010, FR-RIDE-014, FR-RIDE-202, FR-RIDE-203, FR-RIDE-205, FR-RIDE-207, FR-RIDE-208, FR-RIDE-210 |
+| FR IDs (implementation ownership) | FR-RIDE-010, FR-RIDE-205, FR-RIDE-207, **FR-RIDE-077**, **FR-RIDE-078** (~~014/202/203/208/210 killed~~) |
 | UC IDs | UC-RIDE-008, UC-RIDE-020, UC-RIDE-021, UC-RIDE-007 |
 | TR IDs | TR-RIDE-STORE-003, TR-RIDE-PRIV-001, TR-RIDE-PRIV-003, TR-RIDE-PRIV-002, TR-RIDE-SEC-002, TR-RIDE-SEC-003, TR-RIDE-PERF-002, TR-RIDE-STORE-001, TR-RIDE-STORE-002 |
 | TEST IDs | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-031, TEST-RIDE-032 |
@@ -1323,7 +1325,7 @@ Phase numbering does not authorize bypassing a dependency.
 | AC closure | Union of FR-owned ACs above plus TR/TEST/UC-owned ACs for mapped records (see §2.7); partition per phase ac_scope |
 | Files / projects | src/RideAudit.Privacy/; src/RideAudit.Sec/; tests/RideAudit.Privacy.Tests/; tests/RideAudit.Sec.Tests/ |
 | Dependencies | P2; P8; P9 |
-| AC / evidence scope | Privacy/RBAC/retention completion |
+| AC / evidence scope | Privacy/retention completion (~~RBAC invent killed~~) |
 | Exit criteria | TEST-RIDE-010/012/029/031 Failed 0 Skipped 0; TEST-RIDE-032 retention partition; HV AGREE |
 | HV gate | Opposing-model AGREE; retain `docs/receipts/hv/*` JSONL **and** `docs/reviews/hv-pairs/*` canonical pair; commit immediately |
 
@@ -1351,7 +1353,7 @@ Phase numbering does not authorize bypassing a dependency.
 
 ### P11b — Mandatory integrated acceptance and distribution
 
-**Goal:** GPL distribution, Play+source publication receipts, complete integrated suite, Octopus Deploy of containers to PAYTON-DESKTOP (FR-RIDE-063). No GHCR.
+**Goal:** GPL distribution, Play+source publication receipts, complete integrated suite, Octopus Deploy of containers to LAB-OMARCHY (FR-RIDE-063). No GHCR.
 
 | Field | Value |
 | --- | --- |
@@ -1364,12 +1366,12 @@ Phase numbering does not authorize bypassing a dependency.
 | Files / projects | packaging/; deploy/containers/; deploy/omarchy/; docs/receipts/distribution/; docs/reviews/hv-pairs/ |
 | Dependencies | P0-P10 complete + P11a alternate-provider conformance (L2 prod activation not required) |
 | AC / evidence scope | Full integrated acceptance + distribution |
-| Exit criteria | Complete mapped acceptance suite Failed 0 Skipped 0; real Android-to-gRPC-to-custody-to-escrow-to-desktop flows; cross-tenant rejection; retention/legal-hold; signed/reproducible desktop builds Win/Linux/macOS; Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP with a receipt that names the Octopus instance or container and the target machine and does not claim GHCR; ngrok docs distinguish Omarchy interim from PAYTON-DESKTOP target; opposing-model AGREE; Play+source receipts for FR-031 |
+| Exit criteria | Complete mapped acceptance suite Failed 0 Skipped 0; real Android-to-gRPC-to-custody-to-escrow-to-desktop flows; cross-tenant rejection; retention/legal-hold; signed/reproducible desktop builds Win/Linux/macOS; Octopus built and deployed admission/counsel (or related) images to LAB-OMARCHY with a receipt that names the Octopus instance or container and the target machine and does not claim GHCR; ngrok docs distinguish Omarchy interim from LAB-OMARCHY target; opposing-model AGREE; Play+source receipts for FR-031 |
 | HV gate | Opposing-model AGREE; retain `docs/receipts/hv/*` JSONL **and** `docs/reviews/hv-pairs/*` canonical pair; commit immediately |
 
 **BDPv4 notes:** Full suite green; no skips
 
-**P11b mandatory release gate:** P11b cannot close until Octopus Deploy has built RideAudit containers and deployed them to PAYTON-DESKTOP (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. GitHub Actions container registry is not the distribution path. Retain the Octopus release or dry-run receipt, source commit, image digests, the Octopus instance or container name, the PAYTON-DESKTOP target, and post-deploy verification. Failed Octopus deploy or verification blocks release completion. The Octopus path on file is `octopus-rideaudit` to PAYTON-DESKTOP; an Omarchy compose cutover is not that receipt. Canonical ngrok targets `192.168.0.149:28080`. Omarchy `127.0.0.1:18080` is the prior interim. Desktop release evidence must cover signed and reproducible builds on Windows, Linux, and macOS. A lab self-signed win-x64 signature is not that evidence. Play and public-source publication require actual receipts. This revision does not close P11b.
+**P11b mandatory release gate:** P11b cannot close until Octopus Deploy has built RideAudit containers and deployed them to LAB-OMARCHY (FR-RIDE-063). Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. GitHub Actions container registry is not the distribution path. Retain the Octopus release or dry-run receipt, source commit, image digests, the Octopus instance or container name, the LAB-OMARCHY target, and post-deploy verification. Failed Octopus deploy or verification blocks release completion. The Octopus path on file is `octopus-rideaudit` to LAB-OMARCHY; an Omarchy compose cutover is not that receipt. Canonical ngrok targets `192.168.1.182:28080`. Omarchy `127.0.0.1:18080` is the prior interim. Desktop release evidence must cover signed and reproducible builds on Windows, Linux, and macOS. A lab self-signed win-x64 signature is not that evidence. Play and public-source publication require actual receipts. This revision does not close P11b.
 
 **Lab signing checklist (r3.7).** This checklist is not the P11b exit. Operator direction: self-sign for now. Real certs later. Windows only.
 
@@ -1434,16 +1436,16 @@ P0 must approve and document:
 
 P0 cannot close with these contract decisions unresolved in the plan/docs.
 
-### 4.6 Continuous delivery (Octopus to PAYTON-DESKTOP)
+### 4.6 Continuous delivery (Octopus to LAB-OMARCHY)
 
-Operator direction (exact): Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR.
+Operator direction (exact): Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR.
 
 | Rule | Binding record |
 | --- | --- |
-| Octopus builds admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to PAYTON-DESKTOP | FR-RIDE-063, TR-RIDE-DEPLOY-001, UC-RIDE-032, TEST-RIDE-038 |
-| License exhaustion on the default Octopus container means provision a new Octopus container on PAYTON-DESKTOP and continue from that instance | FR-RIDE-063 AC-RIDE-063-002, TR-RIDE-DEPLOY-002 |
+| Octopus builds admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to LAB-OMARCHY | FR-RIDE-063, TR-RIDE-DEPLOY-001, UC-RIDE-032, TEST-RIDE-038 |
+| License exhaustion on the default Octopus container means provision a new Octopus container on LAB-OMARCHY and continue from that instance | FR-RIDE-063 AC-RIDE-063-002, TR-RIDE-DEPLOY-002 |
 | GHCR and GitHub Actions container registry are not the distribution path. Receipts must never claim a GHCR green | FR-RIDE-063 AC-RIDE-063-003 |
-| Canonical ngrok target is PAYTON-DESKTOP admission `192.168.0.149:28080`. Omarchy `127.0.0.1:18080` is the prior interim | FR-RIDE-064 |
+| Canonical ngrok target is LAB-OMARCHY admission `192.168.1.182:28080`. Omarchy `127.0.0.1:18080` is the prior interim | FR-RIDE-064 |
 | Existing Omarchy Octopus/SQL/Caddy containers and lab loopback cutover receipts are not a RideAudit Octopus CD green | FR-RIDE-063 notes |
 
 See `docs/architecture/stack.md` and `docs/receipts/distribution/cd-receipts.md`.
@@ -1518,7 +1520,7 @@ A failed, unavailable, unauthenticated, or partial product HV blocks phase accep
 | R8 | MCP_UNTRUSTED | File-based BDPv4 until healthy |
 | R9 | Broad TEST IDs spanning phases | Explicit AC partitions (§3) |
 | R10 | Escrow key loss | FR-RIDE-216; HSM/KMS |
-| R11 | GHCR or GitHub Actions registry assumed as CD | Superseded by FR-RIDE-063. Octopus to PAYTON-DESKTOP. License exhaustion creates a new Octopus container on PAYTON-DESKTOP. |
+| R11 | GHCR or GitHub Actions registry assumed as CD | Superseded by FR-RIDE-063. Octopus to LAB-OMARCHY. License exhaustion creates a new Octopus container on LAB-OMARCHY. |
 
 ### 7.2 Open questions (decision deadlines)
 
@@ -1579,7 +1581,7 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | Item | Class | Disposition |
 | --- | --- | --- |
 | Canonical ngrok still aimed only at Omarchy `127.0.0.1:18080` | B | Done for this host. Receipt `docs/receipts/distribution/20260929T030643Z-ngrok-desktop-28080.md`: systemd user unit, `PROBE_HTTP=200`, public URL `https://zeugmatically-unindicative-calista.ngrok-free.dev`. |
-| Octopus CD receipt vs plan text that said the plan does not invent a live green | B | Plan cites `20260929T015822Z-octopus-payton-desktop.md`. `DistributionReceipts.OctopusDesktopOnFile` is `receipt-on-file`, not a live probe. Dev/Staging/Prod stay `not-run`. |
+| Octopus CD receipt vs plan text that said the plan does not invent a live green | B | Plan cites `20260929T015822Z-octopus-LAB-OMARCHY.md`. `DistributionReceipts.OctopusDesktopOnFile` is `receipt-on-file`, not a live probe. Dev/Staging/Prod stay `not-run`. |
 | Section 9 boxes (P0 repair, Astra ≥98, Payton AGREE, then P1) | past gate | Not open work. Payton 2026-09-29. Not tracked as pending Class C. This row does not close Caddy, live OTS confirmation and txid, Play, HW1, Public Trust, or P11b. |
 | Android §7 and Server §7 HV/Payton boxes | C | Stay unchecked. Historical child-plan boxes. code-hv-sol-r4 does not check them. |
 | Bracket optional Astra/child HV | C | Stay unchecked. Not run. Not a product-HV pass. |
@@ -1616,7 +1618,7 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-011 | P9 |
 | FR-RIDE-012 | P9 |
 | FR-RIDE-013 | P9 |
-| FR-RIDE-014 | P10 |
+| ~~FR-RIDE-014~~ | P10 **OBSOLETE** |
 | FR-RIDE-015 | P3 |
 | FR-RIDE-016 | P3 |
 | FR-RIDE-017 | P3 |
@@ -1656,15 +1658,15 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-051 | P7 |
 | FR-RIDE-052 | P7 |
 | FR-RIDE-201 | P2 |
-| FR-RIDE-202 | P10 |
-| FR-RIDE-203 | P10 |
+| ~~FR-RIDE-202~~ | P10 **OBSOLETE** |
+| ~~FR-RIDE-203~~ | P10 **OBSOLETE** |
 | FR-RIDE-204 | P9 |
 | FR-RIDE-205 | P10 |
 | FR-RIDE-206 | P9 |
 | FR-RIDE-207 | P10 |
-| FR-RIDE-208 | P10 |
+| ~~FR-RIDE-208~~ | P10 **OBSOLETE** |
 | FR-RIDE-209 | P9 |
-| FR-RIDE-210 | P10 |
+| ~~FR-RIDE-210~~ | P10 **OBSOLETE** |
 | FR-RIDE-211 | P3 |
 | FR-RIDE-212 | P3 (OTS default) + P11a (alternate profiles) |
 | FR-RIDE-213 | P3 |

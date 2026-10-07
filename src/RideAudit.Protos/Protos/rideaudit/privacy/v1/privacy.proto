@@ -2,8 +2,8 @@
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
 // Contract-Version: 0.2.0
-// FR-RIDE-010, FR-RIDE-014, FR-RIDE-202, FR-RIDE-207, FR-RIDE-210.
-// Legal hold blocks deletion. DSAR export does not include sealed plaintext.
+// FR-RIDE-010, FR-RIDE-014, FR-RIDE-207, FR-RIDE-210.
+// DSAR export does not include sealed plaintext.
 syntax = "proto3";
 
 package rideaudit.privacy.v1;
@@ -14,7 +14,6 @@ service Privacy {
   rpc RequestAccessExport (AccessExportRequest) returns (AccessExportResponse);
   rpc RequestDeletion (DeletionRequest) returns (DeletionResponse);
   rpc ViewLocations (ViewLocationsRequest) returns (ViewLocationsResponse);
-  rpc PlaceLegalHold (LegalHoldRequest) returns (LegalHoldResponse);
 }
 
 message AccessExportRequest {
@@ -53,12 +52,3 @@ message ViewLocationsResponse {
   repeated LocationSample samples = 1;
 }
 
-message LegalHoldRequest {
-  string subject_driver_id = 1;
-  string case_id = 2;
-}
-
-message LegalHoldResponse {
-  bool active = 1;
-  string status = 2;
-}

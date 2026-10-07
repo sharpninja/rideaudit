@@ -58,5 +58,5 @@ Session and review sequence diagrams under `docs/ux/flows/` and `docs/ux/review-
 - Do not invent Lyft APIs; Unverified caveats from the source doc are preserved in FR notes where relevant.
 - Seal-at-collect, blockchain receipts, escrow, Play Integrity, GPL-2.0, public multi-driver server, dual-phone video composite, and desktop court viewer are covered.
 - Stack: Avalonia UI 12 for Android capture and desktop court viewer; backend gRPC on .NET 10 containers; protos GPL-2.0; OpenAPI companion non-authoritative. See `docs/architecture/stack.md`.
-- Container CD: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. FR-RIDE-063. Plans must cite it and must not weaken it. Omarchy plus ngrok is interim admission hosting (FR-RIDE-064).
+- Container CD: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. FR-RIDE-063. Plans must cite it and must not weaken it. Omarchy plus ngrok is interim admission hosting (FR-RIDE-064).
 

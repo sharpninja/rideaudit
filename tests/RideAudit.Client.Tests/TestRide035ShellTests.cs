@@ -148,7 +148,12 @@ public class TestRide035ShellTests
         var window = new Window { Width = 400, Height = 800, Content = view };
         window.Show();
         Assert.Equal("WF-01", view.FindControl<TextBlock>("ScreenId")!.Text);
-        Assert.Contains("GPL-2.0-or-later", new MainView().FindControl<TextBlock>("LicenseNotice")!.Text);
+        // FR-RIDE-074: copyright moved from top LicenseNotice to About view (TEST-RIDE-055).
+        var mainForAbout = new MainView();
+        mainForAbout.OpenAbout();
+        var aboutBody = Assert.IsType<AboutView>(mainForAbout.FindControl<ContentControl>("Body")!.Content);
+        Assert.Contains("GPL-2.0-or-later", aboutBody.FindControl<TextBlock>("CopyrightNotice")!.Text);
+        Assert.Null(mainForAbout.FindControl<TextBlock>("LicenseNotice"));
         view.SelectPassenger();
         view.StartSession();
         Assert.Equal("WF-08", view.FindControl<TextBlock>("ScreenId")!.Text);
@@ -191,7 +196,7 @@ public class TestRide035ShellTests
                     Admitted = false,
                 },
             ],
-        }, "counsel", Fixtures.Release(fixture.Clock));
+        }, "reviewer", Fixtures.Release(fixture.Clock));
         var view = new ReviewShellView();
         var window = new Window { Width = 800, Height = 600, Content = view };
         window.Show();

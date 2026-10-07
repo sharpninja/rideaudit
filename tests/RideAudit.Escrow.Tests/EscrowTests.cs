@@ -97,7 +97,7 @@ public class TestRide018CourtRelease
         var cipher = ready.Package.Ciphertext.ToArray();
         var receipt = ready.Package.ReceiptCoreBytes.ToArray();
 
-        var release = world.App.Hsm.RequestRelease(ready.Package.KeyId, enrolled.Driver.TenantId, "CASE-9", "subpoena-2026-9", "counsel review", "counsel-1");
+        var release = world.App.Hsm.RequestRelease(ready.Package.KeyId, enrolled.Driver.TenantId, "CASE-9", "subpoena-2026-9", "court review", "reviewer-1");
         world.App.Hsm.Approve(release.ReleaseId, "custodian-a", "I approve this case.");
         Assert.Throws<RideAuditException>(() => world.App.Hsm.OpenWorkingCopy(release.ReleaseId, ready.Package.EnvelopeBytes, TimeSpan.FromMinutes(15)));
         world.App.Hsm.Approve(release.ReleaseId, "custodian-a", "duplicate approval");

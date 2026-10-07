@@ -66,7 +66,7 @@ public class AcCoverageLedgerTests
         output.AppendLine();
         output.AppendLine("Generated: 2026-09-28. Workspace: PAYTON-LEGION2. Not a claim that all ACs are satisfied.");
         output.AppendLine();
-        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/partnership/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is PAYTON-DESKTOP admission 192.168.0.149:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
+        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/partnership/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-LAB-OMARCHY.md` (not GHCR). Canonical ngrok target is LAB-OMARCHY admission 192.168.0.149:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
         output.AppendLine();
         output.AppendLine("| Status | Count |");
         output.AppendLine("| --- | ---: |");
@@ -146,7 +146,7 @@ public class AcCoverageLedgerTests
         if (record.Id is "AC-RIDE-CHAIN-001-002")
             return "Deferred B07: public OTS confirmation / live txid is not claimed; fixture anchors stay labeled.";
         if (record.Id.StartsWith("AC-RIDE-STORE-003", StringComparison.Ordinal))
-            return "Deferred B08: jurisdiction retention timers and legal-hold deletion are not a lab loopback receipt.";
+            return "Deferred B08: jurisdiction retention timers are not a lab loopback receipt.";
         return null;
     }
 

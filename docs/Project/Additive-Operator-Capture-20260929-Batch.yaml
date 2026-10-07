@@ -12,7 +12,7 @@ records:
     description: >
       RideAudit edge TLS is terminated by Caddy and is distinct from ngrok HTTPS.
       ngrok HTTPS remains FR-RIDE-064 and is not this requirement. Omarchy or
-      PAYTON-DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. This item
+      LAB-OMARCHY loopback or LAN HTTP is not a Caddy TLS receipt. This item
       is Class C and may still be in flight.
     priority: high
     area: RIDE
@@ -817,7 +817,7 @@ records:
       RideAudit lab work prefers accuracy over convenience and keeps a receipt
       for the path and the result. Paths are not silently substituted. Python
       is not used in the lab toolchain. Committed lab text does not use em or
-      en dashes. Execution waits for approval, except lab work on PAYTON-DESKTOP
+      en dashes. Execution waits for approval, except lab work on LAB-OMARCHY
       and PAYTON-LEGION2 which is go-by-default.
     priority: high
     area: RIDE
@@ -839,7 +839,7 @@ records:
         text: Committed lab text does not contain em dashes or en dashes.
         isSatisfied: false
       - id: AC-RIDE-072-005
-        text: Execution waits for approval, except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
+        text: Execution waits for approval, except lab work on LAB-OMARCHY and PAYTON-LEGION2 which is go-by-default.
         isSatisfied: false
 
   - kind: usecase
@@ -850,16 +850,16 @@ records:
     briefDescription: >
       Operator runs RideAudit lab work with receipts, no silent path
       substitution, no Python, and no em or en dashes. Lab work on
-      PAYTON-DESKTOP and PAYTON-LEGION2 is go-by-default. Other execution
+      LAB-OMARCHY and PAYTON-LEGION2 is go-by-default. Other execution
       waits for approval. approval: Payton AGREE 2026-09-29.
     basicFlow: |
       1. Operator selects the documented path and does not swap it without a receipt.
       2. Operator runs the lab step without Python.
       3. Operator writes the receipt in text that has no em or en dashes.
-      4. On PAYTON-DESKTOP or PAYTON-LEGION2 the lab step proceeds go-by-default. Elsewhere the operator waits for approval.
+      4. On LAB-OMARCHY or PAYTON-LEGION2 the lab step proceeds go-by-default. Elsewhere the operator waits for approval.
     acceptanceCriteria:
       - id: AC-UC-042-001
-        text: The lab step has a receipt, uses the documented path, avoids Python and em or en dashes, and waits for approval except on PAYTON-DESKTOP and PAYTON-LEGION2.
+        text: The lab step has a receipt, uses the documented path, avoids Python and em or en dashes, and waits for approval except on LAB-OMARCHY and PAYTON-LEGION2.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-072
@@ -871,7 +871,7 @@ records:
     description: >
       Check RideAudit lab changes for a receipt, an unchanged documented path,
       absence of Python lab tooling, absence of em and en dashes, and the
-      approve-before-execute rule with go-by-default only on PAYTON-DESKTOP
+      approve-before-execute rule with go-by-default only on LAB-OMARCHY
       and PAYTON-LEGION2.
     priority: high
     area: RIDE
@@ -894,7 +894,7 @@ records:
     description: >
       Verify a lab change includes a receipt, does not silently substitute
       paths, does not add Python lab tooling, and does not add em or en dashes.
-      Confirm go-by-default is limited to PAYTON-DESKTOP and PAYTON-LEGION2.
+      Confirm go-by-default is limited to LAB-OMARCHY and PAYTON-LEGION2.
     priority: high
     area: RIDE
     status: pending
@@ -906,7 +906,7 @@ records:
         text: A scan of the lab change finds a receipt reference and no em or en dash characters.
         isSatisfied: false
       - id: AC-TEST-052-002
-        text: The change does not add Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for PAYTON-DESKTOP and PAYTON-LEGION2.
+        text: The change does not add Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for LAB-OMARCHY and PAYTON-LEGION2.
         isSatisfied: false
 
   - kind: fr
@@ -1160,26 +1160,27 @@ records:
     status: pending
     notes: >
       Operator delta 2026-09-29, plus the same-day addon that About includes
-      third-party attributions. Draft until a separate Payton AGREE.
+      third-party attributions. approval: Payton AGREE 2026-10-07.
       Not part of the 2026-09-29 capture AGREE. Cross-links FR-RIDE-029 and
       FR-RIDE-030. Does not satisfy those FRs. Does not satisfy AC-UC-025-001.
       The Avalonia UI 12 framework label is not this copyright notice.
+      ACs marked satisfied 2026-10-07 with TestRide055AboutTests proof.
     acceptanceCriteria:
       - id: AC-RIDE-074-001
         text: A dedicated About view shows the RideAudit UI copyright.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-074-002
         text: The bottom panel includes an About control that opens the About view.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-074-003
         text: The previous chrome location, the top title bar, does not show the copyright notice.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-074-004
         text: Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-074-005
         text: The About view includes third-party attributions, meaning licenses and credits. An About view that shows copyright only does not satisfy this AC.
-        isSatisfied: false
+        isSatisfied: true
 
   - kind: usecase
     localId: UC-RIDE-044
@@ -1199,10 +1200,10 @@ records:
     acceptanceCriteria:
       - id: AC-UC-044-001
         text: The bottom-panel About control opens an About view that shows the UI copyright and third-party attributions (licenses and credits), and the top title bar does not show that copyright.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-UC-044-002
         text: An About view that shows copyright and omits third-party attributions does not satisfy this use case.
-        isSatisfied: false
+        isSatisfied: true
     frLinks:
       - frId: FR-RIDE-074
         linkType: Realizes
@@ -1225,23 +1226,24 @@ records:
     subarea: VIEW
     status: pending
     notes: >
-      Implements FR-RIDE-074. Operator delta 2026-09-29. Draft until a separate
-      Payton AGREE. The current top-bar LicenseNotice is the previous chrome
+      Implements FR-RIDE-074. Operator delta 2026-09-29. approval: Payton AGREE 2026-10-07.
+      The current top-bar LicenseNotice is the previous chrome
       location. The Avalonia UI 12 framework label is not the copyright notice.
       Third-party attributions are licenses and credits shown on About.
+      ACs marked satisfied 2026-10-07 with TestRide055AboutTests proof.
     acceptanceCriteria:
       - id: AC-RIDE-VIEW-007-001
         text: The shared UI has an About view whose content includes the UI copyright.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-VIEW-007-002
         text: A bottom-panel About control navigates to that About view.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-VIEW-007-003
         text: The top title bar does not render the copyright notice.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-RIDE-VIEW-007-004
         text: The About view includes third-party attributions (licenses and credits). Copyright without those attributions does not satisfy this AC.
-        isSatisfied: false
+        isSatisfied: true
 
   - kind: test
     id: TEST-RIDE-055
@@ -1254,21 +1256,21 @@ records:
     area: RIDE
     status: pending
     notes: >
-      Covers FR-RIDE-074. Operator delta 2026-09-29. Draft until a separate
-      Payton AGREE. Does not satisfy FR-RIDE-029 or FR-RIDE-030.
+      Covers FR-RIDE-074. Operator delta 2026-09-29. approval: Payton AGREE 2026-10-07.
+      Does not satisfy FR-RIDE-029 or FR-RIDE-030. ACs marked satisfied 2026-10-07 with TestRide055AboutTests proof.
     acceptanceCriteria:
       - id: AC-TEST-055-001
         text: Activating the bottom-panel About control opens the About view.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-TEST-055-002
         text: The About view shows the RideAudit UI copyright.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-TEST-055-003
         text: The top title bar does not show the copyright notice. A copyright string left on that chrome fails.
-        isSatisfied: false
+        isSatisfied: true
       - id: AC-TEST-055-004
         text: The About view includes third-party attributions (licenses and credits). An About view that shows copyright only fails.
-        isSatisfied: false
+        isSatisfied: true
 
 mappings:
   - frId: FR-RIDE-065

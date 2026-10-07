@@ -1,4 +1,4 @@
-# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+﻿# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
 records:
   - kind: test
     id: TEST-RIDE-001
@@ -137,12 +137,12 @@ records:
         isSatisfied: false
   - kind: test
     id: TEST-RIDE-010
-    title: "DSAR access deletion and legal hold"
-    description: "Access export works; deletion blocked under legal hold and allowed when clear."
+    title: "DSAR access export"
+    description: "Access export works."
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-010, FR-RIDE-210; method: system"
+    notes: "Covers FR-RIDE-010; method: system. Legal-hold title/description clauses removed 2026-10-07 (authorized legal-hold kill). 2026-10-07: title aligned to access-export only (matches sole surviving AC-RIDE-010-001). No deletion test invented."
     acceptanceCriteria:
       - id: AC-TEST-010-001
         text: "Test TEST-RIDE-010 passes for happy path of covered requirements."
@@ -163,21 +163,6 @@ records:
         text: "Test TEST-RIDE-011 passes for happy path of covered requirements."
         isSatisfied: false
       - id: AC-TEST-011-002
-        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
-        isSatisfied: false
-  - kind: test
-    id: TEST-RIDE-012
-    title: "RBAC least privilege location"
-    description: "Roles enforced; precise coordinates masked by default."
-    priority: high
-    area: RIDE
-    status: pending
-    notes: "Covers FR-RIDE-014, FR-RIDE-202; method: system"
-    acceptanceCriteria:
-      - id: AC-TEST-012-001
-        text: "Test TEST-RIDE-012 passes for happy path of covered requirements."
-        isSatisfied: false
-      - id: AC-TEST-012-002
         text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
         isSatisfied: false
   - kind: test
@@ -466,21 +451,6 @@ records:
         text: "Test TEST-RIDE-031 passes for happy path of covered requirements."
         isSatisfied: false
       - id: AC-TEST-031-002
-        text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
-        isSatisfied: false
-  - kind: test
-    id: TEST-RIDE-032
-    title: "Retention crypto agility latency"
-    description: "CA-strict retention default; algorithm IDs preserved on rotation; latency budgets gate admission."
-    priority: high
-    area: RIDE
-    status: pending
-    notes: "Covers FR-RIDE-208, FR-RIDE-211, FR-RIDE-213; method: integration"
-    acceptanceCriteria:
-      - id: AC-TEST-032-001
-        text: "Test TEST-RIDE-032 passes for happy path of covered requirements."
-        isSatisfied: false
-      - id: AC-TEST-032-002
         text: "Failure cases assert non-admission or clear error without inventing Lyft APIs."
         isSatisfied: false
   - kind: test

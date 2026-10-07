@@ -2,7 +2,6 @@ using RideAudit.Anal;
 using RideAudit.Chain;
 using RideAudit.Contracts;
 using RideAudit.Protos.Custody.V1;
-using RideAudit.Sec;
 
 namespace RideAudit.Server.Counsel;
 
@@ -52,10 +51,8 @@ public sealed class CounselDesk
 
     public CounselDesk(ISubmittedRecordSource records) => _records = records;
 
-    public MultiDriverBundle Build(string actorRole, string caseId, IReadOnlyList<string> submissionIds)
+    public MultiDriverBundle Build(string caseId, IReadOnlyList<string> submissionIds)
     {
-        if (!RoleDirectory.IsElevated(actorRole))
-            throw new RideAuditException(ErrorCodes.AuthForbidden, "A counsel, auditor, or admin role is required for a multi-driver bundle.");
         if (string.IsNullOrWhiteSpace(caseId))
             throw new RideAuditException(ErrorCodes.ValidationFailed, "Case id is required.");
         if (submissionIds.Count == 0)
@@ -82,13 +79,13 @@ public sealed class CounselDesk
         return new MultiDriverBundle(Ids.New("bnd-"), caseId, records, false);
     }
 
-    public VerificationReport Verify(string actorId, string actorRole, string caseId, string submissionId)
+    public VerificationReport Verify(string actorId, string caseId, string submissionId)
     {
         if (string.IsNullOrWhiteSpace(caseId))
             throw new RideAuditException(ErrorCodes.ValidationFailed, "Case id is required.");
         var record = _records.Find(submissionId) ?? throw new RideAuditException(ErrorCodes.SubmissionNotFound, "Submission was not found.");
-        if (!RoleDirectory.IsElevated(actorRole) && !string.Equals(actorId, record.DriverId, StringComparison.Ordinal))
-            throw new RideAuditException(ErrorCodes.TenantIsolation, "Subject role cannot verify another driver.");
+        if (!string.Equals(actorId, record.DriverId, StringComparison.Ordinal))
+            throw new RideAuditException(ErrorCodes.TenantIsolation, "Caller cannot verify another driver.");
         return VerifyRecord(record);
     }
 

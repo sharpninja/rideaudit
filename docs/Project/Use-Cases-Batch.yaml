@@ -188,19 +188,13 @@ records:
     frLinks:
     - frId: FR-RIDE-010
       linkType: Realizes
-    - frId: FR-RIDE-202
       linkType: Realizes
-    - frId: FR-RIDE-203
       linkType: Realizes
-    - frId: FR-RIDE-208
       linkType: Realizes
-    - frId: FR-RIDE-210
       linkType: Realizes
     localId: UC-RIDE-008
     actors:
     - Driver
-    - Admin
-    - Counsel
     acceptanceCriteria:
     - id: AC-UC-008-001
       text: Use case UC-RIDE-008 completes happy path without inventing undocumented Lyft APIs.
@@ -208,12 +202,11 @@ records:
     - id: AC-UC-008-002
       text: Unverified caveats from source requirements remain visible where applicable.
       isSatisfied: false
-    briefDescription: Honor DSAR access/deletion for audit-held data subject to legal holds.
+    briefDescription: Honor DSAR access and deletion for audit-held data.
     basicFlow: |
       1. Subject or authorized agent requests access or deletion.
-      2. System checks legal holds.
-      3. Access: export audit-held data with access log.
-      4. Deletion: apply if no hold, document custody impact.
+      2. Access: export audit-held data with access log.
+      3. Deletion: apply deletion and document custody impact.
     title: Data subject access or deletion
 
   - kind: usecase
@@ -578,9 +571,7 @@ records:
       linkType: Realizes
     - frId: FR-RIDE-012
       linkType: Realizes
-    - frId: FR-RIDE-014
       linkType: Realizes
-    - frId: FR-RIDE-202
       linkType: Realizes
     localId: UC-RIDE-020
     actors:
@@ -592,13 +583,11 @@ records:
     - id: AC-UC-020-002
       text: Unverified caveats from source requirements remain visible where applicable.
       isSatisfied: false
-    briefDescription: Admin configures roles and Business API partnership status.
+    briefDescription: Admin sets Business API partnership status; Concierge features follow that gate.
     basicFlow: |
-      1. Admin assigns roles with least privilege.
-      2. Admin sets Business partnership approved or denied.
-      3. System enables/disables Concierge features accordingly.
-      4. Precise location views remain least-privilege.
-    title: Admin RBAC and partnership gates
+      1. Admin sets Business partnership approved or denied.
+      2. System enables/disables Concierge features accordingly.
+    title: Admin partnership gates
 
   - kind: usecase
     frLinks:

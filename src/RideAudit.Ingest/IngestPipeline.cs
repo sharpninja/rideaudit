@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using RideAudit.Contracts;
-using RideAudit.Sec;
 
 namespace RideAudit.Ingest;
 
@@ -64,10 +63,8 @@ public sealed class IngestPipeline
     public IConciergeStatusSource Concierge { get; set; }
     public bool PartnershipApproved => _partnership.Approved;
 
-    public PartnershipView SetPartnership(string actorRole, bool approved)
+    public PartnershipView SetPartnership(bool approved)
     {
-        if (!string.Equals(actorRole, Roles.Admin, StringComparison.Ordinal))
-            throw new RideAuditException(ErrorCodes.AuthForbidden, "Only an admin can change the ride-status partnership gate.");
         _partnership.Approved = approved;
         var notice = approved
             ? "Partnership gate is approved. A configured documented ride-status connector may be polled for organizational rides. Scores are not inferred."

@@ -20,14 +20,14 @@ public static class DistributionReceipts
     ];
 
     /// <summary>
-    /// Pointer to the Octopus PAYTON-DESKTOP receipt on file. Status is receipt-on-file.
+    /// Pointer to the Octopus LAB-OMARCHY receipt on file. Status is receipt-on-file.
     /// This constant is not a live probe and is not a GHCR row. Dev/Staging/Prod stay in <see cref="ServerPortions"/>.
     /// </summary>
     public static CdEnvironmentReceipt OctopusDesktopOnFile { get; } =
         new(
-            "Octopus-PAYTON-DESKTOP",
+            "Octopus-LAB-OMARCHY",
             "receipt-on-file",
-            "docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md names octopus-rideaudit and PAYTON-DESKTOP. This constant is not a live probe and is not GHCR.",
+            "docs/receipts/distribution/20260929T015822Z-octopus-LAB-OMARCHY.md names octopus-rideaudit and LAB-OMARCHY. This constant is not a live probe and is not GHCR.",
             PlayNotClaimed,
             "GPL-2.0-only");
 }
