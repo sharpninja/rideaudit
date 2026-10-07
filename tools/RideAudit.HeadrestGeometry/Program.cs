@@ -34,22 +34,18 @@ internal static class Program
 
     public static int Main(string[] args)
     {
-        MountRoot = LocateMountRoot(args);
-        Scad = Path.Combine(MountRoot, "headrest-phone-mount.scad");
-        Exports = Path.Combine(MountRoot, "exports");
-        Report = Path.Combine(MountRoot, "verification", "geometry-report.md");
-
-        if (!File.Exists(Scad))
-        {
-            Console.Error.WriteLine("missing " + Scad);
-            return 1;
-        }
-
         var notes = new List<string>();
         Dictionary<string, double> checks;
         Dictionary<string, MeshStats> stats;
         try
         {
+            MountRoot = LocateMountRoot(args);
+            Scad = Path.Combine(MountRoot, "headrest-phone-mount.scad");
+            Exports = Path.Combine(MountRoot, "exports");
+            Report = Path.Combine(MountRoot, "verification", "geometry-report.md");
+
+            if (!File.Exists(Scad))
+                throw new Fail("missing " + Scad);
             var tmp = Directory.CreateTempSubdirectory("rideaudit-mount-");
             try
             {
@@ -285,8 +281,11 @@ internal static class Program
             UseShellExecute = false,
         };
         using var proc = Process.Start(psi) ?? throw new Fail("failed to start openscad");
-        var text = proc.StandardOutput.ReadToEnd() + proc.StandardError.ReadToEnd();
+        // Drain stdout and stderr concurrently to avoid pipe deadlock.
+        var stdoutTask = proc.StandardOutput.ReadToEndAsync();
+        var stderrTask = proc.StandardError.ReadToEndAsync();
         proc.WaitForExit();
+        var text = stdoutTask.GetAwaiter().GetResult() + stderrTask.GetAwaiter().GetResult();
         if (part.StartsWith("fitcheck", StringComparison.Ordinal))
         {
             if (!text.Contains("Current top level object is empty.", StringComparison.Ordinal))
@@ -305,7 +304,7 @@ internal static class Program
         {
             if (!line.Contains("ECHO: \"CHECK ", StringComparison.Ordinal))
                 continue;
-            var payload = line.Split("CHECK ", 2)[1].TrimEnd('"');
+            var payload = line.Split("CHECK ", 2)[1].TrimEnd('\r', '"');
             var parts = payload.Split('=', 2);
             checks[parts[0]] = double.Parse(parts[1], CultureInfo.InvariantCulture);
         }
@@ -365,9 +364,9 @@ internal static class Program
         var zs = new List<double>();
         double volume = 0;
         string Key(Vec3 p) =>
-            Math.Round(p.X, 4).ToString(CultureInfo.InvariantCulture) + "," +
-            Math.Round(p.Y, 4).ToString(CultureInfo.InvariantCulture) + "," +
-            Math.Round(p.Z, 4).ToString(CultureInfo.InvariantCulture);
+            (Math.Round(p.X, 4) + 0.0).ToString(CultureInfo.InvariantCulture) + "," +
+            (Math.Round(p.Y, 4) + 0.0).ToString(CultureInfo.InvariantCulture) + "," +
+            (Math.Round(p.Z, 4) + 0.0).ToString(CultureInfo.InvariantCulture);
 
         foreach (var tri in tris)
         {

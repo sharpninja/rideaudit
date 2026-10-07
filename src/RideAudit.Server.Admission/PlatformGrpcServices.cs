@@ -121,7 +121,7 @@ public sealed class IngestGrpcService : ProtoIngest.IngestBase
         return Task.FromResult(Map(result));
     }
 
-            private static IngestCommand Command(DriverPrincipal caller, bool consent, string statement, string jurisdiction, string purpose, string provenance) =>
+    private static IngestCommand Command(DriverPrincipal caller, bool consent, string statement, string jurisdiction, string purpose, string provenance) =>
         new(caller.DriverId, jurisdiction, purpose, statement, consent, provenance);
 
     private static IngestPrivacyExportResponse Map(ImportResult result) => new()

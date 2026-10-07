@@ -1,5 +1,19 @@
 # RideAudit handoff update (PAYTON-LEGION2)
 
+Written: 2026-10-07 12:41:18 CT (America/Chicago).
+Author: Grok Bot.
+
+## PR #26 remedia: accuracy + HeadrestGeometry (no merge)
+
+- Mappings orphan FR-209 keys deleted; AC ledger 550; FR-011 HttpClient/lyft.com guard test; PLAN Concierge KILLED scrub; Octopus-PAYTON-DESKTOP assert; BOM on About/Main axaml; Command indent; PartnershipDisabled removed; Ngrok dup removed.
+- HeadrestGeometry plumbing (stderr drain, CRLF, -0.0 keys, LocateMountRoot in try, slnx); geometry-report honest provenance (openscad not on PATH).
+- Contract-Version shared metadata 0.3.0; Home.md Storyboards links; UiLicense SplashScreen; PrivacySlice FR-077 partial.
+- STOP: UC-008 "authorized agent" wording needs Payton (no RBAC invent). OTS smoke P1s deferred. FR-077 stays partial (no SEI invent).
+- Receipt: docs\receipts\remediation\20261007T174118Z-pr26-remedia-accuracy-headrest.md
+- Do not merge.
+
+---# RideAudit handoff update (PAYTON-LEGION2)
+
 Written: 2026-10-07 11:55 CT (America/Chicago).
 Author: Grok Bot.
 

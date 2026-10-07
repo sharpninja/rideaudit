@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
-// Contract-Version: 0.2.0
+// Contract-Version: 0.3.0
 // FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-020, FR-RIDE-021, FR-RIDE-037, FR-RIDE-038.
 // A bundle lists per-record custody. It does not replace or merge sealed records.
 syntax = "proto3";

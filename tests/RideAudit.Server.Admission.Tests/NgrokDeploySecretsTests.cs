@@ -65,7 +65,6 @@ public class NgrokDeploySecretsTests
 
         var readme = File.ReadAllText(Path.Combine(ngrokDir, "README.md"));
         Assert.Contains("LAB-OMARCHY", readme, StringComparison.Ordinal);
-        Assert.Contains("LAB-OMARCHY", readme, StringComparison.Ordinal);
         Assert.Contains("192.168.1.182:28080", readme, StringComparison.Ordinal);
         Assert.Contains("127.0.0.1:18080", readme, StringComparison.Ordinal);
         Assert.Contains("prior interim", readme, StringComparison.OrdinalIgnoreCase);

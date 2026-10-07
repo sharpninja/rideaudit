@@ -3,7 +3,8 @@ namespace RideAudit.Privacy;
 public static class PrivacySlice
 {
     public const string Phase = "S7";
-    public const string State = "implemented";
+    // FR-077 unmasked precise location is coded without Camera2/H.264 SEI invent; keep partial until SEI exists.
+    public const string State = "partial";
 
     // FR-014/202/203/208 kill-list invent removed from checklist. Access-log helper remains for driver self-access (not RBAC invent).
     public static readonly string[] Checklist =

@@ -20,6 +20,7 @@ public static class UiLicense
         "Avalonia UI framework - MIT license (Avalonia authors).\n" +
         "Avalonia.Fonts.Inter - SIL Open Font License 1.1 (Inter font authors).\n" +
         "Grpc.Net.Client - Apache License 2.0.\n" +
+        "Xamarin.AndroidX.Core.SplashScreen - Apache License 2.0 (Android client splash).\n" +
         "Google.Protobuf - BSD-3-Clause.\n" +
         "In-scope RideAudit application UI code is GPL-2.0-or-later and is not relicensed as MIT or Apache-2.0.";
 }

@@ -13,6 +13,9 @@
     <Project Path="src/RideAudit.Video/RideAudit.Video.csproj" />
     <Project Path="src/RideAudit.Viewer/RideAudit.Viewer.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/RideAudit.HeadrestGeometry/RideAudit.HeadrestGeometry.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/RideAudit.Client.Tests/RideAudit.Client.Tests.csproj" />
   </Folder>

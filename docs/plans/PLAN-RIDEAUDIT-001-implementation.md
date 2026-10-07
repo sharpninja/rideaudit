@@ -1,4 +1,6 @@
 # PLAN-RIDEAUDIT-001 — RideAudit portfolio index (BDPv4)
+
+> **Concierge invent KILLED 2026-10-07 (Payton):** FR-004/012/204/206, UC-003/020, TR-INGEST-004, TEST-004/030 and their ACs are deleted from SoT. Rows below that still name those IDs are historical scrub targets marked KILLED; do not implement.
 > **OBSOLETE-CITES-SCRUB 2026-10-07:** Kill-list invent cites (mask/RBAC/legal-hold/FR-014/202/203/208/210, TR-PRIV-002/SEC-002/SEC-003, TEST-012/032) marked obsolete. Replacements where AGREEd: **FR-RIDE-077** / **TR-RIDE-VIDEO-007** (unmasked + H.264 SEI); **FR-RIDE-078** / **TR-RIDE-PRIV-004** (driver not third-party retention). Do not implement killed invent. Legitimate court/counsel product FRs (e.g. FR-047) unchanged.
 
 
@@ -38,7 +40,7 @@
 | --- | ---: | --- |
 | BRACKET | 3 | FR-RIDE-029, FR-RIDE-030, FR-RIDE-041 |
 | ANDROID | 31 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-025, FR-RIDE-026, FR-RIDE-027, FR-RIDE-029, FR-RIDE-030, FR-RIDE-031, FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045, FR-RIDE-046, FR-RIDE-047, FR-RIDE-048, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-053, FR-RIDE-054, FR-RIDE-055, FR-RIDE-056, FR-RIDE-057, FR-RIDE-058, FR-RIDE-215, FR-RIDE-219, FR-RIDE-220, FR-RIDE-221, FR-RIDE-222 |
-| SERVER | 58 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, ~~FR-RIDE-014~~, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-063, FR-RIDE-064, FR-RIDE-201, ~~FR-RIDE-202~~, ~~FR-RIDE-203~~, FR-RIDE-204, FR-RIDE-205, FR-RIDE-206, FR-RIDE-207, ~~FR-RIDE-208~~, FR-RIDE-209, ~~FR-RIDE-210~~, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
+| SERVER | 58 | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-005, FR-RIDE-006, FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-010, FR-RIDE-011, FR-RIDE-013, ~~FR-RIDE-014~~, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-020, FR-RIDE-021, FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-026, FR-RIDE-028, FR-RIDE-029, FR-RIDE-030, FR-RIDE-032, FR-RIDE-033, FR-RIDE-034, FR-RIDE-035, FR-RIDE-036, FR-RIDE-037, FR-RIDE-038, FR-RIDE-039, FR-RIDE-040, FR-RIDE-059, FR-RIDE-060, FR-RIDE-061, FR-RIDE-062, FR-RIDE-063, FR-RIDE-064, FR-RIDE-201, ~~FR-RIDE-202~~, ~~FR-RIDE-203~~, FR-RIDE-205, FR-RIDE-207, ~~FR-RIDE-208~~, FR-RIDE-209, ~~FR-RIDE-210~~, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213, FR-RIDE-214, FR-RIDE-216, FR-RIDE-217, FR-RIDE-218 |
 
 Union covers all **86** parent FRs after the 2026-09-28 post-planning additive (shared FR-029/030/026 appear in more than one child with role notes). The Astra R7 parent body covered **84** FRs. FR-RIDE-063 and FR-RIDE-064 are additive and do not rewrite that AGREE. Detailed FR→UC→AC→TEST rows live in each child; the pre-additive 404-row AC ledger remains in **§2.7**; post-planning ACs are in **§2.8**.
 
@@ -150,15 +152,15 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-001 | high | Ingest Lyft privacy-export ZIP | TR-RIDE-INGEST-001, TR-RIDE-INGEST-006 | TEST-RIDE-001 | UC-RIDE-001 | AC-RIDE-001-001, AC-RIDE-001-002, AC-RIDE-001-003 | P9 |
 | FR-RIDE-002 | high | Record Smooth Cruiser scores | TR-RIDE-INGEST-002 | TEST-RIDE-002 | UC-RIDE-002 | AC-RIDE-002-001, AC-RIDE-002-002, AC-RIDE-002-003 | P9 |
 | FR-RIDE-003 | high | Ingest trip-level records | TR-RIDE-INGEST-003 | TEST-RIDE-003 | UC-RIDE-001 | AC-RIDE-003-001, AC-RIDE-003-002 | P9 |
-| FR-RIDE-004 | medium | Optional Concierge/Business API integration | TR-RIDE-INGEST-004 | TEST-RIDE-004 | UC-RIDE-003 | AC-RIDE-004-001, AC-RIDE-004-002, AC-RIDE-004-003 | P9 |
+| FR-RIDE-004 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-005 | high | Import third-party telematics | TR-RIDE-INGEST-005, TR-RIDE-INGEST-006 | TEST-RIDE-005 | UC-RIDE-004 | AC-RIDE-005-001, AC-RIDE-005-002, AC-RIDE-005-003 | P9 |
 | FR-RIDE-006 | critical | Provenance and consent ledger | TR-RIDE-INGEST-006, TR-RIDE-PRIV-001 | TEST-RIDE-006 | UC-RIDE-001, UC-RIDE-002, UC-RIDE-004 | AC-RIDE-006-001, AC-RIDE-006-002 | P9 |
 | FR-RIDE-007 | high | Coverage matrix | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-007-001, AC-RIDE-007-002 | P8 |
 | FR-RIDE-008 | high | Online-hours policy audit | TR-RIDE-ANAL-003 | TEST-RIDE-008 | UC-RIDE-006 | AC-RIDE-008-001, AC-RIDE-008-002, AC-RIDE-008-003 | P8 |
 | FR-RIDE-009 | high | Time-window incident report | TR-RIDE-ANAL-004 | TEST-RIDE-009 | UC-RIDE-007 | AC-RIDE-009-001, AC-RIDE-009-002 | P8 |
 | FR-RIDE-010 | critical | Data subject access and deletion | TR-RIDE-STORE-003, TR-RIDE-PRIV-001, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | AC-RIDE-010-001 (AC-002 legal-hold killed) | P10 |
-| FR-RIDE-011 | critical | No undocumented Lyft private APIs | TR-RIDE-INGEST-001, TR-RIDE-INGEST-002 | TEST-RIDE-004 | UC-RIDE-003, UC-RIDE-020 | AC-RIDE-011-001, AC-RIDE-011-002 | P9 |
-| FR-RIDE-012 | medium | Admin partnership gates | TR-RIDE-INGEST-004 | TEST-RIDE-004 | UC-RIDE-003, UC-RIDE-020 | AC-RIDE-012-001, AC-RIDE-012-002 | P9 |
+| FR-RIDE-011 | critical | No undocumented Lyft private APIs | TR-RIDE-INGEST-001, TR-RIDE-INGEST-002 | TEST-RIDE-004 | UC-RIDE-020 | AC-RIDE-011-001, AC-RIDE-011-002 | P9 |
+| FR-RIDE-012 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-013 | high | Hash and version raw imports | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-011 | UC-RIDE-001 | AC-RIDE-013-001, AC-RIDE-013-002 | P9 |
 | FR-RIDE-014 | ~~critical~~ | **OBSOLETE (killed invent)** Role-based access / RBAC — see **FR-RIDE-077** | ~~TR-PRIV-002/SEC-002~~ | ~~TEST-012~~ | UC-RIDE-020 | OBSOLETE | P10 |
 | FR-RIDE-015 | critical | Seal and encrypt at collection | TR-RIDE-STORE-001, TR-RIDE-STORE-002, TR-RIDE-SEAL-001 | TEST-RIDE-013 | UC-RIDE-009 | AC-RIDE-015-001, AC-RIDE-015-002 | P3 |
@@ -202,9 +204,9 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-201 | critical | TLS and secrets vault | TR-RIDE-SEC-001 | TEST-RIDE-029 | UC-RIDE-009 | AC-RIDE-201-001, AC-RIDE-201-002 | P2 |
 | FR-RIDE-202 | ~~critical~~ | **OBSOLETE (killed invent)** Geolocation sensitive masking — precise location stays unmasked; see **FR-RIDE-077** / **TR-RIDE-VIDEO-007** | ~~TR-PRIV-002~~ | ~~TEST-012~~ | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-203 | ~~critical~~ | **OBSOLETE (killed invent)** Append-only access logs (mask/RBAC cluster) — no AGREEd replacement yet | ~~TR-SEC-003~~ | TEST-RIDE-029 | UC-RIDE-008 | OBSOLETE | P10 |
-| FR-RIDE-204 | high | Concierge ingestion resilience | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-030 | UC-RIDE-003 | AC-RIDE-204-001, AC-RIDE-204-002 | P9 |
+| FR-RIDE-204 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-205 | high | Scale multi-year histories | TR-RIDE-PERF-002 | TEST-RIDE-031 | UC-RIDE-021 | AC-RIDE-205-001, AC-RIDE-205-002 | P10 |
-| FR-RIDE-206 | critical | No false Smooth Cruiser labeling | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-030 | UC-RIDE-003 | AC-RIDE-206-001, AC-RIDE-206-002 | P9 |
+| FR-RIDE-206 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-207 | high | Portable audit ZIP export | TR-RIDE-STORE-001, TR-RIDE-STORE-002 | TEST-RIDE-031 | UC-RIDE-007, UC-RIDE-021 | AC-RIDE-207-001 | P10 |
 | FR-RIDE-208 | ~~high~~ | **OBSOLETE (killed invent)** Per-state / CA third-party retention frames — see **FR-RIDE-078** / **TR-RIDE-PRIV-004** | TR-RIDE-STORE-003 | ~~TEST-032~~ | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-209 | medium | In-product API gap notice | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-209-001 | P9 |
@@ -241,11 +243,11 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TR-RIDE-INGEST-001 | INGEST | Privacy-export ZIP parser | AC-RIDE-INGEST-001-001, AC-RIDE-INGEST-001-002 | FR-RIDE-001, FR-RIDE-011 |
 | TR-RIDE-INGEST-002 | INGEST | Smooth Cruiser structured and manual ingest | AC-RIDE-INGEST-002-001, AC-RIDE-INGEST-002-002 | FR-RIDE-002, FR-RIDE-011 |
 | TR-RIDE-INGEST-003 | INGEST | Trip and Business report ingest | AC-RIDE-INGEST-003-001, AC-RIDE-INGEST-003-002 | FR-RIDE-003 |
-| TR-RIDE-INGEST-004 | INGEST | Concierge OAuth and status poller | AC-RIDE-INGEST-004-001, AC-RIDE-INGEST-004-002 | FR-RIDE-004, FR-RIDE-012 |
+| TR-RIDE-INGEST-004 | KILLED | Concierge invent killed 2026-10-07 | - | - |
 | TR-RIDE-INGEST-005 | INGEST | Third-party telematics importers | AC-RIDE-INGEST-005-001, AC-RIDE-INGEST-005-002 | FR-RIDE-005 |
 | TR-RIDE-INGEST-006 | INGEST | Honesty provenance tagging | AC-RIDE-INGEST-006-001 | FR-RIDE-001, FR-RIDE-005, FR-RIDE-006 |
-| TR-RIDE-STORE-001 | STORE | Sealed immutable blob store | AC-RIDE-STORE-001-001, AC-RIDE-STORE-001-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
-| TR-RIDE-STORE-002 | STORE | Versioned correction events | AC-RIDE-STORE-002-001, AC-RIDE-STORE-002-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
+| TR-RIDE-STORE-001 | STORE | Sealed immutable blob store | AC-RIDE-STORE-001-001, AC-RIDE-STORE-001-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
+| TR-RIDE-STORE-002 | STORE | Versioned correction events | AC-RIDE-STORE-002-001, AC-RIDE-STORE-002-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
 | TR-RIDE-STORE-003 | STORE | Jurisdiction retention engine | AC-RIDE-STORE-003-001, AC-RIDE-STORE-003-002 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
 | TR-RIDE-ANAL-001 | ANAL | Authorized working-copy analysis | AC-RIDE-ANAL-001-001, AC-RIDE-ANAL-001-002 | FR-RIDE-020, FR-RIDE-021 |
 | TR-RIDE-ANAL-002 | ANAL | Coverage matrix generator | AC-RIDE-ANAL-002-001, AC-RIDE-ANAL-002-002 | FR-RIDE-007, FR-RIDE-209 |
@@ -313,7 +315,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-001 | Privacy-export ZIP parse and Unverified tagging | AC-TEST-001-001, AC-TEST-001-002 | FR-RIDE-001 |
 | TEST-RIDE-002 | Smooth Cruiser ingest paths | AC-TEST-002-001, AC-TEST-002-002 | FR-RIDE-002 |
 | TEST-RIDE-003 | Trip record ingest | AC-TEST-003-001, AC-TEST-003-002 | FR-RIDE-003 |
-| TEST-RIDE-004 | Concierge optional poll and partnership gate | AC-TEST-004-001, AC-TEST-004-002 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012 |
+| TEST-RIDE-004 | KILLED | Concierge invent killed 2026-10-07 | - | - |
 | TEST-RIDE-005 | Third-party telematics import | AC-TEST-005-001, AC-TEST-005-002 | FR-RIDE-005 |
 | TEST-RIDE-006 | Consent and provenance ledger | AC-TEST-006-001, AC-TEST-006-002 | FR-RIDE-006 |
 | TEST-RIDE-007 | Coverage matrix and API-gap notice | AC-TEST-007-001, AC-TEST-007-002 | FR-RIDE-007, FR-RIDE-209 |
@@ -339,7 +341,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-027 | Counsel composite playback verification | AC-TEST-027-001, AC-TEST-027-002 | FR-RIDE-047, FR-RIDE-221 |
 | TEST-RIDE-028 | Desktop viewer fail-closed timeline | AC-TEST-028-001, AC-TEST-028-002 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
 | TEST-RIDE-029 | Security TLS vault and access logs | AC-TEST-029-001, AC-TEST-029-002 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
-| TEST-RIDE-030 | Concierge resilience and accuracy labeling | AC-TEST-030-001, AC-TEST-030-002 | FR-RIDE-204, FR-RIDE-206 |
+| TEST-RIDE-030 | KILLED | Concierge invent killed 2026-10-07 | - | - |
 | TEST-RIDE-031 | Scalability pagination and portable export | AC-TEST-031-001, AC-TEST-031-002 | FR-RIDE-205, FR-RIDE-207 |
 | TEST-RIDE-032 | **OBSOLETE as killed invent** (retention/crypto/latency bundle) — ~~FR-208~~ killed; FR-211/213 remapping TBD | OBSOLETE | FR-RIDE-211, FR-RIDE-213 (~~208 killed~~) |
 | TEST-RIDE-033 | Video quotas and performance gates | AC-TEST-033-001, AC-TEST-033-002 | FR-RIDE-219, FR-RIDE-220 |
@@ -357,7 +359,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | --- | --- | --- | --- | --- | --- |
 | UC-RIDE-001 | Ingest privacy-export ZIP | yes | AC-UC-001-001, AC-UC-001-002 | FR-RIDE-001, FR-RIDE-003, FR-RIDE-006, FR-RIDE-013 |  |
 | UC-RIDE-002 | Record Smooth Cruiser evidence | yes | AC-UC-002-001, AC-UC-002-002 | FR-RIDE-002, FR-RIDE-006 |  |
-| UC-RIDE-003 | Optional Concierge ride location poll | yes | AC-UC-003-001, AC-UC-003-002 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012, FR-RIDE-204, FR-RIDE-206 |  |
+| UC-RIDE-003 | KILLED | Concierge invent killed 2026-10-07 | - | - |
 | UC-RIDE-004 | Import third-party telematics | yes | AC-UC-004-001, AC-UC-004-002 | FR-RIDE-005, FR-RIDE-006 |  |
 | UC-RIDE-005 | Generate coverage matrix | yes | AC-UC-005-001, AC-UC-005-002 | FR-RIDE-007, FR-RIDE-209 |  |
 | UC-RIDE-006 | Online-hours policy check | yes | AC-UC-006-001, AC-UC-006-002 | FR-RIDE-008 |  |
@@ -374,7 +376,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | UC-RIDE-017 | Dual-phone composite evidence | yes | AC-UC-017-001, AC-UC-017-002 | FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044, FR-RIDE-045, FR-RIDE-046, FR-RIDE-048, FR-RIDE-219, FR-RIDE-220 |  |
 | UC-RIDE-018 | Counsel composite playback | yes | AC-UC-018-001, AC-UC-018-002 | FR-RIDE-047, FR-RIDE-048, FR-RIDE-050, FR-RIDE-221 |  |
 | UC-RIDE-019 | Desktop court viewer review | yes | AC-UC-019-001, AC-UC-019-002 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |  |
-| UC-RIDE-020 | Admin partnership gates (~~RBAC invent killed~~) | yes | AC-UC-020-001, AC-UC-020-002 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) |  |
+| UC-RIDE-020 | KILLED | Concierge invent killed 2026-10-07 | - | - |
 | UC-RIDE-021 | Cross-cutting compliance and quality gates | yes | AC-UC-021-001, AC-UC-021-002 | FR-RIDE-205, FR-RIDE-207 |  |
 | UC-RIDE-022 | Pair driver and passenger phones over Bluetooth | yes | none declared | FR-RIDE-053 | AC-RIDE-053-001/002 + TEST-RIDE-034 |
 | UC-RIDE-023 | Driver coordinates dual-phone session | yes | none declared | FR-RIDE-054 | AC-RIDE-054-001/002 + TEST-RIDE-034 |
@@ -413,15 +415,15 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-RIDE-INGEST-002-002 | TR-RIDE-INGEST-002 | FR-RIDE-002, FR-RIDE-011 |
 | AC-RIDE-INGEST-003-001 | TR-RIDE-INGEST-003 | FR-RIDE-003 |
 | AC-RIDE-INGEST-003-002 | TR-RIDE-INGEST-003 | FR-RIDE-003 |
-| AC-RIDE-INGEST-004-001 | TR-RIDE-INGEST-004 | FR-RIDE-004, FR-RIDE-012 |
-| AC-RIDE-INGEST-004-002 | TR-RIDE-INGEST-004 | FR-RIDE-004, FR-RIDE-012 |
+| AC-RIDE-INGEST-004-001 | TR-RIDE-INGEST-004 | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-INGEST-004-002 | TR-RIDE-INGEST-004 | KILLED | Concierge invent killed 2026-10-07 |
 | AC-RIDE-INGEST-005-001 | TR-RIDE-INGEST-005 | FR-RIDE-005 |
 | AC-RIDE-INGEST-005-002 | TR-RIDE-INGEST-005 | FR-RIDE-005 |
 | AC-RIDE-INGEST-006-001 | TR-RIDE-INGEST-006 | FR-RIDE-001, FR-RIDE-005, FR-RIDE-006 |
-| AC-RIDE-STORE-001-001 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
-| AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
-| AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
-| AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 |
+| AC-RIDE-STORE-001-001 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
+| AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
+| AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
+| AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 |
 | AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
 | AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) |
 | AC-RIDE-ANAL-001-001 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 |
@@ -524,8 +526,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-TEST-002-002 | TEST-RIDE-002 | FR-RIDE-002 |
 | AC-TEST-003-001 | TEST-RIDE-003 | FR-RIDE-003 |
 | AC-TEST-003-002 | TEST-RIDE-003 | FR-RIDE-003 |
-| AC-TEST-004-001 | TEST-RIDE-004 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012 |
-| AC-TEST-004-002 | TEST-RIDE-004 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012 |
+| AC-TEST-004-001 | TEST-RIDE-004 | KILLED | Concierge invent killed 2026-10-07 |
+| AC-TEST-004-002 | TEST-RIDE-004 | KILLED | Concierge invent killed 2026-10-07 |
 | AC-TEST-005-001 | TEST-RIDE-005 | FR-RIDE-005 |
 | AC-TEST-005-002 | TEST-RIDE-005 | FR-RIDE-005 |
 | AC-TEST-006-001 | TEST-RIDE-006 | FR-RIDE-006 |
@@ -576,8 +578,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-TEST-028-002 | TEST-RIDE-028 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
 | AC-TEST-029-001 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
 | AC-TEST-029-002 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
-| AC-TEST-030-001 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 |
-| AC-TEST-030-002 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 |
+| AC-TEST-030-001 | TEST-RIDE-030 | KILLED | Concierge invent killed 2026-10-07 |
+| AC-TEST-030-002 | TEST-RIDE-030 | KILLED | Concierge invent killed 2026-10-07 |
 | AC-TEST-031-001 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 |
 | AC-TEST-031-002 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 |
 | AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD |
@@ -593,8 +595,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-UC-001-002 | UC-RIDE-001 | FR-RIDE-001, FR-RIDE-003, FR-RIDE-006, FR-RIDE-013 |
 | AC-UC-002-001 | UC-RIDE-002 | FR-RIDE-002, FR-RIDE-006 |
 | AC-UC-002-002 | UC-RIDE-002 | FR-RIDE-002, FR-RIDE-006 |
-| AC-UC-003-001 | UC-RIDE-003 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012, FR-RIDE-204, FR-RIDE-206 |
-| AC-UC-003-002 | UC-RIDE-003 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012, FR-RIDE-204, FR-RIDE-206 |
+| AC-UC-003-001 | UC-RIDE-003 | KILLED | Concierge invent killed 2026-10-07 |
+| AC-UC-003-002 | UC-RIDE-003 | KILLED | Concierge invent killed 2026-10-07 |
 | AC-UC-004-001 | UC-RIDE-004 | FR-RIDE-005, FR-RIDE-006 |
 | AC-UC-004-002 | UC-RIDE-004 | FR-RIDE-005, FR-RIDE-006 |
 | AC-UC-005-001 | UC-RIDE-005 | FR-RIDE-007, FR-RIDE-209 |
@@ -627,8 +629,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-UC-018-002 | UC-RIDE-018 | FR-RIDE-047, FR-RIDE-048, FR-RIDE-050, FR-RIDE-221 |
 | AC-UC-019-001 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
 | AC-UC-019-002 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 |
-| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) |
-| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) |
+| AC-UC-020-001 | UC-RIDE-020 | KILLED | Concierge invent killed 2026-10-07 |
+| AC-UC-020-002 | UC-RIDE-020 | KILLED | Concierge invent killed 2026-10-07 |
 | AC-UC-021-001 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 |
 | AC-UC-021-002 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 |
 | AC-UC-025-001 | UC-RIDE-025 | FR-RIDE-056 |
@@ -654,9 +656,9 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-002-003 | FR-RIDE-002 | FR-RIDE-002 | P9 | P11b | TEST-RIDE-002 |
 | AC-RIDE-003-001 | FR-RIDE-003 | FR-RIDE-003 | P9 | P11b | TEST-RIDE-003 |
 | AC-RIDE-003-002 | FR-RIDE-003 | FR-RIDE-003 | P9 | P11b | TEST-RIDE-003 |
-| AC-RIDE-004-001 | FR-RIDE-004 | FR-RIDE-004 | P9 | P11b | TEST-RIDE-004 |
-| AC-RIDE-004-002 | FR-RIDE-004 | FR-RIDE-004 | P9 | P11b | TEST-RIDE-004 |
-| AC-RIDE-004-003 | FR-RIDE-004 | FR-RIDE-004 | P9 | P11b | TEST-RIDE-004 |
+| AC-RIDE-004-001 | FR-RIDE-004 | FR-RIDE-004 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-004-002 | FR-RIDE-004 | FR-RIDE-004 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-004-003 | FR-RIDE-004 | FR-RIDE-004 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-RIDE-005-001 | FR-RIDE-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
 | AC-RIDE-005-002 | FR-RIDE-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
 | AC-RIDE-005-003 | FR-RIDE-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
@@ -673,8 +675,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-010-002 | FR-RIDE-010 | FR-RIDE-010 | P10 | P11b | TEST-RIDE-010 |
 | AC-RIDE-011-001 | FR-RIDE-011 | FR-RIDE-011 | P9 | P11b | TEST-RIDE-004 |
 | AC-RIDE-011-002 | FR-RIDE-011 | FR-RIDE-011 | P9 | P11b | TEST-RIDE-004 |
-| AC-RIDE-012-001 | FR-RIDE-012 | FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
-| AC-RIDE-012-002 | FR-RIDE-012 | FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
+| AC-RIDE-012-001 | FR-RIDE-012 | FR-RIDE-012 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-012-002 | FR-RIDE-012 | FR-RIDE-012 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-RIDE-013-001 | FR-RIDE-013 | FR-RIDE-013 | P9 | P11b | TEST-RIDE-011 |
 | AC-RIDE-013-002 | FR-RIDE-013 | FR-RIDE-013 | P9 | P11b | TEST-RIDE-011 |
 | AC-RIDE-014-001 | ~~FR-014~~ | **OBSOLETE** | P10 | — | ~~TEST-012~~ |
@@ -771,12 +773,12 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-202-001 | ~~FR-202~~ | **OBSOLETE** — see **FR-077** | P10 | — | ~~TEST-012~~ |
 | AC-RIDE-202-002 | ~~FR-202~~ | **OBSOLETE** — see **FR-077** | P10 | — | ~~TEST-012~~ |
 | AC-RIDE-203-001 | ~~FR-203~~ | **OBSOLETE** | P10 | — | TEST-RIDE-029 |
-| AC-RIDE-204-001 | FR-RIDE-204 | FR-RIDE-204 | P9 | P11b | TEST-RIDE-030 |
-| AC-RIDE-204-002 | FR-RIDE-204 | FR-RIDE-204 | P9 | P11b | TEST-RIDE-030 |
+| AC-RIDE-204-001 | FR-RIDE-204 | FR-RIDE-204 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-204-002 | FR-RIDE-204 | FR-RIDE-204 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-RIDE-205-001 | FR-RIDE-205 | FR-RIDE-205 | P10 | P11b | TEST-RIDE-031 |
 | AC-RIDE-205-002 | FR-RIDE-205 | FR-RIDE-205 | P10 | P11b | TEST-RIDE-031 |
-| AC-RIDE-206-001 | FR-RIDE-206 | FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
-| AC-RIDE-206-002 | FR-RIDE-206 | FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
+| AC-RIDE-206-001 | FR-RIDE-206 | FR-RIDE-206 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-206-002 | FR-RIDE-206 | FR-RIDE-206 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-RIDE-207-001 | FR-RIDE-207 | FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-RIDE-208-001 | ~~FR-208~~ | **OBSOLETE** — see **FR-RIDE-078** | P10 | — | ~~TEST-032~~ |
 | AC-RIDE-208-002 | ~~FR-208~~ | **OBSOLETE** — see **FR-RIDE-078** | P10 | — | ~~TEST-032~~ |
@@ -829,21 +831,21 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-054-002 | FR-RIDE-054 | FR-RIDE-054 | P6 | P11b | TEST-RIDE-034 |
 | AC-RIDE-055-001 | FR-RIDE-055 | FR-RIDE-055 | P6 | P11b | TEST-RIDE-034 |
 | AC-RIDE-055-002 | FR-RIDE-055 | FR-RIDE-055 | P6 | P11b | TEST-RIDE-034 |
-| AC-RIDE-INGEST-001-001 | TR-RIDE-INGEST-001 | FR-RIDE-001, FR-RIDE-011 | P9 | P11b | TEST-RIDE-001, TEST-RIDE-004 |
-| AC-RIDE-INGEST-001-002 | TR-RIDE-INGEST-001 | FR-RIDE-001, FR-RIDE-011 | P9 | P11b | TEST-RIDE-001, TEST-RIDE-004 |
-| AC-RIDE-INGEST-002-001 | TR-RIDE-INGEST-002 | FR-RIDE-002, FR-RIDE-011 | P9 | P11b | TEST-RIDE-002, TEST-RIDE-004 |
-| AC-RIDE-INGEST-002-002 | TR-RIDE-INGEST-002 | FR-RIDE-002, FR-RIDE-011 | P9 | P11b | TEST-RIDE-002, TEST-RIDE-004 |
+| AC-RIDE-INGEST-001-001 | TR-RIDE-INGEST-001 | FR-RIDE-001, FR-RIDE-011 | P9 | P11b | TEST-RIDE-001 |
+| AC-RIDE-INGEST-001-002 | TR-RIDE-INGEST-001 | FR-RIDE-001, FR-RIDE-011 | P9 | P11b | TEST-RIDE-001 |
+| AC-RIDE-INGEST-002-001 | TR-RIDE-INGEST-002 | FR-RIDE-002, FR-RIDE-011 | P9 | P11b | TEST-RIDE-002 |
+| AC-RIDE-INGEST-002-002 | TR-RIDE-INGEST-002 | FR-RIDE-002, FR-RIDE-011 | P9 | P11b | TEST-RIDE-002 |
 | AC-RIDE-INGEST-003-001 | TR-RIDE-INGEST-003 | FR-RIDE-003 | P9 | P11b | TEST-RIDE-003 |
 | AC-RIDE-INGEST-003-002 | TR-RIDE-INGEST-003 | FR-RIDE-003 | P9 | P11b | TEST-RIDE-003 |
-| AC-RIDE-INGEST-004-001 | TR-RIDE-INGEST-004 | FR-RIDE-004, FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
-| AC-RIDE-INGEST-004-002 | TR-RIDE-INGEST-004 | FR-RIDE-004, FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
+| AC-RIDE-INGEST-004-001 | TR-RIDE-INGEST-004 | FR-RIDE-012 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-RIDE-INGEST-004-002 | TR-RIDE-INGEST-004 | FR-RIDE-012 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-RIDE-INGEST-005-001 | TR-RIDE-INGEST-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
 | AC-RIDE-INGEST-005-002 | TR-RIDE-INGEST-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
 | AC-RIDE-INGEST-006-001 | TR-RIDE-INGEST-006 | FR-RIDE-001, FR-RIDE-005, FR-RIDE-006 | P9 | P11b | TEST-RIDE-001, TEST-RIDE-005, TEST-RIDE-006 |
-| AC-RIDE-STORE-001-001 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
-| AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
-| AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
-| AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031 |
+| AC-RIDE-STORE-001-001 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
+| AC-RIDE-STORE-001-002 | TR-RIDE-STORE-001 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
+| AC-RIDE-STORE-002-001 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
+| AC-RIDE-STORE-002-002 | TR-RIDE-STORE-002 | FR-RIDE-013, FR-RIDE-015, FR-RIDE-207 | P3, P9, P10 | P11b | TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031 |
 | AC-RIDE-STORE-003-001 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
 | AC-RIDE-STORE-003-002 | TR-RIDE-STORE-003 | FR-RIDE-010, **FR-RIDE-078** (~~208/210 killed~~) | P10 | P11b | TEST-RIDE-010, TEST-RIDE-032 |
 | AC-RIDE-ANAL-001-001 | TR-RIDE-ANAL-001 | FR-RIDE-020, FR-RIDE-021 | P8 | P11b | TEST-RIDE-016 |
@@ -941,8 +943,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-TEST-002-002 | TEST-RIDE-002 | FR-RIDE-002 | P9 | P11b | TEST-RIDE-002 |
 | AC-TEST-003-001 | TEST-RIDE-003 | FR-RIDE-003 | P9 | P11b | TEST-RIDE-003 |
 | AC-TEST-003-002 | TEST-RIDE-003 | FR-RIDE-003 | P9 | P11b | TEST-RIDE-003 |
-| AC-TEST-004-001 | TEST-RIDE-004 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
-| AC-TEST-004-002 | TEST-RIDE-004 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012 | P9 | P11b | TEST-RIDE-004 |
+| AC-TEST-004-001 | TEST-RIDE-004 | FR-RIDE-011 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-TEST-004-002 | TEST-RIDE-004 | FR-RIDE-011 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-TEST-005-001 | TEST-RIDE-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
 | AC-TEST-005-002 | TEST-RIDE-005 | FR-RIDE-005 | P9 | P11b | TEST-RIDE-005 |
 | AC-TEST-006-001 | TEST-RIDE-006 | FR-RIDE-006 | P9 | P11b | TEST-RIDE-006 |
@@ -993,8 +995,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-TEST-028-002 | TEST-RIDE-028 | FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P7 | P11b | TEST-RIDE-028 |
 | AC-TEST-029-001 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) | P2, P5, P10 | P11b | TEST-RIDE-029 |
 | AC-TEST-029-002 | TEST-RIDE-029 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) | P2, P5, P10 | P11b | TEST-RIDE-029 |
-| AC-TEST-030-001 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
-| AC-TEST-030-002 | TEST-RIDE-030 | FR-RIDE-204, FR-RIDE-206 | P9 | P11b | TEST-RIDE-030 |
+| AC-TEST-030-001 | TEST-RIDE-030 | FR-RIDE-206 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-TEST-030-002 | TEST-RIDE-030 | FR-RIDE-206 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-TEST-031-001 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-TEST-031-002 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD | P3, P10 | P11b | TEST-RIDE-032 |
@@ -1005,8 +1007,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-UC-001-002 | UC-RIDE-001 | FR-RIDE-001, FR-RIDE-003, FR-RIDE-006, FR-RIDE-013 | P9 | P11b | TEST-RIDE-001, TEST-RIDE-003, TEST-RIDE-006, TEST-RIDE-011 |
 | AC-UC-002-001 | UC-RIDE-002 | FR-RIDE-002, FR-RIDE-006 | P9 | P11b | TEST-RIDE-002, TEST-RIDE-006 |
 | AC-UC-002-002 | UC-RIDE-002 | FR-RIDE-002, FR-RIDE-006 | P9 | P11b | TEST-RIDE-002, TEST-RIDE-006 |
-| AC-UC-003-001 | UC-RIDE-003 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012, FR-RIDE-204, FR-RIDE-206 | P9 | P11b | TEST-RIDE-004, TEST-RIDE-030 |
-| AC-UC-003-002 | UC-RIDE-003 | FR-RIDE-004, FR-RIDE-011, FR-RIDE-012, FR-RIDE-204, FR-RIDE-206 | P9 | P11b | TEST-RIDE-004, TEST-RIDE-030 |
+| AC-UC-003-001 | UC-RIDE-003 | FR-RIDE-011 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-UC-003-002 | UC-RIDE-003 | FR-RIDE-011 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-UC-004-001 | UC-RIDE-004 | FR-RIDE-005, FR-RIDE-006 | P9 | P11b | TEST-RIDE-005, TEST-RIDE-006 |
 | AC-UC-004-002 | UC-RIDE-004 | FR-RIDE-005, FR-RIDE-006 | P9 | P11b | TEST-RIDE-005, TEST-RIDE-006 |
 | AC-UC-005-001 | UC-RIDE-005 | FR-RIDE-007, FR-RIDE-209 | P8, P9 | P11b | TEST-RIDE-007 |
@@ -1039,8 +1041,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-UC-018-002 | UC-RIDE-018 | FR-RIDE-047, FR-RIDE-048, FR-RIDE-050, FR-RIDE-221 | P6, P7 | P11b | TEST-RIDE-026, TEST-RIDE-027, TEST-RIDE-028 |
 | AC-UC-019-001 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P5, P7 | P11b | TEST-RIDE-018, TEST-RIDE-028 |
 | AC-UC-019-002 | UC-RIDE-019 | FR-RIDE-028, FR-RIDE-049, FR-RIDE-050, FR-RIDE-051, FR-RIDE-052, FR-RIDE-222 | P5, P7 | P11b | TEST-RIDE-018, TEST-RIDE-028 |
-| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) | P9, P10 | P11b | TEST-RIDE-004, TEST-RIDE-012 |
-| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011, FR-RIDE-012 (~~014/202 killed~~) | P9, P10 | P11b | TEST-RIDE-004, TEST-RIDE-012 |
+| AC-UC-020-001 | UC-RIDE-020 | FR-RIDE-011 (~~014/202 killed~~) | P9, P10 | P11b | KILLED | Concierge invent killed 2026-10-07 |
+| AC-UC-020-002 | UC-RIDE-020 | FR-RIDE-011 (~~014/202 killed~~) | P9, P10 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-UC-021-001 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-UC-021-002 | UC-RIDE-021 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-UC-025-001 | UC-RIDE-025 | FR-RIDE-056 | P6 | P11b | TEST-RIDE-035 |
@@ -1297,10 +1299,10 @@ Phase numbering does not authorize bypassing a dependency.
 
 | Field | Value |
 | --- | --- |
-| FR IDs (implementation ownership) | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-004, FR-RIDE-005, FR-RIDE-006, FR-RIDE-011, FR-RIDE-012, FR-RIDE-013, FR-RIDE-204, FR-RIDE-206, FR-RIDE-209 |
-| UC IDs | UC-RIDE-001, UC-RIDE-002, UC-RIDE-003, UC-RIDE-004, UC-RIDE-020, UC-RIDE-005 |
-| TR IDs | TR-RIDE-INGEST-001, TR-RIDE-INGEST-006, TR-RIDE-INGEST-002, TR-RIDE-INGEST-003, TR-RIDE-INGEST-004, TR-RIDE-INGEST-005, TR-RIDE-PRIV-001, TR-RIDE-STORE-001, TR-RIDE-STORE-002, TR-RIDE-ANAL-002 |
-| TEST IDs | TEST-RIDE-001, TEST-RIDE-002, TEST-RIDE-003, TEST-RIDE-004, TEST-RIDE-005, TEST-RIDE-006, TEST-RIDE-011, TEST-RIDE-030, TEST-RIDE-007 |
+| FR IDs (implementation ownership) | FR-RIDE-001, FR-RIDE-002, FR-RIDE-003, FR-RIDE-005, FR-RIDE-006, FR-RIDE-011, FR-RIDE-013, FR-RIDE-209 |
+| UC IDs | UC-RIDE-001, UC-RIDE-002, UC-RIDE-004, UC-RIDE-005 |
+| TR IDs | TR-RIDE-INGEST-001, TR-RIDE-INGEST-006, TR-RIDE-INGEST-002, TR-RIDE-INGEST-003, TR-RIDE-INGEST-005, TR-RIDE-PRIV-001, TR-RIDE-STORE-001, TR-RIDE-STORE-002, TR-RIDE-ANAL-002 |
+| TEST IDs | TEST-RIDE-001, TEST-RIDE-002, TEST-RIDE-003, TEST-RIDE-005, TEST-RIDE-006, TEST-RIDE-011, TEST-RIDE-007 |
 | FR-owned AC IDs | AC-RIDE-001-001, AC-RIDE-001-002, AC-RIDE-001-003, AC-RIDE-002-001, AC-RIDE-002-002, AC-RIDE-002-003, AC-RIDE-003-001, AC-RIDE-003-002, AC-RIDE-004-001, AC-RIDE-004-002, AC-RIDE-004-003, AC-RIDE-005-001, AC-RIDE-005-002, AC-RIDE-005-003, AC-RIDE-006-001, AC-RIDE-006-002, AC-RIDE-011-001, AC-RIDE-011-002, AC-RIDE-012-001, AC-RIDE-012-002, AC-RIDE-013-001, AC-RIDE-013-002, AC-RIDE-204-001, AC-RIDE-204-002, AC-RIDE-206-001, AC-RIDE-206-002, AC-RIDE-209-001 |
 | AC closure | Union of FR-owned ACs above plus TR/TEST/UC-owned ACs for mapped records (see §2.7); partition per phase ac_scope |
 | Files / projects | src/RideAudit.Ingest/; tests/RideAudit.Ingest.Tests/ |
@@ -1318,7 +1320,7 @@ Phase numbering does not authorize bypassing a dependency.
 | Field | Value |
 | --- | --- |
 | FR IDs (implementation ownership) | FR-RIDE-010, FR-RIDE-205, FR-RIDE-207, **FR-RIDE-077**, **FR-RIDE-078** (~~014/202/203/208/210 killed~~) |
-| UC IDs | UC-RIDE-008, UC-RIDE-020, UC-RIDE-021, UC-RIDE-007 |
+| UC IDs | UC-RIDE-008, UC-RIDE-021, UC-RIDE-007 |
 | TR IDs | TR-RIDE-STORE-003, TR-RIDE-PRIV-001, TR-RIDE-PRIV-003, TR-RIDE-PRIV-002, TR-RIDE-SEC-002, TR-RIDE-SEC-003, TR-RIDE-PERF-002, TR-RIDE-STORE-001, TR-RIDE-STORE-002 |
 | TEST IDs | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-031, TEST-RIDE-032 |
 | FR-owned AC IDs | AC-RIDE-010-001, AC-RIDE-010-002, AC-RIDE-014-001, AC-RIDE-014-002, AC-RIDE-202-001, AC-RIDE-202-002, AC-RIDE-203-001, AC-RIDE-205-001, AC-RIDE-205-002, AC-RIDE-207-001, AC-RIDE-208-001, AC-RIDE-208-002, AC-RIDE-210-001 |
@@ -1532,9 +1534,9 @@ A failed, unavailable, unauthenticated, or partial product HV blocks phase accep
 | Quantitative sync, quota, performance thresholds | Before P6 |
 | Retention profiles | Before P10 |
 | OTS fee sponsorship vs per-driver wallet | Before P3 |
-| Concierge partnership authorization | Before enabling FR-RIDE-004 |
+| Concierge partnership authorization | KILLED 2026-10-07 |
 
-Unresolved decisions block the affected phase. Concierge remains disabled without partnership authorization. **No UC/Markdown waivers.**
+Concierge invent killed 2026-10-07; do not enable partnership path. **No UC/Markdown waivers.**
 
 ### 7.3 Rollback
 
@@ -1590,7 +1592,7 @@ Classes: **A** implementable in this tree without a third party; **B** ops/confi
 | Hardware HSM, live L2 signer | C | Fail closed. Not claimed. |
 | Live OTS confirmation/txid | C | Not closed. A live pending calendar submit is receipted (`docs/receipts/chain/20260929T144315Z-live-ots-smoke.md`, SHA-256 `a0652ab08af36fe082729db4586c7e76cbbc3caca085d92987d6ae5f9660c80c`). Pools `a.pool` and `b.pool` plus alice and bob returned HTTP 200 pending proofs. After 60 seconds, requery was still pending and GET was HTTP 404 with `Pending confirmation in Bitcoin blockchain`. No txid. Upgrade deferred (hours). Not admission. `live_bitcoin_metadata` stays false. Fixtures stay labeled. |
 | Physical dual-phone Bluetooth media / production H.264 | C | Fail closed. Source container stays non-H.264. |
-| Lyft Concierge / partnership ingest | C | Stay disabled. |
+| Lyft Concierge / partnership ingest | KILLED | Deleted 2026-10-07. |
 | Edge TLS via Caddy (distinct from ngrok HTTPS) | C | Omarchy/DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. ngrok HTTPS is the tunnel, not that AC. |
 | Lab self-signed Authenticode win-x64 on PAYTON-LEGION2 | A lab slice | Closed for the lab path only, after hostile AGREE `docs/receipts/hostile-validator-20260929T135012Z.md`. Subject `CN=RideAudit Lab Self-Signed`, thumbprint `98B8942B143D2D788F635530531C1B2DF0EC3C79`, store `CurrentUser\My`, key NonExportable. Receipt `docs/receipts/distribution/20260929T125539Z-self-signed-desktop-rid-publish.md`. signtool sees the signature and a DigiCert timestamp. `signtool verify /pa` exit 1 (untrusted root). Signed but not Public Trust. SmartScreen will warn. Not Class C. Not a reproducible public signed release. |
 | Commercial OV/IV Authenticode + cloud HSM | C deferred | Operator: self-sign for now; real certs later. Inventory `docs/receipts/distribution/20260929T124653Z-p11b-signing-inventory.md`. Nothing purchased. |
@@ -1608,7 +1610,7 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-001 | P9 |
 | FR-RIDE-002 | P9 |
 | FR-RIDE-003 | P9 |
-| FR-RIDE-004 | P9 |
+| FR-RIDE-004 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-005 | P9 |
 | FR-RIDE-006 | P9 |
 | FR-RIDE-007 | P8 |
@@ -1616,7 +1618,7 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-009 | P8 |
 | FR-RIDE-010 | P10 |
 | FR-RIDE-011 | P9 |
-| FR-RIDE-012 | P9 |
+| FR-RIDE-012 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-013 | P9 |
 | ~~FR-RIDE-014~~ | P10 **OBSOLETE** |
 | FR-RIDE-015 | P3 |
@@ -1660,9 +1662,9 @@ Appendix rows name the **primary implementation owner**. Final acceptance of bro
 | FR-RIDE-201 | P2 |
 | ~~FR-RIDE-202~~ | P10 **OBSOLETE** |
 | ~~FR-RIDE-203~~ | P10 **OBSOLETE** |
-| FR-RIDE-204 | P9 |
+| FR-RIDE-204 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-205 | P10 |
-| FR-RIDE-206 | P9 |
+| FR-RIDE-206 | KILLED | Concierge invent killed 2026-10-07 | - | - | - |
 | FR-RIDE-207 | P10 |
 | ~~FR-RIDE-208~~ | P10 **OBSOLETE** |
 | FR-RIDE-209 | P9 |

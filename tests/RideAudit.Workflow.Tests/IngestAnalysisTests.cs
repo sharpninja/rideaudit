@@ -103,6 +103,24 @@ public class TestRide001Through006And011And030
 
     
     [Fact]
+    [Trait("TEST", "TEST-RIDE-001")]
+    [Trait("FR", "FR-RIDE-011")]
+    [Trait("AC", "AC-RIDE-011-001")]
+    [Trait("AC", "AC-RIDE-011-002")]
+    public void RideAudit_Ingest_path_has_no_HttpClient_and_no_lyft_com_private_api_scrape()
+    {
+        // Natural replacement for the Concierge partnership half deleted in 2e0670e.
+        // FR-RIDE-011: product must not call undocumented Lyft private APIs.
+        var root = ServerWorld.RepoRoot();
+        var ingestDir = Path.Combine(root, "src/RideAudit.Ingest");
+        var sources = string.Join('\n', Directory.GetFiles(ingestDir, "*.cs").Select(File.ReadAllText));
+        Assert.DoesNotContain("HttpClient", sources, StringComparison.Ordinal);
+        Assert.DoesNotContain("lyft.com", sources, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("undocumented Lyft private APIs", IngestSlice.Constraint, StringComparison.Ordinal);
+    }
+
+
+    [Fact]
     [Trait("TEST", "TEST-RIDE-005")]
     [Trait("FR", "FR-RIDE-005")]
     [Trait("AC", "AC-RIDE-005-001")]
@@ -597,7 +615,7 @@ public class TestRide020And036ServerPortions
     public void Octopus_desktop_pointer_is_a_receipt_not_a_live_probe_or_ghcr_row()
     {
         var onFile = DistributionReceipts.OctopusDesktopOnFile;
-        Assert.Equal("Octopus-LAB-OMARCHY", onFile.Environment);
+        Assert.Equal("Octopus-PAYTON-DESKTOP", onFile.Environment);
         Assert.Equal("receipt-on-file", onFile.Status);
         Assert.Equal(DistributionReceipts.PlayNotClaimed, onFile.PlayPublication);
         Assert.Contains("20260929T015822Z-octopus-payton-desktop.md", onFile.Detail, StringComparison.Ordinal);

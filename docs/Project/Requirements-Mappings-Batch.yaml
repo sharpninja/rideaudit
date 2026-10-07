@@ -1,4 +1,4 @@
-# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+﻿# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
 mappings:
   - frId: FR-RIDE-001
     trIds: [TR-RIDE-INGEST-001, TR-RIDE-INGEST-006]
@@ -212,9 +212,6 @@ mappings:
     trIds: [TR-RIDE-ANAL-002]
     testIds: [TEST-RIDE-007]
     useCaseLocalIds: [UC-RIDE-005]
-    trIds: [TR-RIDE-STORE-003, TR-RIDE-PRIV-003]
-    testIds: [TEST-RIDE-010]
-    useCaseLocalIds: [UC-RIDE-008]
   - frId: FR-RIDE-211
     trIds: [TR-RIDE-SEAL-003]
     testIds: [TEST-RIDE-032]
