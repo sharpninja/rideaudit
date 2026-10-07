@@ -66,7 +66,7 @@ public class AcCoverageLedgerTests
         output.AppendLine();
         output.AppendLine("Generated: 2026-10-07 (recount). Workspace: PAYTON-LEGION2. Not a claim that all ACs are satisfied.");
         output.AppendLine();
-        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/partnership/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is LAB-OMARCHY admission 192.168.1.182:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
+        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is LAB-OMARCHY admission 192.168.1.182:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
         output.AppendLine();
         output.AppendLine("| Status | Count |");
         output.AppendLine("| --- | ---: |");
@@ -137,12 +137,8 @@ public class AcCoverageLedgerTests
             return "Deferred: public L2 refuses commit without a signer.";
         if (ContainsAny(blob, "Caddy", "edge TLS", "TLS 1.2"))
             return "Deferred: Omarchy loopback is not an edge TLS receipt.";
-        if (ContainsAny(blob, "Concierge", "partnership"))
-            return "Deferred: Lyft partnership / Concierge live path is not enabled.";
         if (ContainsAny(blob, "vehicle-fit", "on-vehicle print", "road release"))
             return "Deferred: hardware mount road-fit is operator checklist work.";
-        if (record.Id.StartsWith("AC-RIDE-INGEST-004", StringComparison.Ordinal))
-            return "Deferred: Concierge OAuth live partnership is not enabled.";
         if (record.Id is "AC-RIDE-CHAIN-001-002")
             return "Deferred B07: public OTS confirmation / live txid is not claimed; fixture anchors stay labeled.";
         return null;
