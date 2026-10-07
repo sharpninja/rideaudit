@@ -168,7 +168,7 @@ records:
       isSatisfied: false
     briefDescription: Honor DSAR access and deletion for audit-held data.
     basicFlow: |
-      1. Subject or authorized agent requests access or deletion.
+      1. Authenticated driver (data subject) requests access or deletion of their own audit-held data.
       2. Access: export audit-held data with access log.
       3. Deletion: apply deletion and document custody impact.
     title: Data subject access or deletion

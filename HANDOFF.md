@@ -1,5 +1,17 @@
 # RideAudit handoff update (PAYTON-LEGION2)
 
+Written: 2026-10-07 12:57:10 CT (America/Chicago).
+Author: Grok Bot.
+
+## UC-RIDE-008 own-submissions (Payton: already ordered; no re-ask)
+
+- Step 1: Authenticated driver (data subject) requests access or deletion of their own audit-held data.
+- UX UC-RIDE-008 constraint aligned. No RBAC/agent invent.
+- Receipt: docs\receipts\remediation\20261007T175710Z-pr26-uc008-own-submissions.md
+- Do not merge.
+
+---# RideAudit handoff update (PAYTON-LEGION2)
+
 Written: 2026-10-07 12:41:18 CT (America/Chicago).
 Author: Grok Bot.
 

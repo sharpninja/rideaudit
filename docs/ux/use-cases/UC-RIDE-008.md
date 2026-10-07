@@ -40,7 +40,7 @@ flowchart LR
 
 ## Constraints
 
-- The requester is the data subject (Driver) or an authorized agent acting for that driver.
+- The requester is the authenticated Driver (data subject) requesting access or deletion of their own audit-held data. Own-submissions only; no authorized-agent or delegated roles invent.
 - Deletion documents custody impact. It does not rewrite an already anchored custody receipt.
 
 ## Unverified gaps
