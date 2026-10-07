@@ -106,6 +106,15 @@ public class NgrokDeploySecretsTests
         Assert.Contains("192.168.1.182:28080:8080", compose, StringComparison.Ordinal);
         Assert.Contains("192.168.1.182:28081:8080", compose, StringComparison.Ordinal);
         Assert.DoesNotContain("ghcr.io", compose, StringComparison.OrdinalIgnoreCase);
+
+        var octopusRelease = File.ReadAllText(Path.Combine(root, "deploy", "octopus", "Invoke-RideAuditOctopusRelease.ps1"));
+        Assert.Contains("[string]$TargetRole = \"rideaudit-host-lab-omarchy\"", octopusRelease, StringComparison.Ordinal);
+        Assert.DoesNotContain("[string]$TargetRole = \"rideaudit-host\"", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("ambiguous Octopus role", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("refuse role-first fallback to an old host", octopusRelease, StringComparison.Ordinal);
+        var tentacleCompose = File.ReadAllText(Path.Combine(root, "deploy", "octopus", "new-instance", "compose.yaml"));
+        Assert.Contains("TargetRole: rideaudit-host-lab-omarchy", tentacleCompose, StringComparison.Ordinal);
+
     }
 
     [Fact]

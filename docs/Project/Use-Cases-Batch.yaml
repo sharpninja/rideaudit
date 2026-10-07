@@ -552,7 +552,7 @@ records:
       1. Admin reviews compliance configuration.
       2. Auditor exports portable audit ZIP when needed.
       3. System enforces accuracy labeling and remaining NFR gates.
-      4. Counsel confirms legal-hold and privacy controls remain active.
+      4. System applies own-submissions privacy deletion without legal-hold controls (legal hold removed).
     title: Cross-cutting compliance and quality gates
 
   - kind: usecase

@@ -7,7 +7,7 @@ License: GPL-2.0
 | Permission / capability | Why | Minimization |
 |-------------------------|-----|--------------|
 | Camera | Dual-phone video for audit evidence | Only while an active audit session is running; stop on session end. |
-| Fine / coarse location | Trip correlation and custody metadata; may be required for Bluetooth scan on some API levels | Collect at session-appropriate rate; mask in non-counsel views per FR-RIDE-202. |
+| Fine / coarse location | Trip correlation and custody metadata; may be required for Bluetooth scan on some API levels | Collect at session-appropriate rate; keep precise location unmasked per approved FR-RIDE-077 (no FR-RIDE-202 mask/RBAC). |
 | Body sensors / motion (accelerometer, gyro) | Telematics samples and spider-graph overlay (passenger phone) | Prefer SENSOR delay appropriate to audit, not continuous highest rate when idle. |
 | Bluetooth (connect / scan / advertise) | Driver-rider phone discovery and session control | Only for RideAudit pairing; stop advertising when session ends. |
 | Internet | Sealed upload (driver phone), attestation, clock assist | TLS only; no plaintext media egress. |

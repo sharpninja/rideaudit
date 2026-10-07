@@ -12,7 +12,7 @@ From PAYTON-LEGION2:
 
 1. Sync the git tree to the live Linux Docker host over SSH stdin (same constraint as `deploy/omarchy`: the login shell is pwsh, so scp/sftp break). Shell scripts are stripped of CR so bash does not see `\r`.
 2. Prefer the RideAudit Octopus instance `octopus-rideaudit` on `192.168.1.182:18066` when `~\.creds\octopus-rideaudit.cred.xml` exists. The default `octopus-legion2` instance on `:8066` stays up; its node was observed with a dead task engine (`MaxConcurrentTasks=0` / queued since 2026-09-27).
-3. Ensure project **RideAudit**, environment **Development**, and a polling Tentacle (`LAB-OMARCHY-DOCKER`, role `rideaudit-host`) that talks to the host Docker engine through `/var/run/docker.sock`.
+3. Ensure project **RideAudit**, environment **Development**, and a polling Tentacle (`LAB-OMARCHY-DOCKER`, role `rideaudit-host-lab-omarchy`) that talks to the host Docker engine through `/var/run/docker.sock`.
 4. Octopus runs `remote-build-and-run.sh` on that Tentacle. Images stay on the local Docker engine. No GHCR push or pull as the distribution path. Microsoft Container Registry base images (`mcr.microsoft.com/dotnet/*`) are allowed.
 5. Compose project `rideaudit-octopus` binds admission on `192.168.1.182:28080` and counsel on `192.168.1.182:28081`. That is a different stack from `rideaudit-omarchy` on `127.0.0.1:18080`. Do not `docker compose down` Octopus, SQL, Caddy, or the interim Omarchy stack.
 
@@ -43,7 +43,7 @@ The new stack is `octopus-rideaudit`:
 | --- | --- |
 | `octopus-rideaudit-db-1` | SQL 2022 on host `127.0.0.1:1404` |
 | `octopus-rideaudit-octopus-1` | Server HTTP `192.168.1.182:18066`, Tentacle comms `:19112` |
-| `octopus-rideaudit-tentacle-1` | Polling worker, host `docker.sock`, role `rideaudit-host` |
+| `octopus-rideaudit-tentacle-1` | Polling worker, host `docker.sock`, role `rideaudit-host-lab-omarchy` |
 
 `MASTER_KEY` is generated on LEGION2, stored in the remote `.env` and in `~\.creds\octopus-rideaudit.cred.xml` (DPAPI). Recreating Server without that key cannot decrypt the existing database (certificate decrypt crash-loop). Provision creates environment **Development** before starting the Tentacle (registration fails if that environment is missing). Shell CR-stripping uses `sed s/\x0d$//` — GNU `s/\r$//` strips a trailing letter `r` and breaks `docker`. The default `octopus-legion2-*` containers stay up.
 

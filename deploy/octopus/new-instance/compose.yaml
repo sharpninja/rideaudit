@@ -57,7 +57,7 @@ services:
       ServerUrl: http://octopus:8080
       ServerPort: "10943"
       TargetEnvironment: Development
-      TargetRole: rideaudit-host
+      TargetRole: rideaudit-host-lab-omarchy
       TargetName: LAB-OMARCHY-DOCKER
       Space: Default
     extra_hosts:

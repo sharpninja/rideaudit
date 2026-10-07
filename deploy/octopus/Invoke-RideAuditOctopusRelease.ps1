@@ -7,7 +7,7 @@ param(
     [string]$ProjectName = "RideAudit",
     [string]$EnvironmentName = "Development",
     [string]$TargetName = "LAB-OMARCHY-DOCKER",
-    [string]$TargetRole = "rideaudit-host",
+    [string]$TargetRole = "rideaudit-host-lab-omarchy",
     [string]$SshHost = "LAB-OMARCHY",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
     [string]$SshConnectHost = "172.21.0.1",
@@ -130,12 +130,21 @@ function Ensure-LinuxTarget {
     $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
     $existing = @($machines) | Where-Object { $_.Name -eq "LAB-OMARCHY-LINUX" } | Select-Object -First 1
     if ($existing) {
+        $dirty = $false
         if ($existing.Endpoint.Host -ne $SshConnectHost) {
             $existing.Endpoint.Host = $SshConnectHost
             $existing.Endpoint.Uri = "ssh://${SshConnectHost}:22/"
             $existing.Endpoint.Port = 22
+            $dirty = $true
+        }
+        $roles = @($existing.Roles)
+        if (($roles -notcontains $TargetRole) -or ($roles.Count -ne 1) -or ($roles[0] -ne $TargetRole)) {
+            $existing.Roles = @($TargetRole)
+            $dirty = $true
+        }
+        if ($dirty) {
             $existing = Invoke-RideAuditOctopusApi -Connection $Connection -Method PUT -Path "/api/Spaces-1/machines/$($existing.Id)" -Body $existing
-            Write-Host ("updated machine {0} host={1}" -f $existing.Id, $existing.Endpoint.Host)
+            Write-Host ("updated machine {0} host={1} roles={2}" -f $existing.Id, $existing.Endpoint.Host, (($existing.Roles) -join ","))
         }
         Write-Host ("using machine {0} health={1}" -f $existing.Id, $existing.HealthStatus)
         return $existing
@@ -171,20 +180,44 @@ function Wait-RoleTarget {
     $deadline = (Get-Date).AddSeconds($TimeoutSec)
     do {
         $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
-        $named = @($machines) | Where-Object { $_.Name -eq $TargetName } | Select-Object -First 1
-        $roled = @($machines) | Where-Object {
-            @($_.Roles) -contains $TargetRole
-        } | Select-Object -First 1
-        $hit = $named
-        if (-not $hit) { $hit = $roled }
-        if ($hit) {
-            Write-Host ("using target {0} name={1} health={2} style={3}" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
-            return $hit
+        $namedMatches = @(@($machines) | Where-Object { $_.Name -eq $TargetName })
+        $roledMatches = @(@($machines) | Where-Object { @($_.Roles) -contains $TargetRole })
+
+        if (-not [string]::IsNullOrWhiteSpace($TargetName)) {
+            if ($namedMatches.Count -eq 1) {
+                $hit = $namedMatches[0]
+                Write-Host ("using target {0} name={1} health={2} style={3}" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
+                return $hit
+            }
+            if ($namedMatches.Count -gt 1) {
+                throw "ambiguous Octopus targets named $TargetName count=$($namedMatches.Count)"
+            }
+            if ($roledMatches.Count -gt 1) {
+                $names = ($roledMatches | ForEach-Object { $_.Name }) -join ", "
+                throw "ambiguous Octopus role $TargetRole matches multiple targets ($names) while TargetName=$TargetName was set but not found; refuse role-first fallback to an old host"
+            }
+            if ($roledMatches.Count -eq 1) {
+                $hit = $roledMatches[0]
+                Write-Host ("using unique-role target {0} name={1} health={2} style={3} (exact TargetName $TargetName not found)" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
+                return $hit
+            }
         }
-        Write-Host "waiting for tentacle/target role=$TargetRole"
+        else {
+            if ($roledMatches.Count -gt 1) {
+                $names = ($roledMatches | ForEach-Object { $_.Name }) -join ", "
+                throw "ambiguous Octopus role $TargetRole matches multiple targets ($names); set TargetName to the exact machine"
+            }
+            if ($roledMatches.Count -eq 1) {
+                $hit = $roledMatches[0]
+                Write-Host ("using target {0} name={1} health={2} style={3}" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
+                return $hit
+            }
+        }
+
+        Write-Host "waiting for tentacle/target name=$TargetName role=$TargetRole"
         Start-Sleep -Seconds 5
     } while ((Get-Date) -lt $deadline)
-    throw "no Octopus target with name $TargetName or role $TargetRole after $TimeoutSec seconds"
+    throw "no Octopus target with name $TargetName or unique role $TargetRole after $TimeoutSec seconds"
 }
 
 function Start-MachineHealth {
