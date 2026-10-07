@@ -20,57 +20,21 @@ public sealed record ImportResult(
     string GapNotice,
     string Provenance);
 
-public sealed record ConciergePoll(string RideId, double Latitude, double Longitude, string RideStatus, bool Fail, string? Error);
-
-public sealed class ConciergeUnavailable : Exception
-{
-    public ConciergeUnavailable(string message) : base(message)
-    {
-    }
-}
-
-public interface IConciergeStatusSource
-{
-    bool IsConfigured { get; }
-    ConciergePoll Poll(string rideId);
-}
-
-public sealed class NoNetworkConciergeSource : IConciergeStatusSource
-{
-    public bool IsConfigured => false;
-
-    public ConciergePoll Poll(string rideId) =>
-        throw new InvalidOperationException("The unconfigured ride-status connector must not be called.");
-}
-
 public sealed class IngestPipeline
 {
     private readonly NormalizedStore _store;
     private readonly ImportKeyRing _keys;
     private readonly IClock _clock;
-    private readonly PartnershipGate _partnership = new();
 
-    public IngestPipeline(NormalizedStore store, ImportKeyRing keys, IClock clock, IConciergeStatusSource concierge)
+    public IngestPipeline(NormalizedStore store, ImportKeyRing keys, IClock clock)
     {
         _store = store;
         _keys = keys;
         _clock = clock;
-        Concierge = concierge;
     }
 
     public NormalizedStore Store => _store;
     public ImportKeyRing Keys => _keys;
-    public IConciergeStatusSource Concierge { get; set; }
-    public bool PartnershipApproved => _partnership.Approved;
-
-    public PartnershipView SetPartnership(bool approved)
-    {
-        _partnership.Approved = approved;
-        var notice = approved
-            ? "Partnership gate is approved. A configured documented ride-status connector may be polled for organizational rides. Scores are not inferred."
-            : "Partnership gate is closed. The ride-status connector is disabled and was not called.";
-        return new PartnershipView(approved, notice);
-    }
 
     public ImportResult IngestPrivacyExport(IngestCommand command, byte[] zipBytes, string sourceLabel)
     {
@@ -132,47 +96,6 @@ public sealed class IngestPipeline
         return new ImportResult(record.ImportId, "imported", hash, record.Version, "", ProvenanceTags.Manual);
     }
 
-    public ImportResult IngestConcierge(IngestCommand command, string rideId)
-    {
-        RequireConsent(command);
-        if (string.IsNullOrWhiteSpace(rideId))
-            throw new RideAuditException(ErrorCodes.ValidationFailed, "Ride id is required.");
-        if (!_partnership.Approved)
-        {
-            return new ImportResult("", "partnership-disabled", "", 0,
-                "Partnership gate is closed. The ride-status connector was not called. " + ApiGapNotice.Text,
-                ProvenanceTags.Concierge);
-        }
-        if (!Concierge.IsConfigured)
-        {
-            return new ImportResult("", "connector-unconfigured", "", 0,
-                "Partnership is approved and no documented ride-status connector is configured. No request was sent and no Smooth Cruiser score was inferred.",
-                ProvenanceTags.Concierge);
-        }
-
-        ConciergePoll poll;
-        try
-        {
-            poll = Concierge.Poll(rideId);
-        }
-        catch (ConciergeUnavailable ex)
-        {
-            return new ImportResult("", "partial-outage", "", 0,
-                "Ride-status poll failed (" + ex.Message + "). Stored rides were left unchanged and no Smooth Cruiser score was inferred.",
-                ProvenanceTags.Concierge);
-        }
-
-        var canonical = rideId + "|" + poll.Latitude.ToString("G17", System.Globalization.CultureInfo.InvariantCulture) + "|" + poll.Longitude.ToString("G17", System.Globalization.CultureInfo.InvariantCulture) + "|" + poll.RideStatus;
-        var hash = Ids.Hex(Ids.Sha256Utf8(canonical));
-        var existing = _store.FindHash(command.DriverId, hash);
-        if (existing is not null)
-            return new ImportResult(existing.ImportId, "duplicate-hash", hash, existing.Version, "", ProvenanceTags.Concierge);
-        var importId = Ids.New("imp-");
-        _store.Locations.Add(new LocationRow(Ids.New("loc-"), importId, command.DriverId, command.Jurisdiction, _clock.UtcNow.ToUnixTimeMilliseconds(), poll.Latitude, poll.Longitude, ProvenanceTags.Concierge, "coarse-location"));
-        var record = Seal(command, importId, hash, "concierge-status-1", ProvenanceTags.Concierge, "imported", Encoding.UTF8.GetBytes(canonical));
-        return new ImportResult(record.ImportId, "imported", hash, record.Version, ApiGapNotice.Text, ProvenanceTags.Concierge);
-    }
-
     private ImportRecord Seal(IngestCommand command, string importId, string hash, string parserVersion, string provenance, string status, byte[] plaintext)
     {
         var key = RandomNumberGenerator.GetBytes(32);
@@ -232,11 +155,4 @@ public sealed class IngestPipeline
             return fieldNotice;
         return fieldNotice + " " + rest;
     }
-
-    private sealed class PartnershipGate
-    {
-        public bool Approved { get; set; }
-    }
 }
-
-public sealed record PartnershipView(bool Approved, string Notice);

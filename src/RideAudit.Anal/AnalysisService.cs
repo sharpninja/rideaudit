@@ -13,7 +13,7 @@ public sealed record IncidentReport(int TripCount, int ScoreCount, string GapNot
 
 public sealed class AnalysisService
 {
-    private static readonly string[] Signals = ["trip_records", "smooth_cruiser", "online_hours", "precise_gps", "imu", "concierge_location"];
+    private static readonly string[] Signals = ["trip_records", "smooth_cruiser", "online_hours", "precise_gps", "imu"];
     private readonly NormalizedStore _store;
 
     public AnalysisService(NormalizedStore store) => _store = store;
@@ -30,7 +30,7 @@ public sealed class AnalysisService
             var available = Available(driverId, importId, signal);
             var explicitlyMissing = rows.Any(row => row.Availability is "not_collected" or "unknown");
             var missing = !available && (collected || explicitlyMissing || (rows.Count == 0 && signal is "smooth_cruiser" or "imu" or "precise_gps"));
-            var notice = missing && signal is "smooth_cruiser" or "imu" or "precise_gps" or "concierge_location" ? ApiGapNotice.Text : "";
+            var notice = missing && signal is "smooth_cruiser" or "imu" or "precise_gps" ? ApiGapNotice.Text : "";
             cells.Add(new CoverageCell(signal, collected, available, missing, notice));
         }
         return new CoverageMatrix(driverId, cells);
@@ -82,7 +82,6 @@ public sealed class AnalysisService
         "smooth_cruiser" => _store.Scores.Any(row => Match(row.DriverId, row.ImportId, driverId, importId) && row.Provenance is ProvenanceTags.PrivacyExport or ProvenanceTags.Manual),
         "online_hours" => _store.Hours.Any(row => Match(row.DriverId, row.ImportId, driverId, importId)),
         "precise_gps" => _store.Locations.Any(row => Match(row.DriverId, row.ImportId, driverId, importId) && row.Provenance == ProvenanceTags.ThirdParty),
-        "concierge_location" => _store.Locations.Any(row => Match(row.DriverId, row.ImportId, driverId, importId) && row.Provenance == ProvenanceTags.Concierge),
         _ => false
     };
 

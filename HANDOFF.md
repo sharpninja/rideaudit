@@ -3,6 +3,19 @@
 Written: 2026-10-07 (America/Chicago).
 Author: Grok Bot.
 
+## Concierge / partnership gate removed (Payton: out of scope)
+
+- Deleted SetPartnership RPC, PartnershipGate, IngestConcierge, IConciergeStatusSource wiring, Concierge tests. No RBAC invent. No stubs.
+- ingest.proto Contract-Version 0.3.0 without partnership RPCs.
+- STOP: FR-004 / FR-012 / FR-204 / FR-206 / UC-003 / UC-020 / Concierge TR+TEST rows still name Concierge in AGREEd batches/wiki — need Payton kill before MCP scrub.
+- Receipt: docs\receipts\remediation\20261007T164200Z-pr26-concierge-out-of-scope-removed.md
+- Do not merge.
+
+---# RideAudit handoff update (PAYTON-LEGION2)
+
+Written: 2026-10-07 (America/Chicago).
+Author: Grok Bot.
+
 ## PR #26 FR-072 / TEST-052: Python lab toolchain -> C#
 
 - Payton: rewrite model/lab Python in C#; FR/AC is committed in-repo lab artifacts (headrest-mount etc.), not physical LAB-OMARCHY host.
@@ -48,9 +61,9 @@ Author: Grok Bot.
 
 ## PRIORITY 2 done: PrivacyDesk GeoMask/MaskedLocation cleanup
 
-- Census: `GeoMask`/`MaskedLocation` were **name-only** â€” already returned full G17 + Precise=true (FR-077).
-- Renamed â†’ `GeoPresent` / `PresentedLocation`. Retention unchanged (365/730; precise-geo exempt; no CA 30/180) â€” matches FR-078.
-- PrivacySlice checklist â†’ FR-077/078. Tests: 3/3 passed.
+- Census: `GeoMask`/`MaskedLocation` were **name-only** Ã¢â‚¬â€ already returned full G17 + Precise=true (FR-077).
+- Renamed Ã¢â€ â€™ `GeoPresent` / `PresentedLocation`. Retention unchanged (365/730; precise-geo exempt; no CA 30/180) Ã¢â‚¬â€ matches FR-078.
+- PrivacySlice checklist Ã¢â€ â€™ FR-077/078. Tests: 3/3 passed.
 - No About UI. No Camera2/H.264 SEI. PRIORITY 1 (About UI) still queued.
 
 Receipt: `docs/receipts/privacy/*-privacydesk-geomask-cleanup.md` (also under requirements/)
@@ -66,7 +79,7 @@ Author: Grok Bot.
 - Touched: `docs/plans/PLAN-RIDEAUDIT-001-implementation.md`, `docs/plans/PLAN-RIDEAUDIT-001-SERVER.md`.
 - Kill-list invent cites marked OBSOLETE / struck; pointers to FR-077/078 (+ TR-VIDEO-007 / TR-PRIV-004) where AGREEd.
 - ANDROID/BRACKET: no invent rows to scrub (counsel product cites left).
-- No About UI / PrivacyDesk / Camera2 / H.264 / telematics code. PRIORITY 2â†’1 still queued.
+- No About UI / PrivacyDesk / Camera2 / H.264 / telematics code. PRIORITY 2Ã¢â€ â€™1 still queued.
 
 Receipt: `docs/receipts/requirements/*-plan-obsolete-cites-scrub.md`
 
@@ -93,9 +106,9 @@ Author: Grok Bot.
 
 ## FR-RIDE-074 + TEST-RIDE-010 accuracy
 
-- **FR-RIDE-074:** still Draft pending separate Payton AGREE. No AGREE invented. MCPâ†”Additive batch consistent. Exact Draft text in receipt for Payton to AGREE/reject. No About UI code.
+- **FR-RIDE-074:** still Draft pending separate Payton AGREE. No AGREE invented. MCPÃ¢â€ â€Additive batch consistent. Exact Draft text in receipt for Payton to AGREE/reject. No About UI code.
 - **FR-RIDE-010:** sole AC is AC-RIDE-010-001 access export (AC-002 legal-hold already killed). Disk notes synced.
-- **TEST-RIDE-010:** option (a) access-export only. Title `DSAR access deletion` â†’ `DSAR access export`. Description unchanged (`Access export works.`). No deletion test invented.
+- **TEST-RIDE-010:** option (a) access-export only. Title `DSAR access deletion` Ã¢â€ â€™ `DSAR access export`. Description unchanged (`Access export works.`). No deletion test invented.
 
 Receipt: `docs/receipts/requirements/*-fr074-test010-accuracy.md`
 
@@ -110,7 +123,7 @@ Author: Grok Bot.
 Payton AGREED Candidates A+B; priority high on all four.
 
 - MCP: FR-RIDE-077, TR-RIDE-VIDEO-007, FR-RIDE-078, TR-RIDE-PRIV-004 created (status pending; notes `approval: Payton AGREE 2026-10-07`; acceptanceCriteria empty).
-- Mappings: FR-077â†’TR-VIDEO-007; FR-078â†’TR-PRIV-004.
+- Mappings: FR-077Ã¢â€ â€™TR-VIDEO-007; FR-078Ã¢â€ â€™TR-PRIV-004.
 - Disk: Functional / Technical / Mappings batch YAML appended.
 - Descriptions verbatim from AGREE draft (Exact on FRs; Role body on TRs). No invented AC/mask/RBAC/legal-hold. No feature code.
 
@@ -122,7 +135,7 @@ Receipt: `docs/receipts/requirements/20261007T151421Z-bdpv4-agree-mcp-write.md`
 Written: 2026-10-07 10:12 CT (America/Chicago).
 Author: Grok Bot.
 
-## BDPv4 AGREE â†’ MCP write STOPPED (Accuracy)
+## BDPv4 AGREE Ã¢â€ â€™ MCP write STOPPED (Accuracy)
 
 Payton AGREED BDPv4 Candidates A+B. Accuracy addendum forbids inventing forced fields.
 
@@ -133,7 +146,7 @@ Payton AGREED BDPv4 Candidates A+B. Accuracy addendum forbids inventing forced f
 
 Receipt: `docs/receipts/requirements/20261007T151201Z-bdpv4-agree-schema-gap-stop.md`
 
-Unblock: supply `priority` (critical|high|medium) for the four ids; confirm Roleâ†’title and TR description=Role text; re-dispatch write.
+Unblock: supply `priority` (critical|high|medium) for the four ids; confirm RoleÃ¢â€ â€™title and TR description=Role text; re-dispatch write.
 
 ---
 # RideAudit handoff update (PAYTON-LEGION2)

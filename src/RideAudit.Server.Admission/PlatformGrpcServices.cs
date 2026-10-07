@@ -121,21 +121,7 @@ public sealed class IngestGrpcService : ProtoIngest.IngestBase
         return Task.FromResult(Map(result));
     }
 
-    public override Task<PartnershipStatus> SetPartnership(SetPartnershipRequest request, ServerCallContext context)
-    {
-        PlatformAuth.Require(_app, context);
-        var view = _app.Ingest.SetPartnership(request.Approved);
-        return Task.FromResult(new PartnershipStatus { Approved = view.Approved, Notice = view.Notice });
-    }
-
-    public override Task<IngestPrivacyExportResponse> IngestConciergeStatus(IngestConciergeStatusRequest request, ServerCallContext context)
-    {
-        var caller = PlatformAuth.Require(_app, context);
-        var result = _app.Ingest.IngestConcierge(Command(caller, request.ConsentGranted, request.ConsentStatement, request.Jurisdiction, request.Purpose, ProvenanceTags.Concierge), request.RideId);
-        return Task.FromResult(Map(result));
-    }
-
-    private static IngestCommand Command(DriverPrincipal caller, bool consent, string statement, string jurisdiction, string purpose, string provenance) =>
+            private static IngestCommand Command(DriverPrincipal caller, bool consent, string statement, string jurisdiction, string purpose, string provenance) =>
         new(caller.DriverId, jurisdiction, purpose, statement, consent, provenance);
 
     private static IngestPrivacyExportResponse Map(ImportResult result) => new()

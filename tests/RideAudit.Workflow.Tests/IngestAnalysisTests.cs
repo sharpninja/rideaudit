@@ -81,7 +81,7 @@ public class TestRide001Through006And011And030
         var rejected = world.App.Ingest.IngestPrivacyExport(Consent(driver.DriverId), mislabeled, "driver-upload");
         Assert.Equal("imported-with-gap", rejected.Status);
         Assert.Equal(2, world.App.Imports.Scores.Count);
-        Assert.DoesNotContain(world.App.Imports.Scores, row => row.Provenance == ProvenanceTags.Concierge);
+        Assert.DoesNotContain(world.App.Imports.Scores, row => row.Provenance == "lyft_concierge_api");
     }
 
     [Fact]
@@ -101,38 +101,7 @@ public class TestRide001Through006And011And030
         Assert.True(trip.EndedUnixMillis > trip.StartedUnixMillis);
     }
 
-    [Fact]
-    [Trait("TEST", "TEST-RIDE-004")]
-    [Trait("FR", "FR-RIDE-004")]
-    [Trait("FR", "FR-RIDE-011")]
-    [Trait("FR", "FR-RIDE-012")]
-    [Trait("AC", "AC-RIDE-011-001")]
-    [Trait("AC", "AC-RIDE-011-002")]
-    [Trait("AC", "AC-UC-020-001")]
-    [Trait("AC", "AC-TEST-004-001")]
-    [Trait("AC", "AC-TEST-004-002")]
-    public void Concierge_stays_behind_the_partnership_gate_and_does_not_call_a_private_api()
-    {
-        var root = ServerWorld.RepoRoot();
-        var ingestDir = Path.Combine(root, "src/RideAudit.Ingest");
-        var sources = string.Join('\n', Directory.GetFiles(ingestDir, "*.cs").Select(File.ReadAllText));
-        Assert.DoesNotContain("HttpClient", sources, StringComparison.Ordinal);
-        Assert.DoesNotContain("lyft.com", sources, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("undocumented Lyft private APIs", IngestSlice.Constraint, StringComparison.Ordinal);
-
-        var world = ServerWorld.Create();
-        var driver = world.Register();
-        var closed = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-1");
-        Assert.Equal("partnership-disabled", closed.Status);
-        Assert.Contains("not called", closed.GapNotice, StringComparison.OrdinalIgnoreCase);
-        Assert.Empty(world.App.Imports.Locations);
-        var opened = world.App.Ingest.SetPartnership(true);
-        Assert.True(opened.Approved);
-        var unconfigured = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-1");
-        Assert.Equal("connector-unconfigured", unconfigured.Status);
-        Assert.Empty(world.App.Imports.Scores);
-    }
-
+    
     [Fact]
     [Trait("TEST", "TEST-RIDE-005")]
     [Trait("FR", "FR-RIDE-005")]
@@ -155,7 +124,6 @@ public class TestRide001Through006And011And030
         var sample = Assert.Single(world.App.Imports.Locations);
         Assert.Equal("third-party-sample", sample.MetricKind);
         Assert.NotEqual(ProvenanceTags.PrivacyExport, sample.Provenance);
-        Assert.NotEqual(ProvenanceTags.Concierge, sample.Provenance);
         Assert.Empty(world.App.Imports.Scores);
     }
 
@@ -210,38 +178,7 @@ public class TestRide001Through006And011And030
         Assert.NotEqual(first.ContentHashHex, other.ContentHashHex);
     }
 
-    [Fact]
-    [Trait("TEST", "TEST-RIDE-030")]
-    [Trait("FR", "FR-RIDE-204")]
-    [Trait("FR", "FR-RIDE-206")]
-    [Trait("AC", "AC-TEST-030-001")]
-    [Trait("AC", "AC-TEST-030-002")]
-    public void Ride_status_outage_does_not_corrupt_rides_or_invent_a_smooth_cruiser_score()
-    {
-        var world = ServerWorld.Create();
-        var driver = world.Register();
-        world.App.Ingest.SetPartnership(true);
-        var script = new ScriptedConcierge();
-        script.Queue.Enqueue(new ConciergePoll("ride-1", 0, 0, "", true, "rate limited"));
-        script.Queue.Enqueue(new ConciergePoll("ride-2", 37.7, -122.4, "pickedUp", false, null));
-        world.App.Ingest.Concierge = script;
-
-        world.App.Ingest.IngestPrivacyExport(Consent(driver.DriverId), ExportZip(true, false), "driver-upload");
-        var before = world.App.Imports.Trips.Count;
-        var outage = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-1");
-        Assert.Equal("partial-outage", outage.Status);
-        Assert.Equal(before, world.App.Imports.Trips.Count);
-        Assert.Empty(world.App.Imports.Locations);
-        Assert.DoesNotContain(world.App.Imports.Scores, row => row.Provenance == ProvenanceTags.Concierge);
-
-        var ok = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-2");
-        Assert.Equal("imported", ok.Status);
-        var sample = Assert.Single(world.App.Imports.Locations);
-        Assert.Equal("coarse-location", sample.MetricKind);
-        Assert.Equal(ProvenanceTags.Concierge, sample.Provenance);
-        Assert.Single(world.App.Imports.Scores);
-    }
-
+    
     internal static IngestCommand Consent(string driverId) =>
         new(driverId, "US-CA", "court-audit", "I consent to sealed custody of this import.", true, ProvenanceTags.PrivacyExport);
 
@@ -275,23 +212,6 @@ public class TestRide001Through006And011And030
     }
 }
 
-public sealed class ScriptedConcierge : IConciergeStatusSource
-{
-    public Queue<ConciergePoll> Queue { get; } = new();
-    public int Calls { get; private set; }
-    public bool IsConfigured => true;
-
-    public ConciergePoll Poll(string rideId)
-    {
-        Calls++;
-        if (Queue.Count == 0)
-            throw new ConciergeUnavailable("empty script");
-        var next = Queue.Dequeue();
-        if (next.Fail)
-            throw new ConciergeUnavailable(next.Error ?? "outage");
-        return next with { RideId = rideId };
-    }
-}
 
 public class TestRide007Through009And016And023
 {

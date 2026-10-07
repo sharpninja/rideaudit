@@ -157,7 +157,7 @@ public static class AdmissionHost
             identity, play, ots, anchoring, hsm, journal, abuse, alerts, logs, redactor, access, clockService, archive, options.PolicyVersion, l2Client);
         var imports = new NormalizedStore();
         var keys = new ImportKeyRing();
-        var ingest = new IngestPipeline(imports, keys, clockService, new NoNetworkConciergeSource());
+        var ingest = new IngestPipeline(imports, keys, clockService);
         var analysis = new AnalysisService(imports);
         var recordSource = new JournalRecordSource(journal);
         var counsel = new CounselDesk(recordSource);
