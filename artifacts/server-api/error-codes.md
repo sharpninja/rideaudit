@@ -22,8 +22,6 @@ Machine-readable `code` values. The gRPC status mapping in `RideAudit.Server.Adm
 | `INTERNAL_ERROR` | 500 | Unexpected server fault (no sensitive detail) |
 | `NOT_IMPLEMENTED` | 501 | Reserved. Counsel, ingest, and privacy RPCs in this tree are implemented. |
 | `CONSENT_REQUIRED` | 422 | Import refused because consent was not granted |
-| `PARTNERSHIP_DISABLED` | 422 | Ride-status connector is gated off |
-| `LEGAL_HOLD_ACTIVE` | 422 | Deletion or retention removal blocked by a legal hold |
 | `IMPORT_REJECTED` | 422 | Raw import could not be parsed |
 | `CONFIG_PROFILE_INVALID` | 422 | Missing or invalid vehicle configuration profile |
 | `CHAIN_UNCONFIRMED` | 422 | Anchor pending or otherwise not confirmed |

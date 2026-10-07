@@ -101,7 +101,7 @@ public class TestRide001Through006And011And030
         Assert.True(trip.EndedUnixMillis > trip.StartedUnixMillis);
     }
 
-    
+
     [Fact]
     [Trait("TEST", "TEST-RIDE-001")]
     [Trait("FR", "FR-RIDE-011")]
@@ -196,7 +196,7 @@ public class TestRide001Through006And011And030
         Assert.NotEqual(first.ContentHashHex, other.ContentHashHex);
     }
 
-    
+
     internal static IngestCommand Consent(string driverId) =>
         new(driverId, "US-CA", "court-audit", "I consent to sealed custody of this import.", true, ProvenanceTags.PrivacyExport);
 

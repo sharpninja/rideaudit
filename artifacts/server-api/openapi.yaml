@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
   title: RideAudit Public Sealed-Submission API
-  version: 0.2.0
+  version: 0.3.0
   x-rideaudit-contract-authority: non-authoritative-companion
   x-rideaudit-authoritative-contract: src/RideAudit.Protos
   description: |
     NON-AUTHORITATIVE COMPANION. This OpenAPI document is a human-readable
     companion only (FR-RIDE-062, TR-RIDE-SERVER-010, UC-RIDE-031). It is not
     the wire contract. Authoritative gRPC protobuf contracts live at
-    src/RideAudit.Protos/ (contract version 0.2.0). When this document and the
+    src/RideAudit.Protos/ (contract version 0.3.0). When this document and the
     protos disagree, including REST paths versus gRPC methods, conformance
     binds to grpc-protobuf.
 
