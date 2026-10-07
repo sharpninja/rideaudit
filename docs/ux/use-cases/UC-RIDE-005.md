@@ -31,7 +31,7 @@ flowchart LR
 
 ## Relationships
 
-- No «include» or «extend». The basic flow is one use case: open the subject coverage view, list Lyft-collected categories against audit-available data, and mark missing signals with the API-gap notice.
+- No Â«includeÂ» or Â«extendÂ». The basic flow is one use case: open the subject coverage view, list Lyft-collected categories against audit-available data, and mark missing signals with the API-gap notice.
 
 ## Constraints
 
@@ -39,7 +39,7 @@ flowchart LR
 
 ## Unverified gaps
 
-Which signal categories a privacy export or Concierge status poll actually contains remains Unverified where the source requirements say so. The matrix shows those gaps instead of inferring the missing signals.
+Which signal categories a privacy export actually contains remains Unverified where the source requirements say so. The matrix shows those gaps instead of inferring the missing signals.
 
 ## Related
 

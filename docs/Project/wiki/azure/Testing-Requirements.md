@@ -26,14 +26,6 @@ Map trip fields when present; leave missing null.
 - [ ] Test TEST-RIDE-003 passes for happy path of covered requirements.
 - [ ] Failure cases assert non-admission or clear error without inventing Lyft APIs.
 
-### TEST-RIDE-004
-
-With partnership approved, poll documented status only; when denied, features disabled; no private APIs.
-
-**Acceptance Criteria:**
-- [ ] Test TEST-RIDE-004 passes for happy path of covered requirements.
-- [ ] Failure cases assert non-admission or clear error without inventing Lyft APIs.
-
 ### TEST-RIDE-005
 
 Import CSV/JSON and assert third_party_telematics provenance.
@@ -227,14 +219,6 @@ TLS 1.2+; secrets in vault; no plaintext tokens in logs; private keys not in app
 - [ ] Test TEST-RIDE-029 passes for happy path of covered requirements.
 - [ ] Failure cases assert non-admission or clear error without inventing Lyft APIs.
 
-### TEST-RIDE-030
-
-Rate-limit/outage does not corrupt rides; Concierge-derived metrics not labeled Smooth Cruiser.
-
-**Acceptance Criteria:**
-- [ ] Test TEST-RIDE-030 passes for happy path of covered requirements.
-- [ ] Failure cases assert non-admission or clear error without inventing Lyft APIs.
-
 ### TEST-RIDE-031
 
 Large histories paginate; export ZIP has CSV+PDF+provenance JSON.
@@ -423,10 +407,10 @@ Verify screenshot validation checks usability in addition to baseline comparison
 Verify the bottom panel About control opens the About view, the About view shows the UI copyright and third-party attributions (licenses and credits), and the top title bar does not show that copyright. Copyright alone fails.
 
 **Acceptance Criteria:**
-- [ ] Activating the bottom-panel About control opens the About view.
-- [ ] The About view shows the RideAudit UI copyright.
-- [ ] The top title bar does not show the copyright notice. A copyright string left on that chrome fails.
-- [ ] The About view includes third-party attributions (licenses and credits). An About view that shows copyright only fails.
+- [x] Activating the bottom-panel About control opens the About view.
+- [x] The About view shows the RideAudit UI copyright.
+- [x] The top title bar does not show the copyright notice. A copyright string left on that chrome fails.
+- [x] The About view includes third-party attributions (licenses and credits). An About view that shows copyright only fails.
 
 ### TEST-RIDE-056
 

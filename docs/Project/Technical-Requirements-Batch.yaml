@@ -49,22 +49,6 @@ records:
         text: "Missing fields not invented."
         isSatisfied: false
   - kind: tr
-    id: TR-RIDE-INGEST-004
-    title: "Concierge OAuth and status poller"
-    description: "Optional Concierge client using documented OAuth and /concierge/rides/{id}/status only for org-booked active rides."
-    priority: medium
-    area: RIDE
-    subarea: INGEST
-    status: pending
-    notes: "Implements/supports: FR-RIDE-004, FR-RIDE-012"
-    acceptanceCriteria:
-      - id: AC-RIDE-INGEST-004-001
-        text: "Uses documented Concierge status endpoint only."
-        isSatisfied: false
-      - id: AC-RIDE-INGEST-004-002
-        text: "Disabled when partnership denied."
-        isSatisfied: false
-  - kind: tr
     id: TR-RIDE-INGEST-005
     title: "Third-party telematics importers"
     description: "CSV/JSON importers for GPS, speed, harsh events with third_party_telematics provenance."
@@ -83,7 +67,7 @@ records:
   - kind: tr
     id: TR-RIDE-INGEST-006
     title: "Honesty provenance tagging"
-    description: "Tag each field with provenance enum: lyft_privacy_export | lyft_concierge_api | in_app_manual | third_party_telematics | unverified."
+    description: "Tag each field with provenance enum: lyft_privacy_export | in_app_manual | third_party_telematics | unverified."
     priority: high
     area: RIDE
     subarea: INGEST

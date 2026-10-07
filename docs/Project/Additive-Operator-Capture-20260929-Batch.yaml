@@ -816,9 +816,11 @@ records:
     description: >
       RideAudit lab work prefers accuracy over convenience and keeps a receipt
       for the path and the result. Paths are not silently substituted. Python
-      is not used in the lab toolchain. Committed lab text does not use em or
-      en dashes. Execution waits for approval, except lab work on LAB-OMARCHY
-      and PAYTON-LEGION2 which is go-by-default.
+      is not used in the committed in-repo lab toolchain (for example
+      artifacts/hardware/headrest-phone-mount and its docs); this FR does not
+      constrain languages installed on a physical LAB-OMARCHY host. Committed
+      lab text does not use em or en dashes. Execution waits for approval,
+      except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
     priority: high
     area: RIDE
     status: pending
@@ -833,7 +835,7 @@ records:
         text: A required path is not silently replaced with a different path.
         isSatisfied: false
       - id: AC-RIDE-072-003
-        text: The RideAudit lab toolchain does not use Python.
+        text: The committed in-repo RideAudit lab toolchain (artifacts/hardware and related lab docs that invoke it) does not use Python.
         isSatisfied: false
       - id: AC-RIDE-072-004
         text: Committed lab text does not contain em dashes or en dashes.
@@ -869,10 +871,10 @@ records:
     id: TR-RIDE-LAB-004
     title: Lab conduct checks
     description: >
-      Check RideAudit lab changes for a receipt, an unchanged documented path,
-      absence of Python lab tooling, absence of em and en dashes, and the
-      approve-before-execute rule with go-by-default only on LAB-OMARCHY
-      and PAYTON-LEGION2.
+      Check RideAudit committed lab toolchain under artifacts/hardware for a
+      receipt, an unchanged documented path, absence of Python lab tooling,
+      absence of em and en dashes, and the approve-before-execute rule with
+      go-by-default only on PAYTON-DESKTOP and PAYTON-LEGION2.
     priority: high
     area: RIDE
     subarea: LAB
@@ -885,16 +887,19 @@ records:
         text: A lab change cites its receipt and the path it actually used.
         isSatisfied: false
       - id: AC-RIDE-LAB-004-002
-        text: Lab scripts are not Python, committed text has no em or en dash, and non-lab hosts still require approval.
+        text: Lab scripts under the committed lab toolchain are not Python, committed lab text has no em or en dash, and non-lab hosts still require approval.
         isSatisfied: false
 
   - kind: test
     id: TEST-RIDE-052
     title: Lab conduct receipt and dash scan
     description: >
-      Verify a lab change includes a receipt, does not silently substitute
-      paths, does not add Python lab tooling, and does not add em or en dashes.
-      Confirm go-by-default is limited to LAB-OMARCHY and PAYTON-LEGION2.
+      Verify the committed in-repo lab toolchain under artifacts/hardware
+      includes a receipt reference, does not silently substitute paths, does
+      not use Python lab tooling, and does not contain em or en dashes.
+      Confirm go-by-default is limited to PAYTON-DESKTOP and PAYTON-LEGION2.
+      Scope is in-repo lab artifacts (for example headrest-phone-mount), not
+      languages on a physical LAB-OMARCHY host.
     priority: high
     area: RIDE
     status: pending
@@ -903,10 +908,10 @@ records:
       approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-TEST-052-001
-        text: A scan of the lab change finds a receipt reference and no em or en dash characters.
+        text: A scan of the committed lab tree under artifacts/hardware finds a receipt reference and no em or en dash characters.
         isSatisfied: false
       - id: AC-TEST-052-002
-        text: The change does not add Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for LAB-OMARCHY and PAYTON-LEGION2.
+        text: The committed lab toolchain under artifacts/hardware does not use Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for PAYTON-DESKTOP and PAYTON-LEGION2.
         isSatisfied: false
 
   - kind: fr

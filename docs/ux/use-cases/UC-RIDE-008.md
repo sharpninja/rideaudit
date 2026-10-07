@@ -48,5 +48,3 @@ flowchart LR
 None specific to this use case beyond the project rule: do not invent Lyft private APIs, and keep source Unverified caveats visible where they apply.
 
 ## Related
-
-- Optional Concierge poll remains out of this DSAR use case.

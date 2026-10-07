@@ -7,7 +7,6 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | FR-RIDE-001 | Tracked | Functional-Requirements.md |
 | FR-RIDE-002 | Tracked | Functional-Requirements.md |
 | FR-RIDE-003 | Tracked | Functional-Requirements.md |
-| FR-RIDE-004 | Tracked | Functional-Requirements.md |
 | FR-RIDE-005 | Tracked | Functional-Requirements.md |
 | FR-RIDE-006 | Tracked | Functional-Requirements.md |
 | FR-RIDE-007 | Tracked | Functional-Requirements.md |
@@ -15,7 +14,6 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | FR-RIDE-009 | Tracked | Functional-Requirements.md |
 | FR-RIDE-010 | Tracked | Functional-Requirements.md |
 | FR-RIDE-011 | Tracked | Functional-Requirements.md |
-| FR-RIDE-012 | Tracked | Functional-Requirements.md |
 | FR-RIDE-013 | Tracked | Functional-Requirements.md |
 | FR-RIDE-015 | Tracked | Functional-Requirements.md |
 | FR-RIDE-016 | Tracked | Functional-Requirements.md |
@@ -78,10 +76,10 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | FR-RIDE-074 | Tracked | Functional-Requirements.md |
 | FR-RIDE-075 | Tracked | Functional-Requirements.md |
 | FR-RIDE-076 | Tracked | Functional-Requirements.md |
+| FR-RIDE-077 | Tracked | Functional-Requirements.md |
+| FR-RIDE-078 | Tracked | Functional-Requirements.md |
 | FR-RIDE-201 | Tracked | Functional-Requirements.md |
-| FR-RIDE-204 | Tracked | Functional-Requirements.md |
 | FR-RIDE-205 | Tracked | Functional-Requirements.md |
-| FR-RIDE-206 | Tracked | Functional-Requirements.md |
 | FR-RIDE-207 | Tracked | Functional-Requirements.md |
 | FR-RIDE-209 | Tracked | Functional-Requirements.md |
 | FR-RIDE-211 | Tracked | Functional-Requirements.md |
@@ -121,7 +119,6 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | TR-RIDE-INGEST-001 | Tracked | Technical-Requirements.md |
 | TR-RIDE-INGEST-002 | Tracked | Technical-Requirements.md |
 | TR-RIDE-INGEST-003 | Tracked | Technical-Requirements.md |
-| TR-RIDE-INGEST-004 | Tracked | Technical-Requirements.md |
 | TR-RIDE-INGEST-005 | Tracked | Technical-Requirements.md |
 | TR-RIDE-INGEST-006 | Tracked | Technical-Requirements.md |
 | TR-RIDE-LAB-001 | Tracked | Technical-Requirements.md |
@@ -136,6 +133,7 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | TR-RIDE-PLAY-003 | Tracked | Technical-Requirements.md |
 | TR-RIDE-PRIV-001 | Tracked | Technical-Requirements.md |
 | TR-RIDE-PRIV-003 | Tracked | Technical-Requirements.md |
+| TR-RIDE-PRIV-004 | Tracked | Technical-Requirements.md |
 | TR-RIDE-SEAL-001 | Tracked | Technical-Requirements.md |
 | TR-RIDE-SEAL-002 | Tracked | Technical-Requirements.md |
 | TR-RIDE-SEAL-003 | Tracked | Technical-Requirements.md |
@@ -159,6 +157,7 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | TR-RIDE-VIDEO-004 | Tracked | Technical-Requirements.md |
 | TR-RIDE-VIDEO-005 | Tracked | Technical-Requirements.md |
 | TR-RIDE-VIDEO-006 | Tracked | Technical-Requirements.md |
+| TR-RIDE-VIDEO-007 | Tracked | Technical-Requirements.md |
 | TR-RIDE-VIDEO-010 | Tracked | Technical-Requirements.md |
 | TR-RIDE-VIDEO-011 | Tracked | Technical-Requirements.md |
 | TR-RIDE-VIDEO-012 | Tracked | Technical-Requirements.md |
@@ -178,7 +177,6 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | TEST-RIDE-001 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-002 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-003 | Tracked | Testing-Requirements.md |
-| TEST-RIDE-004 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-005 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-006 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-007 | Tracked | Testing-Requirements.md |
@@ -203,7 +201,6 @@ Traceability policy: see `Requirements-Traceability-Policy.md`.
 | TEST-RIDE-027 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-028 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-029 | Tracked | Testing-Requirements.md |
-| TEST-RIDE-030 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-031 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-033 | Tracked | Testing-Requirements.md |
 | TEST-RIDE-034 | Tracked | Testing-Requirements.md |

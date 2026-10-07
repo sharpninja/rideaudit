@@ -223,7 +223,7 @@ Scope: layer-1+
 ## TR-RIDE-INGEST-001
 
 **Privacy-export ZIP parser** — Implement DataDictionary-driven ZIP parser with Unverified tagging for unknown types.
-**Covered by:** FR: FR-RIDE-001, FR-RIDE-011; TEST: TEST-RIDE-001, TEST-RIDE-004
+**Covered by:** FR: FR-RIDE-001, FR-RIDE-011; TEST: TEST-RIDE-001
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
@@ -233,7 +233,7 @@ Scope: layer-1+
 ## TR-RIDE-INGEST-002
 
 **Smooth Cruiser structured and manual ingest** — Support structured field ingest and consented screenshot/manual entry with provenance tags.
-**Covered by:** FR: FR-RIDE-002, FR-RIDE-011; TEST: TEST-RIDE-002, TEST-RIDE-004
+**Covered by:** FR: FR-RIDE-002, FR-RIDE-011; TEST: TEST-RIDE-002
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
@@ -250,16 +250,6 @@ Scope: layer-1+
 - [ ] Trip fields mapped when present.
 - [ ] Missing fields not invented.
 
-## TR-RIDE-INGEST-004
-
-**Concierge OAuth and status poller** — Optional Concierge client using documented OAuth and /concierge/rides/{id}/status only for org-booked active rides.
-**Covered by:** FR: FR-RIDE-004, FR-RIDE-012; TEST: TEST-RIDE-004
-**Status:** pending
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Uses documented Concierge status endpoint only.
-- [ ] Disabled when partnership denied.
-
 ## TR-RIDE-INGEST-005
 
 **Third-party telematics importers** — CSV/JSON importers for GPS, speed, harsh events with third_party_telematics provenance.
@@ -272,7 +262,7 @@ Scope: layer-1+
 
 ## TR-RIDE-INGEST-006
 
-**Honesty provenance tagging** — Tag each field with provenance enum: lyft_privacy_export | lyft_concierge_api | in_app_manual | third_party_telematics | unverified.
+**Honesty provenance tagging** — Tag each field with provenance enum: lyft_privacy_export | in_app_manual | third_party_telematics | unverified.
 **Covered by:** FR: FR-RIDE-001, FR-RIDE-005, FR-RIDE-006; TEST: TEST-RIDE-001, TEST-RIDE-005, TEST-RIDE-006
 **Status:** pending
 Scope: layer-1+
@@ -312,13 +302,13 @@ Scope: layer-1+
 
 ## TR-RIDE-LAB-004
 
-**Lab conduct checks** — Check RideAudit lab changes for a receipt, an unchanged documented path, absence of Python lab tooling, absence of em and en dashes, and the approve-before-execute rule with go-by-default only on PAYTON-DESKTOP and PAYTON-LEGION2.
+**Lab conduct checks** — Check RideAudit committed lab toolchain under artifacts/hardware for a receipt, an unchanged documented path, absence of Python lab tooling, absence of em and en dashes, and the approve-before-execute rule with go-by-default only on PAYTON-DESKTOP and PAYTON-LEGION2.
 **Covered by:** FR: FR-RIDE-072; TEST: TEST-RIDE-052
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] A lab change cites its receipt and the path it actually used.
-- [ ] Lab scripts are not Python, committed text has no em or en dash, and non-lab hosts still require approval.
+- [ ] Lab scripts under the committed lab toolchain are not Python, committed lab text has no em or en dash, and non-lab hosts still require approval.
 
 ## TR-RIDE-PERF-001
 
@@ -396,6 +386,13 @@ Scope: layer-1+
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Access export available.
+
+## TR-RIDE-PRIV-004
+
+**Technical: retention timers must not apply CA third-party 30-day / location 180-day deletion frames to driver-owned vehicle evidentiary capture** — retention timers must not apply CA third-party 30-day / location 180-day deletion frames to driver-owned vehicle evidentiary capture
+**Covered by:** FR: FR-RIDE-078
+**Status:** pending
+Scope: layer-1+
 
 ## TR-RIDE-SEAL-001
 
@@ -531,7 +528,7 @@ Scope: layer-1+
 ## TR-RIDE-STORE-001
 
 **Sealed immutable blob store** — Store original imports only as sealed immutable ciphertext blobs plus custody receipts; normalized tables must not replace sealed originals.
-**Covered by:** FR: FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207; TEST: TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031
+**Covered by:** FR: FR-RIDE-013, FR-RIDE-015, FR-RIDE-207; TEST: TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
@@ -541,7 +538,7 @@ Scope: layer-1+
 ## TR-RIDE-STORE-002
 
 **Versioned correction events** — Never rewrite a sealed blob; corrections create new version/event preserving original ciphertext, hash, and receipt.
-**Covered by:** FR: FR-RIDE-013, FR-RIDE-015, FR-RIDE-204, FR-RIDE-206, FR-RIDE-207; TEST: TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-030, TEST-RIDE-031
+**Covered by:** FR: FR-RIDE-013, FR-RIDE-015, FR-RIDE-207; TEST: TEST-RIDE-011, TEST-RIDE-013, TEST-RIDE-031
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
@@ -616,6 +613,13 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Quotas and size limits enforced.
 - [ ] Chunk integrity verified; resumable uploads work.
+
+## TR-RIDE-VIDEO-007
+
+**Technical: SEI NAL units carry real-time per-picture accelerometer and precise location matched to each picture** — SEI NAL units carry real-time per-picture accelerometer and precise location matched to each picture
+**Covered by:** FR: FR-RIDE-077
+**Status:** pending
+Scope: layer-1+
 
 ## TR-RIDE-VIDEO-010
 
@@ -774,8 +778,8 @@ Scope: layer-1+
 **Status:** pending
 Scope: layer-1+
 **Acceptance Criteria:**
-- [ ] The shared UI has an About view whose content includes the UI copyright.
-- [ ] A bottom-panel About control navigates to that About view.
-- [ ] The top title bar does not render the copyright notice.
-- [ ] The About view includes third-party attributions (licenses and credits). Copyright without those attributions does not satisfy this AC.
+- [x] The shared UI has an About view whose content includes the UI copyright.
+- [x] A bottom-panel About control navigates to that About view.
+- [x] The top title bar does not render the copyright notice.
+- [x] The About view includes third-party attributions (licenses and credits). Copyright without those attributions does not satisfy this AC.
 

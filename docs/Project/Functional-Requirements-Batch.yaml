@@ -1,4 +1,4 @@
-﻿# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
 records:
   - kind: fr
     id: FR-RIDE-001
@@ -50,24 +50,6 @@ records:
         isSatisfied: false
       - id: AC-RIDE-003-002
         text: "Missing trip fields are left null and flagged, not invented."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-004
-    title: "Optional Concierge/Business API integration"
-    description: "Optionally integrate Lyft Concierge/Business API: OAuth client credentials, program linkage, poll /concierge/rides/{id}/status for driver_location during active organizational rides only."
-    priority: medium
-    area: RIDE
-    status: pending
-    notes: "Original FR-4. Concierge provides coarse driver_location for org-booked rides only. No public driver telematics API. Unverified partnership extras."
-    acceptanceCriteria:
-      - id: AC-RIDE-004-001
-        text: "OAuth client-credentials flow works when Business partnership is approved."
-        isSatisfied: false
-      - id: AC-RIDE-004-002
-        text: "Polling is limited to active organizational rides the org booked."
-        isSatisfied: false
-      - id: AC-RIDE-004-003
-        text: "No undocumented Lyft endpoints are called. Concierge location is coarse lat/lng only."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-005
@@ -176,21 +158,6 @@ records:
         isSatisfied: false
       - id: AC-RIDE-011-002
         text: "Build and review gates reject such implementations."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-012
-    title: "Admin partnership gates"
-    description: "Admin UI to mark partnerships (Business API approved / denied) and disable Concierge features when ungated access is unavailable."
-    priority: medium
-    area: RIDE
-    status: pending
-    notes: "Original FR-12."
-    acceptanceCriteria:
-      - id: AC-RIDE-012-001
-        text: "Admin can set Business API partnership status."
-        isSatisfied: false
-      - id: AC-RIDE-012-002
-        text: "Concierge features are disabled when status is denied or unavailable."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-013
@@ -850,21 +817,6 @@ records:
         text: "Secrets stored in vault; no plaintext API tokens in logs."
         isSatisfied: false
   - kind: fr
-    id: FR-RIDE-204
-    title: "Concierge ingestion resilience"
-    description: "Reliability: Concierge ingestion must tolerate API rate limits and partial outages without corrupting stored rides."
-    priority: high
-    area: RIDE
-    status: pending
-    notes: "Original NFR-4. Mapped into FR namespace as FR-RIDE-204 per MCP entity conventions."
-    acceptanceCriteria:
-      - id: AC-RIDE-204-001
-        text: "Rate-limit and outage conditions do not corrupt stored rides."
-        isSatisfied: false
-      - id: AC-RIDE-204-002
-        text: "Retries are idempotent."
-        isSatisfied: false
-  - kind: fr
     id: FR-RIDE-205
     title: "Scale multi-year histories"
     description: "Scalability: support multi-year trip histories and multi-Hz GPS tracks from third-party devices without UI freezes (paginate / downsample for display)."
@@ -878,21 +830,6 @@ records:
         isSatisfied: false
       - id: AC-RIDE-205-002
         text: "Multi-year histories load without UI freezes."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-206
-    title: "No false Smooth Cruiser labeling"
-    description: "Accuracy: never present inferred speed/brake events from sparse Concierge lat/lng polls as Lyft Smooth Cruiser equivalents; label derived metrics clearly."
-    priority: critical
-    area: RIDE
-    status: pending
-    notes: "Original NFR-6. Mapped into FR namespace as FR-RIDE-206 per MCP entity conventions."
-    acceptanceCriteria:
-      - id: AC-RIDE-206-001
-        text: "Derived metrics from Concierge lat/lng are labeled as derived, not Smooth Cruiser."
-        isSatisfied: false
-      - id: AC-RIDE-206-002
-        text: "No false equivalence claims."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-207

@@ -57,38 +57,6 @@ records:
 
   - kind: usecase
     frLinks:
-    - frId: FR-RIDE-004
-      linkType: Realizes
-    - frId: FR-RIDE-011
-      linkType: Realizes
-    - frId: FR-RIDE-012
-      linkType: Realizes
-    - frId: FR-RIDE-204
-      linkType: Realizes
-    - frId: FR-RIDE-206
-      linkType: Realizes
-    localId: UC-RIDE-003
-    actors:
-    - Admin
-    - Auditor
-    acceptanceCriteria:
-    - id: AC-UC-003-001
-      text: Use case UC-RIDE-003 completes happy path without inventing undocumented Lyft APIs.
-      isSatisfied: false
-    - id: AC-UC-003-002
-      text: Unverified caveats from source requirements remain visible where applicable.
-      isSatisfied: false
-    briefDescription: Admin-enabled org polls Concierge status for driver_location on active org-booked rides only.
-    basicFlow: |
-      1. Admin marks Business partnership approved.
-      2. System obtains OAuth client credentials.
-      3. System polls documented status endpoint for active org rides only.
-      4. System stores coarse lat/lng with lyft_concierge_api provenance, never as Smooth Cruiser.
-      5. If partnership denied, Concierge features stay disabled.
-    title: Optional Concierge ride location poll
-
-  - kind: usecase
-    frLinks:
     - frId: FR-RIDE-005
       linkType: Realizes
     - frId: FR-RIDE-006
@@ -563,28 +531,6 @@ records:
 
   - kind: usecase
     frLinks:
-    - frId: FR-RIDE-011
-      linkType: Realizes
-    - frId: FR-RIDE-012
-      linkType: Realizes
-    localId: UC-RIDE-020
-    actors:
-    - Admin
-    acceptanceCriteria:
-    - id: AC-UC-020-001
-      text: Use case UC-RIDE-020 completes happy path without inventing undocumented Lyft APIs.
-      isSatisfied: false
-    - id: AC-UC-020-002
-      text: Unverified caveats from source requirements remain visible where applicable.
-      isSatisfied: false
-    briefDescription: Admin sets Business API partnership status; Concierge features follow that gate.
-    basicFlow: |
-      1. Admin sets Business partnership approved or denied.
-      2. System enables/disables Concierge features accordingly.
-    title: Admin partnership gates
-
-  - kind: usecase
-    frLinks:
     - frId: FR-RIDE-205
       linkType: Realizes
     - frId: FR-RIDE-207
@@ -793,4 +739,3 @@ records:
       2. Conformance and codegen bind to gRPC protos.
       3. Disagreement is resolved in favor of gRPC.
     title: Prefer gRPC over interim OpenAPI companion
-

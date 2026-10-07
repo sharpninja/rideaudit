@@ -26,15 +26,6 @@ Scope: layer-1+
 - [ ] Trip records are created when export or Business report fields are present.
 - [ ] Missing trip fields are left null and flagged, not invented.
 
-## FR-RIDE-004 Optional Concierge/Business API integration
-
-Optionally integrate Lyft Concierge/Business API: OAuth client credentials, program linkage, poll /concierge/rides/{id}/status for driver_location during active organizational rides only.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] OAuth client-credentials flow works when Business partnership is approved.
-- [ ] Polling is limited to active organizational rides the org booked.
-- [ ] No undocumented Lyft endpoints are called. Concierge location is coarse lat/lng only.
-
 ## FR-RIDE-005 Import third-party telematics
 
 Import third-party telematics files (CSV/JSON) for GPS track, speed, harsh brake/accel events from devices the driver/fleet controls.
@@ -91,14 +82,6 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Product features list excludes private API scraping and traffic interception.
 - [ ] Build and review gates reject such implementations.
-
-## FR-RIDE-012 Admin partnership gates
-
-Admin UI to mark partnerships (Business API approved / denied) and disable Concierge features when ungated access is unavailable.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Admin can set Business API partnership status.
-- [ ] Concierge features are disabled when status is denied or unavailable.
 
 ## FR-RIDE-013 Hash and version raw imports
 
@@ -619,11 +602,11 @@ Scope: layer-1+
 The RideAudit UI shows its copyright and its third-party attributions (licenses and credits) on a dedicated About view. Copyright alone does not satisfy this requirement. The bottom panel includes an About control that opens that view. Copyright does not remain on the previous chrome location, the top title bar. GPL licensing of the code stays FR-RIDE-029. GPL notices on shared artifacts stay FR-RIDE-030. Source-file copyright headers stay in place.
 Scope: layer-1+
 **Acceptance Criteria:**
-- [ ] A dedicated About view shows the RideAudit UI copyright.
-- [ ] The bottom panel includes an About control that opens the About view.
-- [ ] The previous chrome location, the top title bar, does not show the copyright notice.
-- [ ] Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
-- [ ] The About view includes third-party attributions, meaning licenses and credits. An About view that shows copyright only does not satisfy this AC.
+- [x] A dedicated About view shows the RideAudit UI copyright.
+- [x] The bottom panel includes an About control that opens the About view.
+- [x] The previous chrome location, the top title bar, does not show the copyright notice.
+- [x] Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
+- [x] The About view includes third-party attributions, meaning licenses and credits. An About view that shows copyright only does not satisfy this AC.
 
 ## FR-RIDE-075 Capture UI ADA/WCAG contrast for authorized slate colors
 
@@ -645,6 +628,16 @@ Scope: layer-1+
 - [ ] A controls/layout/style fidelity failure against the approved wireframe fails closed even when pixel comparison is within an advisory threshold.
 - [ ] Verification receipts name the primary fidelity verdict separately from any advisory pixel metric.
 
+## FR-RIDE-077 Functional rule: unmasked capture; accel + precise location in H.264 SEI per picture
+
+Precise location and other capture data stay unmasked; accelerometer and precise location are embedded in the H.264 stream as real-time per-picture SEI for certifiable legal data.
+Scope: layer-1+
+
+## FR-RIDE-078 Functional rule: driver-collected evidentiary retention is not third-party retention
+
+Retention does not treat the driver as a third party; do not apply California 30-day or 180-day location third-party deletion frames to driver-collected evidentiary data in their own vehicle.
+Scope: layer-1+
+
 ## FR-RIDE-201 TLS and secrets vault
 
 Security: encryption in transit (TLS 1.2+) and at rest; secrets in a vault; no plaintext API tokens in logs.
@@ -653,14 +646,6 @@ Scope: layer-1+
 - [ ] TLS 1.2+ enforced for network traffic.
 - [ ] Secrets stored in vault; no plaintext API tokens in logs.
 
-## FR-RIDE-204 Concierge ingestion resilience
-
-Reliability: Concierge ingestion must tolerate API rate limits and partial outages without corrupting stored rides.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Rate-limit and outage conditions do not corrupt stored rides.
-- [ ] Retries are idempotent.
-
 ## FR-RIDE-205 Scale multi-year histories
 
 Scalability: support multi-year trip histories and multi-Hz GPS tracks from third-party devices without UI freezes (paginate / downsample for display).
@@ -668,14 +653,6 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] UI paginates or downsamples large GPS tracks.
 - [ ] Multi-year histories load without UI freezes.
-
-## FR-RIDE-206 No false Smooth Cruiser labeling
-
-Accuracy: never present inferred speed/brake events from sparse Concierge lat/lng polls as Lyft Smooth Cruiser equivalents; label derived metrics clearly.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Derived metrics from Concierge lat/lng are labeled as derived, not Smooth Cruiser.
-- [ ] No false equivalence claims.
 
 ## FR-RIDE-207 Portable audit ZIP export
 
