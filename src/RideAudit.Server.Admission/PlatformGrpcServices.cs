@@ -20,8 +20,7 @@ public sealed class CounselGrpcService : ProtoCounsel.CounselBase
     public override Task<MultiDriverBundle> BuildMultiDriverBundle(BuildMultiDriverBundleRequest request, ServerCallContext context)
     {
         var caller = PlatformAuth.Require(_app, context);
-        _ = caller;
-        var bundle = _app.Counsel.Build(request.CaseId, request.SubmissionIds);
+        var bundle = _app.Counsel.Build(caller.DriverId, request.CaseId, request.SubmissionIds);
         var response = new MultiDriverBundle
         {
             BundleId = bundle.BundleId,
@@ -190,7 +189,7 @@ public sealed class PrivacyGrpcService : ProtoPrivacy.PrivacyBase
             SampleId = sample.SampleId,
             Latitude = sample.Latitude,
             Longitude = sample.Longitude,
-            Precise = true
+            Precise = sample.Precise
         }));
         return Task.FromResult(response);
     }

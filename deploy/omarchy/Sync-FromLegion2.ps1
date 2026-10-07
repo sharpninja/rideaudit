@@ -1,4 +1,4 @@
-# Sync the current HEAD to PAYTON-OMARCHY as a git bundle.
+# Sync the current HEAD to LAB-OMARCHY as a git bundle.
 # scp/sftp cannot be used: the remote login shell is pwsh and prints profile
 # banners, which breaks the SFTP handshake. Files move over stdin to
 # `exec /usr/bin/bash --noprofile --norc`. Does not wipe remote volumes.
@@ -6,7 +6,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-OMARCHY",
+    [string]$SshHost = "LAB-OMARCHY",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit"
 )
 

@@ -18,7 +18,7 @@ public class AcCoverageLedgerTests
     {
         var root = Repo.Root();
         var yamlFiles = Directory.GetFiles(Path.Combine(root, "docs", "Project"), "*Batch.yaml");
-        Assert.Equal(8, yamlFiles.Length);
+        Assert.Equal(9, yamlFiles.Length);
 
         var records = new List<AcRecord>();
         foreach (var file in yamlFiles.OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
@@ -37,7 +37,7 @@ public class AcCoverageLedgerTests
             .Select(group => group.First())
             .OrderBy(record => record.Id, StringComparer.Ordinal)
             .ToList();
-        Assert.Equal(424, unique.Count);
+        Assert.Equal(569, unique.Count);
 
         var testText = string.Join('\n', Directory.GetFiles(Path.Combine(root, "tests"), "*.cs", SearchOption.AllDirectories)
             .Select(File.ReadAllText));
@@ -64,9 +64,9 @@ public class AcCoverageLedgerTests
         var output = new StringBuilder();
         output.AppendLine("# RideAudit AC coverage ledger");
         output.AppendLine();
-        output.AppendLine("Generated: 2026-09-28. Workspace: PAYTON-LEGION2. Not a claim that all ACs are satisfied.");
+        output.AppendLine("Generated: 2026-10-07 (recount). Workspace: PAYTON-LEGION2. Not a claim that all ACs are satisfied.");
         output.AppendLine();
-        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/partnership/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-LAB-OMARCHY.md` (not GHCR). Canonical ngrok target is LAB-OMARCHY admission 192.168.0.149:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
+        output.AppendLine("Statuses: `deferred` wins when the AC's own text, an id prefix, or `explicit-deferrals.txt` marks live hardware/Play/HSM/partnership/Caddy-TLS work. A neighboring requirement in the YAML file does not defer this AC. `covered` = the id appears in `tests/**/*.cs` and is not deferred. `missing` = neither. A covered row is a test-source name, not semantic closure. Octopus CD evidence is the receipt `20260929T015822Z-octopus-payton-desktop.md` (not GHCR). Canonical ngrok target is LAB-OMARCHY admission 192.168.1.182:28080; Omarchy 127.0.0.1:18080 is the prior interim.");
         output.AppendLine();
         output.AppendLine("| Status | Count |");
         output.AppendLine("| --- | ---: |");
@@ -85,7 +85,7 @@ public class AcCoverageLedgerTests
         var dest = Path.Combine(destDir, "20260928-ledger.md");
         File.WriteAllText(dest, output.ToString());
         Assert.True(File.Exists(dest));
-        Assert.Equal(424, rows.Count);
+        Assert.Equal(569, rows.Count);
         Assert.Equal(0, rows.Count(row => string.IsNullOrWhiteSpace(row.Item4)));
     }
 

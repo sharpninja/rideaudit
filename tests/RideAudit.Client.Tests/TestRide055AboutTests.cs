@@ -92,6 +92,12 @@ public class TestRide055AboutTests
         Assert.Contains("licenses and credits", attributions, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("MIT", attributions, StringComparison.Ordinal);
         Assert.Contains("Avalonia", attributions, StringComparison.Ordinal);
+        Assert.Contains("SIL Open Font License", attributions, StringComparison.Ordinal);
+        Assert.Contains("Avalonia.Fonts.Inter", attributions, StringComparison.Ordinal);
+        Assert.Contains("Grpc.Net.Client", attributions, StringComparison.Ordinal);
+        Assert.Contains("Apache License 2.0", attributions, StringComparison.Ordinal);
+        Assert.Contains("Google.Protobuf", attributions, StringComparison.Ordinal);
+        Assert.Contains("BSD-3-Clause", attributions, StringComparison.Ordinal);
         Assert.Equal(UiLicense.Attributions, attributions);
 
         var copyright = about.FindControl<TextBlock>("CopyrightNotice")!.Text;

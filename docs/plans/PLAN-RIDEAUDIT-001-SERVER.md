@@ -216,7 +216,7 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | FR IDs | FR-RIDE-217, FR-RIDE-063, FR-RIDE-064 (+ server contribution to FR-031 portfolio gate) |
 | TEST | TEST-RIDE-020, TEST-RIDE-038, TEST-RIDE-039, TEST-RIDE-040 |
 | Depends | S1–S8 + Android A3/A4 + Bracket HW2 as applicable |
-| Exit | Full suite Failed 0 Skipped 0; Octopus built and deployed images to LAB-OMARCHY with a receipt that names the instance or container and target and does not claim GHCR (FR-RIDE-063). If the default Octopus container is out of licenses, a new Octopus container on LAB-OMARCHY is the fallback, not GHCR. Recorded path: `octopus-rideaudit`, admission `192.168.1.182:28080`, counsel `192.168.1.182:28081` (`20260929T015822Z-octopus-LAB-OMARCHY.md`). Canonical ngrok target is that admission bind (FR-RIDE-064). Omarchy `127.0.0.1:18080` is the prior interim. This exit is not closed: full-suite, Play, and per-phase HV remain open. |
+| Exit | Full suite Failed 0 Skipped 0; Octopus built and deployed images to LAB-OMARCHY with a receipt that names the instance or container and target and does not claim GHCR (FR-RIDE-063). If the default Octopus container is out of licenses, a new Octopus container on LAB-OMARCHY is the fallback, not GHCR. Recorded path: `octopus-rideaudit`, admission `192.168.1.182:28080`, counsel `192.168.1.182:28081` (`20260929T015822Z-octopus-payton-desktop.md`). Canonical ngrok target is that admission bind (FR-RIDE-064). Omarchy `127.0.0.1:18080` is the prior interim. This exit is not closed: full-suite, Play, and per-phase HV remain open. |
 
 **Authoritative dependencies** (from parent): P1→P0+gate; P2→P1; P3→P1; P4 client on Android; P5→P3+P4; P8→P2+P5+P7; P9→P2..P5; P10→P2+P8+P9; P11a→P3+P6; P11b→all.
 

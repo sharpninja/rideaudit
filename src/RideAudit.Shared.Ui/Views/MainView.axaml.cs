@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 RideAudit contributors
 
 using Avalonia.Controls;
@@ -42,7 +42,7 @@ public partial class MainView : UserControl
             return;
         }
 
-        if (Body.Content is not null && Body.Content is not AboutView)
+        if (Body.Content is not null)
         {
             _shellContent = Body.Content;
         }

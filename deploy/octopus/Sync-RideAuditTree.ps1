@@ -1,10 +1,10 @@
-# Sync RideAudit HEAD (and optional linux-x64 publish tree) to PAYTON-DESKTOP.
+# Sync RideAudit HEAD (and optional linux-x64 publish tree) to LAB-OMARCHY.
 # Reuses the Omarchy stdin-copy path because the login shell is pwsh.
 # FR-RIDE-063. Not a CD green by itself. SPDX-License-Identifier: GPL-2.0-only
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-DESKTOP",
+    [string]$SshHost = "LAB-OMARCHY",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
     [switch]$WithPublish
 )

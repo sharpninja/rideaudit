@@ -1,5 +1,18 @@
 # RideAudit handoff update (PAYTON-LEGION2)
 
+Written: 2026-10-07 (America/Chicago).
+Author: Grok Bot.
+
+## PR #26 remedia resumed (own-submissions + safe accuracy batch)
+
+- Payton: own-submissions only / no roles applied to CounselDesk.Build + Analysis negatives. SetPartnership STOP (global gate).
+- Safe threads: ledger 569, mappings dedupe, README UC approvals, plan unassigned=10, Android visual scope, receipt pointer, orphan linkTypes, LAB-OMARCHY 182 deploy retarget, storyboards layout, About attributions, privacy.proto 0.3.0, PrivacyDesk dead branch, Precise=sample.Precise, BOM/nits.
+- STOP for Payton: SetPartnership product path; TEST-052 FR whole-tree vs TEST change-scope ambiguity.
+- Receipt: docs\receipts\remediation\20261007T161645Z-pr26-safe-remedia-own-submissions.md
+- Do not merge. Remedia continues after reviewer re-check.
+
+---# RideAudit handoff update (PAYTON-LEGION2)
+
 Written: 2026-10-07 10:36 CT (America/Chicago).
 Author: Grok Bot.
 

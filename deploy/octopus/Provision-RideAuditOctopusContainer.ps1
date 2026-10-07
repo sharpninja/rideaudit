@@ -1,13 +1,13 @@
-# Provision a new Octopus Server container on PAYTON-DESKTOP.
+# Provision a new Octopus Server container on LAB-OMARCHY.
 # Used when the default octopus-legion2 instance cannot run tasks.
 # FR-RIDE-063 AC-RIDE-063-002. Secrets stay under ~/.creds. No GHCR.
 # SPDX-License-Identifier: GPL-2.0-only
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-DESKTOP",
+    [string]$SshHost = "LAB-OMARCHY",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
-    [string]$ListenAddress = "192.168.0.149",
+    [string]$ListenAddress = "192.168.1.182",
     [int]$HttpPort = 18066,
     [string]$CredOut = (Join-Path $env:USERPROFILE ".creds\octopus-rideaudit.cred.xml"),
     [switch]$ResetData,
@@ -167,7 +167,7 @@ $dev = @($envItems) | Where-Object { $_.Name -eq "Development" } | Select-Object
 if (-not $dev) {
     $dev = Invoke-RideAuditOctopusApi -Connection $bootCx -Method POST -Path "/api/Spaces-1/environments" -Body @{
         Name             = "Development"
-        Description      = "FR-RIDE-063 PAYTON-DESKTOP"
+        Description      = "FR-RIDE-063 LAB-OMARCHY"
         SortOrder        = 1
         UseGuidedFailure = $false
     }

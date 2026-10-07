@@ -1,12 +1,12 @@
-# Start the ngrok tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080 from PAYTON-LEGION2.
+# Start the ngrok tunnel to LAB-OMARCHY admission 192.168.1.182:28080 from PAYTON-LEGION2.
 # Token is copied from ~/.creds/ngrok.yml over SSH stdin. Never printed. Not GHCR.
 # SPDX-License-Identifier: GPL-2.0-only
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-DESKTOP",
+    [string]$SshHost = "LAB-OMARCHY",
     [string]$CredsPath = "",
-    [string]$Addr = "192.168.0.149:28080",
+    [string]$Addr = "192.168.1.182:28080",
     [switch]$KeepOnFailure,
     [switch]$KeepConflictingLocal
 )
@@ -108,7 +108,7 @@ function Stop-ConflictingLocalNgrok {
     if ($KeepConflictingLocal) {
         throw "Local ngrok already holds the reserved domain for a non-admission address. Fail closed; not pooling mixed backends."
     }
-    Write-Host "Stopping conflicting local ngrok so PAYTON-DESKTOP can terminate the RideAudit admission tunnel."
+    Write-Host "Stopping conflicting local ngrok so LAB-OMARCHY can terminate the RideAudit admission tunnel."
     foreach ($t in @($api.tunnels)) {
         $name = [string]$t.name
         if (-not $name) { continue }

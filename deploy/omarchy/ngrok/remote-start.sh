@@ -1,10 +1,10 @@
 #!/usr/bin/bash
-# Start a durable ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080.
+# Start a durable ngrok HTTP tunnel to LAB-OMARCHY admission 192.168.1.182:28080.
 # Fail closed if admission is down. No Python.
 # SPDX-License-Identifier: GPL-2.0-only
 set -euo pipefail
 
-ADDR="${RIDEAUDIT_NGROK_ADDR:-192.168.0.149:28080}"
+ADDR="${RIDEAUDIT_NGROK_ADDR:-192.168.1.182:28080}"
 CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 UNIT_DIR="$HOME/.config/systemd/user"
@@ -57,7 +57,7 @@ write_unit() {
   local bin="$1"
   cat > "$UNIT_DIR/rideaudit-ngrok.service" <<EOF
 [Unit]
-Description=RideAudit ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080
+Description=RideAudit ngrok HTTP tunnel to LAB-OMARCHY admission 192.168.1.182:28080
 After=network-online.target
 Wants=network-online.target
 

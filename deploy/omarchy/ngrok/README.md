@@ -4,18 +4,18 @@ GPL-2.0-only. Implements FR-RIDE-064 / UC-RIDE-033 / TR-RIDE-EDGE-001.
 
 This is an operator tunnel. It is not Octopus CD, not GHCR, not Play Store, and not a Caddy TLS cutover.
 
-Product CD is FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. That path is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`. This wrapper publishes the live admission front door. It does not replace the Octopus receipt.
+Product CD is FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. That path is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`. This wrapper publishes the live admission front door. It does not replace the Octopus receipt.
 
 ## Current vs prior interim
 
 | Role | Host | Binding | Status |
 | --- | --- | --- | --- |
-| Canonical terminator | PAYTON-DESKTOP (SSH alias; Linux hostname on this box is PAYTON-OMARCHY) | `192.168.0.149:28080` -> Octopus admission container `8080` | Current public tunnel target |
-| Prior interim | PAYTON-OMARCHY loopback | `127.0.0.1:18080` -> `rideaudit-omarchy` admission | Kept running. Not the canonical tunnel. |
+| Canonical terminator | LAB-OMARCHY (SSH alias; Linux hostname on this box is LAB-OMARCHY) | `192.168.1.182:28080` -> Octopus admission container `8080` | Current public tunnel target |
+| Prior interim | LAB-OMARCHY loopback | `127.0.0.1:18080` -> `rideaudit-omarchy` admission | Kept running. Not the canonical tunnel. |
 
-`127.0.0.1:28080` is not the bind. Compose publishes admission on `192.168.0.149:28080` only. Counsel stays on `192.168.0.149:28081` and is not the public tunnel.
+`127.0.0.1:28080` is not the bind. Compose publishes admission on `192.168.1.182:28080` only. Counsel stays on `192.168.1.182:28081` and is not the public tunnel.
 
-SSH aliases `PAYTON-DESKTOP`, `PAYTON-OMARCHY`, and `OMARCHY` resolve to `192.168.0.149`. Do not invent a second machine from the alias list.
+SSH aliases `LAB-OMARCHY`, `LAB-OMARCHY`, and `OMARCHY` resolve to `192.168.1.182`. Do not invent a second machine from the alias list.
 
 ## Secrets
 
@@ -37,12 +37,12 @@ pwsh -NoProfile -File deploy/omarchy/ngrok/Stop-Ngrok.ps1
 
 `Start-Ngrok.ps1` defaults:
 
-- `-SshHost PAYTON-DESKTOP`
-- `-Addr 192.168.0.149:28080`
+- `-SshHost LAB-OMARCHY`
+- `-Addr 192.168.1.182:28080`
 
 It:
 
-1. Confirms admission `GET http://192.168.0.149:28080/` on that host returns HTTP 200.
+1. Confirms admission `GET http://192.168.1.182:28080/` on that host returns HTTP 200.
 2. Installs official Linux amd64 ngrok under `~/.local/bin` if missing, or reuses an existing binary.
 3. Copies the token file with `Copy-OmarchyStdinFile` (no `scp`).
 4. Starts a systemd user unit `rideaudit-ngrok.service` when a user bus is available, otherwise `nohup`.
@@ -67,13 +67,13 @@ export XDG_RUNTIME_DIR=/run/user/$(id -u)
 systemctl --user restart rideaudit-ngrok.service
 ```
 
-Restart alone reuses the unit written by the last `remote-start.sh`. After this tree change, run `Start-Ngrok.ps1` once so the unit `ExecStart` address becomes `192.168.0.149:28080`.
+Restart alone reuses the unit written by the last `remote-start.sh`. After this tree change, run `Start-Ngrok.ps1` once so the unit `ExecStart` address becomes `192.168.1.182:28080`.
 
 ## Probe notes
 
-Admission's documented companion HTTP front door is `GET /` on `192.168.0.149:28080`. A live tunnel must return that same 200 body. Free ngrok interstitial pages are skipped on the LEGION2 probe with `ngrok-skip-browser-warning: 1`.
+Admission's documented companion HTTP front door is `GET /` on `192.168.1.182:28080`. A live tunnel must return that same 200 body. Free ngrok interstitial pages are skipped on the LEGION2 probe with `ngrok-skip-browser-warning: 1`.
 
-This wrapper starts `ngrok http 192.168.0.149:28080`. gRPC clients that require HTTP/2 end-to-end can be added later; do not advertise a URL unless the HTTP health probe succeeds.
+This wrapper starts `ngrok http 192.168.1.182:28080`. gRPC clients that require HTTP/2 end-to-end can be added later; do not advertise a URL unless the HTTP health probe succeeds.
 
 ## Fail closed
 

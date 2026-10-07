@@ -1,10 +1,10 @@
-# Copy the LEGION2 linux-x64 publish tree to PAYTON-OMARCHY over SSH stdin.
+# Copy the LEGION2 linux-x64 publish tree to LAB-OMARCHY over SSH stdin.
 # scp/sftp cannot be used (remote pwsh profile banners). Does not compose up.
 # SPDX-License-Identifier: GPL-2.0-only
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-OMARCHY",
+    [string]$SshHost = "LAB-OMARCHY",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
     [string]$PublishDir = ""
 )

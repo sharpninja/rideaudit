@@ -51,8 +51,10 @@ public sealed class CounselDesk
 
     public CounselDesk(ISubmittedRecordSource records) => _records = records;
 
-    public MultiDriverBundle Build(string caseId, IReadOnlyList<string> submissionIds)
+    public MultiDriverBundle Build(string actorId, string caseId, IReadOnlyList<string> submissionIds)
     {
+        if (string.IsNullOrWhiteSpace(actorId))
+            throw new RideAuditException(ErrorCodes.ValidationFailed, "Caller id is required.");
         if (string.IsNullOrWhiteSpace(caseId))
             throw new RideAuditException(ErrorCodes.ValidationFailed, "Case id is required.");
         if (submissionIds.Count == 0)
@@ -64,6 +66,8 @@ public sealed class CounselDesk
         foreach (var submissionId in submissionIds)
         {
             var record = _records.Find(submissionId) ?? throw new RideAuditException(ErrorCodes.SubmissionNotFound, "Submission was not found.");
+            if (!string.Equals(actorId, record.DriverId, StringComparison.Ordinal))
+                throw new RideAuditException(ErrorCodes.TenantIsolation, "Caller cannot bundle another driver.");
             var report = VerifyRecord(record);
             records.Add(new BundleRecord(
                 record.SubmissionId,

@@ -931,7 +931,7 @@ records:
       and for usability checks in addition to pixel comparison.
       Android visual and usability tests use the SharpNinja.aiUnit codex-subscription profile.
       approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
-      Baselines are the wireframe and storyboard documents under docs/ux, including docs/ux/review-app.
+      Baselines are the mobile wireframe and storyboard documents under docs/ux/wireframes and docs/ux/storyboards. Desktop court/counsel review-app baselines (docs/ux/review-app WF-R/SB-R) are out of scope for the Android harness and belong to the desktop review client.
       Storyboard steps are the beats in those documents. Each beat is a frame.
       Storyboard driving uses SharpNinja.Avalonia.RemoteControl, required by FR-RIDE-067.
       ADB taps are not the storyboard step driver.
@@ -1052,10 +1052,10 @@ records:
         text: RideAudit.Client.Android references SharpNinja.aiUnit.
         isSatisfied: false
       - id: AC-RIDE-VIDEO-017-002
-        text: The test set includes one single-screen device screenshot comparison for each wireframe under docs/ux, including docs/ux/review-app, unless that wireframe specifies otherwise.
+        text: The test set includes one single-screen device screenshot comparison for each mobile wireframe under docs/ux/wireframes (not docs/ux/review-app), unless that wireframe specifies otherwise.
         isSatisfied: false
       - id: AC-RIDE-VIDEO-017-003
-        text: For each storyboard under docs/ux, including docs/ux/review-app, the harness drives the running app with SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) through that storyboard step sequence and compares a screenshot at each frame.
+        text: For each mobile storyboard under docs/ux/storyboards (not docs/ux/review-app), the harness drives the running Android app with SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) through that storyboard step sequence and compares a screenshot at each frame.
         isSatisfied: false
       - id: AC-RIDE-VIDEO-017-004
         text: The harness runs on PAYTON-LEGION2 and requires a connected Android device. Emulator-only mode is not a pass.

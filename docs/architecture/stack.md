@@ -19,7 +19,7 @@ Do not invent Lyft private APIs. Capture pairing is RideAudit device pairing onl
 | Layer | Stack | Notes |
 | --- | --- | --- |
 | Service API | **gRPC on .NET 10** | Sealed-only admission and counsel/review support services. |
-| Deployment | **Containers via Octopus Deploy** | Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. |
+| Deployment | **Containers via Octopus Deploy** | Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. |
 
 Public sealed submit remains ciphertext-only at ingest. No decrypt at public-server ingest.
 
@@ -27,11 +27,11 @@ Public sealed submit remains ciphertext-only at ingest. No decrypt at public-ser
 
 This is the binding CD path. It supersedes GHCR, GitHub Actions container-registry, and any plan text that treated Octopus license exhaustion as deferral or out of scope.
 
-1. **Use Octopus Deploy.** Octopus builds RideAudit admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to **PAYTON-DESKTOP** (FR-RIDE-063).
-2. **License exhaustion is not a deferral.** If the default Octopus container is out of licenses, create a new Octopus container on PAYTON-DESKTOP and continue from that instance (AC-RIDE-063-002, TR-RIDE-DEPLOY-002).
+1. **Use Octopus Deploy.** Octopus builds RideAudit admission, counsel, and related images from `deploy/containers` (or the documented successor) and deploys them to **LAB-OMARCHY** (FR-RIDE-063).
+2. **License exhaustion is not a deferral.** If the default Octopus container is out of licenses, create a new Octopus container on LAB-OMARCHY and continue from that instance (AC-RIDE-063-002, TR-RIDE-DEPLOY-002).
 3. **Do not use GHCR.** Receipts must never claim a GHCR green. GitHub Actions container registry is not the distribution path.
-4. **Public tunnel.** The canonical ngrok target is PAYTON-DESKTOP admission `192.168.0.149:28080` (FR-RIDE-064). Omarchy loopback `127.0.0.1:18080` is the prior interim and stays documented. Counsel `192.168.0.149:28081` is not the public tunnel.
-5. **Honesty.** Octopus CD to PAYTON-DESKTOP is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md` (`octopus-rideaudit`, not GHCR). That receipt is not Play publication, not edge-TLS-via-Caddy, and not a claim that every P11b acceptance row is closed. Omarchy compose cutover receipts remain the prior interim path.
+4. **Public tunnel.** The canonical ngrok target is LAB-OMARCHY admission `192.168.1.182:28080` (FR-RIDE-064). Omarchy loopback `127.0.0.1:18080` is the prior interim and stays documented. Counsel `192.168.1.182:28081` is not the public tunnel.
+5. **Honesty.** Octopus CD to LAB-OMARCHY is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md` (`octopus-rideaudit`, not GHCR). That receipt is not Play publication, not edge-TLS-via-Caddy, and not a claim that every P11b acceptance row is closed. Omarchy compose cutover receipts remain the prior interim path.
 
 Authoritative requirements: `docs/Project/Additive-PostPlanning-Deploy-Ngrok-Batch.yaml`. Plan citation: PLAN-RIDEAUDIT-001 r3.4 §4.6.
 
@@ -66,5 +66,5 @@ Mappings live in `docs/Project/Requirements-Mappings-Batch.yaml`. Post-planning 
 
 | Topic | FR | TR | TEST | UC |
 | --- | --- | --- | --- | --- |
-| Octopus Deploy CD to PAYTON-DESKTOP | FR-RIDE-063 | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 |
-| ngrok ingress (canonical PAYTON-DESKTOP `:28080`; Omarchy `:18080` prior interim) | FR-RIDE-064 | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 |
+| Octopus Deploy CD to LAB-OMARCHY | FR-RIDE-063 | TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002 | TEST-RIDE-038, TEST-RIDE-040 | UC-RIDE-032 |
+| ngrok ingress (canonical LAB-OMARCHY `:28080`; Omarchy `:18080` prior interim) | FR-RIDE-064 | TR-RIDE-EDGE-001 | TEST-RIDE-039, TEST-RIDE-040 | UC-RIDE-033 |

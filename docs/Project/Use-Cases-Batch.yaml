@@ -188,10 +188,6 @@ records:
     frLinks:
     - frId: FR-RIDE-010
       linkType: Realizes
-      linkType: Realizes
-      linkType: Realizes
-      linkType: Realizes
-      linkType: Realizes
     localId: UC-RIDE-008
     actors:
     - Driver
@@ -570,8 +566,6 @@ records:
     - frId: FR-RIDE-011
       linkType: Realizes
     - frId: FR-RIDE-012
-      linkType: Realizes
-      linkType: Realizes
       linkType: Realizes
     localId: UC-RIDE-020
     actors:

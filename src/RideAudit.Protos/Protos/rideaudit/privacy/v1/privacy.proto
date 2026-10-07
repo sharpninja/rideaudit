@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
-// Contract-Version: 0.2.0
-// FR-RIDE-010, FR-RIDE-014, FR-RIDE-207, FR-RIDE-210.
+// Contract-Version: 0.3.0
+// FR-RIDE-010, FR-RIDE-077, FR-RIDE-207. (FR-014 RBAC / FR-210 legal-hold killed; PlaceLegalHold RPC removed.)
 // DSAR export does not include sealed plaintext.
 syntax = "proto3";
 
@@ -11,6 +11,7 @@ package rideaudit.privacy.v1;
 option csharp_namespace = "RideAudit.Protos.Privacy.V1";
 
 service Privacy {
+  // reserved: former PlaceLegalHold RPC and LegalHoldRequest/Response messages removed with FR-210.
   rpc RequestAccessExport (AccessExportRequest) returns (AccessExportResponse);
   rpc RequestDeletion (DeletionRequest) returns (DeletionResponse);
   rpc ViewLocations (ViewLocationsRequest) returns (ViewLocationsResponse);

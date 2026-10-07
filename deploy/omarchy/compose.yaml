@@ -1,5 +1,5 @@
 # RideAudit admission (counsel RPCs on the same host).
-# Bind loopback only. Does not replace Octopus/SQL/Caddy on PAYTON-OMARCHY.
+# Bind loopback only. Does not replace Octopus/SQL/Caddy on LAB-OMARCHY.
 # Production cutover MUST use this file with --no-build --pull never so compose
 # cannot silently rebuild a different local artifact. Rebuilds use
 # compose.build.yaml, then the recorded digest in RECORDED-IMAGE-DIGEST must

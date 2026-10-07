@@ -9,12 +9,11 @@ using RideAudit.Server.Counsel;
 
 namespace RideAudit.Privacy;
 
-/// <summary>Retention timers (FR-RIDE-078): driver evidentiary data is not third-party CA 30/180 frames. CA default 365d else 730d; precise-geo exempt from sweep.</summary>
+/// <summary>Retention timers (FR-RIDE-078): driver evidentiary data is not third-party CA 30/180 frames. CA default 365d else 730d. Locations are not swept under FR-RIDE-078 (precise geo stays retained by omitting Locations from SweepRetention).</summary>
 public static class RetentionPolicy
 {
-    public static TimeSpan For(string jurisdiction, string dataClass)
+    public static TimeSpan For(string jurisdiction)
     {
-        _ = dataClass;
         var california = string.Equals(jurisdiction, "US-CA", StringComparison.OrdinalIgnoreCase);
         return california ? TimeSpan.FromDays(365) : TimeSpan.FromDays(730);
     }
@@ -78,6 +77,7 @@ public sealed class PrivacyDesk
 
     public DeletionResult Delete(string actorId, string subjectDriverId, string caseId)
     {
+        _ = caseId; // retained for wire/API shape; legal-hold blocked-delete path removed
         Authorize(actorId, subjectDriverId, "dsar-delete");
 
         foreach (var import in _store.Imports.Where(row => row.DriverId == subjectDriverId).ToArray())
@@ -96,17 +96,16 @@ public sealed class PrivacyDesk
     {
         var now = _clock.UtcNow;
         var removed = 0;
-        removed += _store.Trips.RemoveAll(row => Expired(row.Jurisdiction, "trips", row.StartedUnixMillis, now));
+        // Locations are intentionally not swept (FR-RIDE-078 precise-geo retention by omission).
+        removed += _store.Trips.RemoveAll(row => Expired(row.Jurisdiction, row.StartedUnixMillis, now));
         _store.TripIndex.RemoveAll(row => !_store.Trips.Contains(row));
         return removed;
     }
 
-    private bool Expired(string jurisdiction, string dataClass, long observedUnixMillis, DateTimeOffset now)
+    private bool Expired(string jurisdiction, long observedUnixMillis, DateTimeOffset now)
     {
-        if (string.Equals(dataClass, "precise-geo", StringComparison.Ordinal))
-            return false;
         var age = now - DateTimeOffset.FromUnixTimeMilliseconds(observedUnixMillis);
-        return age > RetentionPolicy.For(jurisdiction, dataClass);
+        return age > RetentionPolicy.For(jurisdiction);
     }
 
     private void Authorize(string actorId, string driverId, string action)

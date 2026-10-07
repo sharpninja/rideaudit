@@ -1,7 +1,9 @@
-# Mappings for the 2026-09-29 operator capture.
-# New IDs plus the updated rows for existing FRs.
-# FR-RIDE-068 was withdrawn. Cradle TR/TEST/UC map to FR-RIDE-041.
-# FR-RIDE-063 row links are unchanged. Omarchy compose is an AC on that FR, not a new FR.
+# Mappings for the 2026-09-29 operator capture (new IDs only).
+# Updated rows for existing FRs live in Requirements-Mappings-Batch.yaml
+# (and FR-RIDE-063 updates in Additive-PostPlanning-Deploy-Ngrok mappings).
+# Do not duplicate those FR rows here — applying all mapping files would
+# submit multiple mappings for the same FR.
+# FR-RIDE-068 was withdrawn. Cradle TR/TEST/UC map to FR-RIDE-041 in the main mappings file.
 # approval: Payton AGREE 2026-09-29.
 mappings:
   - frId: FR-RIDE-065
@@ -40,23 +42,3 @@ mappings:
     trIds: [TR-RIDE-VIEW-007]
     testIds: [TEST-RIDE-055]
     useCaseLocalIds: [UC-RIDE-044]
-  - frId: FR-RIDE-222
-    trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
-    testIds: [TEST-RIDE-028, TEST-RIDE-041]
-    useCaseLocalIds: [UC-RIDE-019, UC-RIDE-034]
-  - frId: FR-RIDE-018
-    trIds: [TR-RIDE-CHAIN-002]
-    testIds: [TEST-RIDE-014, TEST-RIDE-042]
-    useCaseLocalIds: [UC-RIDE-009]
-  - frId: FR-RIDE-056
-    trIds: [TR-RIDE-VIDEO-012, TR-RIDE-VIDEO-015]
-    testIds: [TEST-RIDE-035, TEST-RIDE-043]
-    useCaseLocalIds: [UC-RIDE-025]
-  - frId: FR-RIDE-041
-    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016, TR-RIDE-HW-001]
-    testIds: [TEST-RIDE-025, TEST-RIDE-044, TEST-RIDE-048]
-    useCaseLocalIds: [UC-RIDE-017, UC-RIDE-038]
-  - frId: FR-RIDE-063
-    trIds: [TR-RIDE-DEPLOY-001, TR-RIDE-DEPLOY-002]
-    testIds: [TEST-RIDE-038, TEST-RIDE-040]
-    useCaseLocalIds: [UC-RIDE-032]

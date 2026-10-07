@@ -26,7 +26,7 @@ public class NgrokDeploySecretsTests
 
         var exampleText = File.ReadAllText(example);
         Assert.Contains("YOUR_NGROK_AUTHTOKEN", exampleText, StringComparison.Ordinal);
-        Assert.Contains("192.168.0.149:28080", exampleText, StringComparison.Ordinal);
+        Assert.Contains("192.168.1.182:28080", exampleText, StringComparison.Ordinal);
         Assert.DoesNotContain("127.0.0.1:18080", exampleText, StringComparison.Ordinal);
 
         foreach (var path in Directory.GetFiles(ngrokDir, "*", SearchOption.TopDirectoryOnly))
@@ -50,23 +50,23 @@ public class NgrokDeploySecretsTests
         Assert.Contains("fail-closed", start, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("ghcr.io", start, StringComparison.OrdinalIgnoreCase);
 
-        Assert.Contains("[string]$Addr = \"192.168.0.149:28080\"", start, StringComparison.Ordinal);
-        Assert.Contains("[string]$SshHost = \"PAYTON-DESKTOP\"", start, StringComparison.Ordinal);
+        Assert.Contains("[string]$Addr = \"192.168.1.182:28080\"", start, StringComparison.Ordinal);
+        Assert.Contains("[string]$SshHost = \"LAB-OMARCHY\"", start, StringComparison.Ordinal);
         Assert.Contains("No public URL is advertised", start, StringComparison.Ordinal);
 
         var unit = File.ReadAllText(Path.Combine(ngrokDir, "rideaudit-ngrok.service"));
-        Assert.Contains("192.168.0.149:28080", unit, StringComparison.Ordinal);
+        Assert.Contains("192.168.1.182:28080", unit, StringComparison.Ordinal);
         Assert.Contains("Restart=on-failure", unit, StringComparison.Ordinal);
 
         var remote = File.ReadAllText(Path.Combine(ngrokDir, "remote-start.sh"));
-        Assert.Contains("192.168.0.149:28080", remote, StringComparison.Ordinal);
+        Assert.Contains("192.168.1.182:28080", remote, StringComparison.Ordinal);
         Assert.DoesNotContain("python3", remote, StringComparison.Ordinal);
         Assert.DoesNotContain("python ", remote, StringComparison.Ordinal);
 
         var readme = File.ReadAllText(Path.Combine(ngrokDir, "README.md"));
-        Assert.Contains("PAYTON-OMARCHY", readme, StringComparison.Ordinal);
-        Assert.Contains("PAYTON-DESKTOP", readme, StringComparison.Ordinal);
-        Assert.Contains("192.168.0.149:28080", readme, StringComparison.Ordinal);
+        Assert.Contains("LAB-OMARCHY", readme, StringComparison.Ordinal);
+        Assert.Contains("LAB-OMARCHY", readme, StringComparison.Ordinal);
+        Assert.Contains("192.168.1.182:28080", readme, StringComparison.Ordinal);
         Assert.Contains("127.0.0.1:18080", readme, StringComparison.Ordinal);
         Assert.Contains("prior interim", readme, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("KeepConflictingLocal", readme, StringComparison.Ordinal);
@@ -104,8 +104,8 @@ public class NgrokDeploySecretsTests
         Assert.DoesNotContain("ghcr.io", receipt, StringComparison.OrdinalIgnoreCase);
 
         var compose = File.ReadAllText(Path.Combine(root, "deploy", "octopus", "compose.yaml"));
-        Assert.Contains("192.168.0.149:28080:8080", compose, StringComparison.Ordinal);
-        Assert.Contains("192.168.0.149:28081:8080", compose, StringComparison.Ordinal);
+        Assert.Contains("192.168.1.182:28080:8080", compose, StringComparison.Ordinal);
+        Assert.Contains("192.168.1.182:28081:8080", compose, StringComparison.Ordinal);
         Assert.DoesNotContain("ghcr.io", compose, StringComparison.OrdinalIgnoreCase);
     }
 
