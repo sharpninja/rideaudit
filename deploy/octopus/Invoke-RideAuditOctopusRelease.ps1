@@ -317,7 +317,7 @@ function Ensure-ProjectAndProcess {
 }
 
 function New-RideAuditReleaseAndDeploy {
-    param($Connection, $Project, [string]$ReleaseVersion)
+    param($Connection, $Project, [string]$ReleaseVersion, [string]$MachineId = "")
     $channels = @(Get-OctopusItems -Connection $Connection -Path "/api/Spaces-1/projects/$($Project.Id)/channels")
     $channel = @($channels) | Select-Object -First 1
     if (-not $channel) { throw "project $($Project.Id) has no channel" }
@@ -338,6 +338,11 @@ function New-RideAuditReleaseAndDeploy {
         ReleaseId     = $release.Id
         EnvironmentId = $env.Id
         Comments      = "FR-RIDE-063 / UC-RIDE-032"
+    }
+    if (-not [string]::IsNullOrWhiteSpace($MachineId)) {
+        # Pin to the machine Wait-RoleTarget / Ensure-LinuxTarget chose so a shared role cannot fan out to Tentacle + SSH.
+        $deployBody["SpecificMachineIds"] = @($MachineId)
+        Write-Host ("deploy pinned to SpecificMachineIds={0}" -f $MachineId)
     }
     $deployment = Invoke-RideAuditOctopusApi -Connection $Connection -Method POST -Path "/api/Spaces-1/deployments" -Body $deployBody
     Write-Host ("created deployment {0} task={1}" -f $deployment.Id, $deployment.TaskId)
@@ -417,7 +422,11 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     $Version = "0.1.0-$sha-$stamp"
 }
 
-$result = New-RideAuditReleaseAndDeploy -Connection $cx -Project $project -ReleaseVersion $Version
+if (($WorkerMode -eq "Tentacle" -or $WorkerMode -eq "Ssh") -and (-not $machine -or [string]::IsNullOrWhiteSpace($machine.Id))) {
+    throw "WorkerMode=$WorkerMode requires a selected Octopus machine before deploy; refuse role-wide deploy"
+}
+$machineIdForDeploy = if ($machine) { $machine.Id } else { $null }
+$result = New-RideAuditReleaseAndDeploy -Connection $cx -Project $project -ReleaseVersion $Version -MachineId $machineIdForDeploy
 Write-Host ("release-state task={0}" -f $result.Task.State)
 if ($result.Task.State -ne "Success") {
     throw "Octopus deployment task $($result.Task.Id) ended $($result.Task.State)"

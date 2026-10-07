@@ -437,7 +437,7 @@ public class TestRide010012029031032
     [Fact]
     [Trait("TEST", "TEST-RIDE-010")]
     [Trait("FR", "FR-RIDE-010")]
-    [Trait("AC", "AC-RIDE-010-002")]
+    [Trait("NOTE", "AC-RIDE-010-002-removed-with-legal-hold")]
     [Trait("AC", "AC-UC-008-001")]
     [Trait("AC", "AC-UC-008-002")]
     [Trait("AC", "AC-TEST-010-001")]

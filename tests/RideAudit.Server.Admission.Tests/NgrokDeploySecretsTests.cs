@@ -112,6 +112,9 @@ public class NgrokDeploySecretsTests
         Assert.DoesNotContain("[string]$TargetRole = \"rideaudit-host\"", octopusRelease, StringComparison.Ordinal);
         Assert.Contains("ambiguous Octopus role", octopusRelease, StringComparison.Ordinal);
         Assert.Contains("refuse role-first fallback to an old host", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("$deployBody[\"SpecificMachineIds\"] = @($MachineId)", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("-MachineId $machineIdForDeploy", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("refuse role-wide deploy", octopusRelease, StringComparison.Ordinal);
         var tentacleCompose = File.ReadAllText(Path.Combine(root, "deploy", "octopus", "new-instance", "compose.yaml"));
         Assert.Contains("TargetRole: rideaudit-host-lab-omarchy", tentacleCompose, StringComparison.Ordinal);
 
