@@ -17,41 +17,7 @@ public class AcCoverageLedgerTests
     public void Writes_honest_ledger_for_all_requirement_ac_ids()
     {
         var root = Repo.Root();
-        var yamlFiles = Directory.GetFiles(Path.Combine(root, "docs", "Project"), "*Batch.yaml");
-        Assert.Equal(9, yamlFiles.Length);
-
-        var records = new List<AcRecord>();
-        foreach (var file in yamlFiles.OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
-        {
-            var text = File.ReadAllText(file);
-            foreach (Match match in AcId.Matches(text))
-            {
-                var id = match.Groups[1].Value;
-                var acText = ExtractAcText(text, match.Index);
-                records.Add(new AcRecord(id, Path.GetFileName(file), acText));
-            }
-        }
-
-        var unique = records
-            .GroupBy(record => record.Id, StringComparer.Ordinal)
-            .Select(group => group.First())
-            .OrderBy(record => record.Id, StringComparer.Ordinal)
-            .ToList();
-        Assert.Equal(549, unique.Count);
-
-        var testText = string.Join('\n', Directory.GetFiles(Path.Combine(root, "tests"), "*.cs", SearchOption.AllDirectories)
-            .Select(File.ReadAllText));
-        var named = unique.Where(record => testText.Contains(record.Id, StringComparison.Ordinal)).Select(record => record.Id).ToHashSet(StringComparer.Ordinal);
-
-        var rows = unique.Select(record =>
-        {
-            var deferred = ClassifyDeferred(record);
-            if (deferred is not null)
-                return (record.Id, record.Source, "deferred", deferred);
-            return named.Contains(record.Id)
-                ? (record.Id, record.Source, "covered", "Named in executable test source. Not semantic closure.")
-                : (record.Id, record.Source, "missing", "No test source reference and no deferred live-integration reason.");
-        }).ToList();
+        var rows = BuildLedgerRows(root);
 
         var covered = rows.Count(row => row.Item3 == "covered");
         var deferred = rows.Count(row => row.Item3 == "deferred");
@@ -137,6 +103,75 @@ public class AcCoverageLedgerTests
     {
         var match = AcId.Matches(yaml).Single(candidate => candidate.Groups[1].Value == id);
         return ExtractAcText(yaml, match.Index);
+    }
+
+    [Fact]
+    [Trait("FR", "FR-RIDE-071")]
+    [Trait("UC", "UC-RIDE-041")]
+    [Trait("AC", "AC-UC-041-001")]
+    public void Ledger_names_or_defers_each_ac_and_deferred_wins_without_closing_acs()
+    {
+        var root = Repo.Root();
+        var rows = BuildLedgerRows(root);
+
+        // Each AC is named or deferred. None is missing.
+        Assert.All(rows, row => Assert.True(row.Status is "covered" or "deferred", row.Id + " is " + row.Status));
+
+        // Deferred wins over a test-source name: every explicit deferral stays deferred even when a test names it,
+        // and a live edge-TLS AC that a test names is still deferred by its own text.
+        foreach (var (id, reason) in LoadExplicitDeferrals())
+        {
+            var row = Assert.Single(rows, candidate => candidate.Id == id);
+            Assert.Equal("deferred", row.Status);
+            Assert.Equal(reason, row.Reason);
+        }
+        var admissionTests = File.ReadAllText(Path.Combine(root, "tests", "RideAudit.Server.Admission.Tests", "AdmissionTests.cs"));
+        Assert.Contains("AC-RIDE-201-001", admissionTests, StringComparison.Ordinal);
+        Assert.Equal("deferred", Assert.Single(rows, row => row.Id == "AC-RIDE-201-001").Status);
+
+        // Ledger totals do not close ACs: a covered row is only a test-source name.
+        Assert.All(rows.Where(row => row.Status == "covered"), row =>
+            Assert.Equal("Named in executable test source. Not semantic closure.", row.Reason));
+    }
+
+    private static List<(string Id, string Source, string Status, string Reason)> BuildLedgerRows(string root)
+    {
+        var yamlFiles = Directory.GetFiles(Path.Combine(root, "docs", "Project"), "*Batch.yaml");
+        Assert.Equal(9, yamlFiles.Length);
+
+        var records = new List<AcRecord>();
+        foreach (var file in yamlFiles.OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
+        {
+            var text = File.ReadAllText(file);
+            foreach (Match match in AcId.Matches(text))
+            {
+                var id = match.Groups[1].Value;
+                var acText = ExtractAcText(text, match.Index);
+                records.Add(new AcRecord(id, Path.GetFileName(file), acText));
+            }
+        }
+
+        var unique = records
+            .GroupBy(record => record.Id, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .OrderBy(record => record.Id, StringComparer.Ordinal)
+            .ToList();
+        Assert.Equal(549, unique.Count);
+
+        var testText = string.Join('\n', Directory.GetFiles(Path.Combine(root, "tests"), "*.cs", SearchOption.AllDirectories)
+            .Select(File.ReadAllText));
+        var named = unique.Where(record => testText.Contains(record.Id, StringComparison.Ordinal)).Select(record => record.Id).ToHashSet(StringComparer.Ordinal);
+
+        var rows = unique.Select(record =>
+        {
+            var deferred = ClassifyDeferred(record);
+            if (deferred is not null)
+                return (record.Id, record.Source, "deferred", deferred);
+            return named.Contains(record.Id)
+                ? (record.Id, record.Source, "covered", "Named in executable test source. Not semantic closure.")
+                : (record.Id, record.Source, "missing", "No test source reference and no deferred live-integration reason.");
+        }).ToList();
+        return rows;
     }
 
     private static Dictionary<string, string> LoadExplicitDeferrals()

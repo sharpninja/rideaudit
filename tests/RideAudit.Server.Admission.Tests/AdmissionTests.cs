@@ -333,6 +333,7 @@ public class TestRide029Security
     [Trait("AC", "AC-RIDE-201-001")]
         [Trait("AC", "AC-RIDE-201-002")]
         [Trait("AC", "AC-RIDE-SEC-001-002")]
+        [Trait("AC", "AC-RIDE-SEC-001-001")]
     public void Tls_policy_vault_and_log_redaction_hold()
     {
         #pragma warning disable SYSLIB0039

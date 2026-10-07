@@ -141,6 +141,43 @@ public class NgrokDeploySecretsTests
         Assert.DoesNotContain("ghcr.io/", receipt, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    [Trait("TEST", "TEST-RIDE-038")]
+    [Trait("FR", "FR-RIDE-063")]
+    [Trait("UC", "UC-RIDE-032")]
+    [Trait("AC", "AC-RIDE-063-004")]
+    [Trait("AC", "AC-RIDE-DEPLOY-002-003")]
+    [Trait("AC", "AC-TEST-038-003")]
+    [Trait("AC", "AC-UC-032-002")]
+    public void Omarchy_compose_cutover_is_prior_interim_and_not_the_octopus_cd_green()
+    {
+        var root = FindRepoRoot();
+
+        // The compose cutover is recorded as loopback-only interim evidence and says it is not a CD green.
+        var cutoverReceipt = File.ReadAllText(Path.Combine(root, "docs", "receipts", "distribution", "legion2-omarchy-20260928.md"));
+        Assert.Contains("compose up on loopback only", cutoverReceipt, StringComparison.Ordinal);
+        Assert.Contains("rideaudit-omarchy-admission-1", cutoverReceipt, StringComparison.Ordinal);
+        Assert.Contains("Still not a CD green", cutoverReceipt, StringComparison.Ordinal);
+        Assert.DoesNotContain("octopus-rideaudit", cutoverReceipt, StringComparison.Ordinal);
+
+        var omarchyReadme = File.ReadAllText(Path.Combine(root, "deploy", "omarchy", "README.md"));
+        Assert.Contains("It is not a continuous-delivery receipt and not a production cutover.", omarchyReadme, StringComparison.Ordinal);
+        Assert.Contains("Omarchy loopback plus ngrok is interim admission hosting only.", omarchyReadme, StringComparison.Ordinal);
+        Assert.Contains("That bind is the prior interim.", omarchyReadme, StringComparison.Ordinal);
+
+        var confirmCutover = File.ReadAllText(Path.Combine(root, "deploy", "omarchy", "Confirm-Cutover.ps1"));
+        Assert.Contains("Not a CD green.", confirmCutover, StringComparison.Ordinal);
+        Assert.Contains("This is still not a CD green until the coordinator records a receipt.", confirmCutover, StringComparison.Ordinal);
+
+        // The Octopus receipt that TEST-RIDE-038 scores is a different compose project and excludes the interim loopback.
+        var octopusReceipt = File.ReadAllText(Path.Combine(root, "docs", "receipts", "distribution", "20260929T015822Z-octopus-payton-desktop.md"));
+        Assert.Contains("Compose project `rideaudit-octopus` (not `rideaudit-omarchy`)", octopusReceipt, StringComparison.Ordinal);
+        Assert.Contains("Omarchy interim loopback", octopusReceipt, StringComparison.Ordinal);
+        Assert.Contains("It is not this receipt", octopusReceipt, StringComparison.Ordinal);
+        Assert.DoesNotContain("Confirm-Cutover", octopusReceipt, StringComparison.Ordinal);
+        Assert.DoesNotContain("legion2-omarchy-20260928", octopusReceipt, StringComparison.Ordinal);
+    }
+
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
