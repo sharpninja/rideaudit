@@ -210,7 +210,7 @@ mappings:
     useCaseLocalIds: [UC-RIDE-005]
   - frId: FR-RIDE-211
     trIds: [TR-RIDE-SEAL-003]
-    testIds: [TEST-RIDE-032]
+    testIds: []
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-212
     trIds: [TR-RIDE-CHAIN-002]
@@ -218,7 +218,7 @@ mappings:
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-213
     trIds: [TR-RIDE-PERF-001]
-    testIds: [TEST-RIDE-032]
+    testIds: []
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-214
     trIds: [TR-RIDE-ESCROW-003]

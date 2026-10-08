@@ -102,9 +102,9 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | FR-RIDE-208 | ~~high~~ | **OBSOLETE (killed invent)** Per-state / CA third-party retention frames — see **FR-RIDE-078** / **TR-RIDE-PRIV-004** | TR-RIDE-STORE-003 | ~~TEST-032~~ | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-209 | medium | In-product API gap notice | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-209-001 | P9 |
 | FR-RIDE-210 | ~~critical~~ | **OBSOLETE (killed invent)** Legal hold suspends deletion — no legal-hold SoT | TR-RIDE-STORE-003, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | OBSOLETE | P10 |
-| FR-RIDE-211 | high | Cryptographic agility | TR-RIDE-SEAL-003 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-211-001, AC-RIDE-211-002 | P3 |
+| FR-RIDE-211 | high | Cryptographic agility | TR-RIDE-SEAL-003 | ~~TEST-RIDE-032~~ | UC-RIDE-009 | AC-RIDE-211-001, AC-RIDE-211-002 | P3 |
 | FR-RIDE-212 | high | Configurable public chain | TR-RIDE-CHAIN-002 | TEST-RIDE-014 | UC-RIDE-009 | AC-RIDE-212-001, AC-RIDE-212-002, AC-RIDE-212-003 | P3 (OTS default) + P11a (alternate profiles) |
-| FR-RIDE-213 | high | Seal/receipt latency budget | TR-RIDE-PERF-001 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-213-001, AC-RIDE-213-002 | P3 |
+| FR-RIDE-213 | high | Seal/receipt latency budget | TR-RIDE-PERF-001 | ~~TEST-RIDE-032~~ | UC-RIDE-009 | AC-RIDE-213-001, AC-RIDE-213-002 | P3 |
 | FR-RIDE-214 | critical | HSM/KMS key custody | TR-RIDE-ESCROW-003 | TEST-RIDE-029 | UC-RIDE-010, UC-RIDE-011 | AC-RIDE-214-001, AC-RIDE-214-002 | P5 |
 | FR-RIDE-216 | critical | Escrow resilience | TR-RIDE-ESCROW-001 | TEST-RIDE-017 | UC-RIDE-011 | AC-RIDE-216-001, AC-RIDE-216-002 | P5 |
 | FR-RIDE-217 | critical | GPL-2.0 governance NFR | TR-RIDE-GPL-001 | TEST-RIDE-020 | UC-RIDE-013 | AC-RIDE-217-001, AC-RIDE-217-002 | P11b |
@@ -156,7 +156,7 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | Field | Value |
 | --- | --- |
 | FR IDs | FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 (+ store support for client FR-015/016 ciphertext) |
-| UC / TEST | UC-RIDE-009; TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-032 |
+| UC / TEST | UC-RIDE-009; TEST-RIDE-014, TEST-RIDE-015, ~~TEST-RIDE-032~~ |
 | Files | `src/RideAudit.Seal/`, `src/RideAudit.Chain/`, `src/RideAudit.Chain.OpenTimestamps/` |
 | Depends | S1 |
 | Exit | OTS primary `btc-ots`; non-admission on chain failure |

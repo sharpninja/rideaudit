@@ -211,9 +211,9 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-208 | ~~high~~ | **OBSOLETE (killed invent)** Per-state / CA third-party retention frames — see **FR-RIDE-078** / **TR-RIDE-PRIV-004** | TR-RIDE-STORE-003 | ~~TEST-032~~ | UC-RIDE-008 | OBSOLETE | P10 |
 | FR-RIDE-209 | medium | In-product API gap notice | TR-RIDE-ANAL-002 | TEST-RIDE-007 | UC-RIDE-005 | AC-RIDE-209-001 | P9 |
 | FR-RIDE-210 | ~~critical~~ | **OBSOLETE (killed invent)** Legal hold suspends deletion — no legal-hold SoT | TR-RIDE-STORE-003, TR-RIDE-PRIV-003 | TEST-RIDE-010 | UC-RIDE-008 | OBSOLETE | P10 |
-| FR-RIDE-211 | high | Cryptographic agility | TR-RIDE-SEAL-003 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-211-001, AC-RIDE-211-002 | P3 |
+| FR-RIDE-211 | high | Cryptographic agility | TR-RIDE-SEAL-003 | ~~TEST-RIDE-032~~ | UC-RIDE-009 | AC-RIDE-211-001, AC-RIDE-211-002 | P3 |
 | FR-RIDE-212 | high | Configurable public chain | TR-RIDE-CHAIN-002 | TEST-RIDE-014 | UC-RIDE-009 | AC-RIDE-212-001, AC-RIDE-212-002, AC-RIDE-212-003 | P3 (OTS default) + P11a (alternate profiles) |
-| FR-RIDE-213 | high | Seal/receipt latency budget | TR-RIDE-PERF-001 | TEST-RIDE-032 | UC-RIDE-009 | AC-RIDE-213-001, AC-RIDE-213-002 | P3 |
+| FR-RIDE-213 | high | Seal/receipt latency budget | TR-RIDE-PERF-001 | ~~TEST-RIDE-032~~ | UC-RIDE-009 | AC-RIDE-213-001, AC-RIDE-213-002 | P3 |
 | FR-RIDE-214 | critical | HSM/KMS key custody | TR-RIDE-ESCROW-003 | TEST-RIDE-029 | UC-RIDE-010, UC-RIDE-011 | AC-RIDE-214-001, AC-RIDE-214-002 | P5 |
 | FR-RIDE-215 | critical | Play authenticity allowlist | TR-RIDE-PLAY-001, TR-RIDE-PLAY-003 | TEST-RIDE-019 | UC-RIDE-012 | AC-RIDE-215-001, AC-RIDE-215-002, AC-RIDE-215-003 | P4 |
 | FR-RIDE-216 | critical | Escrow resilience | TR-RIDE-ESCROW-001 | TEST-RIDE-017 | UC-RIDE-011 | AC-RIDE-216-001, AC-RIDE-216-002 | P5 |
@@ -343,7 +343,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-029 | Security TLS vault and access logs | AC-TEST-029-001, AC-TEST-029-002 | FR-RIDE-201, FR-RIDE-214 (~~FR-203 killed~~) |
 | TEST-RIDE-030 | KILLED | Concierge invent killed 2026-10-07 | - | - |
 | TEST-RIDE-031 | Scalability pagination and portable export | AC-TEST-031-001, AC-TEST-031-002 | FR-RIDE-205, FR-RIDE-207 |
-| TEST-RIDE-032 | **OBSOLETE as killed invent** (retention/crypto/latency bundle) — ~~FR-208~~ killed; FR-211/213 remapping TBD | OBSOLETE | FR-RIDE-211, FR-RIDE-213 (~~208 killed~~) |
+| ~~TEST-RIDE-032~~ | **OBSOLETE as killed invent** (retention/crypto/latency bundle) — ~~FR-208~~ killed; FR-211/213 map to no TEST (Payton 2026-10-08) | OBSOLETE | FR-RIDE-211, FR-RIDE-213 (~~208 killed~~) |
 | TEST-RIDE-033 | Video quotas and performance gates | AC-TEST-033-001, AC-TEST-033-002 | FR-RIDE-219, FR-RIDE-220 |
 | TEST-RIDE-035 | Avalonia UI 12 clients and GPL share | (inherits mapped FR ACs) | FR-RIDE-056, FR-RIDE-057, FR-RIDE-058 |
 | TEST-RIDE-036 | gRPC .NET 10 sealed fail-closed admission | (inherits mapped FR ACs) | FR-RIDE-059, FR-RIDE-061 |
@@ -582,8 +582,8 @@ Every implementation increment must identify the exact AC IDs exercised by each 
 | AC-TEST-030-002 | TEST-RIDE-030 | KILLED | Concierge invent killed 2026-10-07 |
 | AC-TEST-031-001 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 |
 | AC-TEST-031-002 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 |
-| AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD |
-| AC-TEST-032-002 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD |
+| AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 map to no TEST (Payton 2026-10-08) |
+| AC-TEST-032-002 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 map to no TEST (Payton 2026-10-08) |
 | AC-TEST-033-001 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 |
 | AC-TEST-033-002 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 |
 
@@ -784,13 +784,13 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-208-002 | ~~FR-208~~ | **OBSOLETE** — see **FR-RIDE-078** | P10 | — | ~~TEST-032~~ |
 | AC-RIDE-209-001 | FR-RIDE-209 | FR-RIDE-209 | P9 | P11b | TEST-RIDE-007 |
 | AC-RIDE-210-001 | ~~FR-210~~ | **OBSOLETE** legal-hold | P10 | — | TEST-RIDE-010 |
-| AC-RIDE-211-001 | FR-RIDE-211 | FR-RIDE-211 | P3 | P11b | TEST-RIDE-032 |
-| AC-RIDE-211-002 | FR-RIDE-211 | FR-RIDE-211 | P3 | P11b | TEST-RIDE-032 |
+| AC-RIDE-211-001 | FR-RIDE-211 | FR-RIDE-211 | P3 | P11b | ~~TEST-RIDE-032~~ |
+| AC-RIDE-211-002 | FR-RIDE-211 | FR-RIDE-211 | P3 | P11b | ~~TEST-RIDE-032~~ |
 | AC-RIDE-212-001 | FR-RIDE-212 | FR-RIDE-212 | P3, P11a | P11b | TEST-RIDE-014 |
 | AC-RIDE-212-002 | FR-RIDE-212 | FR-RIDE-212 | P3, P11a | P11b | TEST-RIDE-014 |
 | AC-RIDE-212-003 | FR-RIDE-212 | FR-RIDE-212 | P3, P11a | P11b | TEST-RIDE-014 |
-| AC-RIDE-213-001 | FR-RIDE-213 | FR-RIDE-213 | P3 | P11b | TEST-RIDE-032 |
-| AC-RIDE-213-002 | FR-RIDE-213 | FR-RIDE-213 | P3 | P11b | TEST-RIDE-032 |
+| AC-RIDE-213-001 | FR-RIDE-213 | FR-RIDE-213 | P3 | P11b | ~~TEST-RIDE-032~~ |
+| AC-RIDE-213-002 | FR-RIDE-213 | FR-RIDE-213 | P3 | P11b | ~~TEST-RIDE-032~~ |
 | AC-RIDE-214-001 | FR-RIDE-214 | FR-RIDE-214 | P5 | P11b | TEST-RIDE-029 |
 | AC-RIDE-214-002 | FR-RIDE-214 | FR-RIDE-214 | P5 | P11b | TEST-RIDE-029 |
 | AC-RIDE-215-001 | FR-RIDE-215 | FR-RIDE-215 | P4 | P11b | TEST-RIDE-019 |
@@ -860,8 +860,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-SEAL-001-002 | TR-RIDE-SEAL-001 | FR-RIDE-015 | P3 | P11b | TEST-RIDE-013 |
 | AC-RIDE-SEAL-002-001 | TR-RIDE-SEAL-002 | FR-RIDE-016 | P3 | P11b | TEST-RIDE-013 |
 | AC-RIDE-SEAL-002-002 | TR-RIDE-SEAL-002 | FR-RIDE-016 | P3 | P11b | TEST-RIDE-013 |
-| AC-RIDE-SEAL-003-001 | TR-RIDE-SEAL-003 | FR-RIDE-211 | P3 | P11b | TEST-RIDE-032 |
-| AC-RIDE-SEAL-003-002 | TR-RIDE-SEAL-003 | FR-RIDE-211 | P3 | P11b | TEST-RIDE-032 |
+| AC-RIDE-SEAL-003-001 | TR-RIDE-SEAL-003 | FR-RIDE-211 | P3 | P11b | ~~TEST-RIDE-032~~ |
+| AC-RIDE-SEAL-003-002 | TR-RIDE-SEAL-003 | FR-RIDE-211 | P3 | P11b | ~~TEST-RIDE-032~~ |
 | AC-RIDE-CHAIN-001-001 | TR-RIDE-CHAIN-001 | FR-RIDE-017, FR-RIDE-027 | P3, P4 | P11b | TEST-RIDE-014, TEST-RIDE-019 |
 | AC-RIDE-CHAIN-001-002 | TR-RIDE-CHAIN-001 | FR-RIDE-017, FR-RIDE-027 | P3, P4 | P11b | TEST-RIDE-014, TEST-RIDE-019 |
 | AC-RIDE-CHAIN-002-001 | TR-RIDE-CHAIN-002 | FR-RIDE-018, FR-RIDE-212 | P3, P11a | P11b | TEST-RIDE-014 |
@@ -932,8 +932,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-RIDE-SEC-002-001 | TR-RIDE-SEC-002 | ~~FR-014~~ **OBSOLETE** | P10 | P11b | TEST-RIDE-012 |
 | AC-RIDE-SEC-002-002 | TR-RIDE-SEC-002 | ~~FR-014~~ **OBSOLETE** | P10 | P11b | TEST-RIDE-012 |
 | AC-RIDE-SEC-003-001 | TR-RIDE-SEC-003 | ~~FR-203~~ **OBSOLETE** | P10 | P11b | TEST-RIDE-029 |
-| AC-RIDE-PERF-001-001 | TR-RIDE-PERF-001 | FR-RIDE-213 | P3 | P11b | TEST-RIDE-032 |
-| AC-RIDE-PERF-001-002 | TR-RIDE-PERF-001 | FR-RIDE-213 | P3 | P11b | TEST-RIDE-032 |
+| AC-RIDE-PERF-001-001 | TR-RIDE-PERF-001 | FR-RIDE-213 | P3 | P11b | ~~TEST-RIDE-032~~ |
+| AC-RIDE-PERF-001-002 | TR-RIDE-PERF-001 | FR-RIDE-213 | P3 | P11b | ~~TEST-RIDE-032~~ |
 | AC-RIDE-PERF-002-001 | TR-RIDE-PERF-002 | FR-RIDE-205 | P10 | P11b | TEST-RIDE-031 |
 | AC-RIDE-PERF-003-001 | TR-RIDE-PERF-003 | FR-RIDE-220 | P6 | P11b | TEST-RIDE-033 |
 | AC-RIDE-PERF-003-002 | TR-RIDE-PERF-003 | FR-RIDE-220 | P6 | P11b | TEST-RIDE-033 |
@@ -999,8 +999,8 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-TEST-030-002 | TEST-RIDE-030 | FR-RIDE-206 | P9 | P11b | KILLED | Concierge invent killed 2026-10-07 |
 | AC-TEST-031-001 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
 | AC-TEST-031-002 | TEST-RIDE-031 | FR-RIDE-205, FR-RIDE-207 | P10 | P11b | TEST-RIDE-031 |
-| AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD | P3, P10 | P11b | TEST-RIDE-032 |
-| AC-TEST-032-002 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 TBD | P3, P10 | P11b | TEST-RIDE-032 |
+| AC-TEST-032-001 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 map to no TEST (Payton 2026-10-08) | P3, P10 | P11b | ~~TEST-RIDE-032~~ |
+| AC-TEST-032-002 | ~~TEST-032~~ | **OBSOLETE** ~~FR-208~~; FR-211/213 map to no TEST (Payton 2026-10-08) | P3, P10 | P11b | ~~TEST-RIDE-032~~ |
 | AC-TEST-033-001 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 | P6 | P11b | TEST-RIDE-033 |
 | AC-TEST-033-002 | TEST-RIDE-033 | FR-RIDE-219, FR-RIDE-220 | P6 | P11b | TEST-RIDE-033 |
 | AC-UC-001-001 | UC-RIDE-001 | FR-RIDE-001, FR-RIDE-003, FR-RIDE-006, FR-RIDE-013 | P9 | P11b | TEST-RIDE-001, TEST-RIDE-003, TEST-RIDE-006, TEST-RIDE-011 |
@@ -1017,10 +1017,10 @@ Conservative closure policy: primary implementation phases = union of section 10
 | AC-UC-006-002 | UC-RIDE-006 | FR-RIDE-008 | P8 | P11b | TEST-RIDE-008 |
 | AC-UC-007-001 | UC-RIDE-007 | FR-RIDE-009, ~~FR-RIDE-038~~, FR-RIDE-207 | P8, P10 | P11b | TEST-RIDE-009, TEST-RIDE-023, TEST-RIDE-031 |
 | AC-UC-007-002 | UC-RIDE-007 | FR-RIDE-009, ~~FR-RIDE-038~~, FR-RIDE-207 | P8, P10 | P11b | TEST-RIDE-009, TEST-RIDE-023, TEST-RIDE-031 |
-| AC-UC-008-001 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-032 |
-| AC-UC-008-002 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-032 |
-| AC-UC-009-001 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 | P2, P3, P11a | P11b | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-029, TEST-RIDE-032 |
-| AC-UC-009-002 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 | P2, P3, P11a | P11b | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-029, TEST-RIDE-032 |
+| AC-UC-008-001 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, ~~TEST-RIDE-032~~ |
+| AC-UC-008-002 | UC-RIDE-008 | FR-RIDE-010 (~~202/203/208/210 killed~~); **FR-RIDE-078** | P10 | P11b | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, ~~TEST-RIDE-032~~ |
+| AC-UC-009-001 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 | P2, P3, P11a | P11b | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-029, ~~TEST-RIDE-032~~ |
+| AC-UC-009-002 | UC-RIDE-009 | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-201, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 | P2, P3, P11a | P11b | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-029, ~~TEST-RIDE-032~~ |
 | AC-UC-010-001 | UC-RIDE-010 | FR-RIDE-020, FR-RIDE-021, FR-RIDE-028, FR-RIDE-214 | P5, P8 | P11b | TEST-RIDE-016, TEST-RIDE-018, TEST-RIDE-029 |
 | AC-UC-010-002 | UC-RIDE-010 | FR-RIDE-020, FR-RIDE-021, FR-RIDE-028, FR-RIDE-214 | P5, P8 | P11b | TEST-RIDE-016, TEST-RIDE-018, TEST-RIDE-029 |
 | AC-UC-011-001 | UC-RIDE-011 | FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-214, FR-RIDE-216 | P5 | P11b | TEST-RIDE-017, TEST-RIDE-018, TEST-RIDE-029 |
@@ -1096,7 +1096,7 @@ Post-planning ledger row count: **20**. Combined planned AC inventory: **424**.
 
 P0 is documentation-only. P1–P10 are construction increments; completing an increment does **not** automatically satisfy every FR or broad TEST record named in its table. Before each increment, partition work by explicit AC IDs and name any later acceptance gate. For each next small behavior retain: RED evidence, passing mock validation, passing tests against the real target implementation, and refactor evidence with current+prior suites at Failed 0 and Skipped 0. External dependency mocks must be identified. Mock or contract-only results must never be labeled real-provider or end-to-end acceptance.
 
-P1 provides contract-only evidence. P2 provides admission orchestration and fail-closed adapter boundaries; **real custody integration is accepted only after P3–P5**. TEST-RIDE-032 P3 scope = cryptographic agility and latency; retention completes in P10. TEST-RIDE-016 P5 scope = court-release path; verification UI completes in P8. TEST-RIDE-035 P6 scope = Android and shared UI; desktop and cross-client reuse complete in P7. TEST-RIDE-020 early scope = licensing/metadata; publication completes in P11b. Each partition must list its exact FR/TR/TEST/UC AC closure. **P11b** runs the complete integrated acceptance suite with no skipped requirements.
+P1 provides contract-only evidence. P2 provides admission orchestration and fail-closed adapter boundaries; **real custody integration is accepted only after P3–P5**. ~~TEST-RIDE-032~~ P3 scope = cryptographic agility and latency; retention completes in P10. TEST-RIDE-016 P5 scope = court-release path; verification UI completes in P8. TEST-RIDE-035 P6 scope = Android and shared UI; desktop and cross-client reuse complete in P7. TEST-RIDE-020 early scope = licensing/metadata; publication completes in P11b. Each partition must list its exact FR/TR/TEST/UC AC closure. **P11b** runs the complete integrated acceptance suite with no skipped requirements.
 
 ### Authoritative dependency table
 
@@ -1182,13 +1182,13 @@ Phase numbering does not authorize bypassing a dependency.
 | FR IDs (implementation ownership) | FR-RIDE-015, FR-RIDE-016, FR-RIDE-017, FR-RIDE-018, FR-RIDE-019, FR-RIDE-211, FR-RIDE-212, FR-RIDE-213 |
 | UC IDs | UC-RIDE-009 |
 | TR IDs | TR-RIDE-STORE-001, TR-RIDE-STORE-002, TR-RIDE-SEAL-001, TR-RIDE-SEAL-002, TR-RIDE-CHAIN-001, TR-RIDE-CHAIN-002, TR-RIDE-CHAIN-003, TR-RIDE-SEAL-003, TR-RIDE-PERF-001 |
-| TEST IDs | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, TEST-RIDE-032 |
+| TEST IDs | TEST-RIDE-013, TEST-RIDE-014, TEST-RIDE-015, ~~TEST-RIDE-032~~ |
 | FR-owned AC IDs | AC-RIDE-015-001, AC-RIDE-015-002, AC-RIDE-016-001, AC-RIDE-016-002, AC-RIDE-016-003, AC-RIDE-017-001, AC-RIDE-017-002, AC-RIDE-018-001, AC-RIDE-018-002, AC-RIDE-018-003, AC-RIDE-019-001, AC-RIDE-019-002, AC-RIDE-019-003, AC-RIDE-211-001, AC-RIDE-211-002, AC-RIDE-212-001, AC-RIDE-212-002, AC-RIDE-212-003, AC-RIDE-213-001, AC-RIDE-213-002 |
 | AC closure | Union of FR-owned ACs above plus TR/TEST/UC-owned ACs for mapped records (see §2.7); partition per phase ac_scope |
 | Files / projects | src/RideAudit.Seal/; src/RideAudit.Chain/; src/RideAudit.Chain.OpenTimestamps/; tests/RideAudit.Seal.Tests/; tests/RideAudit.Chain.Tests/ |
 | Dependencies | P1 |
 | AC / evidence scope | Seal+OTS; retention portion of TEST-032 deferred to P10 |
-| Exit criteria | TEST-RIDE-013/014/015 Failed 0 Skipped 0; TEST-RIDE-032 only crypto-agility+latency partition; OTS primary profile btc-ots; HV AGREE |
+| Exit criteria | TEST-RIDE-013/014/015 Failed 0 Skipped 0; ~~TEST-RIDE-032~~ only crypto-agility+latency partition; OTS primary profile btc-ots; HV AGREE |
 | HV gate | Opposing-model AGREE; retain `docs/receipts/hv/*` JSONL **and** `docs/reviews/hv-pairs/*` canonical pair; commit immediately |
 
 **BDPv4 notes:** BDPv4; real OTS calendar or recorded fixture per plan custody contracts
@@ -1322,13 +1322,13 @@ Phase numbering does not authorize bypassing a dependency.
 | FR IDs (implementation ownership) | FR-RIDE-010, FR-RIDE-205, FR-RIDE-207, **FR-RIDE-077**, **FR-RIDE-078** (~~014/202/203/208/210 killed~~) |
 | UC IDs | UC-RIDE-008, UC-RIDE-021, UC-RIDE-007 |
 | TR IDs | TR-RIDE-STORE-003, TR-RIDE-PRIV-001, TR-RIDE-PRIV-003, TR-RIDE-PRIV-002, TR-RIDE-SEC-002, TR-RIDE-SEC-003, TR-RIDE-PERF-002, TR-RIDE-STORE-001, TR-RIDE-STORE-002 |
-| TEST IDs | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-031, TEST-RIDE-032 |
+| TEST IDs | TEST-RIDE-010, TEST-RIDE-012, TEST-RIDE-029, TEST-RIDE-031, ~~TEST-RIDE-032~~ |
 | FR-owned AC IDs | AC-RIDE-010-001, AC-RIDE-010-002, AC-RIDE-014-001, AC-RIDE-014-002, AC-RIDE-202-001, AC-RIDE-202-002, AC-RIDE-203-001, AC-RIDE-205-001, AC-RIDE-205-002, AC-RIDE-207-001, AC-RIDE-208-001, AC-RIDE-208-002, AC-RIDE-210-001 |
 | AC closure | Union of FR-owned ACs above plus TR/TEST/UC-owned ACs for mapped records (see §2.7); partition per phase ac_scope |
 | Files / projects | src/RideAudit.Privacy/; src/RideAudit.Sec/; tests/RideAudit.Privacy.Tests/; tests/RideAudit.Sec.Tests/ |
 | Dependencies | P2; P8; P9 |
 | AC / evidence scope | Privacy/retention completion (~~RBAC invent killed~~) |
-| Exit criteria | TEST-RIDE-010/012/029/031 Failed 0 Skipped 0; TEST-RIDE-032 retention partition; HV AGREE |
+| Exit criteria | TEST-RIDE-010/012/029/031 Failed 0 Skipped 0; ~~TEST-RIDE-032~~ retention partition; HV AGREE |
 | HV gate | Opposing-model AGREE; retain `docs/receipts/hv/*` JSONL **and** `docs/reviews/hv-pairs/*` canonical pair; commit immediately |
 
 **BDPv4 notes:** BDPv4
