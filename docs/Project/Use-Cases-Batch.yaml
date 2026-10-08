@@ -399,29 +399,6 @@ records:
 
   - kind: usecase
     frLinks:
-    - frId: FR-RIDE-037
-      linkType: Realizes
-    localId: UC-RIDE-016
-    actors:
-    - Counsel
-    - Admin
-    acceptanceCriteria:
-    - id: AC-UC-016-001
-      text: Use case UC-RIDE-016 completes happy path without inventing undocumented Lyft APIs.
-      isSatisfied: false
-    - id: AC-UC-016-002
-      text: Unverified caveats from source requirements remain visible where applicable.
-      isSatisfied: false
-    briefDescription: Assemble independently admitted submissions from many drivers with per-record verification reports.
-    basicFlow: |
-      1. Counsel selects authorized case drivers/submissions.
-      2. System builds bundle preserving per-record receipts and attestations.
-      3. System attaches VerificationReport per record.
-      4. Aggregation does not weaken per-record custody.
-    title: Counsel multi-driver bundle
-
-  - kind: usecase
-    frLinks:
     - frId: FR-RIDE-041
       linkType: Realizes
     - frId: FR-RIDE-042

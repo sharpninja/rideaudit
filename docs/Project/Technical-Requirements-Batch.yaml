@@ -544,22 +544,6 @@ records:
         text: "Aggregate indexes require explicit authorization."
         isSatisfied: false
   - kind: tr
-    id: TR-RIDE-SERVER-007
-    title: "Counsel multi-driver bundle builder"
-    description: "Assemble many drivers independently admitted submissions with per-record verification reports."
-    priority: high
-    area: RIDE
-    subarea: SERVER
-    status: pending
-    notes: "Implements/supports: FR-RIDE-037"
-    acceptanceCriteria:
-      - id: AC-RIDE-SERVER-007-001
-        text: "Bundle preserves per-record custody."
-        isSatisfied: false
-      - id: AC-RIDE-SERVER-007-002
-        text: "Per-record VerificationReport included."
-        isSatisfied: false
-  - kind: tr
     id: TR-RIDE-VIDEO-001
     title: "Dual-phone capture session"
     description: "Coordinate two approved phones for one authorized vehicle/session with per-device identity, attestation, camera metadata, timestamps."

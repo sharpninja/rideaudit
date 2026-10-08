@@ -72,7 +72,6 @@ Package view of every actor and every use case: [overview.md](overview.md).
 | UC-RIDE-013 | GPL-2.0 publish and notice | Admin | [UC-RIDE-013.md](UC-RIDE-013.md) | associations only |
 | UC-RIDE-014 | Driver self-registers on public server | Driver, PublicServer | [UC-RIDE-014.md](UC-RIDE-014.md) | associations only |
 | UC-RIDE-015 | Submit sealed package to public server | Driver, PublicServer | [UC-RIDE-015.md](UC-RIDE-015.md) | 1 extend |
-| UC-RIDE-016 | Counsel multi-driver bundle | Counsel, Admin | [UC-RIDE-016.md](UC-RIDE-016.md) | associations only |
 | UC-RIDE-017 | Dual-phone composite evidence | Driver | [UC-RIDE-017.md](UC-RIDE-017.md) | 5 include, 1 extend |
 | UC-RIDE-018 | Counsel composite playback | Counsel | [UC-RIDE-018.md](UC-RIDE-018.md) | 2 include, 1 extend |
 | UC-RIDE-019 | Desktop court viewer review | Counsel, Auditor | [UC-RIDE-019.md](UC-RIDE-019.md) | 2 include, 1 extend |

@@ -58,7 +58,6 @@ flowchart TB
     subgraph server["Public server"]
       direction TB
       N015(["UC-RIDE-015<br/>Submit sealed package to public server"])
-      N016(["UC-RIDE-016<br/>Counsel multi-driver bundle"])
     end
     subgraph video["Dual-phone evidence"]
       direction TB
@@ -125,8 +124,6 @@ flowchart TB
   A_PublicServer --- N015
   A_PublicChain --- N015
   A_PlayIntegrity --- N015
-  A_Counsel --- N016
-  A_Admin --- N016
   A_Driver --- N017
   A_DriverPhone --- N017
   A_PassengerPhone --- N017
@@ -171,7 +168,7 @@ flowchart TB
 | --- | --- |
 | Driver | [UC-RIDE-001](UC-RIDE-001.md), [UC-RIDE-002](UC-RIDE-002.md), [UC-RIDE-004](UC-RIDE-004.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-012](UC-RIDE-012.md), [UC-RIDE-014](UC-RIDE-014.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-017](UC-RIDE-017.md) |
 | Third-party telematics source | [UC-RIDE-004](UC-RIDE-004.md) |
-| Counsel | [UC-RIDE-005](UC-RIDE-005.md), [UC-RIDE-007](UC-RIDE-007.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-011](UC-RIDE-011.md), [UC-RIDE-016](UC-RIDE-016.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md), [UC-RIDE-021](UC-RIDE-021.md), [UC-RIDE-026](UC-RIDE-026.md) |
+| Counsel | [UC-RIDE-005](UC-RIDE-005.md), [UC-RIDE-007](UC-RIDE-007.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-011](UC-RIDE-011.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md), [UC-RIDE-021](UC-RIDE-021.md), [UC-RIDE-026](UC-RIDE-026.md) |
 | Public server | [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-014](UC-RIDE-014.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-017](UC-RIDE-017.md), [UC-RIDE-023](UC-RIDE-023.md), [UC-RIDE-028](UC-RIDE-028.md), [UC-RIDE-030](UC-RIDE-030.md) |
 | Configured public chain | [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md) |
 | Play Integrity | [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-012](UC-RIDE-012.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md) |
