@@ -1,3 +1,25 @@
+# RideAudit handoff update (cloud takeover)
+
+Written: 2026-10-08 07:25 CT (America/Chicago).
+Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payton's direction (2026-10-08). Grok is unavailable for HV.
+
+## Done this pass (pushed to cursor/capture-operator-reqs-b19f; merge commits only, no force-push)
+
+- Merged master (#27 Fold 4 cradle) into PR #26 and ported #27's verify-geometry.py changes into tools/RideAudit.HeadrestGeometry. The C# report matches master's Python report on every value. Receipt: docs/receipts/remediation/20261008T121552Z-pr26-merge-master-fold4-csharp-port.md
+- Fixed the Client test that still asserted the Section 9 checkbox text removed in 9906172.
+- HV process amended (2026-10-08): Claude Code is an approved generator; gpt-6.1-sol at high is the opposing validator while Grok is unavailable. docs/process/hostile-validation.md, docs/process/code-generation.md
+- FR-RIDE-038 multi-driver bundle retired (Payton 2026-10-07). Contract 0.4.0. FR-RIDE-037 kept, "multi-driver" dropped. Ledger 547 (385 covered / 162 deferred / 0 missing). Receipt with the MCP sync list: docs/receipts/remediation/20261008T122143Z-pr26-retire-fr038-multidriver-bundle.md
+
+## Open
+
+- MCP SoT is not reachable from the cloud session. Apply the MCP sync list in the FR-038 receipt on PAYTON-LEGION2 and regenerate both wikis.
+- STOP for Payton: TR-RIDE-SERVER-007 and UC-RIDE-016 (bundle rows, ACs deferred); approved review-app UX files that still describe multi-driver bundles (listed in the receipt).
+- No HV run yet. gpt-6.1-sol at high is not reachable from this session.
+- PR #26 review threads still to triage and answer.
+- Tests run on Linux with .NET SDK 10.0.112 and OpenSCAD 2021.01. global.json pins 10.0.401 and was relaxed locally only (not committed). Android and Windows host tests not run here.
+- Do not merge.
+
+---
 # RideAudit handoff update (PAYTON-LEGION2)
 
 Written: 2026-10-07 12:57:10 CT (America/Chicago).
