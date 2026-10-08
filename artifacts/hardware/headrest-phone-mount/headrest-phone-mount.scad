@@ -32,7 +32,13 @@
 // the cradle bottom, through that arm slot, and into an M8×1.25 tap hole in
 // the receiver roof, on the arm centerline. Fully seated, the head face clamps
 // the bottom plate and the arm.
-// The phone sits flush on the vertical back plate.
+// The closed Galaxy Z Fold 4 sits in landscape. The cover screen is flush on
+// the vertical back plate. The primary rear cameras face forward, out of the
+// cradle opening, toward the road. The portrait-top end (rear cluster) is -X.
+// The portrait-bottom end (USB-C) is +X. A short hook at +X stops the phone
+// sliding forward. That hook does not cross the camera end. No published
+// figure gives the camera-bump height or the cluster's edge offsets, so the
+// model does not cut a bump pocket or a sized lens window.
 //
 // Use frame (assembly):
 //   X  across the headrest posts
@@ -59,15 +65,15 @@ slot_gap     = 14;   // mm, cradle-bottom clearance slot length along the arm
 slot_radius  = 185;  // mm, post axis to the preview screw, along the arm
 
 /* [Phone cradle] */
-phone_width_min     = 70;   // mm, landscape short side (vertical on the plate)
-phone_width_max     = 85;
-phone_length_min    = 140;  // mm, landscape long side
-phone_length_max    = 172;
-phone_thickness_max = 12;   // mm, including a slim case
-camera_clearance    = 18;   // mm, square window, both upper corners of the back plate
-
-/* [Structure] */
-cradle_lip = 3;    // mm, front lip thickness
+// Closed Galaxy Z Fold 4, landscape. Long side is the closed height.
+// Short side is the closed width, vertical in the cradle.
+// Thickness is the hinge (glass to glass), the thickest published body.
+// Sources are cited in dimensions.md. No case.
+phone_width_min     = 67.1;
+phone_width_max     = 67.1;
+phone_length_min    = 155.1;
+phone_length_max    = 155.1;
+phone_thickness_max = 15.8;
 
 /* [Export] */
 // assembly, block, tray, coupon, screw
@@ -79,10 +85,17 @@ arm_width = 56;     // wide rails beside the tight slot, so the arm does not fle
 arm_t = 12.0;       // vertical thickness; the arm lies flat
 arm_z0 = 0;
 rail_half_y = 9.0;  // receiver roof fore-aft half-depth
-rail_h = 16.0;      // roof thickness; must exceed thread engagement
 bottom_t = 6.0;     // cradle bottom, the head's bearing plate
 cheek = 6.0;        // side ties from the bottom plate up to the roof, outside the arms
 arm_gap_z = 0.20;   // slide clearance each side; seating the head takes this up
+// USB-C end hook. It stands proud of the 15.8 mm hinge face and stops
+// forward slip. It stays on the portrait-bottom end only.
+usb_hook_len = 12;
+usb_hook_gap = 0.35;
+usb_hook_t = 2.4;
+front_reach = phone_thickness_max + usb_hook_gap + usb_hook_t;
+// Roof is just taller than the forward overhang so the wedge prints at 45 degrees.
+rail_h = front_reach + 0.45;
 // M8×1.25. Crest is the major diameter. The roof hole is the tap drill.
 screw_pitch = 1.25;
 screw_major = 8.0;
@@ -134,11 +147,16 @@ slot_y1 = arm_y1 - 8;                 // and stops short of the tip
 slot_len = slot_y1 - slot_y0;
 
 side_wall = 3.4;
-pocket_x = phone_length_max + 1.6;
-pocket_z = phone_width_max + 0.8;
-pocket_y = phone_thickness_max + 0.5;
-front_lip_t = cradle_lip;
-front_lip_h = cradle_lip + 5;
+// Closed Fold 4 only. Clearance is per end on the long side, at the top, and in front of the hinge.
+side_clear = 0.40;
+top_clear = 0.40;
+thick_clear = 0.40;
+fold_d_min = 14.2; // published thin edge. The hinge, phone_thickness_max, sizes the pocket.
+pocket_x = phone_length_max + 2 * side_clear;
+pocket_z = phone_width_max + top_clear;
+pocket_y = phone_thickness_max + thick_clear;
+front_lip_t = 0; // no full-width fence across the camera face
+front_lip_h = 0;
 outer_x = pocket_x + 2 * side_wall;
 
 rail_z0 = arm_z0 + arm_t + arm_gap_z;
@@ -169,10 +187,8 @@ clamp_stack = bottom_t + arm_t;          // bottom plate + arm, gaps closed
 clamp_takeup = 2 * arm_gap_z;            // slide clearance the seating load closes
 asm_lift = -(z_bear - screw_head_h);
 
-standout_y = y_plate1 + pocket_y + front_lip_t;
+standout_y = y_plate1 + front_reach;
 asm_top_z = z_pocket1 + asm_lift;
-win_x = pocket_x / 2 - camera_clearance / 2;
-win_z = z_pocket1 - camera_clearance / 2;
 y_solid = slot_y0 + 20;
 
 /* ----------------------- checks ----------------------- */
@@ -184,9 +200,18 @@ assert(phone_width_max + 0.01 >= phone_width_min, "phone width range");
 assert(phone_length_max + 0.01 >= phone_length_min, "phone length range");
 assert(phone_length_min + 0.01 >= phone_width_max, "landscape long side must exceed the short side");
 assert(phone_thickness_max >= 6 && phone_thickness_max <= 18, "phone thickness out of bracket range");
-assert(camera_clearance >= 12, "camera_clearance too small to uncover a lens");
-assert(2 * camera_clearance + 12 <= pocket_x, "camera windows do not fit across the back plate");
-assert(camera_clearance + 6 <= pocket_z, "camera window does not fit the short side");
+assert(abs(phone_length_max - 155.1) < 0.05, "length is not the Fold 4 closed height");
+assert(abs(phone_width_max - 67.1) < 0.05, "short side is not the Fold 4 closed width");
+assert(abs(phone_thickness_max - 15.8) < 0.05, "thickness is not the Fold 4 hinge");
+assert(abs(phone_length_min - phone_length_max) < 0.05, "length range is not one closed Fold 4");
+assert(abs(phone_width_min - phone_width_max) < 0.05, "width range is not one closed Fold 4");
+assert(abs(fold_d_min - 14.2) < 0.05, "thin edge is not the published 14.2 mm");
+assert(fold_d_min + 0.5 < phone_thickness_max, "thin edge is not thinner than the hinge");
+assert(usb_hook_len >= 8 && usb_hook_len <= 16, "USB-end hook is not a short stop");
+assert(phone_length_max - usb_hook_len >= 130, "USB-end hook reaches the camera end");
+assert(front_reach > phone_thickness_max + 1.5, "hook does not stand proud of the hinge face");
+assert(pocket_y + 0.01 >= phone_thickness_max, "pocket is shallower than the hinge");
+assert(pocket_y + 0.05 < front_reach, "pocket depth swallows the USB hook");
 assert(post_od + 0.001 >= post_od_min && post_od - 0.001 <= post_od_max, "post_od is outside 10..14 mm");
 assert(post_clearance + 0.001 >= 0.2 && post_clearance - 0.001 <= 0.5, "clearance is outside 0.2..0.5 mm");
 assert(abs(bore_id - (post_od + post_clearance)) < 0.01, "bore is not post_od plus clearance");
@@ -220,7 +245,7 @@ assert(z_pocket0 >= rail_z1 - 0.01, "phone pocket overlaps the screw rail");
 assert(plate_t + 1 < pocket_z, "back plate is not a vertical plate");
 assert(arm_rise == 0, "arm is not horizontal");
 assert(abs(arm_y1 - arm_y0) > 100, "arm does not reach forward");
-assert(rail_h + 0.01 >= pocket_y + front_lip_t, "pocket overhang is steeper than 45 degrees");
+assert(rail_h + 0.01 >= front_reach, "forward overhang is steeper than 45 degrees");
 assert(rail_span / 2 + 0.01 >= post_spacing_max / 2 + arm_width / 2, "roof does not cover the wide-spacing arm");
 assert(block_wall + 0.01 >= 5, "collar wall is thinner than 5 mm");
 assert(gusset_y0 > bore_cy + bore_id / 2, "gusset covers the post bore");
@@ -298,9 +323,14 @@ echo(str("CHECK phone_width_max=", phone_width_max));
 echo(str("CHECK phone_length_min=", phone_length_min));
 echo(str("CHECK phone_length_max=", phone_length_max));
 echo(str("CHECK phone_thickness_max=", phone_thickness_max));
-echo(str("CHECK camera_clearance=", camera_clearance));
-echo(str("CHECK win_x=", win_x));
-echo(str("CHECK win_z=", win_z));
+echo(str("CHECK fold_d_min=", fold_d_min));
+echo(str("CHECK side_clear=", side_clear));
+echo(str("CHECK top_clear=", top_clear));
+echo(str("CHECK thick_clear=", thick_clear));
+echo(str("CHECK front_reach=", front_reach));
+echo(str("CHECK usb_hook_len=", usb_hook_len));
+echo(str("CHECK usb_hook_gap=", usb_hook_gap));
+echo(str("CHECK usb_hook_t=", usb_hook_t));
 echo(str("CHECK standout_y=", standout_y));
 echo(str("CHECK asm_top_z=", asm_top_z));
 echo(str("CHECK cradle_count=", 1));
@@ -405,36 +435,37 @@ module tray_use() {
             // Vertical back plate. The phone sits flush on the forward face (y_plate1).
             translate([-outer_x / 2, y_plate0, rail_z0])
                 cube([outer_x, plate_t, z_plate1 - rail_z0]);
-            // Phone side walls, with a 45° wedge down to the roof so the print needs no support.
+            // End walls. They flank the phone. They do not wrap onto the camera face.
+            // The wedge down to the roof prints at 45 degrees.
             for (sx = [-1, 1]) {
                 x0 = sx * outer_x / 2 - (sx > 0 ? side_wall : 0);
                 hull() {
                     translate([x0, y_plate1, rail_z0])
                         cube([side_wall, 0.02, z_pocket1 - rail_z0]);
-                    translate([x0, y_plate1 + pocket_y + front_lip_t - 0.02, z_pocket0])
+                    translate([x0, y_plate1 + front_reach - 0.02, z_pocket0])
                         cube([side_wall, 0.02, pocket_z]);
                 }
             }
-            // Lip at the bottom of the pocket, and the wedge under it.
+            // Floor under the full body. The top of this wedge is the pocket floor.
+            // It does not rise in front of the lenses.
             hull() {
                 translate([-pocket_x / 2, y_plate1, rail_z0])
                     cube([pocket_x, 0.02, rail_h]);
-                translate([-pocket_x / 2, y_plate1 + front_lip_t - 0.02, z_pocket0])
-                    cube([pocket_x, 0.02, front_lip_h]);
+                translate([-pocket_x / 2, y_plate1 + front_reach - 0.02, z_pocket0])
+                    cube([pocket_x, 0.02, 0.02]);
             }
+            // USB-C end only (+X, portrait bottom). Stops forward slip.
+            // The camera end (-X, portrait top) stays open in front of the glass.
+            translate([
+                pocket_x / 2 - usb_hook_len,
+                y_plate1 + phone_thickness_max + usb_hook_gap,
+                z_pocket0
+            ])
+                cube([usb_hook_len, usb_hook_t, pocket_z]);
         }
         roof_holes();
         bottom_slots();
-        camera_windows();
         strap_slots();
-    }
-}
-
-module camera_windows() {
-    for (sx = [-1, 1]) {
-        x0 = sx > 0 ? pocket_x / 2 - camera_clearance : -pocket_x / 2;
-        translate([x0, rail_y0 - 1, z_pocket1 - camera_clearance])
-            cube([camera_clearance, y_plate1 - rail_y0 + 2, camera_clearance + 1]);
     }
 }
 

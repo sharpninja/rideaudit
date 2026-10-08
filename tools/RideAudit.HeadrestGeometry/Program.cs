@@ -102,7 +102,13 @@ internal static class Program
                 Expect(c["pocket_x"] >= c["phone_length_max"], "pocket shorter than the longest phone");
                 Expect(c["pocket_y"] >= c["phone_thickness_max"], "pocket shallower than the thickest phone");
                 Expect(c["pocket_z"] >= c["phone_width_max"], "pocket shorter than the widest short side");
-                Expect(c["camera_clearance"] >= 12, "camera window too small");
+                Expect(Math.Abs(c["phone_length_max"] - 155.1) < 0.05, "length is not the Fold 4 closed height");
+                Expect(Math.Abs(c["phone_width_max"] - 67.1) < 0.05, "short side is not the Fold 4 closed width");
+                Expect(Math.Abs(c["phone_thickness_max"] - 15.8) < 0.05, "thickness is not the Fold 4 hinge");
+                Expect(c["usb_hook_len"] <= 16, "USB-end hook is long enough to reach the camera end");
+                Expect(c["phone_length_max"] - c["usb_hook_len"] >= 130, "USB-end hook reaches the camera end");
+                Expect(c["front_reach"] > c["phone_thickness_max"] + 1.5, "hook is not proud of the hinge face");
+                Expect(c["rail_h"] + 0.01 >= c["front_reach"], "forward overhang is steeper than 45 degrees");
                 Expect(c["cradle_count"] == 1, "model is not the single shared cradle");
                 Expect(c["slot_side_gap"] <= 1.001, "arm slot gap is over 1 mm on a side");
                 Expect(c["slot_side_gap"] + 0.001 >= 0.8, "arm slot does not clear the crest");
@@ -164,13 +170,21 @@ internal static class Program
                 probes.Add(Classify(trayM, (0.0, phoneY, phoneZ), false, "max-phone center is in the pocket"));
                 probes.Add(Classify(trayM, (c["phone_length_max"] / 2 - 0.6, phoneY, c["z_pocket0"] + c["phone_width_max"] - 0.6), false, "max-phone upper corner is not blocked"));
                 probes.Add(Classify(trayM, (0.0, plateY, c["z_pocket0"] + c["pocket_z"] / 2), true, "back plate is present behind the phone"));
-                probes.Add(Classify(trayM, (-c["win_x"], plateY, c["win_z"]), false, "camera window is open"));
-                probes.Add(Classify(trayM, (c["win_x"], plateY, c["win_z"]), false, "opposite camera window is open"));
-                probes.Add(Classify(trayM, (0.0, plateY, c["win_z"]), true, "back plate remains between the camera windows"));
-                var lipY = c["y_plate1"] + c["front_lip_t"] / 2;
-                var lipZ = c["z_pocket0"] + c["front_lip_h"] / 2;
-                probes.Add(Classify(trayM, (0.0, lipY, lipZ), true, "front retention lip is present"));
-                probes.Add(Classify(trayM, (0.0, lipY, c["z_pocket0"] + c["front_lip_h"] + 8), false, "front of the cradle stays open above the lip"));
+                probes.Add(Classify(trayM, (-c["pocket_x"] / 2 + 6.0, plateY, c["z_pocket1"] - 6.0), true, "back plate is solid at the camera end"));
+                probes.Add(Classify(trayM, (c["pocket_x"] / 2 - 6.0, plateY, c["z_pocket1"] - 6.0), true, "back plate is solid at the USB end"));
+                probes.Add(Classify(trayM, (0.0, plateY, c["z_pocket0"] + c["pocket_z"] / 2), true, "back plate is solid behind the cover screen"));
+                // Primary cameras face +Y, out of the opening. The camera end is -X.
+                var camY = c["y_plate1"] + c["phone_thickness_max"] + 1.0;
+                var camX = -c["pocket_x"] / 2 + 8.0;
+                probes.Add(Classify(trayM, (camX, camY, c["z_pocket0"] + c["phone_width_max"] / 2), false, "camera-end forward face is open"));
+                probes.Add(Classify(trayM, (camX, camY, c["z_pocket0"] + c["phone_width_max"] - 4.0), false, "camera-end upper forward face is open"));
+                probes.Add(Classify(trayM, (0.0, camY, c["z_pocket0"] + c["phone_width_max"] / 2), false, "center forward face is open"));
+                var hookX = c["pocket_x"] / 2 - c["usb_hook_len"] / 2;
+                var hookY = c["y_plate1"] + c["phone_thickness_max"] + c["usb_hook_gap"] + c["usb_hook_t"] / 2;
+                var hookZ = c["z_pocket0"] + c["pocket_z"] / 2;
+                probes.Add(Classify(trayM, (hookX, hookY, hookZ), true, "USB-end hook stops forward slip"));
+                probes.Add(Classify(trayM, (c["pocket_x"] / 2 - c["usb_hook_len"] - 4.0, hookY, hookZ), false, "forward face beside the USB hook stays open"));
+                probes.Add(Classify(trayM, (0.0, c["y_plate1"] + 3.0, c["z_pocket0"] - 0.6), true, "pocket floor supports the phone"));
                 var lx = c["screw_x_left"];
                 var rx = c["screw_x_right"];
                 probes.Add(Classify(trayM, (lx, c["y_slot"], holeZ), false, "left thumbscrew hole is open in the roof"));
@@ -492,8 +506,9 @@ internal static class Program
             "| Clamp stack | bottom plate " + F0(c["bottom_t"]) + " mm + arm " + F0(c["arm_thick"]) + " mm = " + F0(c["clamp_stack"]) + " mm; slide take-up " + F2(c["clamp_takeup"]) + " mm |",
             "| Thumbscrews | " + F0(c["screw_count"]) + " modeled, head " + F0(c["screw_head_d"]) + " mm, shank " + F1(c["screw_shank_l"]) + " mm under the face |",
             "| Phone pocket (L x short side x thickness) | " + F1(c["pocket_x"]) + " x " + F1(c["pocket_z"]) + " x " + F1(c["pocket_y"]) + " mm |",
-            "| Phone envelope | length " + F0(c["phone_length_min"]) + "-" + F0(c["phone_length_max"]) + " mm, short side " + F0(c["phone_width_min"]) + "-" + F0(c["phone_width_max"]) + " mm, thickness <= " + F0(c["phone_thickness_max"]) + " mm |",
-            "| Camera window | " + F0(c["camera_clearance"]) + " mm square, both upper corners, through the back plate |",
+            "| Phone | closed Galaxy Z Fold 4, landscape, " + F1(c["phone_length_min"]) + " x " + F1(c["phone_width_min"]) + " x " + F1(c["phone_thickness_max"]) + " mm hinge (thin edge " + F1(c["fold_d_min"]) + " mm) |",
+            "| Cameras | primary cluster faces forward, out of the opening. Back plate is solid. USB-end hook " + F0(c["usb_hook_len"]) + " mm at +X. Camera end stays open |",
+            "| Roof | " + F2(c["rail_h"]) + " mm, forward reach " + F2(c["front_reach"]) + " mm so the wedge is 45 degrees or shallower |",
             "| Phone front from the headrest face | " + F1(c["standout_y"]) + " mm |",
             "| Cradle top above the block bottom | " + F1(c["z_pocket1"]) + " mm |",
             "| Cradles | " + F0(c["cradle_count"]) + " shared landscape holder |",
