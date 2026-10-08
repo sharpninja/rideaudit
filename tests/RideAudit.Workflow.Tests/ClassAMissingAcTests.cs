@@ -75,7 +75,6 @@ public class ClassAMissingAcTests
     [Trait("AC", "AC-TEST-015-001")]
     [Trait("AC", "AC-TEST-015-002")]
     [Trait("AC", "AC-TEST-022-001")]
-    [Trait("AC", "AC-RIDE-204-002")]
     public void Seal_receipt_chain_profile_and_idempotent_submit_stay_labeled()
     {
         var world = ServerWorld.Create(fixtureL2: true);

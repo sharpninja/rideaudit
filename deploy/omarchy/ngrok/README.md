@@ -4,7 +4,7 @@ GPL-2.0-only. Implements FR-RIDE-064 / UC-RIDE-033 / TR-RIDE-EDGE-001.
 
 This is an operator tunnel. It is not Octopus CD, not GHCR, not Play Store, and not a Caddy TLS cutover.
 
-Product CD is FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. That path is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`. This wrapper publishes the live admission front door. It does not replace the Octopus receipt.
+Product CD is FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. The only live Octopus receipt, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`, records the earlier PAYTON-DESKTOP Docker host (`192.168.0.149`). No LAB-OMARCHY Octopus receipt exists yet. This wrapper publishes the live admission front door. It does not replace the Octopus receipt.
 
 ## Current vs prior interim
 

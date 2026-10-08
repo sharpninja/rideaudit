@@ -85,7 +85,15 @@ function Invoke-OmarchyBashAllowFail {
     }
 }
 
+function ConvertTo-NgrokBackendKey {
+    param([string]$Value)
+    $v = ([string]$Value).Trim()
+    $v = $v -replace '^[A-Za-z][A-Za-z0-9+.-]*://', ''
+    return $v.TrimEnd('/').ToLowerInvariant()
+}
+
 function Stop-ConflictingLocalNgrok {
+    $admissionKey = ConvertTo-NgrokBackendKey $Addr
     $api = $null
     try {
         $api = Invoke-RestMethod -Uri "http://127.0.0.1:4040/api/tunnels" -TimeoutSec 3
@@ -95,10 +103,10 @@ function Stop-ConflictingLocalNgrok {
     }
     $conflicts = @()
     foreach ($t in @($api.tunnels)) {
-        $addr = [string]$t.config.addr
+        $tunnelAddr = [string]$t.config.addr
         $pub = [string]$t.public_url
-        if ($addr -and $addr -notmatch '28080') {
-            $conflicts += [pscustomobject]@{ Addr = $addr; Public = $pub }
+        if ($tunnelAddr -and (ConvertTo-NgrokBackendKey $tunnelAddr) -ne $admissionKey) {
+            $conflicts += [pscustomobject]@{ Addr = $tunnelAddr; Public = $pub }
         }
     }
     if ($conflicts.Count -eq 0) { return }
@@ -137,7 +145,7 @@ function Stop-ConflictingLocalNgrok {
     try {
         $again = Invoke-RestMethod -Uri "http://127.0.0.1:4040/api/tunnels" -TimeoutSec 3
         foreach ($t in @($again.tunnels)) {
-            if ([string]$t.config.addr -notmatch '28080') { $still = $true }
+            if ((ConvertTo-NgrokBackendKey ([string]$t.config.addr)) -ne $admissionKey) { $still = $true }
         }
     }
     catch {
