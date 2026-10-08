@@ -130,8 +130,6 @@ records:
     frLinks:
     - frId: FR-RIDE-009
       linkType: Realizes
-    - frId: FR-RIDE-038
-      linkType: Realizes
     - frId: FR-RIDE-207
       linkType: Realizes
     localId: UC-RIDE-007
@@ -402,8 +400,6 @@ records:
   - kind: usecase
     frLinks:
     - frId: FR-RIDE-037
-      linkType: Realizes
-    - frId: FR-RIDE-038
       linkType: Realizes
     localId: UC-RIDE-016
     actors:

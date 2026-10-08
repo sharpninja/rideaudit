@@ -111,7 +111,7 @@ public class TestRide035ShellTests
         var generated = protos.GetType("RideAudit.Protos.Admission.V1.Admission+AdmissionClient");
         Assert.NotNull(generated);
         Assert.Equal("src/RideAudit.Protos", ContractProvenance.Source);
-        Assert.Equal("0.3.0", ContractProvenance.ContractVersion);
+        Assert.Equal("0.4.0", ContractProvenance.ContractVersion);
         Assert.Equal("src/RideAudit.Protos", ContractProvenance.SwapTarget);
         Assert.Equal("non-authoritative", ContractProvenance.OpenApiAuthority);
         var root = Repo.Root();

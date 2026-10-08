@@ -548,8 +548,8 @@ records:
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-037
-    title: "Multi-driver per-record provenance"
-    description: "Preserve court multi-driver provenance: each submission must be independently verifiable through device attestation, collector_id, driver_id, vehicle_id, and its on-chain receipt; aggregation must not weaken per-record custody."
+    title: "Per-record provenance"
+    description: "Preserve court provenance: each submission must be independently verifiable through device attestation, collector_id, driver_id, vehicle_id, and its on-chain receipt; aggregation must not weaken per-record custody."
     priority: critical
     area: RIDE
     status: pending
@@ -560,21 +560,6 @@ records:
         isSatisfied: false
       - id: AC-RIDE-037-002
         text: "Aggregation does not replace per-record custody."
-        isSatisfied: false
-  - kind: fr
-    id: FR-RIDE-038
-    title: "Counsel multi-driver bundle"
-    description: "Generate a counsel bundle containing submissions from many drivers while providing a per-record verification report for each sealed record, receipt, attestation, vehicle registration, and escrow/decryption path."
-    priority: high
-    area: RIDE
-    status: pending
-    notes: "Original FR-38."
-    acceptanceCriteria:
-      - id: AC-RIDE-038-001
-        text: "Counsel bundle can include many drivers submissions."
-        isSatisfied: false
-      - id: AC-RIDE-038-002
-        text: "Each record has its own verification report covering receipt, attestation, vehicle, escrow path."
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-039

@@ -359,61 +359,57 @@ public class TestRide007Through009And016And023
     [Fact]
     [Trait("TEST", "TEST-RIDE-023")]
     [Trait("FR", "FR-RIDE-037")]
-    [Trait("FR", "FR-RIDE-038")]
     [Trait("AC", "AC-RIDE-037-001")]
     [Trait("AC", "AC-RIDE-037-002")]
-    [Trait("AC", "AC-RIDE-038-001")]
-    [Trait("AC", "AC-RIDE-038-002")]
-    [Trait("AC", "AC-RIDE-SERVER-006-002")]
-    [Trait("AC", "AC-RIDE-SERVER-007-001")]
-    [Trait("AC", "AC-RIDE-SERVER-007-002")]
-    [Trait("AC", "AC-UC-016-001")]
-    [Trait("AC", "AC-UC-016-002")]
     [Trait("AC", "AC-TEST-023-001")]
     [Trait("AC", "AC-TEST-023-002")]
-    public void Own_submissions_bundle_keeps_each_record_independent()
-    {
-        var world = ServerWorld.Create();
-        var first = world.Enroll();
-        var left = world.SealReady(first.Driver, first.Session);
-        var right = world.SealReady(first.Driver, first.Session);
-        var a = world.Submit(first.Driver, left.Package, left.Token, left.Nonce);
-        var b = world.Submit(first.Driver, right.Package, right.Token, right.Nonce);
-        var beforeA = world.App.Journal.Find(a.SubmissionId)!.Ciphertext.ToArray();
-        var beforeB = world.App.Journal.Find(b.SubmissionId)!.Ciphertext.ToArray();
-
-        var bundle = world.App.Counsel.Build(first.Driver.DriverId, "case-9", new[] { a.SubmissionId, b.SubmissionId });
-        Assert.False(bundle.AggregationReplacesRecords);
-        Assert.Equal(2, bundle.Records.Count);
-        Assert.All(bundle.Records, row =>
-        {
-            Assert.True(row.IndependentCustody);
-            Assert.True(row.HashMatches);
-            Assert.False(string.IsNullOrWhiteSpace(row.AnchorStatus));
-            Assert.Equal(first.Driver.DriverId, row.DriverId);
-        });
-        Assert.NotEqual(bundle.Records[0].ContentHashHex, bundle.Records[1].ContentHashHex);
-        Assert.Equal(beforeA, world.App.Journal.Find(a.SubmissionId)!.Ciphertext);
-        Assert.Equal(beforeB, world.App.Journal.Find(b.SubmissionId)!.Ciphertext);
-        Assert.Equal(0, world.App.Hsm.WorkingCopyOpens);
-        Assert.Equal("implemented", CounselSlice.State);
-    }
-
-    [Fact]
-    [Trait("TEST", "TEST-RIDE-023")]
-    [Trait("NOTE", "own-submissions-only-no-roles")]
-    public void Build_rejects_non_own_submissions()
+    public void Each_submission_is_verified_on_its_own_record()
     {
         var world = ServerWorld.Create();
         var first = world.Enroll();
         var second = world.Enroll();
         var left = world.SealReady(first.Driver, first.Session);
-        var right = world.SealReady(second.Driver, second.Session);
+        var right = world.SealReady(first.Driver, first.Session);
+        var other = world.SealReady(second.Driver, second.Session);
         var a = world.Submit(first.Driver, left.Package, left.Token, left.Nonce);
-        var b = world.Submit(second.Driver, right.Package, right.Token, right.Nonce);
-        var ex = Assert.Throws<RideAuditException>(() =>
-            world.App.Counsel.Build(first.Driver.DriverId, "case-x", new[] { a.SubmissionId, b.SubmissionId }));
-        Assert.Equal(ErrorCodes.TenantIsolation, ex.Code);
+        var b = world.Submit(first.Driver, right.Package, right.Token, right.Nonce);
+        var c = world.Submit(second.Driver, other.Package, other.Token, other.Nonce);
+        var beforeA = world.App.Journal.Find(a.SubmissionId)!.Ciphertext.ToArray();
+        var beforeB = world.App.Journal.Find(b.SubmissionId)!.Ciphertext.ToArray();
+        var source = new JournalRecordSource(world.App.Journal);
+
+        var reportA = world.App.Counsel.Verify(first.Driver.DriverId, "case-9", a.SubmissionId);
+        var reportB = world.App.Counsel.Verify(first.Driver.DriverId, "case-9", b.SubmissionId);
+        Assert.Equal(a.SubmissionId, reportA.SubmissionId);
+        Assert.Equal(b.SubmissionId, reportB.SubmissionId);
+        foreach (var report in new[] { reportA, reportB })
+        {
+            Assert.True(report.HashMatches);
+            Assert.True(report.AnchorConfirmed);
+            Assert.False(report.DecryptionPerformed);
+            Assert.False(string.IsNullOrWhiteSpace(report.AnchorStatus));
+        }
+        foreach (var id in new[] { a.SubmissionId, b.SubmissionId })
+        {
+            var view = source.Find(id)!;
+            Assert.Equal(first.Driver.DriverId, view.DriverId);
+            Assert.False(string.IsNullOrWhiteSpace(view.VehicleId));
+            Assert.False(string.IsNullOrWhiteSpace(view.CollectorId));
+            Assert.NotEmpty(view.ReceiptCoreBytes);
+        }
+        Assert.NotEqual(source.Find(a.SubmissionId)!.ReceiptCoreBytes, source.Find(b.SubmissionId)!.ReceiptCoreBytes);
+        Assert.Equal(beforeA, world.App.Journal.Find(a.SubmissionId)!.Ciphertext);
+        Assert.Equal(beforeB, world.App.Journal.Find(b.SubmissionId)!.Ciphertext);
+        Assert.Equal(0, world.App.Hsm.WorkingCopyOpens);
+
+        var crossDriver = Assert.Throws<RideAuditException>(() =>
+            world.App.Counsel.Verify(first.Driver.DriverId, "case-9", c.SubmissionId));
+        Assert.Equal(ErrorCodes.TenantIsolation, crossDriver.Code);
+        var missing = Assert.Throws<RideAuditException>(() =>
+            world.App.Counsel.Verify(first.Driver.DriverId, "case-9", "sub-missing"));
+        Assert.Equal(ErrorCodes.SubmissionNotFound, missing.Code);
+        Assert.Equal("implemented", CounselSlice.State);
+        Assert.DoesNotContain(CounselSlice.Checklist, line => line.Contains("FR-RIDE-038", StringComparison.Ordinal));
     }
 
     [Fact]

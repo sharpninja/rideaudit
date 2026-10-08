@@ -2,7 +2,7 @@
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
 // COMPANION_NOTICE: artifacts/server-api/openapi.yaml is a non-authoritative companion.
-// Contract-Version: 0.3.0
+// Contract-Version: 0.4.0
 //
 // Public ingest accepts sealed ciphertext plus custody metadata only.
 // These RPCs must not decrypt. FR-RIDE-035, FR-RIDE-036, FR-RIDE-059, FR-RIDE-061.

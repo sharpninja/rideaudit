@@ -1,6 +1,6 @@
 id: ART-RIDE-API-001
 kind: grpc-api
-version: "0.3.0"
+version: "0.4.0"
 title: RideAudit public sealed-submission API
 author: Sharp Ninja
 license: GPL-2.0-only
@@ -9,7 +9,7 @@ status: contract-ready-admission-runtime
 targetStack: gRPC on .NET 10 containers
 authoritativeContract: src/RideAudit.Protos/
 authoritativeContractFormat: proto3
-contractVersion: "0.3.0"
+contractVersion: "0.4.0"
 companionAuthority: non-authoritative
 interimHumanReadableCompanion: openapi.yaml
 implementationStatus: >

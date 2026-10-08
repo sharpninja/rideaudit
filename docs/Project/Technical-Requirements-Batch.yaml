@@ -551,7 +551,7 @@ records:
     area: RIDE
     subarea: SERVER
     status: pending
-    notes: "Implements/supports: FR-RIDE-037, FR-RIDE-038"
+    notes: "Implements/supports: FR-RIDE-037"
     acceptanceCriteria:
       - id: AC-RIDE-SERVER-007-001
         text: "Bundle preserves per-record custody."

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
-// Contract-Version: 0.3.0
+// Contract-Version: 0.4.0
 // FR-RIDE-001 through FR-RIDE-003, FR-RIDE-005, FR-RIDE-006, FR-RIDE-011, FR-RIDE-013.
 // Driver-provided privacy-export and third-party files only.
 // Concierge / partnership RPCs removed (out of scope per operator 2026-10-07).

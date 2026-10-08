@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
-// Contract-Version: 0.3.0
+// Contract-Version: 0.4.0
 // FR-RIDE-010, FR-RIDE-077, FR-RIDE-207. (FR-014 RBAC / FR-210 legal-hold killed; PlaceLegalHold RPC removed.)
 // DSAR export does not include sealed plaintext.
 syntax = "proto3";

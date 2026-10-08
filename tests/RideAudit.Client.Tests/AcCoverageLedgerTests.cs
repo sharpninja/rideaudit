@@ -51,7 +51,7 @@ public class AcCoverageLedgerTests
         var dest = Path.Combine(destDir, "20260928-ledger.md");
         File.WriteAllText(dest, output.ToString());
         Assert.True(File.Exists(dest));
-        Assert.Equal(549, rows.Count);
+        Assert.Equal(547, rows.Count);
         Assert.Equal(0, rows.Count(row => string.IsNullOrWhiteSpace(row.Item4)));
     }
 
@@ -156,7 +156,7 @@ public class AcCoverageLedgerTests
             .Select(group => group.First())
             .OrderBy(record => record.Id, StringComparer.Ordinal)
             .ToList();
-        Assert.Equal(549, unique.Count);
+        Assert.Equal(547, unique.Count);
 
         var testText = string.Join('\n', Directory.GetFiles(Path.Combine(root, "tests"), "*.cs", SearchOption.AllDirectories)
             .Select(File.ReadAllText));

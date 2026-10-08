@@ -17,31 +17,6 @@ public sealed class CounselGrpcService : ProtoCounsel.CounselBase
 
     public CounselGrpcService(AdmissionComposition app) => _app = app;
 
-    public override Task<MultiDriverBundle> BuildMultiDriverBundle(BuildMultiDriverBundleRequest request, ServerCallContext context)
-    {
-        var caller = PlatformAuth.Require(_app, context);
-        var bundle = _app.Counsel.Build(caller.DriverId, request.CaseId, request.SubmissionIds);
-        var response = new MultiDriverBundle
-        {
-            BundleId = bundle.BundleId,
-            CaseId = bundle.CaseId,
-            AggregationReplacesRecords = bundle.AggregationReplacesRecords
-        };
-        response.Records.AddRange(bundle.Records.Select(row => new PerRecordVerification
-        {
-            SubmissionId = row.SubmissionId,
-            DriverId = row.DriverId,
-            VehicleId = row.VehicleId,
-            CollectorId = row.CollectorId,
-            IndependentCustody = row.IndependentCustody,
-            ContentHashHex = row.ContentHashHex,
-            CustodyState = row.CustodyState,
-            HashMatches = row.HashMatches,
-            AnchorStatus = row.AnchorStatus
-        }));
-        return Task.FromResult(response);
-    }
-
     public override Task<CoverageMatrix> AnalyzeCoverage(AnalyzeCoverageRequest request, ServerCallContext context)
     {
         var caller = PlatformAuth.Require(_app, context);

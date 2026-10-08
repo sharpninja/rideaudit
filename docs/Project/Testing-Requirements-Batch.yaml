@@ -305,12 +305,12 @@ records:
         isSatisfied: false
   - kind: test
     id: TEST-RIDE-023
-    title: "Multi-driver provenance and counsel bundle"
-    description: "Per-record verification in multi-driver bundle; aggregation does not weaken custody."
+    title: "Per-record provenance"
+    description: "Per-record verification; aggregation does not weaken custody."
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-037, FR-RIDE-038; method: system"
+    notes: "Covers FR-RIDE-037; method: system"
     acceptanceCriteria:
       - id: AC-TEST-023-001
         text: "Test TEST-RIDE-023 passes for happy path of covered requirements."

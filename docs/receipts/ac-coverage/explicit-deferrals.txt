@@ -150,3 +150,10 @@ AC-UC-043-008	Deferred BDPv4: visual regression / storyboard baseline harness no
 AC-UC-043-009	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
 AC-UC-044-001	Deferred BDPv4: UC-RIDE-044 remains Draft; About FR/TR/TEST covered by TestRide055AboutTests.
 AC-UC-044-002	Deferred BDPv4: UC-RIDE-044 remains Draft; About FR/TR/TEST covered by TestRide055AboutTests.
+
+# FR-RIDE-038 multi-driver bundle retired (Payton 2026-10-07). These ACs were named only on the removed bundle test. Name-or-defer gate only; not semantic closure.
+AC-RIDE-SERVER-006-002	Deferred BDPv4: no aggregate index exists after the FR-RIDE-038 bundle was retired, so there is no aggregate query to authorize. Per-record cross-driver rejection is covered under AC-RIDE-SERVER-006-001.
+AC-RIDE-SERVER-007-001	Deferred BDPv4: TR-RIDE-SERVER-007 is the counsel bundle builder, retired with FR-RIDE-038. Killing or rewording TR-RIDE-SERVER-007 awaits Payton.
+AC-RIDE-SERVER-007-002	Deferred BDPv4: TR-RIDE-SERVER-007 is the counsel bundle builder, retired with FR-RIDE-038. Per-record VerificationReport remains via CounselDesk.Verify (FR-RIDE-037). Killing or rewording TR-RIDE-SERVER-007 awaits Payton.
+AC-UC-016-001	Deferred BDPv4: UC-RIDE-016 is the counsel multi-driver bundle use case, retired with FR-RIDE-038. Killing or rewording UC-RIDE-016 awaits Payton.
+AC-UC-016-002	Deferred BDPv4: UC-RIDE-016 is the counsel multi-driver bundle use case, retired with FR-RIDE-038. Killing or rewording UC-RIDE-016 awaits Payton.

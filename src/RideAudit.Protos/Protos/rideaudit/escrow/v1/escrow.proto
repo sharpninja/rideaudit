@@ -2,7 +2,7 @@
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
 // COMPANION_NOTICE: artifacts/server-api/openapi.yaml is a non-authoritative companion.
-// Contract-Version: 0.3.0
+// Contract-Version: 0.4.0
 // FR-RIDE-022, FR-RIDE-023, FR-RIDE-024, FR-RIDE-028, FR-RIDE-214, FR-RIDE-216
 syntax = "proto3";
 

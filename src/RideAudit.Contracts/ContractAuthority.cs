@@ -9,7 +9,7 @@ public static class ContractAuthority
     public const string OpenApiRole = "non-authoritative-companion";
     public const string AuthoritativePath = "src/RideAudit.Protos";
     public const string CompanionPath = "artifacts/server-api/openapi.yaml";
-    public const string ContractVersion = "0.3.0";
+    public const string ContractVersion = "0.4.0";
 
     public static string BindConformanceSource() => Authoritative;
 }

@@ -136,10 +136,6 @@ mappings:
     trIds: [TR-RIDE-SERVER-007]
     testIds: [TEST-RIDE-023]
     useCaseLocalIds: [UC-RIDE-015, UC-RIDE-016]
-  - frId: FR-RIDE-038
-    trIds: [TR-RIDE-SERVER-007]
-    testIds: [TEST-RIDE-023]
-    useCaseLocalIds: [UC-RIDE-007, UC-RIDE-016]
   - frId: FR-RIDE-039
     trIds: [TR-RIDE-SERVER-004, TR-RIDE-SERVER-005]
     testIds: [TEST-RIDE-024]
