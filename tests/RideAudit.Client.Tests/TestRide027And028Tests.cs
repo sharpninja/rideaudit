@@ -223,8 +223,10 @@ public class TestRide028ViewerTests
         var plan = File.ReadAllText(Path.Combine(Repo.Root(), "docs", "plans", "PLAN-RIDEAUDIT-001-implementation.md"));
         Assert.Contains("- [x] Lab self-signed Authenticode", plan);
         Assert.Contains("- [ ] Commercial OV/IV Authenticode + cloud HSM", plan);
-        Assert.Contains("- [ ] Section 9 Class C boxes", plan);
-        Assert.Contains("- [ ] P0 documentation repair complete", plan);
+        // Payton 2026-09-29 (9906172): Section 9 plan-acceptance boxes are not open work. They are not checked either.
+        Assert.Contains("- Section 9 Astra/Payton plan-acceptance boxes are not open work (Payton 2026-09-29).", plan);
+        Assert.DoesNotContain("- [x] Section 9", plan);
+        Assert.DoesNotContain("- [x] P0 documentation repair complete", plan);
         var publish = File.ReadAllText(Path.Combine(Repo.Root(), "deploy", "desktop", "Publish-RideAuditDesktopLab.ps1"));
         var create = File.ReadAllText(Path.Combine(Repo.Root(), "deploy", "desktop", "New-RideAuditLabCodeSigningCert.ps1"));
         Assert.Contains("FD1AC65B183E708D229E3D7A16C0D021CA3EB3C4", publish);
