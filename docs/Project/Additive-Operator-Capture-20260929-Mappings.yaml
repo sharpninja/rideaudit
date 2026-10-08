@@ -4,7 +4,7 @@
 # Do not duplicate those FR rows here — applying all mapping files would
 # submit multiple mappings for the same FR.
 # FR-RIDE-068 was withdrawn. Cradle TR/TEST/UC map to FR-RIDE-041 in the main mappings file.
-# approval: Payton AGREE 2026-09-29.
+# approval: Payton AGREE 2026-09-29 for the FR-RIDE-065..073 rows; the FR-RIDE-074 row is Payton AGREE 2026-10-07.
 mappings:
   - frId: FR-RIDE-065
     trIds: [TR-RIDE-EDGE-002]

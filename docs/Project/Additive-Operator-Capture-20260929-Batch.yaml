@@ -1,5 +1,7 @@
 # Additive batch: operator capture after plan approval (2026-09-29)
-# BDPv4. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied.
+# BDPv4. approval: Payton AGREE 2026-09-29 for the original capture records (FR-RIDE-065..073 and their TR, TEST and UC rows). Their acceptance criteria stay unsatisfied.
+# Exception: FR-RIDE-074, TR-RIDE-VIEW-007 and TEST-RIDE-055 are Payton AGREE 2026-10-07 (About view); their ACs are satisfied only with test proof.
+# UC-RIDE-044 stays Draft until a separate use-case AGREE.
 # Plan section 9 Astra/Payton acceptance boxes are not open work (Payton 2026-09-29).
 # Does not mark AC-RIDE-222-001, AC-UC-025-001, live OTS confirmation, or Caddy TLS satisfied.
 # Reconciled updates to existing IDs live in the source batch that already defines that ID.
