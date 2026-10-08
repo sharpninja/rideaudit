@@ -9,6 +9,7 @@ CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 UNIT_DIR="$HOME/.config/systemd/user"
 PID_FILE="$STATE_DIR/ngrok.pid"
+ADDR_FILE="$STATE_DIR/ngrok.addr"
 LOG_FILE="$STATE_DIR/ngrok.log"
 API_URL="http://127.0.0.1:4040/api/tunnels"
 
@@ -98,13 +99,28 @@ start_nohup() {
   if [ -f "$PID_FILE" ]; then
     old="$(cat "$PID_FILE" || true)"
     if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
-      echo "NGROK_MODE=nohup-existing"
-      return 0
+      # Reuse the running agent only when it was started for this backend.
+      if [ -f "$ADDR_FILE" ] && [ "$(cat "$ADDR_FILE" || true)" = "$ADDR" ]; then
+        echo "NGROK_MODE=nohup-existing"
+        return 0
+      fi
+      echo "NGROK_STALE_BACKEND=restart"
+      kill "$old" 2>/dev/null || true
+      j=0
+      while kill -0 "$old" 2>/dev/null && [ $j -lt 10 ]; do
+        j=$((j + 1))
+        sleep 1
+      done
+      if kill -0 "$old" 2>/dev/null; then
+        echo "FAIL_CLOSED=stale_ngrok_still_running"
+        exit 1
+      fi
     fi
   fi
   nohup "$bin" http "$ADDR" --config "$CONFIG" --log "$LOG_FILE" --log-format logfmt \
     >"$STATE_DIR/ngrok.out" 2>&1 &
   echo $! > "$PID_FILE"
+  printf '%s\n' "$ADDR" > "$ADDR_FILE"
   echo "NGROK_MODE=nohup"
 }
 

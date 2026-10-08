@@ -23,6 +23,7 @@ if [ -f "$PID_FILE" ]; then
   fi
   rm -f "$PID_FILE"
 fi
+rm -f "$STATE_DIR/ngrok.addr"
 
 pkill -f 'ngrok http 192.168.1.182:28080' >/dev/null 2>&1 || true
 pkill -f 'ngrok http 127.0.0.1:18080' >/dev/null 2>&1 || true
