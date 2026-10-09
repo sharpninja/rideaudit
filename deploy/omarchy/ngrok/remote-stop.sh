@@ -10,6 +10,16 @@ CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 ADDR_FILE="$STATE_DIR/ngrok.addr"
 LOG_FILE="$STATE_DIR/ngrok.log"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+# A user manager implies systemd is installed, so a systemctl missing from PATH is looked for in
+# the standard locations before the stop concludes that no user manager is supervising the unit.
+if ! command -v systemctl >/dev/null 2>&1; then
+  for dir in /usr/bin /bin; do
+    if [ -x "$dir/systemctl" ]; then
+      PATH="$PATH:$dir"
+      break
+    fi
+  done
+fi
 # A stale XDG_RUNTIME_DIR must not hide a user manager that is still supervising the unit. The user
 # manager keeps its runtime directory at /run/user/<uid>, so fall back to it when it exists.
 if [ ! -d "$XDG_RUNTIME_DIR" ] && [ -d "/run/user/$(id -u)" ]; then

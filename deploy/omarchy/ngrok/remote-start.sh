@@ -91,6 +91,15 @@ start_systemd() {
   if [ ! -d "$XDG_RUNTIME_DIR" ]; then
     return 1
   fi
+  # Look for systemctl in the standard locations too, as remote-stop.sh does.
+  if ! command -v systemctl >/dev/null 2>&1; then
+    for dir in /usr/bin /bin; do
+      if [ -x "$dir/systemctl" ]; then
+        PATH="$PATH:$dir"
+        break
+      fi
+    done
+  fi
   if ! command -v systemctl >/dev/null 2>&1; then
     return 1
   fi
