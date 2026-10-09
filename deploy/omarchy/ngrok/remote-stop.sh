@@ -52,6 +52,32 @@ add_backend "${RIDEAUDIT_NGROK_ADDR:-}"
 # agent while leaving the unit file behind, so the PID-file and sweep cleanup below must still run.
 # The recorded failure decides the final result.
 SYSTEMD_FAIL=""
+
+# An explicit stop must leave the tunnel stopped after the next login too: remote-start.sh enables
+# the unit under default.target. If disable fails, remove the link it would have removed and log
+# why. If the unit still reads as enabled, the stop fails closed.
+WANTS_LINK="$HOME/.config/systemd/user/default.target.wants/rideaudit-ngrok.service"
+ensure_disabled() {
+  local rc=0 state
+  systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || rc=$?
+  if [ "$rc" -ne 0 ] && [ -L "$WANTS_LINK" ]; then
+    rm -f "$WANTS_LINK"
+    echo "remote-stop: systemctl --user disable failed rc=${rc}; removed ${WANTS_LINK}" >&2
+  fi
+  state="$(systemctl --user is-enabled rideaudit-ngrok.service 2>/dev/null || true)"
+  case "$state" in
+    enabled|enabled-runtime|linked|linked-runtime|alias)
+      SYSTEMD_FAIL="${SYSTEMD_FAIL:+$SYSTEMD_FAIL }ngrok_systemd_still_enabled state=${state} disable_rc=${rc}"
+      return 1
+      ;;
+  esac
+  if [ -L "$WANTS_LINK" ] || [ -e "$WANTS_LINK" ]; then
+    SYSTEMD_FAIL="${SYSTEMD_FAIL:+$SYSTEMD_FAIL }ngrok_systemd_still_enabled link=${WANTS_LINK} disable_rc=${rc}"
+    return 1
+  fi
+  return 0
+}
+
 stop_systemd_unit() {
   local unit_pid unit_state unit_cmd stop_rc
   # Our unit is installed: every systemd step must succeed, or we cannot prove the tunnel stopped.
@@ -70,7 +96,7 @@ stop_systemd_unit() {
     SYSTEMD_FAIL="ngrok_systemd_stop_failed rc=${stop_rc}"
     return
   fi
-  systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  ensure_disabled || return 0
   if ! unit_state="$(systemctl --user show -p ActiveState --value rideaudit-ngrok.service 2>/dev/null)"; then
     SYSTEMD_FAIL="ngrok_systemd_query_failed"
     return
@@ -127,14 +153,14 @@ stop_loaded_unit_without_file() {
   fi
   stop_rc=0
   systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || stop_rc=$?
-  systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  ensure_disabled || true
   if [ "$query_ok" -eq 0 ] && [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
-    SYSTEMD_FAIL="ngrok_systemd_unverified query_failed stop_rc=${stop_rc}"
+    SYSTEMD_FAIL="${SYSTEMD_FAIL:+$SYSTEMD_FAIL }ngrok_systemd_unverified query_failed stop_rc=${stop_rc}"
     return 0
   fi
   [ -n "$LOADED_UNIT_PID" ] || return 0
   if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
-    SYSTEMD_FAIL="ngrok_systemd_stop_failed rc=${stop_rc}"
+    SYSTEMD_FAIL="${SYSTEMD_FAIL:+$SYSTEMD_FAIL }ngrok_systemd_stop_failed rc=${stop_rc}"
   fi
   if kill -0 "$LOADED_UNIT_PID" 2>/dev/null; then
     [ -n "$SYSTEMD_FAIL" ] || SYSTEMD_FAIL="ngrok_systemd_agent_still_running pid=${LOADED_UNIT_PID}"

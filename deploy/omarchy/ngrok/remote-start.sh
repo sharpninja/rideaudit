@@ -82,7 +82,7 @@ EOF
 }
 
 start_systemd() {
-  local bin="$1"
+  local bin="$1" enable_rc=0
   export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
   if [ ! -d "$XDG_RUNTIME_DIR" ]; then
     return 1
@@ -96,7 +96,11 @@ start_systemd() {
   if ! systemctl --user daemon-reload; then
     return 1
   fi
-  systemctl --user enable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  systemctl --user enable rideaudit-ngrok.service >/dev/null 2>&1 || enable_rc=$?
+  if [ "$enable_rc" -ne 0 ]; then
+    # Not an explicit stop, so the start goes on and the failure is logged with its context.
+    echo "remote-start: systemctl --user enable failed rc=${enable_rc}; the tunnel runs now but will not start at the next login" >&2
+  fi
   if ! systemctl --user restart rideaudit-ngrok.service; then
     return 1
   fi

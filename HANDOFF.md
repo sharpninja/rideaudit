@@ -1,6 +1,6 @@
 # RideAudit handoff update (cloud takeover)
 
-Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-09 15:13 CT.
+Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-09 17:01 CT.
 Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payton's direction (2026-10-08). Grok is unavailable for HV.
 
 ## Done this pass (pushed to cursor/capture-operator-reqs-b19f; merge commits only, no force-push)
@@ -22,6 +22,8 @@ Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payt
 - Pre-existing, not fixed in PR #29 (recorded in docs/receipts/remediation/20261009T195221Z-pr29-self-review-e1f6e0d.md): in systemd mode ngrok remote-start does not stop an existing nohup agent; `DriverDirectory.UpdateVehicle` treats an empty make or model as a new value.
 - Held by Payton (2026-10-09 15:10 CT), no further change until Payton reviews them: (1) cd5d91b, the ngrok stop that fails closed without killing an unidentified systemd agent (Codex High advisory thread stays open); (2) the candidate's custodian and grant changes from r27, r28 and r30 (effective-holder rule, one slot per key, active-principal checks at key creation and on bind-legacy). Process rule from Payton: bring security and owner-decision findings to Payton with options before changing anything.
 - Candidate r31 owner choices still named in the text: whether a grantee's court request needs a live grant (spec says yes); what happens to an existing escrow key with a threshold of one.
+- Payton 2026-10-09 (ngrok): an explicit stop must leave the tunnel stopped; anywhere else, log the failure with context and go on. remote-stop.sh now removes the default.target.wants link itself when `systemctl --user disable` fails, and fails closed with `ngrok_systemd_still_enabled` if the unit still reads as enabled; remote-start.sh logs a failed `enable` and continues. cd5d91b itself stays on hold.
+- Process from Payton: fix the deficient requirement with an observable outcome, no new mechanism in plan text; sweep each finding's class for siblings; batch changes so one full suite and one push validate them together; a fix is done only when a full suite pass is clean.
 - Open review threads: FR-065..074 phase assignment; generic deferral reasons; OTS smoke script findings (author-deferred, now five).
 - No eligible HV run yet. Codex HV replies on PR #26 (partial) and PR #29 (gpt-5.6-sol, completed-ineligible, DISAGREE 96/92) are recorded under docs/reviews/hv-pairs/. gpt-6.1-sol at high is not reachable from this session.
 - Tests run on Linux with .NET SDK 10.0.112, OpenSCAD 2021.01 and PowerShell 7.6.6. global.json pins 10.0.401 and was relaxed locally only (not committed). Android and Windows host tests not run here.
