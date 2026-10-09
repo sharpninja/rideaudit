@@ -10,6 +10,11 @@ CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 ADDR_FILE="$STATE_DIR/ngrok.addr"
 LOG_FILE="$STATE_DIR/ngrok.log"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+# A stale XDG_RUNTIME_DIR must not hide a user manager that is still supervising the unit. The user
+# manager keeps its runtime directory at /run/user/<uid>, so fall back to it when it exists.
+if [ ! -d "$XDG_RUNTIME_DIR" ] && [ -d "/run/user/$(id -u)" ]; then
+  export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+fi
 
 # remote-start.sh records the config the agent was launched with. Ownership follows that
 # recorded path as well as the current one, so a changed RIDEAUDIT_NGROK_CONFIG cannot
@@ -182,7 +187,8 @@ if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
     stop_loaded_unit_without_file
   fi
 elif [ -L "$WANTS_LINK" ] || [ -e "$WANTS_LINK" ]; then
-  # No user manager to ask (between logins, or no systemctl), so no unit agent can be running.
+  # No user manager runtime directory exists (between logins), or there is no systemctl, so no user
+  # manager is supervising the unit and no unit agent can be running.
   # An explicit stop must still keep the unit from starting at the next login.
   rm -f "$WANTS_LINK"
   echo "remote-stop: no user systemd manager; removed ${WANTS_LINK}" >&2

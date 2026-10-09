@@ -84,6 +84,10 @@ EOF
 start_systemd() {
   local bin="$1" enable_rc=0
   export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+  # A stale XDG_RUNTIME_DIR must not hide a running user manager (remote-stop.sh does the same).
+  if [ ! -d "$XDG_RUNTIME_DIR" ] && [ -d "/run/user/$(id -u)" ]; then
+    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+  fi
   if [ ! -d "$XDG_RUNTIME_DIR" ]; then
     return 1
   fi
