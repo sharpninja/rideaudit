@@ -1,6 +1,6 @@
 # RideAudit handoff update (cloud takeover)
 
-Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-08 22:53 CT.
+Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-09 10:13 CT.
 Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payton's direction (2026-10-08). Grok is unavailable for HV.
 
 ## Done this pass (pushed to cursor/capture-operator-reqs-b19f; merge commits only, no force-push)
@@ -17,9 +17,9 @@ Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payt
 
 - MCP SoT is not reachable from the cloud session. On PAYTON-LEGION2 apply the MCP sync lists in the 20261008T12* receipts under docs/receipts/remediation/ (FR-038 retire; TR-SERVER-007 / UC-016 kill; FR-211/213 TEST mappings), then regenerate both wikis.
 - Also on LEGION2: export FR-RIDE-075/076, TR-RIDE-A11Y-001, TR-RIDE-VIDEO-018 and TEST-RIDE-056/057 (with mappings) from MCP into a disk batch. They are in MCP and the wikis but in no batch; the wiki lacks AC ids and priority, so they were not rebuilt by hand. Recount the ledger after.
-- Payton decisions pending: (1) counsel verification (Codex P1 on PlatformGrpcServices BuildVerificationReport): UC-RIDE-010 is AGREEd with Counsel/Admin actors but the server is own-submissions only; options are offline review-app verification from a driver export, a driver-issued case-scoped capability, or retiring the endpoint. (2) Approved review-app UX files that still describe multi-driver bundles (list in the FR-038 receipt). (3) Role actors left on UC-005/006/007/021.
+- Payton decisions pending: (1) AGREE on the driver-issued case-grant candidate (r6, PR #29: docs/receipts/requirements/20261009T033424Z-bdpv4-candidate-case-grant.md). It answers counsel verification and the role actors on all 15 use cases. Four Codex security threads on PR #29 stay open for his decision: import binding, viewer grant check, relabeling, sidecar grafting. (2) Approved review-app UX files that still describe multi-driver bundles (list in the FR-038 receipt).
 - Open review threads: FR-065..074 phase assignment; generic deferral reasons; OTS smoke script findings (author-deferred, now five).
-- No HV run yet. gpt-6.1-sol at high is not reachable from this session.
+- No eligible HV run yet. Codex HV replies on PR #26 (partial) and PR #29 (gpt-5.6-sol, completed-ineligible, DISAGREE 96/92) are recorded under docs/reviews/hv-pairs/. gpt-6.1-sol at high is not reachable from this session.
 - Tests run on Linux with .NET SDK 10.0.112, OpenSCAD 2021.01 and PowerShell 7.6.6. global.json pins 10.0.401 and was relaxed locally only (not committed). Android and Windows host tests not run here.
 
 ---
