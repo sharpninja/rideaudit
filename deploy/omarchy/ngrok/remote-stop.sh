@@ -92,12 +92,39 @@ stop_systemd_unit() {
   fi
 }
 
+# The unit file can be gone while the unit is still loaded and running. Its agent logs to stdout,
+# so is_our_ngrok cannot see it. Identify it by the loaded unit's MainPID instead. If the unit is
+# not loaded, or the query fails, there is nothing to prove and the stop stays best-effort.
+LOADED_UNIT_PID=""
+stop_loaded_unit_without_file() {
+  local unit_pid unit_cmd stop_rc
+  unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null || true)"
+  if [ -n "$unit_pid" ] && [ "$unit_pid" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
+    unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
+    case "$unit_cmd" in
+      *ngrok\ http\ *) LOADED_UNIT_PID="$unit_pid" ;;
+    esac
+  fi
+  stop_rc=0
+  systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || stop_rc=$?
+  systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  [ -n "$LOADED_UNIT_PID" ] || return 0
+  if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
+    SYSTEMD_FAIL="ngrok_systemd_stop_failed rc=${stop_rc}"
+  fi
+  if kill -0 "$LOADED_UNIT_PID" 2>/dev/null; then
+    [ -n "$SYSTEMD_FAIL" ] || SYSTEMD_FAIL="ngrok_systemd_agent_still_running pid=${LOADED_UNIT_PID}"
+    kill "$LOADED_UNIT_PID" 2>/dev/null || true
+    sleep 1
+    kill -9 "$LOADED_UNIT_PID" 2>/dev/null || true
+  fi
+}
+
 if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
   if [ -f "$UNIT_FILE" ]; then
     stop_systemd_unit
   else
-    systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
-    systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+    stop_loaded_unit_without_file
   fi
 fi
 
@@ -191,7 +218,7 @@ if [ -n "$SYSTEMD_FAIL" ]; then
   # sweep killed. Each kill of a restarted agent can schedule another restart, so watch up to
   # three RestartSec windows (plus margin). In each window, retry stop and a runtime mask, and kill
   # any restart. Report a supervisor that is still restarting after the last window.
-  restart_sec="$(sed -n 's/^RestartSec=\([0-9][0-9]*\)$/\1/p' "$UNIT_FILE" 2>/dev/null | head -n 1)"
+  restart_sec="$(sed -n 's/^RestartSec=\([0-9][0-9]*\)$/\1/p' "$UNIT_FILE" 2>/dev/null | head -n 1 || true)"
   restarts=""
   quiet=0
   for window in 1 2 3; do
@@ -220,6 +247,10 @@ fi
 remaining="$(our_agents | tr '\n' ' ')"
 if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && { is_our_ngrok "$old" || is_recorded_agent "$old"; }; then
   remaining="$remaining $old"
+fi
+if [ -n "$LOADED_UNIT_PID" ] && kill -0 "$LOADED_UNIT_PID" 2>/dev/null \
+  && [ "$(awk '/^State/{print $2}' "/proc/$LOADED_UNIT_PID/status" 2>/dev/null)" != Z ]; then
+  remaining="$remaining $LOADED_UNIT_PID"
 fi
 if [ -n "${remaining// /}" ]; then
   # Keep the state files so a later stop can still identify the agent.

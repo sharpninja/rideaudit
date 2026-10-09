@@ -20,6 +20,9 @@ public sealed record DeletionResult(string Status, bool Deleted, bool CustodyCip
 public interface ISubjectAccountSource
 {
     IReadOnlyDictionary<string, object> SubjectDatasets(string driverId);
+
+    /// <summary>The subject's tenant id, used to attribute access-log entries to the subject.</summary>
+    string? SubjectTenant(string driverId) => null;
 }
 
 /// <summary>Presents stored coordinates without masking (FR-RIDE-077).</summary>
@@ -74,6 +77,7 @@ public sealed class PrivacyDesk
             ["data/consents.json"] = _store.Consents.Where(row => row.DriverId == subjectDriverId).ToList(),
             ["data/dictionary.json"] = _store.Dictionary.Where(row => importIds.Contains(row.ImportId)).ToList(),
             ["data/unverified.json"] = _store.Unverified.Where(row => importIds.Contains(row.ImportId)).ToList(),
+            ["data/access-log.json"] = SubjectAccessLog(subjectDriverId, submissions),
         };
         if (_accounts is not null)
         {
@@ -92,6 +96,33 @@ public sealed class PrivacyDesk
         var zip = BuildZip(manifest, subjectDriverId, imports, datasets);
         var status = imports.Count == 0 && submissions.Count == 0 ? "no-personal-imports" : "exported";
         return new AccessExport(Ids.New("exp-"), status, zip);
+    }
+
+    // FR-RIDE-010: access-log entries about the subject, including the export event Authorize just wrote.
+    // An entry is the subject's when the subject acted or when it targets the subject's driver id, tenant
+    // or a submission. Any other principal's ids in a kept entry are replaced, so the export never
+    // discloses another person's identifiers.
+    private List<AccessLogEntry> SubjectAccessLog(string subjectDriverId, IReadOnlyList<SubmittedRecordView> submissions)
+    {
+        var own = new HashSet<string>(StringComparer.Ordinal) { subjectDriverId };
+        foreach (var row in submissions)
+        {
+            own.Add(row.SubmissionId);
+            own.Add(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).TenantId);
+        }
+        var tenant = _accounts?.SubjectTenant(subjectDriverId);
+        if (!string.IsNullOrEmpty(tenant))
+            own.Add(tenant);
+        own.Remove("");
+        return _access.Entries
+            .Where(entry => entry.ActorId == subjectDriverId || own.Contains(entry.TenantId) || own.Contains(entry.ResourceId))
+            .Select(entry => entry with
+            {
+                ActorId = entry.ActorId == subjectDriverId ? entry.ActorId : "other-principal",
+                TenantId = own.Contains(entry.TenantId) ? entry.TenantId : "other-subject",
+                ResourceId = own.Contains(entry.ResourceId) ? entry.ResourceId : "other-subject",
+            })
+            .ToList();
     }
 
     public DeletionResult Delete(string actorId, string subjectDriverId, string caseId)

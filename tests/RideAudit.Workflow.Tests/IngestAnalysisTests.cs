@@ -482,6 +482,12 @@ public class TestRide010012029031032
         var originalLabel = enrolled.Vehicle.Label;
         world.App.Identity.UpdateVehicle(world.Require(enrolled.Driver), enrolled.Vehicle.VehicleId, "Renamed-DSAR-7c41", "", "", 0, "label correction");
 
+        // Access-log entries: the subject's own read, a refused attempt by the neighbor against the subject,
+        // and the neighbor's own read, which must not appear in the subject's export.
+        world.App.Identity.ListVehicles(world.Require(enrolled.Driver));
+        Assert.Throws<RideAuditException>(() => world.App.Privacy.ViewLocations(neighbor.Driver.DriverId, enrolled.Driver.DriverId));
+        world.App.Identity.ListVehicles(world.Require(neighbor.Driver));
+
         var export = world.App.Privacy.Export(enrolled.Driver.DriverId, enrolled.Driver.DriverId);
         Assert.Equal("exported", export.Status);
         using (var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read))
@@ -511,6 +517,13 @@ public class TestRide010012029031032
             Assert.Contains("\"Label\":" + System.Text.Json.JsonSerializer.Serialize(originalLabel), Entry("account/vehicle-versions.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/profiles.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Session.SessionId, Entry("account/sessions.json"), StringComparison.Ordinal);
+
+            // Access-log entries about the subject, including this export, with the neighbor's id replaced.
+            var accessLog = Entry("data/access-log.json");
+            Assert.Contains("\"Action\":\"list-vehicles\"", accessLog, StringComparison.Ordinal);
+            Assert.Contains("\"Action\":\"dsar-export\"", accessLog, StringComparison.Ordinal);
+            Assert.Contains("\"ActorId\":\"other-principal\",\"TenantId\":" + System.Text.Json.JsonSerializer.Serialize(enrolled.Driver.DriverId) + ",\"Action\":\"view-location\"", accessLog, StringComparison.Ordinal);
+            Assert.Single(System.Text.RegularExpressions.Regex.Matches(accessLog, "\"Action\":\"list-vehicles\""));
 
             foreach (var entry in zip.Entries)
             {

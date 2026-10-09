@@ -10,6 +10,8 @@ public sealed class DirectorySubjectAccountSource : ISubjectAccountSource
 
     public DirectorySubjectAccountSource(DriverDirectory directory) => _directory = directory;
 
+    public string? SubjectTenant(string driverId) => _directory.ExportSubject(driverId)?.Account.TenantId;
+
     public IReadOnlyDictionary<string, object> SubjectDatasets(string driverId)
     {
         var export = _directory.ExportSubject(driverId);
