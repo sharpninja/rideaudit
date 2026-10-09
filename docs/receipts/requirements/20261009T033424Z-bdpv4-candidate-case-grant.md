@@ -11,6 +11,7 @@
 - **Revised:** r9, 2026-10-09 10:36 CT (20261009T153644Z). Answers Codex review 5472175684: an explicit operation-to-RPC map, with every other read RPC refusing a grantee (TR-RIDE-SEC-004 AC 7, TEST-RIDE-058 item 10); the grafting negative includes the OTS proof.
 - **Revised:** r10, 2026-10-09 10:50 CT (20261009T155020Z). Answers Codex review 5472262525: grant context transport on every mapped RPC (TR-RIDE-SEC-004 AC 8, TEST-RIDE-058 item 11); interval-bound package export; Driver-path grafting and offline negatives.
 - **Revised:** r11, 2026-10-09 11:00 CT (20261009T160019Z). Answers Codex review 5472419763: the interval is a public request field and its test uses the public RPC; grantee packages exclude the driver's identity datasets.
+- **Revised:** r12, 2026-10-09 11:16 CT (20261009T161621Z). Answers Codex review 5472589691: public contracts for grantee accounts, grant management and viewer authorization; escrow binding; duplicate case id; interval only for UC-RIDE-007 packages (TEST-RIDE-058 items 12 and 13).
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -83,7 +84,7 @@ TR-RIDE-SEC-004:
 
    All other read RPCs refuse a grantee with `TENANT_ISOLATION`, return no data, and write a refusal record. These include `Identity.ListVehicles`, `GetConfigurationProfile`, `Admission.GetAdmissionStatus`, `Escrow.GetEscrowStatus` and `Privacy.ViewLocations`.
 
-8. Grant transport. Every grantee call carries an authoritative grant context, `{grant_id, case_id}`, as a request field on each mapped RPC. `Privacy.RequestAccessExport` also gains an `interval {start_unix_millis, end_unix_millis}` field, which a grantee `package-export` must set. This is a contract change: a `GrantContext` message is added to each request in the AC 7 map, and the minor contract version is bumped. The server authorizes against that one grant only. It never infers a grant from the caller and never unions several grants. A grantee call without a grant context, or whose grant id is not the caller's, is refused with `TENANT_ISOLATION`. The use or refusal record names the presented grant id.
+8. Grant transport. Every grantee call carries an authoritative grant context, `{grant_id, case_id}`, as a request field on each mapped RPC. `Privacy.RequestAccessExport` also gains an optional `interval {start_unix_millis, end_unix_millis}` field. A UC-RIDE-007 incident package sets it, and rows outside it are excluded. A UC-RIDE-021 portable export leaves it unset and covers the whole granted scope. `Counsel.VerificationReportRequest.case_id` is deprecated: if it is set, it must equal `GrantContext.case_id`, or the call is refused. This is a contract change: a `GrantContext` message is added to each request in the AC 7 map, and the minor contract version is bumped. The server authorizes against that one grant only. It never infers a grant from the caller and never unions several grants. A grantee call without a grant context, or whose grant id is not the caller's, is refused with `TENANT_ISOLATION`. The use or refusal record names the presented grant id.
 
 TEST-RIDE-058:
 
@@ -124,6 +125,40 @@ TEST-RIDE-058:
 9. Read-only grant: with a valid grant that allows every operation, the grantee calls each mutating RPC in TR-RIDE-SEC-004 AC 6 against the grantor's data. Each call returns `TENANT_ISOLATION` and no data. The import, normalized, custody, vehicle, profile and key stores are unchanged, and each call writes one refusal record.
 10. Unmapped reads: with a valid grant that allows every operation, the grantee calls each read RPC outside the AC 7 mapping (`Identity.ListVehicles`, `GetConfigurationProfile`, `Admission.GetAdmissionStatus`, `Escrow.GetEscrowStatus`, `Privacy.ViewLocations`). Each call returns `TENANT_ISOLATION` and no data, and writes one refusal record.
 11. Grant transport, through the public gRPC contracts: the same grantee holds grant A (case CA, import IA) and grant B (case CB, import IB). A call presenting grant A returns only IA rows and logs grant A. A call presenting grant A's id with case CB is refused. A call with no grant context is refused. Each refusal writes one refusal record naming the presented grant id, if any.
+12. Public contracts, through gRPC (see "Public contracts" below):
+    - a grantee invited by the driver registers with the invite code, authenticates, and is the grantee used by item 7;
+    - a disabled grantee is refused everywhere;
+    - viewer resolution and refusal upload run through `Grants.ResolveViewerRecords` and `Grants.UploadViewerRefusals`, and replaying the same outbox entry records it once;
+    - a `VerificationReportRequest` whose `case_id` differs from `GrantContext.case_id` is refused;
+    - a UC-RIDE-021 portable export with no interval returns the whole granted scope, and nothing outside it.
+13. Escrow binding, each failing closed with no key, plaintext or working copy, and one refusal record:
+    - `VerifyForCounsel` with a real release id that belongs to another submission, grantor or case reports no quorum and no `WorkingCopyAuthorized`;
+    - `RequestCourtRelease` with a `requester_id` other than the authenticated caller is refused;
+    - `ApproveCourtRelease` by an authenticated principal who is not the named escrow custodian is refused;
+    - `OpenExpiringWorkingCopy` by anyone but the authenticated requester of that release is refused.
+
+
+### Public contracts (proposed, r12)
+
+These come with the same minor contract-version bump as `GrantContext` (TR-RIDE-SEC-004 AC 8).
+
+- **Grantee accounts.** The driver invites a grantee with `Grants.InviteGrantee {email, display_name}`. The server returns a one-time invite code, and the driver delivers it out of band; the server sends nothing itself. The grantee redeems it with `Identity.RegisterGrantee {invite_code, email, display_name}` and receives a grantee principal, an access token and a recovery code, under the same credential rules as drivers. `Identity.RecoverAccount` works for grantees. The inviting driver can call `Grants.DisableGrantee {grantee_id}`, which revokes all of that driver's grants to that grantee. A grantee with no live grant can do nothing. *Choice for Payton: driver-invited grantee accounts, as written here, or operator-provisioned ones.*
+- **Grant management.** These calls take the driver principal only:
+  - `Grants.IssueGrant {grantee_id, case_id, import_ids[], submission_ids[], operations[], expires_unix_millis}` returns `Grant`;
+  - `Grants.RevokeGrant {grant_id}` returns `Grant`;
+  - `Grants.ListGrants {}` lists the caller's issued grants.
+
+  A grantee can call `Grants.ListMyGrants {}`. It returns grant id, grantor, case, operations and expiry, but no data.
+- **Viewer authorization.**
+  - `Grants.ResolveViewerRecords {grant_context?, records[{content_hash, receipt_core}]}` returns, per record, either the resolved submission id, the bound-field digest and the admission state, or a refusal reason. `grant_context` is absent on the Driver path.
+  - `Grants.UploadViewerRefusals {entries[{client_event_id, at_unix_millis, grant_id?, record_hash, reason}]}` is idempotent by `client_event_id`.
+- **Escrow binding.** This is a dependency of FR-RIDE-079 AC 5, on the court path:
+  - `VerifyForCounsel` counts quorum only for a release whose key belongs to the requested submission's sealed record, grantor tenant and case;
+  - `RequestCourtRelease` binds `requester_id` to the authenticated caller;
+  - `ApproveCourtRelease` accepts only an authenticated principal who is a named custodian of that key;
+  - `OpenExpiringWorkingCopy` opens only for the authenticated requester of that release.
+
+  The current master code does none of these (`GrpcServices.cs`, `EscrowGrpcService`). That is a pre-existing defect, reported separately on PR #29.
 
 ### Use-case changes that go with it (for AGREE)
 
