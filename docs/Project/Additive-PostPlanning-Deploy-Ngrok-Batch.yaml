@@ -1,8 +1,8 @@
 # Additive batch: post-planning Octopus Deploy CD and ngrok ingress (2026-09-28)
 # Operator deltas after PLAN-RIDEAUDIT-001 / docs/Project/* planning batches.
-# Binding direction: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP.
+# Binding direction: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY.
 # If you are out of licenses on the default container, create a new Octopus container
-# on PAYTON-DESKTOP. Do not use GHCR.
+# on LAB-OMARCHY. Do not use GHCR.
 # Plans (PLAN-RIDEAUDIT-001 r3.4 and children) must cite FR-RIDE-063 and must not weaken it.
 # License exhaustion is a provision step, not deferral and not out of scope.
 # Does not invent GHCR, a live Octopus green, Omarchy-as-FR, live Play, or extra product features.
@@ -10,13 +10,13 @@
 records:
   - kind: fr
     id: FR-RIDE-063
-    title: Octopus Deploy CD to PAYTON-DESKTOP
+    title: Octopus Deploy CD to LAB-OMARCHY
     description: >
       Build RideAudit admission, counsel, and related container images through
-      Octopus Deploy and deploy those images to PAYTON-DESKTOP. Octopus is the
+      Octopus Deploy and deploy those images to LAB-OMARCHY. Octopus is the
       container build and deploy path. GitHub Container Registry is not the
       distribution path. If the default Octopus container is out of licenses,
-      provision a new Octopus container on PAYTON-DESKTOP and continue from that
+      provision a new Octopus container on LAB-OMARCHY and continue from that
       instance. Release receipts must name the Octopus instance or container and
       the target machine. Receipts must never claim GHCR greens.
     priority: high
@@ -26,19 +26,26 @@ records:
       Operator 2026-09-28. Supersedes any GHCR assumption from earlier HV path-to-98
       notes, B08 GHCR wording, or plan distribution placeholders. Existing Omarchy
       loopback cutover receipts are lab deploy evidence only and do not satisfy
-      this FR. Existing deploy/omarchy docs currently alias PAYTON-DESKTOP,
-      PAYTON-OMARCHY, and OMARCHY to 192.168.0.149; do not invent a second host
+      this FR. Existing deploy/omarchy docs currently alias LAB-OMARCHY,
+      LAB-OMARCHY, and OMARCHY to 192.168.1.182; do not invent a second host
       if those names resolve together, and do not treat the loopback cutover as
       Octopus CD complete. Not a live Play FR.
+      Update 2026-09-29: recorded path on file is container octopus-rideaudit on
+      LAB-OMARCHY (docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md).
+      That receipt does not mark these ACs satisfied and does not authorize GHCR.
+      approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:
       - id: AC-RIDE-063-001
-        text: Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to PAYTON-DESKTOP.
+        text: Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to LAB-OMARCHY.
         isSatisfied: false
       - id: AC-RIDE-063-002
-        text: If the default Octopus container is out of licenses, a new Octopus container is provisioned on PAYTON-DESKTOP and subsequent releases use that instance.
+        text: If the default Octopus container is out of licenses, a new Octopus container is provisioned on LAB-OMARCHY and subsequent releases use that instance.
         isSatisfied: false
       - id: AC-RIDE-063-003
         text: Release receipts record the Octopus instance or container and the target machine, and never claim GHCR as the distribution path or a GHCR green.
+        isSatisfied: false
+      - id: AC-RIDE-063-004
+        text: LAB-OMARCHY compose cutover is prior interim evidence. It is not the Octopus CD green for LAB-OMARCHY.
         isSatisfied: false
 
   - kind: fr
@@ -52,7 +59,7 @@ records:
       variable and are never committed. If ngrok is misconfigured or the tunnel
       is not live, the system fails closed and does not advertise a public URL.
       Docs must state which host currently terminates the tunnel. The
-      canonical tunnel target is PAYTON-DESKTOP admission 192.168.0.149:28080
+      canonical tunnel target is LAB-OMARCHY admission 192.168.1.182:28080
       after the Octopus path in FR-RIDE-063. Omarchy loopback 127.0.0.1:18080
       is the prior interim and may remain bound.
     priority: high
@@ -62,6 +69,8 @@ records:
       Operator 2026-09-28. Supersedes any GHCR assumption for public ingress.
       Does not invent GHCR. Does not claim Omarchy loopback cutover or live Play
       as this FR. Current vs target must stay honest in receipts.
+      Update 2026-09-29: ngrok HTTPS is not Caddy edge TLS. Caddy is FR-RIDE-065 and remains Class C.
+      approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:
       - id: AC-RIDE-064-001
         text: A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.
@@ -70,26 +79,29 @@ records:
         text: ngrok token and related secrets are supplied from a secret store or environment and are not committed to git.
         isSatisfied: false
       - id: AC-RIDE-064-003
-        text: Misconfigured or non-live ngrok does not advertise a public URL. Docs name the current tunnel host and distinguish Omarchy loopback interim from PAYTON-DESKTOP target.
+        text: Misconfigured or non-live ngrok does not advertise a public URL. Docs name the current tunnel host and distinguish Omarchy loopback interim from LAB-OMARCHY target.
         isSatisfied: false
 
   - kind: usecase
     localId: UC-RIDE-032
-    title: Operator releases RideAudit via Octopus to PAYTON-DESKTOP
+    title: Operator releases RideAudit via Octopus to LAB-OMARCHY
     actors:
       - Operator
       - OctopusDeploy
       - PaytonDesktop
-    briefDescription: Operator configures the RideAudit Octopus project and releases container images to PAYTON-DESKTOP without using GHCR.
+    briefDescription: "Operator configures the RideAudit Octopus project and releases container images to LAB-OMARCHY without using GHCR. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     basicFlow: |
-      1. Operator opens the RideAudit Octopus project on the licensed instance (default container, or a new container on PAYTON-DESKTOP if licenses are exhausted).
+      1. Operator opens the RideAudit Octopus project on the licensed instance (default container, or a new container on LAB-OMARCHY if licenses are exhausted).
       2. Operator confirms the process builds admission, counsel, and related images from deploy/containers.
-      3. Operator creates or promotes a release targeting PAYTON-DESKTOP.
-      4. Octopus deploys the images to PAYTON-DESKTOP.
+      3. Operator creates or promotes a release targeting LAB-OMARCHY.
+      4. Octopus deploys the images to LAB-OMARCHY.
       5. Operator records the Octopus instance or container and target machine in a release receipt and does not claim GHCR.
     acceptanceCriteria:
       - id: AC-UC-032-001
-        text: Operator can configure the Octopus project and complete a release to PAYTON-DESKTOP with a receipt that names the instance and target and does not claim GHCR.
+        text: Operator can configure the Octopus project and complete a release to LAB-OMARCHY with a receipt that names the instance and target and does not claim GHCR.
+        isSatisfied: false
+      - id: AC-UC-032-002
+        text: A LAB-OMARCHY compose cutover is not accepted as the Octopus CD green.
         isSatisfied: false
     frLinks:
       - frId: FR-RIDE-063
@@ -105,7 +117,7 @@ records:
     briefDescription: Operator configures ngrok for the running RideAudit service and verifies an external probe reaches admission health.
     basicFlow: |
       1. Operator loads the ngrok token from a secret store or environment, not from git.
-      2. Operator starts or confirms the ngrok process on the documented host (interim Omarchy loopback or PAYTON-DESKTOP after Octopus CD).
+      2. Operator starts or confirms the ngrok process on the documented host (interim Omarchy loopback or LAB-OMARCHY after Octopus CD).
       3. Operator records the live public URL only when the tunnel is up.
       4. Operator sends an external health or admission probe through that URL.
       5. The probe reaches the running admission (or documented companion front door). If the tunnel is down or misconfigured, no public URL is advertised.
@@ -139,23 +151,26 @@ records:
 
   - kind: tr
     id: TR-RIDE-DEPLOY-002
-    title: Octopus agent and license fallback on PAYTON-DESKTOP
+    title: Octopus agent and license fallback on LAB-OMARCHY
     description: >
       Run an Octopus deployment agent (or equivalent tentacle/worker) on
-      PAYTON-DESKTOP so releases land on that target. If the default Octopus
+      LAB-OMARCHY so releases land on that target. If the default Octopus
       container is out of licenses, provision a new Octopus container on
-      PAYTON-DESKTOP and point the RideAudit project at that instance.
+      LAB-OMARCHY and point the RideAudit project at that instance.
     priority: high
     area: RIDE
     subarea: DEPLOY
     status: pending
-    notes: Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green.
+    notes: "Implements/supports FR-RIDE-063. Operator 2026-09-28. Existing Omarchy Octopus/SQL/Caddy containers are not a RideAudit CD green. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     acceptanceCriteria:
       - id: AC-RIDE-DEPLOY-002-001
-        text: PAYTON-DESKTOP is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
+        text: LAB-OMARCHY is a registered Octopus deployment target with a live agent or worker for RideAudit releases.
         isSatisfied: false
       - id: AC-RIDE-DEPLOY-002-002
-        text: License exhaustion on the default Octopus container results in a new Octopus container on PAYTON-DESKTOP rather than a GHCR workaround.
+        text: License exhaustion on the default Octopus container results in a new Octopus container on LAB-OMARCHY rather than a GHCR workaround.
+        isSatisfied: false
+      - id: AC-RIDE-DEPLOY-002-003
+        text: LAB-OMARCHY compose cutover is recorded as prior interim and is not the Octopus deployment green.
         isSatisfied: false
 
   - kind: tr
@@ -184,18 +199,21 @@ records:
     title: Octopus release receipt without GHCR
     description: >
       A documented Octopus dry-run or release receipt proves RideAudit images
-      were built and deployed to PAYTON-DESKTOP through Octopus, names the
+      were built and deployed to LAB-OMARCHY through Octopus, names the
       instance or container and target machine, and does not claim GHCR.
     priority: high
     area: RIDE
     status: pending
-    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28."
+    notes: "Covers FR-RIDE-063. Method: system receipt or documented dry-run. Operator 2026-09-28. approval: Payton AGREE 2026-09-29. Acceptance criteria stay unsatisfied."
     acceptanceCriteria:
       - id: AC-TEST-038-001
-        text: Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to PAYTON-DESKTOP.
+        text: Receipt or dry-run shows Octopus built and deployed admission/counsel (or related) images to LAB-OMARCHY.
         isSatisfied: false
       - id: AC-TEST-038-002
         text: Receipt names the Octopus instance or container and target machine and contains no GHCR green claim.
+        isSatisfied: false
+      - id: AC-TEST-038-003
+        text: A LAB-OMARCHY compose cutover receipt is not scored as the Octopus CD green.
         isSatisfied: false
 
   - kind: test

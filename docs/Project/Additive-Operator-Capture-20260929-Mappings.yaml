@@ -1,0 +1,44 @@
+# Mappings for the 2026-09-29 operator capture (new IDs only).
+# Updated rows for existing FRs live in Requirements-Mappings-Batch.yaml
+# (and FR-RIDE-063 updates in Additive-PostPlanning-Deploy-Ngrok mappings).
+# Do not duplicate those FR rows here — applying all mapping files would
+# submit multiple mappings for the same FR.
+# FR-RIDE-068 was withdrawn. Cradle TR/TEST/UC map to FR-RIDE-041 in the main mappings file.
+# approval: Payton AGREE 2026-09-29 for the FR-RIDE-065..073 rows; the FR-RIDE-074 row is Payton AGREE 2026-10-07.
+mappings:
+  - frId: FR-RIDE-065
+    trIds: [TR-RIDE-EDGE-002]
+    testIds: [TEST-RIDE-045]
+    useCaseLocalIds: [UC-RIDE-035]
+  - frId: FR-RIDE-066
+    trIds: [TR-RIDE-VIDEO-013]
+    testIds: [TEST-RIDE-046]
+    useCaseLocalIds: [UC-RIDE-036]
+  - frId: FR-RIDE-067
+    trIds: [TR-RIDE-VIDEO-014]
+    testIds: [TEST-RIDE-047]
+    useCaseLocalIds: [UC-RIDE-037, UC-RIDE-043]
+  - frId: FR-RIDE-069
+    trIds: [TR-RIDE-LAB-001]
+    testIds: [TEST-RIDE-049]
+    useCaseLocalIds: [UC-RIDE-039]
+  - frId: FR-RIDE-070
+    trIds: [TR-RIDE-LAB-002]
+    testIds: [TEST-RIDE-050]
+    useCaseLocalIds: [UC-RIDE-040]
+  - frId: FR-RIDE-071
+    trIds: [TR-RIDE-LAB-003]
+    testIds: [TEST-RIDE-051]
+    useCaseLocalIds: [UC-RIDE-041]
+  - frId: FR-RIDE-072
+    trIds: [TR-RIDE-LAB-004]
+    testIds: [TEST-RIDE-052]
+    useCaseLocalIds: [UC-RIDE-042]
+  - frId: FR-RIDE-073
+    trIds: [TR-RIDE-VIDEO-017]
+    testIds: [TEST-RIDE-053, TEST-RIDE-054]
+    useCaseLocalIds: [UC-RIDE-043]
+  - frId: FR-RIDE-074
+    trIds: [TR-RIDE-VIEW-007]
+    testIds: [TEST-RIDE-055]
+    useCaseLocalIds: [UC-RIDE-044]

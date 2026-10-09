@@ -1,4 +1,4 @@
-// RideAudit headrest phone mount — ART-RIDE-MOUNT-001
+// RideAudit headrest phone mount - ART-RIDE-MOUNT-001
 // Copyright (C) 2026 RideAudit contributors
 //
 // This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 // Two post blocks, one shared vertical cradle.
 // Each post passes through its block. The block is one round collar, 25.5 mm
 // outside and 33 mm thick along the post. The bore is
-// post_od plus 0.2–0.5 mm. The default is a 14 mm post, so the preview bore
+// post_od plus 0.2-0.5 mm. The default is a 14 mm post, so the preview bore
 // is 14.5 mm. Its rear is tangent to the headrest (Y = 0). Each collar carries
 // a ~200 mm arm in a horizontal plane (constant Z). The arm shares the collar's
 // bottom face. Short blends rise into the collar above the arm and stop at the
@@ -48,7 +48,7 @@
 // Print frames are applied by the orient modules.
 
 /* [Headrest posts] */
-post_spacing_min = 120;  // mm, narrow end of the usual 120–170 mm center range
+post_spacing_min = 120;  // mm, narrow end of the usual 120-170 mm center range
 post_spacing_max = 170;  // mm, wide end of that range
 post_spacing     = 150;  // mm, a common center distance (also 130 and 160)
 // Measured post diameter. Presets: 10, 12, 12.7, 13.8, 14. Any value in 10..14.

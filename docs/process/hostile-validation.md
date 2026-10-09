@@ -21,6 +21,17 @@ Generated code **MUST** receive hostile validation from the opposing agent and m
 
 The product matrix historically named `gpt-6-sol` at `xhigh` as the opposing validator to Grok generation. The currently available Cursor/OpenAI Sol-family model id is **`gpt-5.6-sol`** at reasoning **`xhigh`**. Treat `gpt-5.6-sol` (xhigh) as the approved opposing validator. `gpt-6-sol` remains the family name; `gpt-5.6-sol` is the dated concrete alias. A completed `gpt-5.6-sol` xhigh opposing run is formally eligible for the product HV gate. Eligibility is not a pass; AGREE at threshold 98 is still required.
 
+### Amendment 2026-10-08 - Claude Code generator; temporary `gpt-6.1-sol` validator at `high`
+
+Payton 2026-10-08: Grok is unavailable for HV. Use `gpt-6.1-sol` at reasoning `high` for now. Claude Code (Anthropic) takes over generation from Grok Bot.
+
+- **Approved generator:** Claude Code, provider `anthropic`, is an approved generator in addition to section 1. Its pair files record `"agent": "Claude Code"` and `"provider": "anthropic"`. Claude Code does not write a model id into repository files, so `generator.model` is `"not-recorded"` for this generator.
+- **Opposing validator for Claude Code work:** GPT Sol family `gpt-6.1-sol` at reasoning `high`. Different provider and model family, so it is opposing under section 2.
+- **Grok-generated work:** `gpt-6.1-sol` at `high` is also accepted as its opposing validator while this amendment is in force.
+- **Sol-generated work:** no opposing validator is approved while Grok is unavailable. Record that HV as `unavailable`. A Sol validator on Sol work is same-family review and does not count.
+- **Temporary:** `high` is accepted in place of `xhigh` only under this amendment. It ends when Grok is available for HV again or Payton amends it, whichever comes first.
+- **Unchanged:** JSON pair custody (sections 3 and 4), immediate commit, AGREE only at accuracy and completeness of 98 or higher, and truthful `unavailable` / `failed` status. Pair files record `"validator": {"model": "gpt-6.1-sol", "reasoning_effort": "high"}`.
+
 Self-review by the generating agent is not opposing-model HV and does not satisfy this rule. The validator must attack correctness, security, fail-closed behavior, data custody, requirements traceability, and other risks appropriate to the generated work. A failed, partial, unavailable, or unauthenticated validation is not a pass.
 
 ### Authentication limitation

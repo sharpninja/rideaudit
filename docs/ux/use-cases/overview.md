@@ -15,7 +15,6 @@ flowchart TB
     A_Driver((Driver))
     A_Auditor((Auditor))
     A_Admin((Admin))
-    A_ConciergeApi((Lyft Concierge status API))
     A_ThirdParty((Third-party telematics source))
     A_Counsel((Counsel))
     A_PublicServer((Public server))
@@ -35,7 +34,6 @@ flowchart TB
       direction TB
       N001(["UC-RIDE-001<br/>Ingest privacy-export ZIP"])
       N002(["UC-RIDE-002<br/>Record Smooth Cruiser evidence"])
-      N003(["UC-RIDE-003<br/>Optional Concierge ride location poll"])
       N004(["UC-RIDE-004<br/>Import third-party telematics"])
     end
     subgraph analysis["Analysis and subject requests"]
@@ -60,8 +58,6 @@ flowchart TB
     subgraph server["Public server"]
       direction TB
       N015(["UC-RIDE-015<br/>Submit sealed package to public server"])
-      N016(["UC-RIDE-016<br/>Counsel multi-driver bundle"])
-      N020(["UC-RIDE-020<br/>Admin RBAC and partnership gates"])
     end
     subgraph video["Dual-phone evidence"]
       direction TB
@@ -93,7 +89,6 @@ flowchart TB
   A_Auditor --- N002
   A_Admin --- N003
   A_Auditor --- N003
-  A_ConciergeApi --- N003
   A_Driver --- N004
   A_Auditor --- N004
   A_ThirdParty --- N004
@@ -129,8 +124,6 @@ flowchart TB
   A_PublicServer --- N015
   A_PublicChain --- N015
   A_PlayIntegrity --- N015
-  A_Counsel --- N016
-  A_Admin --- N016
   A_Driver --- N017
   A_DriverPhone --- N017
   A_PassengerPhone --- N017
@@ -174,11 +167,8 @@ flowchart TB
 | Actor | Use cases |
 | --- | --- |
 | Driver | [UC-RIDE-001](UC-RIDE-001.md), [UC-RIDE-002](UC-RIDE-002.md), [UC-RIDE-004](UC-RIDE-004.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-012](UC-RIDE-012.md), [UC-RIDE-014](UC-RIDE-014.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-017](UC-RIDE-017.md) |
-| Auditor | [UC-RIDE-001](UC-RIDE-001.md), [UC-RIDE-002](UC-RIDE-002.md), [UC-RIDE-003](UC-RIDE-003.md), [UC-RIDE-004](UC-RIDE-004.md), [UC-RIDE-005](UC-RIDE-005.md), [UC-RIDE-006](UC-RIDE-006.md), [UC-RIDE-007](UC-RIDE-007.md), [UC-RIDE-019](UC-RIDE-019.md), [UC-RIDE-021](UC-RIDE-021.md), [UC-RIDE-026](UC-RIDE-026.md), [UC-RIDE-027](UC-RIDE-027.md), [UC-RIDE-031](UC-RIDE-031.md) |
-| Admin | [UC-RIDE-003](UC-RIDE-003.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-011](UC-RIDE-011.md), [UC-RIDE-013](UC-RIDE-013.md), [UC-RIDE-016](UC-RIDE-016.md), [UC-RIDE-020](UC-RIDE-020.md), [UC-RIDE-021](UC-RIDE-021.md) |
-| Lyft Concierge status API | [UC-RIDE-003](UC-RIDE-003.md) |
 | Third-party telematics source | [UC-RIDE-004](UC-RIDE-004.md) |
-| Counsel | [UC-RIDE-005](UC-RIDE-005.md), [UC-RIDE-007](UC-RIDE-007.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-011](UC-RIDE-011.md), [UC-RIDE-016](UC-RIDE-016.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md), [UC-RIDE-021](UC-RIDE-021.md), [UC-RIDE-026](UC-RIDE-026.md) |
+| Counsel | [UC-RIDE-005](UC-RIDE-005.md), [UC-RIDE-007](UC-RIDE-007.md), [UC-RIDE-008](UC-RIDE-008.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-011](UC-RIDE-011.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md), [UC-RIDE-021](UC-RIDE-021.md), [UC-RIDE-026](UC-RIDE-026.md) |
 | Public server | [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-014](UC-RIDE-014.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-017](UC-RIDE-017.md), [UC-RIDE-023](UC-RIDE-023.md), [UC-RIDE-028](UC-RIDE-028.md), [UC-RIDE-030](UC-RIDE-030.md) |
 | Configured public chain | [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md) |
 | Play Integrity | [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-012](UC-RIDE-012.md), [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md) |
@@ -193,11 +183,9 @@ flowchart TB
 
 ## Packages
 
-- Ingest: [UC-RIDE-001](UC-RIDE-001.md), [UC-RIDE-002](UC-RIDE-002.md), [UC-RIDE-003](UC-RIDE-003.md), [UC-RIDE-004](UC-RIDE-004.md)
 - Analysis and subject requests: [UC-RIDE-005](UC-RIDE-005.md), [UC-RIDE-006](UC-RIDE-006.md), [UC-RIDE-007](UC-RIDE-007.md), [UC-RIDE-008](UC-RIDE-008.md)
 - Seal, integrity, and escrow: [UC-RIDE-009](UC-RIDE-009.md), [UC-RIDE-010](UC-RIDE-010.md), [UC-RIDE-011](UC-RIDE-011.md), [UC-RIDE-012](UC-RIDE-012.md)
 - GPL-2.0 publish and registration: [UC-RIDE-013](UC-RIDE-013.md), [UC-RIDE-014](UC-RIDE-014.md)
-- Public server: [UC-RIDE-015](UC-RIDE-015.md), [UC-RIDE-016](UC-RIDE-016.md), [UC-RIDE-020](UC-RIDE-020.md)
 - Dual-phone evidence: [UC-RIDE-017](UC-RIDE-017.md), [UC-RIDE-018](UC-RIDE-018.md), [UC-RIDE-019](UC-RIDE-019.md), [UC-RIDE-022](UC-RIDE-022.md), [UC-RIDE-023](UC-RIDE-023.md), [UC-RIDE-024](UC-RIDE-024.md)
 - Compliance: [UC-RIDE-021](UC-RIDE-021.md)
 - Avalonia UI 12 and gRPC: [UC-RIDE-025](UC-RIDE-025.md), [UC-RIDE-026](UC-RIDE-026.md), [UC-RIDE-027](UC-RIDE-027.md), [UC-RIDE-028](UC-RIDE-028.md), [UC-RIDE-029](UC-RIDE-029.md), [UC-RIDE-030](UC-RIDE-030.md), [UC-RIDE-031](UC-RIDE-031.md)

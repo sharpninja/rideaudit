@@ -10,11 +10,11 @@ Copyright (C) 2026 RideAudit contributors. GPL-2.0-or-later. See [LICENSE](LICEN
 
 ## Purpose
 
-One landscape phone, held on a vertical plate. Two post blocks, one per post. Each block is one round collar, 25.5 mm outside and 33 mm thick along the post. The bore is the measured post plus 0.2–0.5 mm. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. The rear of the collar is tangent to the headrest pad. Each collar carries a 200 mm arm in a horizontal plane. The arm shares the collar's bottom face, and short blends rise into the 33 mm collar so the arm moment enters the tube around the post. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot 10 mm wide, 1 mm clear of the M8 crest on each side, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M8×1.25 thumbscrew comes up from below, on that arm's centerline, through a slot in the cradle bottom, through that arm slot, and into a tap hole in the receiver roof. Fully seated, the head face clamps the bottom plate and the arm.
+One landscape phone, held on a vertical plate. Two post blocks, one per post. Each block is one round collar, 25.5 mm outside and 33 mm thick along the post. The bore is the measured post plus 0.2-0.5 mm. The default export is a 14 mm post with 0.5 mm clearance, so the preview bore is 14.5 mm. The rear of the collar is tangent to the headrest pad. Each collar carries a 200 mm arm in a horizontal plane. The arm shares the collar's bottom face, and short blends rise into the 33 mm collar so the arm moment enters the tube around the post. Both arms slide into one shared cradle from the rear. Each arm has a longitudinal slot 10 mm wide, 1 mm clear of the M8 crest on each side, so the cradle can slide forward or back to set how far the phone sits from the pad. Its own M8×1.25 thumbscrew comes up from below, on that arm's centerline, through a slot in the cradle bottom, through that arm slot, and into a tap hole in the receiver roof. Fully seated, the head face clamps the bottom plate and the arm.
 
 The closed Galaxy Z Fold 4 sits in that cradle in landscape. The cover screen is flush on the forward face of the vertical plate. The primary rear cameras face forward, out of the opening, toward the road. Nothing in this package is a second cradle, a shared rail, a sliding clip, or an arm that rises toward the phone.
 
-The blocks are independent. Set `post_spacing` to the measured center distance (120–170 mm; 130, 150, and 160 mm are common) and re-export so each arm's tap hole sits on that arm. The longitudinal slot is only the depth lock: it is too tight to reach a neighboring hole. Set `post_od` to the measured post (presets 10, 12, 12.7, 13.8, and 14 mm) and reprint the coupon with the blocks.
+The blocks are independent. Set `post_spacing` to the measured center distance (120-170 mm; 130, 150, and 160 mm are common) and re-export so each arm's tap hole sits on that arm. The longitudinal slot is only the depth lock: it is too tight to reach a neighboring hole. Set `post_od` to the measured post (presets 10, 12, 12.7, 13.8, and 14 mm) and reprint the coupon with the blocks.
 
 ![Complete assembly](verification/previews/assembly.png)
 
@@ -139,7 +139,7 @@ openscad -o exports/post-block.stl --export-format binstl -D 'part="block"' head
 Check the geometry (Fold 4 pocket, open camera end, USB-end hook, default 14 mm post and 14.5 mm bore, 33 mm collar, rear entry, tight arm slots, root blends, cradle-bottom slots, modeled thumbscrews, flush heels, no arm interference):
 
 ```text
-python3 verify-geometry.py
+dotnet run --project ../../../tools/RideAudit.HeadrestGeometry -- --root .
 ```
 
 That rewrites [verification/geometry-report.md](verification/geometry-report.md). OpenSCAD 2021 or newer is required. A failing assert in the `.scad` file means the parameters cannot satisfy the mount constraints.

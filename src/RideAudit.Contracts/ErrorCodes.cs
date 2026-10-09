@@ -33,8 +33,6 @@ public static class ErrorCodes
     public const string LatencyBudgetExceeded = "LATENCY_BUDGET_EXCEEDED";
     public const string WorkingCopyExpired = "WORKING_COPY_EXPIRED";
     public const string ConsentRequired = "CONSENT_REQUIRED";
-    public const string PartnershipDisabled = "PARTNERSHIP_DISABLED";
-    public const string LegalHoldActive = "LEGAL_HOLD_ACTIVE";
     public const string ImportRejected = "IMPORT_REJECTED";
     public const string BluetoothDisabled = "BT_DISABLED";
     public const string CameraUnavailable = "CAMERA_UNAVAILABLE";

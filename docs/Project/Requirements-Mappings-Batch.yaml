@@ -1,4 +1,4 @@
-# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
+﻿# RideAudit MCP createBatch entities. status: pending. MCP_UNTRUSTED until plugin healthy.
 mappings:
   - frId: FR-RIDE-001
     trIds: [TR-RIDE-INGEST-001, TR-RIDE-INGEST-006]
@@ -12,10 +12,6 @@ mappings:
     trIds: [TR-RIDE-INGEST-003]
     testIds: [TEST-RIDE-003]
     useCaseLocalIds: [UC-RIDE-001]
-  - frId: FR-RIDE-004
-    trIds: [TR-RIDE-INGEST-004]
-    testIds: [TEST-RIDE-004]
-    useCaseLocalIds: [UC-RIDE-003]
   - frId: FR-RIDE-005
     trIds: [TR-RIDE-INGEST-005, TR-RIDE-INGEST-006]
     testIds: [TEST-RIDE-005]
@@ -42,20 +38,12 @@ mappings:
     useCaseLocalIds: [UC-RIDE-008]
   - frId: FR-RIDE-011
     trIds: [TR-RIDE-INGEST-001, TR-RIDE-INGEST-002]
-    testIds: [TEST-RIDE-004]
-    useCaseLocalIds: [UC-RIDE-003, UC-RIDE-020]
-  - frId: FR-RIDE-012
-    trIds: [TR-RIDE-INGEST-004]
-    testIds: [TEST-RIDE-004]
-    useCaseLocalIds: [UC-RIDE-003, UC-RIDE-020]
+    testIds: [TEST-RIDE-001, TEST-RIDE-002]
+    useCaseLocalIds: []
   - frId: FR-RIDE-013
     trIds: [TR-RIDE-STORE-001, TR-RIDE-STORE-002]
     testIds: [TEST-RIDE-011]
     useCaseLocalIds: [UC-RIDE-001]
-  - frId: FR-RIDE-014
-    trIds: [TR-RIDE-PRIV-002, TR-RIDE-SEC-002]
-    testIds: [TEST-RIDE-012]
-    useCaseLocalIds: [UC-RIDE-020]
   - frId: FR-RIDE-015
     trIds: [TR-RIDE-STORE-001, TR-RIDE-STORE-002, TR-RIDE-SEAL-001]
     testIds: [TEST-RIDE-013]
@@ -70,7 +58,7 @@ mappings:
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-018
     trIds: [TR-RIDE-CHAIN-002]
-    testIds: [TEST-RIDE-014]
+    testIds: [TEST-RIDE-014, TEST-RIDE-042]
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-019
     trIds: [TR-RIDE-CHAIN-003]
@@ -145,13 +133,9 @@ mappings:
     testIds: [TEST-RIDE-022]
     useCaseLocalIds: [UC-RIDE-015]
   - frId: FR-RIDE-037
-    trIds: [TR-RIDE-SERVER-007]
+    trIds: []
     testIds: [TEST-RIDE-023]
-    useCaseLocalIds: [UC-RIDE-015, UC-RIDE-016]
-  - frId: FR-RIDE-038
-    trIds: [TR-RIDE-SERVER-007]
-    testIds: [TEST-RIDE-023]
-    useCaseLocalIds: [UC-RIDE-007, UC-RIDE-016]
+    useCaseLocalIds: [UC-RIDE-015]
   - frId: FR-RIDE-039
     trIds: [TR-RIDE-SERVER-004, TR-RIDE-SERVER-005]
     testIds: [TEST-RIDE-024]
@@ -161,9 +145,9 @@ mappings:
     testIds: [TEST-RIDE-024]
     useCaseLocalIds: [UC-RIDE-015]
   - frId: FR-RIDE-041
-    trIds: [TR-RIDE-VIDEO-001]
-    testIds: [TEST-RIDE-025]
-    useCaseLocalIds: [UC-RIDE-017]
+    trIds: [TR-RIDE-VIDEO-001, TR-RIDE-VIDEO-016, TR-RIDE-HW-001]
+    testIds: [TEST-RIDE-025, TEST-RIDE-044, TEST-RIDE-048]
+    useCaseLocalIds: [UC-RIDE-017, UC-RIDE-038]
   - frId: FR-RIDE-042
     trIds: [TR-RIDE-VIDEO-002]
     testIds: [TEST-RIDE-025]
@@ -212,45 +196,21 @@ mappings:
     trIds: [TR-RIDE-SEC-001]
     testIds: [TEST-RIDE-029]
     useCaseLocalIds: [UC-RIDE-009]
-  - frId: FR-RIDE-202
-    trIds: [TR-RIDE-PRIV-002]
-    testIds: [TEST-RIDE-012]
-    useCaseLocalIds: [UC-RIDE-008, UC-RIDE-020]
-  - frId: FR-RIDE-203
-    trIds: [TR-RIDE-SEC-003]
-    testIds: [TEST-RIDE-029]
-    useCaseLocalIds: [UC-RIDE-008]
-  - frId: FR-RIDE-204
-    trIds: [TR-RIDE-STORE-001, TR-RIDE-STORE-002]
-    testIds: [TEST-RIDE-030]
-    useCaseLocalIds: [UC-RIDE-003]
   - frId: FR-RIDE-205
     trIds: [TR-RIDE-PERF-002]
     testIds: [TEST-RIDE-031]
     useCaseLocalIds: [UC-RIDE-021]
-  - frId: FR-RIDE-206
-    trIds: [TR-RIDE-STORE-001, TR-RIDE-STORE-002]
-    testIds: [TEST-RIDE-030]
-    useCaseLocalIds: [UC-RIDE-003]
   - frId: FR-RIDE-207
     trIds: [TR-RIDE-STORE-001, TR-RIDE-STORE-002]
     testIds: [TEST-RIDE-031]
     useCaseLocalIds: [UC-RIDE-007, UC-RIDE-021]
-  - frId: FR-RIDE-208
-    trIds: [TR-RIDE-STORE-003]
-    testIds: [TEST-RIDE-032]
-    useCaseLocalIds: [UC-RIDE-008]
   - frId: FR-RIDE-209
     trIds: [TR-RIDE-ANAL-002]
     testIds: [TEST-RIDE-007]
     useCaseLocalIds: [UC-RIDE-005]
-  - frId: FR-RIDE-210
-    trIds: [TR-RIDE-STORE-003, TR-RIDE-PRIV-003]
-    testIds: [TEST-RIDE-010]
-    useCaseLocalIds: [UC-RIDE-008]
   - frId: FR-RIDE-211
     trIds: [TR-RIDE-SEAL-003]
-    testIds: [TEST-RIDE-032]
+    testIds: []
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-212
     trIds: [TR-RIDE-CHAIN-002]
@@ -258,7 +218,7 @@ mappings:
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-213
     trIds: [TR-RIDE-PERF-001]
-    testIds: [TEST-RIDE-032]
+    testIds: []
     useCaseLocalIds: [UC-RIDE-009]
   - frId: FR-RIDE-214
     trIds: [TR-RIDE-ESCROW-003]
@@ -293,9 +253,9 @@ mappings:
     testIds: [TEST-RIDE-027]
     useCaseLocalIds: [UC-RIDE-018]
   - frId: FR-RIDE-222
-    trIds: [TR-RIDE-VIEW-001]
-    testIds: [TEST-RIDE-028]
-    useCaseLocalIds: [UC-RIDE-019]
+    trIds: [TR-RIDE-VIEW-001, TR-RIDE-VIEW-006]
+    testIds: [TEST-RIDE-028, TEST-RIDE-041]
+    useCaseLocalIds: [UC-RIDE-019, UC-RIDE-034]
 
   - frId: FR-RIDE-053
     trIds: [TR-RIDE-VIDEO-010]
@@ -311,8 +271,8 @@ mappings:
     useCaseLocalIds: [UC-RIDE-024]
 
   - frId: FR-RIDE-056
-    trIds: [TR-RIDE-VIDEO-012]
-    testIds: [TEST-RIDE-035]
+    trIds: [TR-RIDE-VIDEO-012, TR-RIDE-VIDEO-015]
+    testIds: [TEST-RIDE-035, TEST-RIDE-043]
     useCaseLocalIds: [UC-RIDE-025]
   - frId: FR-RIDE-057
     trIds: [TR-RIDE-VIEW-005]
@@ -338,3 +298,12 @@ mappings:
     trIds: [TR-RIDE-SERVER-010]
     testIds: [TEST-RIDE-037]
     useCaseLocalIds: [UC-RIDE-031]
+
+  - frId: FR-RIDE-077
+    trIds: [TR-RIDE-VIDEO-007]
+    testIds: []
+    notes: "Payton AGREE 2026-10-07 BDPv4 Candidate A pairing"
+  - frId: FR-RIDE-078
+    trIds: [TR-RIDE-PRIV-004]
+    testIds: []
+    notes: "Payton AGREE 2026-10-07 BDPv4 Candidate B pairing"

@@ -28,8 +28,8 @@ public class RaesWorkingCopyTests
             enrolled.Driver.TenantId,
             "CASE-RAES",
             "subpoena-raes-1",
-            "counsel review",
-            "counsel-1");
+            "court review",
+            "reviewer-1");
         world.App.Hsm.Approve(release.ReleaseId, "custodian-a", "I approve this case.");
         var oneShare = Assert.Throws<RideAuditException>(() =>
             world.App.Hsm.OpenWorkingCopy(release.ReleaseId, raes.Record.Envelope, TimeSpan.FromMinutes(15)));
@@ -61,8 +61,8 @@ public class RaesWorkingCopyTests
             enrolled.Driver.TenantId,
             "CASE-RAES-TAMPER",
             "subpoena-raes-2",
-            "counsel review",
-            "counsel-1");
+            "court review",
+            "reviewer-1");
         world.App.Hsm.Approve(release.ReleaseId, "custodian-a", "approve");
         world.App.Hsm.Approve(release.ReleaseId, "custodian-b", "approve");
 

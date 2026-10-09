@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // Copyright (C) 2026 RideAudit contributors
 // CONTRACT_AUTHORITY: grpc-protobuf
-// Contract-Version: 0.2.0
-// FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-020, FR-RIDE-021, FR-RIDE-037, FR-RIDE-038.
-// A bundle lists per-record custody. It does not replace or merge sealed records.
+// Contract-Version: 0.4.0
+// FR-RIDE-007, FR-RIDE-008, FR-RIDE-009, FR-RIDE-020, FR-RIDE-021, FR-RIDE-037.
+// Each sealed record is verified on its own. FR-RIDE-038 (multi-driver bundle) is retired (Payton 2026-10-07).
 syntax = "proto3";
 
 package rideaudit.counsel.v1;
@@ -11,35 +11,10 @@ package rideaudit.counsel.v1;
 option csharp_namespace = "RideAudit.Protos.Counsel.V1";
 
 service Counsel {
-  rpc BuildMultiDriverBundle (BuildMultiDriverBundleRequest) returns (MultiDriverBundle);
   rpc AnalyzeCoverage (AnalyzeCoverageRequest) returns (CoverageMatrix);
   rpc AnalyzeOnlineHours (AnalyzeOnlineHoursRequest) returns (OnlineHoursAudit);
   rpc AnalyzeIncidentWindow (AnalyzeIncidentWindowRequest) returns (IncidentReport);
   rpc BuildVerificationReport (VerificationReportRequest) returns (VerificationReport);
-}
-
-message BuildMultiDriverBundleRequest {
-  string case_id = 1;
-  repeated string submission_ids = 2;
-}
-
-message PerRecordVerification {
-  string submission_id = 1;
-  string driver_id = 2;
-  string vehicle_id = 3;
-  string collector_id = 4;
-  bool independent_custody = 5;
-  string content_hash_hex = 6;
-  string custody_state = 7;
-  bool hash_matches = 8;
-  string anchor_status = 9;
-}
-
-message MultiDriverBundle {
-  string bundle_id = 1;
-  repeated PerRecordVerification records = 2;
-  string case_id = 3;
-  bool aggregation_replaces_records = 4;
 }
 
 message AnalyzeCoverageRequest {

@@ -109,7 +109,6 @@ public sealed class AdmissionComposition
     public required CollectionBoundarySealer Sealer { get; init; }
     public required DocumentedFixtureL2Calendar? L2 { get; init; }
     public required IEthL2Client? L2Client { get; init; }
-    public required RoleDirectory Roles { get; init; }
     public required NormalizedStore Imports { get; init; }
     public required IngestPipeline Ingest { get; init; }
     public required AnalysisService Analysis { get; init; }
@@ -158,12 +157,11 @@ public static class AdmissionHost
             identity, play, ots, anchoring, hsm, journal, abuse, alerts, logs, redactor, access, clockService, archive, options.PolicyVersion, l2Client);
         var imports = new NormalizedStore();
         var keys = new ImportKeyRing();
-        var roles = new RoleDirectory();
-        var ingest = new IngestPipeline(imports, keys, clockService, new NoNetworkConciergeSource());
+        var ingest = new IngestPipeline(imports, keys, clockService);
         var analysis = new AnalysisService(imports);
         var recordSource = new JournalRecordSource(journal);
         var counsel = new CounselDesk(recordSource);
-        var privacy = new PrivacyDesk(imports, keys, new LegalHoldRegistry(), access, clockService, recordSource);
+        var privacy = new PrivacyDesk(imports, keys, access, clockService, recordSource);
         var algorithms = new AlgorithmRegistry(RideAuditPolicy.AlgorithmId);
         var sealer = new CollectionBoundarySealer(play, hsm, hsm, clockService, algorithms);
         return new AdmissionComposition
@@ -190,7 +188,6 @@ public static class AdmissionHost
             Sealer = sealer,
             L2 = l2,
             L2Client = l2Client,
-            Roles = roles,
             Imports = imports,
             Ingest = ingest,
             Analysis = analysis,

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build admission/counsel images on PAYTON-OMARCHY. Does not compose up.
+# Build admission/counsel images on LAB-OMARCHY. Does not compose up.
 # SPDX-License-Identifier: GPL-2.0-only
 set -eu
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"

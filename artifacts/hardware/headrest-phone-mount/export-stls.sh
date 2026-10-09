@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# RideAudit headrest phone mount — export print STLs from the OpenSCAD source.
+# RideAudit headrest phone mount - export print STLs from the OpenSCAD source.
 # Copyright (C) 2026 RideAudit contributors
 # SPDX-License-Identifier: GPL-2.0
 # The .scad file is the source of truth. Re-run this after any parameter edit.

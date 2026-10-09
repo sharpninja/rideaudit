@@ -2,27 +2,64 @@
 // Copyright (C) 2026 RideAudit contributors
 
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace RideAudit.Shared.Ui.Views;
 
 public partial class MainView : UserControl
 {
+    private object? _shellContent;
+    private ShellMode _mode = ShellMode.Review;
+
     public MainView()
     {
         InitializeComponent();
-        LicenseNotice.Text = UiLicense.Notice;
         FrameworkNotice.Text = UiLicense.Framework;
+        AboutButton.Click += OnAbout;
     }
 
     public void ApplyMode(ShellMode mode)
     {
+        _mode = mode;
         if (mode != ShellMode.Capture)
         {
-            Body.Content = new ReviewShellView();
+            _shellContent = new ReviewShellView();
+            Body.Content = _shellContent;
             return;
         }
 
-        Body.Content = App.CaptureRuntime?.CreateShell()
+        _shellContent = App.CaptureRuntime?.CreateShell()
+            ?? CaptureShellView.CreateUncomposedRefuse();
+        Body.Content = _shellContent;
+    }
+
+    public void OpenAbout() => OnAbout(null, new RoutedEventArgs());
+
+    private void OnAbout(object? sender, RoutedEventArgs e)
+    {
+        if (Body.Content is AboutView)
+        {
+            return;
+        }
+
+        if (Body.Content is not null)
+        {
+            _shellContent = Body.Content;
+        }
+
+        var about = new AboutView();
+        about.BackRequested += (_, _) => Body.Content = _shellContent ?? CreateShellForMode();
+        Body.Content = about;
+    }
+
+    private Control CreateShellForMode()
+    {
+        if (_mode != ShellMode.Capture)
+        {
+            return new ReviewShellView();
+        }
+
+        return App.CaptureRuntime?.CreateShell()
             ?? CaptureShellView.CreateUncomposedRefuse();
     }
 }

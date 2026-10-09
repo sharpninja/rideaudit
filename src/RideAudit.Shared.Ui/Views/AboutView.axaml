@@ -1,0 +1,15 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="RideAudit.Shared.Ui.Views.AboutView">
+  <ScrollViewer>
+    <StackPanel Spacing="12" Margin="4">
+      <TextBlock x:Name="ScreenId" Text="WF-ABOUT" FontWeight="Bold" />
+      <TextBlock Text="About" FontSize="18" />
+      <TextBlock Text="Copyright" FontWeight="SemiBold" />
+      <TextBlock x:Name="CopyrightNotice" TextWrapping="Wrap" />
+      <TextBlock Text="Third-party attributions" FontWeight="SemiBold" />
+      <TextBlock x:Name="AttributionsNotice" TextWrapping="Wrap" />
+      <Button x:Name="BackButton" Content="Back" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

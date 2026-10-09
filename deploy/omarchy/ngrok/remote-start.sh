@@ -1,14 +1,15 @@
 #!/usr/bin/bash
-# Start a durable ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080.
+# Start a durable ngrok HTTP tunnel to LAB-OMARCHY admission 192.168.1.182:28080.
 # Fail closed if admission is down. No Python.
 # SPDX-License-Identifier: GPL-2.0-only
 set -euo pipefail
 
-ADDR="${RIDEAUDIT_NGROK_ADDR:-192.168.0.149:28080}"
+ADDR="${RIDEAUDIT_NGROK_ADDR:-192.168.1.182:28080}"
 CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 UNIT_DIR="$HOME/.config/systemd/user"
 PID_FILE="$STATE_DIR/ngrok.pid"
+ADDR_FILE="$STATE_DIR/ngrok.addr"
 LOG_FILE="$STATE_DIR/ngrok.log"
 API_URL="http://127.0.0.1:4040/api/tunnels"
 
@@ -57,7 +58,7 @@ write_unit() {
   local bin="$1"
   cat > "$UNIT_DIR/rideaudit-ngrok.service" <<EOF
 [Unit]
-Description=RideAudit ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080
+Description=RideAudit ngrok HTTP tunnel to LAB-OMARCHY admission 192.168.1.182:28080
 After=network-online.target
 Wants=network-online.target
 
@@ -93,18 +94,51 @@ start_systemd() {
   return 0
 }
 
+is_our_ngrok() {
+  local pid="$1" cmd=""
+  if [ -r "/proc/$pid/cmdline" ]; then
+    cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+  fi
+  case "$cmd" in
+    *ngrok\ http\ *) return 0 ;;
+  esac
+  return 1
+}
+
 start_nohup() {
   local bin="$1"
   if [ -f "$PID_FILE" ]; then
     old="$(cat "$PID_FILE" || true)"
+    # A PID file can outlive its process and the PID can be reused. Only treat it as
+    # our agent when the live process is an ngrok http tunnel; otherwise drop the file.
+    if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && ! is_our_ngrok "$old"; then
+      echo "NGROK_STALE_PID=discarded"
+      rm -f "$PID_FILE" "$ADDR_FILE"
+      old=""
+    fi
     if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
-      echo "NGROK_MODE=nohup-existing"
-      return 0
+      # Reuse the running agent only when it was started for this backend.
+      if [ -f "$ADDR_FILE" ] && [ "$(cat "$ADDR_FILE" || true)" = "$ADDR" ]; then
+        echo "NGROK_MODE=nohup-existing"
+        return 0
+      fi
+      echo "NGROK_STALE_BACKEND=restart"
+      kill "$old" 2>/dev/null || true
+      j=0
+      while kill -0 "$old" 2>/dev/null && [ $j -lt 10 ]; do
+        j=$((j + 1))
+        sleep 1
+      done
+      if kill -0 "$old" 2>/dev/null; then
+        echo "FAIL_CLOSED=stale_ngrok_still_running"
+        exit 1
+      fi
     fi
   fi
   nohup "$bin" http "$ADDR" --config "$CONFIG" --log "$LOG_FILE" --log-format logfmt \
     >"$STATE_DIR/ngrok.out" 2>&1 &
   echo $! > "$PID_FILE"
+  printf '%s\n' "$ADDR" > "$ADDR_FILE"
   echo "NGROK_MODE=nohup"
 }
 

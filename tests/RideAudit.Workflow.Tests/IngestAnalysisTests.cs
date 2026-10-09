@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using RideAudit.Anal;
@@ -47,11 +48,8 @@ public class TestRide001Through006And011And030
     [Fact]
     [Trait("TEST", "TEST-RIDE-002")]
     [Trait("FR", "FR-RIDE-002")]
-    [Trait("FR", "FR-RIDE-206")]
-        [Trait("AC", "AC-RIDE-206-001")]
         [Trait("AC", "AC-RIDE-002-001")]
         [Trait("AC", "AC-RIDE-002-003")]
-        [Trait("AC", "AC-RIDE-206-002")]
         [Trait("AC", "AC-UC-002-001")]
         [Trait("AC", "AC-UC-002-002")]
         [Trait("AC", "AC-TEST-002-001")]
@@ -80,7 +78,7 @@ public class TestRide001Through006And011And030
         var rejected = world.App.Ingest.IngestPrivacyExport(Consent(driver.DriverId), mislabeled, "driver-upload");
         Assert.Equal("imported-with-gap", rejected.Status);
         Assert.Equal(2, world.App.Imports.Scores.Count);
-        Assert.DoesNotContain(world.App.Imports.Scores, row => row.Provenance == ProvenanceTags.Concierge);
+        Assert.DoesNotContain(world.App.Imports.Scores, row => row.Provenance == "lyft_concierge_api");
     }
 
     [Fact]
@@ -100,40 +98,24 @@ public class TestRide001Through006And011And030
         Assert.True(trip.EndedUnixMillis > trip.StartedUnixMillis);
     }
 
+
     [Fact]
-    [Trait("TEST", "TEST-RIDE-004")]
-    [Trait("FR", "FR-RIDE-004")]
+    [Trait("TEST", "TEST-RIDE-001")]
     [Trait("FR", "FR-RIDE-011")]
-    [Trait("FR", "FR-RIDE-012")]
     [Trait("AC", "AC-RIDE-011-001")]
     [Trait("AC", "AC-RIDE-011-002")]
-    [Trait("AC", "AC-UC-020-001")]
-    [Trait("AC", "AC-TEST-004-001")]
-    [Trait("AC", "AC-TEST-004-002")]
-    public void Concierge_stays_behind_the_partnership_gate_and_does_not_call_a_private_api()
+    public void RideAudit_Ingest_path_has_no_HttpClient_and_no_lyft_com_private_api_scrape()
     {
+        // Natural replacement for the Concierge partnership half deleted in 2e0670e.
+        // FR-RIDE-011: product must not call undocumented Lyft private APIs.
         var root = ServerWorld.RepoRoot();
         var ingestDir = Path.Combine(root, "src/RideAudit.Ingest");
         var sources = string.Join('\n', Directory.GetFiles(ingestDir, "*.cs").Select(File.ReadAllText));
         Assert.DoesNotContain("HttpClient", sources, StringComparison.Ordinal);
         Assert.DoesNotContain("lyft.com", sources, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("undocumented Lyft private APIs", IngestSlice.Constraint, StringComparison.Ordinal);
-
-        var world = ServerWorld.Create();
-        var driver = world.Register();
-        var closed = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-1");
-        Assert.Equal("partnership-disabled", closed.Status);
-        Assert.Contains("not called", closed.GapNotice, StringComparison.OrdinalIgnoreCase);
-        Assert.Empty(world.App.Imports.Locations);
-        Assert.Throws<RideAuditException>(() => world.App.Ingest.SetPartnership(Roles.Subject, true));
-
-        world.App.Roles.GrantBootstrap(driver.DriverId, Roles.Admin);
-        var opened = world.App.Ingest.SetPartnership(Roles.Admin, true);
-        Assert.True(opened.Approved);
-        var unconfigured = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-1");
-        Assert.Equal("connector-unconfigured", unconfigured.Status);
-        Assert.Empty(world.App.Imports.Scores);
     }
+
 
     [Fact]
     [Trait("TEST", "TEST-RIDE-005")]
@@ -157,7 +139,6 @@ public class TestRide001Through006And011And030
         var sample = Assert.Single(world.App.Imports.Locations);
         Assert.Equal("third-party-sample", sample.MetricKind);
         Assert.NotEqual(ProvenanceTags.PrivacyExport, sample.Provenance);
-        Assert.NotEqual(ProvenanceTags.Concierge, sample.Provenance);
         Assert.Empty(world.App.Imports.Scores);
     }
 
@@ -212,38 +193,6 @@ public class TestRide001Through006And011And030
         Assert.NotEqual(first.ContentHashHex, other.ContentHashHex);
     }
 
-    [Fact]
-    [Trait("TEST", "TEST-RIDE-030")]
-    [Trait("FR", "FR-RIDE-204")]
-    [Trait("FR", "FR-RIDE-206")]
-    [Trait("AC", "AC-TEST-030-001")]
-    [Trait("AC", "AC-TEST-030-002")]
-    public void Ride_status_outage_does_not_corrupt_rides_or_invent_a_smooth_cruiser_score()
-    {
-        var world = ServerWorld.Create();
-        var driver = world.Register();
-        world.App.Roles.GrantBootstrap(driver.DriverId, Roles.Admin);
-        world.App.Ingest.SetPartnership(Roles.Admin, true);
-        var script = new ScriptedConcierge();
-        script.Queue.Enqueue(new ConciergePoll("ride-1", 0, 0, "", true, "rate limited"));
-        script.Queue.Enqueue(new ConciergePoll("ride-2", 37.7, -122.4, "pickedUp", false, null));
-        world.App.Ingest.Concierge = script;
-
-        world.App.Ingest.IngestPrivacyExport(Consent(driver.DriverId), ExportZip(true, false), "driver-upload");
-        var before = world.App.Imports.Trips.Count;
-        var outage = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-1");
-        Assert.Equal("partial-outage", outage.Status);
-        Assert.Equal(before, world.App.Imports.Trips.Count);
-        Assert.Empty(world.App.Imports.Locations);
-        Assert.DoesNotContain(world.App.Imports.Scores, row => row.Provenance == ProvenanceTags.Concierge);
-
-        var ok = world.App.Ingest.IngestConcierge(Consent(driver.DriverId), "ride-2");
-        Assert.Equal("imported", ok.Status);
-        var sample = Assert.Single(world.App.Imports.Locations);
-        Assert.Equal("coarse-location", sample.MetricKind);
-        Assert.Equal(ProvenanceTags.Concierge, sample.Provenance);
-        Assert.Single(world.App.Imports.Scores);
-    }
 
     internal static IngestCommand Consent(string driverId) =>
         new(driverId, "US-CA", "court-audit", "I consent to sealed custody of this import.", true, ProvenanceTags.PrivacyExport);
@@ -278,23 +227,6 @@ public class TestRide001Through006And011And030
     }
 }
 
-public sealed class ScriptedConcierge : IConciergeStatusSource
-{
-    public Queue<ConciergePoll> Queue { get; } = new();
-    public int Calls { get; private set; }
-    public bool IsConfigured => true;
-
-    public ConciergePoll Poll(string rideId)
-    {
-        Calls++;
-        if (Queue.Count == 0)
-            throw new ConciergeUnavailable("empty script");
-        var next = Queue.Dequeue();
-        if (next.Fail)
-            throw new ConciergeUnavailable(next.Error ?? "outage");
-        return next with { RideId = rideId };
-    }
-}
 
 public class TestRide007Through009And016And023
 {
@@ -316,7 +248,7 @@ public class TestRide007Through009And016And023
         var world = ServerWorld.Create();
         var driver = world.Register();
         var imported = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(driver.DriverId), TestRide001Through006And011And030.ExportZip(false, true), "driver-upload");
-        var matrix = world.App.Analysis.Coverage(driver.DriverId, Roles.Subject, driver.DriverId, imported.ImportId);
+        var matrix = world.App.Analysis.Coverage(driver.DriverId, driver.DriverId, imported.ImportId);
         var trip = Assert.Single(matrix.Cells, cell => cell.Signal == "trip_records");
         Assert.True(trip.CollectedBySource);
         Assert.True(trip.AvailableToAuditor);
@@ -349,18 +281,18 @@ public class TestRide007Through009And016And023
         var world = ServerWorld.Create();
         var driver = world.Register();
         world.App.Imports.AddTrip(new TripRow("imp", driver.DriverId, "US-CA", "long", 0, 20 * 3_600_000, "droppedOff", ProvenanceTags.PrivacyExport));
-        var absent = world.App.Analysis.OnlineHours(driver.DriverId, Roles.Subject, driver.DriverId, "US-CA", 0, 0);
+        var absent = world.App.Analysis.OnlineHours(driver.DriverId, driver.DriverId, "US-CA", 0, 0);
         Assert.False(absent.HoursDataPresent);
         Assert.Empty(absent.Violations);
 
         world.App.Imports.Hours.Add(new OnlineHoursRow("imp", driver.DriverId, "US-CA", 0, 13 * 3_600_000));
-        var flagged = world.App.Analysis.OnlineHours(driver.DriverId, Roles.Subject, driver.DriverId, "US-CA", 0, 0);
+        var flagged = world.App.Analysis.OnlineHours(driver.DriverId, driver.DriverId, "US-CA", 0, 0);
         Assert.True(flagged.HoursDataPresent);
         Assert.Contains(flagged.Violations, line => line.Contains("exceeds 12h", StringComparison.Ordinal));
 
         world.App.Imports.Hours.Clear();
         world.App.Imports.Hours.Add(new OnlineHoursRow("imp", driver.DriverId, "US-NY", 0, 9 * 3_600_000));
-        var regional = world.App.Analysis.OnlineHours(driver.DriverId, Roles.Subject, driver.DriverId, "US-NY", 8, 6);
+        var regional = world.App.Analysis.OnlineHours(driver.DriverId, driver.DriverId, "US-NY", 8, 6);
         Assert.Contains(regional.Violations, line => line.Contains("exceeds 8h", StringComparison.Ordinal));
         Assert.Contains("regional override", regional.Policy, StringComparison.Ordinal);
         var analysis = File.ReadAllText(Path.Combine(ServerWorld.RepoRoot(), "src/RideAudit.Anal/AnalysisService.cs"));
@@ -385,13 +317,13 @@ public class TestRide007Through009And016And023
         world.App.Imports.AddTrip(new TripRow("imp", driver.DriverId, "US-CA", "in", 1_000, 2_000, "droppedOff", ProvenanceTags.PrivacyExport));
         world.App.Imports.AddTrip(new TripRow("imp", driver.DriverId, "US-CA", "out", 9_000, 9_500, "droppedOff", ProvenanceTags.PrivacyExport));
         world.App.Imports.Scores.Add(new ScoreRow("imp", driver.DriverId, 1_500, 80, 80, 80, 80, 80, ProvenanceTags.Manual));
-        var report = world.App.Analysis.Incident(driver.DriverId, Roles.Subject, driver.DriverId, 1_000, 3_000);
+        var report = world.App.Analysis.Incident(driver.DriverId, driver.DriverId, 1_000, 3_000);
         Assert.Equal(1, report.TripCount);
         Assert.Equal(1, report.ScoreCount);
         Assert.Contains(report.Lines, line => line.Contains("trip in", StringComparison.Ordinal));
         Assert.DoesNotContain(report.Lines, line => line.Contains("trip out", StringComparison.Ordinal));
 
-        var empty = world.App.Analysis.Incident(driver.DriverId, Roles.Subject, driver.DriverId, 50_000, 60_000);
+        var empty = world.App.Analysis.Incident(driver.DriverId, driver.DriverId, 50_000, 60_000);
         Assert.Equal(0, empty.TripCount);
         Assert.Contains("Missing signals stay missing", empty.GapNotice, StringComparison.Ordinal);
     }
@@ -414,7 +346,7 @@ public class TestRide007Through009And016And023
         var ready = world.SealReady(enrolled.Driver, enrolled.Session);
         var outcome = world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce);
         var opens = world.App.Hsm.WorkingCopyOpens;
-        var report = world.App.Counsel.Verify(enrolled.Driver.DriverId, Roles.Subject, "case-1", outcome.SubmissionId);
+        var report = world.App.Counsel.Verify(enrolled.Driver.DriverId, "case-1", outcome.SubmissionId);
         Assert.True(report.HashMatches);
         Assert.True(report.AnchorConfirmed);
         Assert.False(report.DecryptionPerformed);
@@ -427,47 +359,72 @@ public class TestRide007Through009And016And023
     [Fact]
     [Trait("TEST", "TEST-RIDE-023")]
     [Trait("FR", "FR-RIDE-037")]
-    [Trait("FR", "FR-RIDE-038")]
     [Trait("AC", "AC-RIDE-037-001")]
     [Trait("AC", "AC-RIDE-037-002")]
-    [Trait("AC", "AC-RIDE-038-001")]
-    [Trait("AC", "AC-RIDE-038-002")]
-    [Trait("AC", "AC-RIDE-SERVER-006-002")]
-    [Trait("AC", "AC-RIDE-SERVER-007-001")]
-    [Trait("AC", "AC-RIDE-SERVER-007-002")]
-    [Trait("AC", "AC-UC-016-001")]
-    [Trait("AC", "AC-UC-016-002")]
     [Trait("AC", "AC-TEST-023-001")]
     [Trait("AC", "AC-TEST-023-002")]
-    public void Multi_driver_bundle_keeps_each_record_independent()
+    public void Each_submission_is_verified_on_its_own_record()
     {
         var world = ServerWorld.Create();
         var first = world.Enroll();
         var second = world.Enroll();
         var left = world.SealReady(first.Driver, first.Session);
-        var right = world.SealReady(second.Driver, second.Session);
+        var right = world.SealReady(first.Driver, first.Session);
+        var other = world.SealReady(second.Driver, second.Session);
         var a = world.Submit(first.Driver, left.Package, left.Token, left.Nonce);
-        var b = world.Submit(second.Driver, right.Package, right.Token, right.Nonce);
+        var b = world.Submit(first.Driver, right.Package, right.Token, right.Nonce);
+        var c = world.Submit(second.Driver, other.Package, other.Token, other.Nonce);
         var beforeA = world.App.Journal.Find(a.SubmissionId)!.Ciphertext.ToArray();
         var beforeB = world.App.Journal.Find(b.SubmissionId)!.Ciphertext.ToArray();
+        var source = new JournalRecordSource(world.App.Journal);
 
-        Assert.Throws<RideAuditException>(() => world.App.Counsel.Build(Roles.Subject, "case-9", new[] { a.SubmissionId, b.SubmissionId }));
-        var bundle = world.App.Counsel.Build(Roles.Counsel, "case-9", new[] { a.SubmissionId, b.SubmissionId });
-        Assert.False(bundle.AggregationReplacesRecords);
-        Assert.Equal(2, bundle.Records.Count);
-        Assert.All(bundle.Records, row =>
+        var reportA = world.App.Counsel.Verify(first.Driver.DriverId, "case-9", a.SubmissionId);
+        var reportB = world.App.Counsel.Verify(first.Driver.DriverId, "case-9", b.SubmissionId);
+        Assert.Equal(a.SubmissionId, reportA.SubmissionId);
+        Assert.Equal(b.SubmissionId, reportB.SubmissionId);
+        foreach (var report in new[] { reportA, reportB })
         {
-            Assert.True(row.IndependentCustody);
-            Assert.True(row.HashMatches);
-            Assert.False(string.IsNullOrWhiteSpace(row.AnchorStatus));
-        });
-        Assert.Equal(first.Driver.DriverId, bundle.Records[0].DriverId);
-        Assert.Equal(second.Driver.DriverId, bundle.Records[1].DriverId);
-        Assert.NotEqual(bundle.Records[0].ContentHashHex, bundle.Records[1].ContentHashHex);
+            Assert.True(report.HashMatches);
+            Assert.True(report.AnchorConfirmed);
+            Assert.False(report.DecryptionPerformed);
+            Assert.False(string.IsNullOrWhiteSpace(report.AnchorStatus));
+        }
+        foreach (var id in new[] { a.SubmissionId, b.SubmissionId })
+        {
+            var view = source.Find(id)!;
+            Assert.Equal(first.Driver.DriverId, view.DriverId);
+            Assert.False(string.IsNullOrWhiteSpace(view.VehicleId));
+            Assert.False(string.IsNullOrWhiteSpace(view.CollectorId));
+            Assert.NotEmpty(view.ReceiptCoreBytes);
+        }
+        Assert.NotEqual(source.Find(a.SubmissionId)!.ReceiptCoreBytes, source.Find(b.SubmissionId)!.ReceiptCoreBytes);
         Assert.Equal(beforeA, world.App.Journal.Find(a.SubmissionId)!.Ciphertext);
         Assert.Equal(beforeB, world.App.Journal.Find(b.SubmissionId)!.Ciphertext);
         Assert.Equal(0, world.App.Hsm.WorkingCopyOpens);
+
+        var crossDriver = Assert.Throws<RideAuditException>(() =>
+            world.App.Counsel.Verify(first.Driver.DriverId, "case-9", c.SubmissionId));
+        Assert.Equal(ErrorCodes.TenantIsolation, crossDriver.Code);
+        var missing = Assert.Throws<RideAuditException>(() =>
+            world.App.Counsel.Verify(first.Driver.DriverId, "case-9", "sub-missing"));
+        Assert.Equal(ErrorCodes.SubmissionNotFound, missing.Code);
         Assert.Equal("implemented", CounselSlice.State);
+        Assert.DoesNotContain(CounselSlice.Checklist, line => line.Contains("FR-RIDE-038", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [Trait("NOTE", "own-submissions-only-no-roles")]
+    public void Analysis_rejects_cross_driver_subject()
+    {
+        var world = ServerWorld.Create();
+        var driver = world.Register();
+        var other = world.Register();
+        var cov = Assert.Throws<RideAuditException>(() => world.App.Analysis.Coverage(driver.DriverId, other.DriverId, null));
+        Assert.Equal(ErrorCodes.TenantIsolation, cov.Code);
+        var hours = Assert.Throws<RideAuditException>(() => world.App.Analysis.OnlineHours(driver.DriverId, other.DriverId, "US-CA", 0, 0));
+        Assert.Equal(ErrorCodes.TenantIsolation, hours.Code);
+        var incident = Assert.Throws<RideAuditException>(() => world.App.Analysis.Incident(driver.DriverId, other.DriverId, 1_000, 2_000));
+        Assert.Equal(ErrorCodes.TenantIsolation, incident.Code);
     }
 }
 
@@ -476,15 +433,12 @@ public class TestRide010012029031032
     [Fact]
     [Trait("TEST", "TEST-RIDE-010")]
     [Trait("FR", "FR-RIDE-010")]
-    [Trait("FR", "FR-RIDE-210")]
-    [Trait("AC", "AC-RIDE-010-002")]
-    [Trait("AC", "AC-RIDE-210-001")]
-    [Trait("AC", "AC-RIDE-PRIV-003-002")]
+    [Trait("NOTE", "AC-RIDE-010-002-removed-with-legal-hold")]
     [Trait("AC", "AC-UC-008-001")]
     [Trait("AC", "AC-UC-008-002")]
     [Trait("AC", "AC-TEST-010-001")]
     [Trait("AC", "AC-TEST-010-002")]
-    public void Dsar_deletes_personal_imports_unless_a_legal_hold_is_active()
+    public void Dsar_deletes_personal_imports_and_retains_custody_ciphertext()
     {
         var world = ServerWorld.Create();
         var enrolled = world.Enroll();
@@ -492,16 +446,14 @@ public class TestRide010012029031032
         var outcome = world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce);
         var cipher = world.App.Journal.Find(outcome.SubmissionId)!.Ciphertext.ToArray();
         world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(enrolled.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, true), "driver-upload");
-        world.App.Roles.GrantBootstrap(enrolled.Driver.DriverId, Roles.Counsel);
-        world.App.Privacy.Holds.Place(Roles.Counsel, enrolled.Driver.DriverId, "hold-1");
-        var blocked = world.App.Privacy.Delete(enrolled.Driver.DriverId, Roles.Subject, enrolled.Driver.DriverId, "hold-1");
-        Assert.False(blocked.Deleted);
-        Assert.Equal("blocked-legal-hold", blocked.Status);
-        Assert.NotEmpty(world.App.Imports.Scores);
+        var enrolledDeleted = world.App.Privacy.Delete(enrolled.Driver.DriverId, enrolled.Driver.DriverId, "");
+        Assert.True(enrolledDeleted.Deleted);
+        Assert.True(enrolledDeleted.CustodyCiphertextRetained);
+        Assert.DoesNotContain(world.App.Imports.Scores, row => row.DriverId == enrolled.Driver.DriverId);
 
         var other = world.Register();
         world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(other.DriverId), TestRide001Through006And011And030.ExportZip(true, false), "driver-upload");
-        var deleted = world.App.Privacy.Delete(other.DriverId, Roles.Subject, other.DriverId, "");
+        var deleted = world.App.Privacy.Delete(other.DriverId, other.DriverId, "");
         Assert.True(deleted.Deleted);
         Assert.True(deleted.CustodyCiphertextRetained);
         Assert.DoesNotContain(world.App.Imports.Scores, row => row.DriverId == other.DriverId);
@@ -510,45 +462,25 @@ public class TestRide010012029031032
     }
 
     [Fact]
-    [Trait("TEST", "TEST-RIDE-012")]
-    [Trait("FR", "FR-RIDE-014")]
-    [Trait("FR", "FR-RIDE-202")]
-    [Trait("AC", "AC-RIDE-014-001")]
-    [Trait("AC", "AC-RIDE-014-002")]
-    [Trait("AC", "AC-RIDE-202-001")]
-    [Trait("AC", "AC-RIDE-202-002")]
-    [Trait("AC", "AC-RIDE-PRIV-002-001")]
-    [Trait("AC", "AC-RIDE-PRIV-002-002")]
-    [Trait("AC", "AC-RIDE-SEC-002-001")]
-    [Trait("AC", "AC-RIDE-SEC-002-002")]
-    [Trait("AC", "AC-UC-020-002")]
-    [Trait("AC", "AC-TEST-012-001")]
-    [Trait("AC", "AC-TEST-012-002")]
-    public void Roles_mask_precise_location_and_block_cross_driver_reads()
+    [Trait("FR", "FR-RIDE-077")]
+    [Trait("NOTE", "killed-TEST-012-FR-014-202-replaced-by-FR-077")]
+    public void Precise_location_stays_visible_and_blocks_cross_driver_reads()
     {
         var world = ServerWorld.Create();
         var driver = world.Register();
         var other = world.Register();
         world.App.Imports.Locations.Add(new LocationRow("loc-1", "imp", driver.DriverId, "US-CA", 10, 37.7749, -122.4194, ProvenanceTags.ThirdParty, "third-party-sample"));
-        var masked = Assert.Single(world.App.Privacy.ViewLocations(driver.DriverId, Roles.Subject, driver.DriverId));
-        Assert.False(masked.Precise);
-        Assert.Equal("37.8", masked.Latitude);
-        Assert.Equal("-122.4", masked.Longitude);
-        Assert.Throws<RideAuditException>(() => world.App.Privacy.ViewLocations(driver.DriverId, Roles.Subject, other.DriverId));
-
-        world.App.Roles.GrantBootstrap(other.DriverId, Roles.Auditor);
-        var precise = Assert.Single(world.App.Privacy.ViewLocations(other.DriverId, Roles.Auditor, driver.DriverId));
-        Assert.True(precise.Precise);
-        Assert.Contains("37.7749", precise.Latitude, StringComparison.Ordinal);
-        Assert.True(LocationAccessPolicy.MayViewPreciseLocation(Roles.Auditor));
-        Assert.False(LocationAccessPolicy.MayViewPreciseLocation(Roles.Subject));
-        Assert.True(world.App.Roles.Is(driver.DriverId, Roles.Subject));
+        var ownView = Assert.Single(world.App.Privacy.ViewLocations(driver.DriverId, driver.DriverId));
+        Assert.True(ownView.Precise);
+        Assert.Equal(37.7749.ToString("G17", CultureInfo.InvariantCulture), ownView.Latitude);
+        Assert.Equal((-122.4194).ToString("G17", CultureInfo.InvariantCulture), ownView.Longitude);
+        Assert.Throws<RideAuditException>(() => world.App.Privacy.ViewLocations(driver.DriverId, other.DriverId));
+        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "loc-1");
     }
 
     [Fact]
     [Trait("TEST", "TEST-RIDE-029")]
-    [Trait("FR", "FR-RIDE-203")]
-    [Trait("AC", "AC-RIDE-203-001")]
+    [Trait("NOTE", "access-log-helper-retained-not-RBAC-mask; prior FR-203/AC-203 removed from live traits")]
     [Trait("AC", "AC-TEST-029-001")]
     [Trait("AC", "AC-TEST-029-002")]
     public void Access_log_is_append_only()
@@ -557,9 +489,9 @@ public class TestRide010012029031032
         var driver = world.Register();
         world.App.Imports.Locations.Add(new LocationRow("loc-1", "imp", driver.DriverId, "US-CA", 10, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
         var before = world.App.AccessLog.Entries.Count;
-        world.App.Privacy.ViewLocations(driver.DriverId, Roles.Subject, driver.DriverId);
+        world.App.Privacy.ViewLocations(driver.DriverId, driver.DriverId);
         var snapshot = world.App.AccessLog.Entries;
-        world.App.Privacy.ViewLocations(driver.DriverId, Roles.Subject, driver.DriverId);
+        world.App.Privacy.ViewLocations(driver.DriverId, driver.DriverId);
         Assert.Equal(before + 1, snapshot.Count);
         Assert.Equal(before + 2, world.App.AccessLog.Entries.Count);
         var names = typeof(AppendOnlyAccessLog).GetMethods().Select(method => method.Name).ToArray();
@@ -591,7 +523,7 @@ public class TestRide010012029031032
         Assert.True(world.App.Imports.TripIndex.LastComparisons < world.App.Imports.TripIndex.Count);
 
         var imported = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(driver.DriverId), TestRide001Through006And011And030.ExportZip(true, true), "driver-upload");
-        var export = world.App.Privacy.Export(driver.DriverId, Roles.Subject, driver.DriverId);
+        var export = world.App.Privacy.Export(driver.DriverId, driver.DriverId);
         Assert.Equal("exported", export.Status);
         using var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read);
         var manifest = new StreamReader(zip.GetEntry("manifest.json")!.Open()).ReadToEnd();
@@ -614,35 +546,31 @@ public class TestRide010012029031032
     }
 
     [Fact]
-    [Trait("TEST", "TEST-RIDE-032")]
-    [Trait("FR", "FR-RIDE-208")]
-    [Trait("AC", "AC-RIDE-208-001")]
-    [Trait("AC", "AC-RIDE-208-002")]
-    [Trait("AC", "AC-TEST-032-001")]
-    [Trait("AC", "AC-TEST-032-002")]
-    [Trait("AC", "AC-UC-021-002")]
-    public void Retention_is_shorter_in_california_and_stops_for_a_legal_hold()
+    [Trait("FR", "FR-RIDE-078")]
+    [Trait("NOTE", "killed-TEST-032-FR-208-replaced-by-FR-078; jurisdiction-retention-timers-removed")]
+    public void Retention_does_not_remove_location_rows()
     {
         var world = ServerWorld.Create();
         var now = world.Clock.UtcNow;
-        var old = now.AddDays(-31).ToUnixTimeMilliseconds();
+        var old = now.AddDays(-800).ToUnixTimeMilliseconds();
         var recent = now.AddDays(-10).ToUnixTimeMilliseconds();
         var driver = world.Register();
         world.App.Imports.Locations.Add(new LocationRow("ca-old", "imp", driver.DriverId, "US-CA", old, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
         world.App.Imports.Locations.Add(new LocationRow("ca-new", "imp", driver.DriverId, "US-CA", recent, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
         world.App.Imports.Locations.Add(new LocationRow("ny-old", "imp", driver.DriverId, "US-NY", old, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
-        var held = world.Register();
-        world.App.Imports.Locations.Add(new LocationRow("held", "imp", held.DriverId, "US-CA", old, 1, 2, ProvenanceTags.ThirdParty, "third-party-sample"));
-        world.App.Roles.GrantBootstrap(driver.DriverId, Roles.Admin);
-        world.App.Privacy.Holds.Place(Roles.Admin, held.DriverId, "case");
-        var removed = world.App.Privacy.SweepRetention();
-        Assert.Equal(1, removed);
-        Assert.DoesNotContain(world.App.Imports.Locations, row => row.SampleId == "ca-old");
-        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "ca-new");
-        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "ny-old");
-        Assert.Contains(world.App.Imports.Locations, row => row.SampleId == "held");
-        Assert.Equal(TimeSpan.FromDays(30), RetentionPolicy.For("US-CA", "precise-geo"));
-        Assert.Equal(TimeSpan.FromDays(180), RetentionPolicy.For("US-NY", "precise-geo"));
+
+        // Jurisdiction retention timers were removed 2026-10-07 because they conflict with FR-RIDE-078.
+        Assert.Null(typeof(PrivacyDesk).GetMethod("SweepRetention"));
+        Assert.Null(typeof(PrivacyDesk).Assembly.GetType("RideAudit.Privacy.RetentionPolicy"));
+
+        var viewed = world.App.Privacy.ViewLocations(driver.DriverId, driver.DriverId);
+        Assert.Equal(3, viewed.Count);
+        Assert.All(viewed, sample =>
+        {
+            Assert.True(sample.Precise);
+            Assert.Equal(1d.ToString("G17", CultureInfo.InvariantCulture), sample.Latitude);
+            Assert.Equal(2d.ToString("G17", CultureInfo.InvariantCulture), sample.Longitude);
+        });
     }
 }
 

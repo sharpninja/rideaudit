@@ -9,13 +9,20 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Stack decision. Cross-link docs/architecture/stack.md and ART-RIDE-ANDROID-001. Author Sharp Ninja.
+    notes: >
+      Stack decision. Cross-link docs/architecture/stack.md and ART-RIDE-ANDROID-001. Author Sharp Ninja.
+      Update 2026-09-29: primary device proof for AC-UC-025 class runtime is a Samsung Galaxy Z Fold 4 on USB.
+      Emulator-only evidence does not satisfy that class. approval: Payton AGREE 2026-09-29.
+      Does not mark AC-UC-025-001 satisfied.
     acceptanceCriteria:
       - id: AC-RIDE-056-001
         text: Android capture client builds and runs with Avalonia UI 12 for driver and passenger roles.
         isSatisfied: false
       - id: AC-RIDE-056-002
         text: Capture UX does not depend on a non-Avalonia UI framework for primary screens.
+        isSatisfied: false
+      - id: AC-RIDE-056-003
+        text: Primary device proof for AC-UC-025 class runtime is a Samsung Galaxy Z Fold 4 attached by USB. Emulator-only runs do not satisfy that runtime class. A lab shell receipt is not semantic closure of AC-UC-025-001.
         isSatisfied: false
   - kind: fr
     id: FR-RIDE-057
@@ -24,7 +31,10 @@ records:
     priority: high
     area: RIDE
     status: pending
-    notes: Stack decision. Extends FR-RIDE-049. Cross-link docs/architecture/stack.md and ART-RIDE-UX-REVIEW-001. Author Sharp Ninja.
+    notes: >
+      Stack decision. Extends FR-RIDE-049. Cross-link docs/architecture/stack.md and ART-RIDE-UX-REVIEW-001. Author Sharp Ninja.
+      Update 2026-09-29: macOS codesign and macOS publish are deferred. Current lab desktop builds are Windows only.
+      AC-RIDE-057-001 stays unsatisfied for the macOS leg. approval: Payton AGREE 2026-09-29.
     acceptanceCriteria:
       - id: AC-RIDE-057-001
         text: Desktop court viewer builds with Avalonia UI 12 on Windows, Linux, and macOS.

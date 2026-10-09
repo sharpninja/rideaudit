@@ -22,7 +22,7 @@ These remain out of scope for **this CODE-HV loop**. Missing them must not block
 | --- | --- | --- |
 | Physical Bluetooth media / H.264 composite | B04 | In-process source-payload container only. No two-device radio media. |
 | Real Play decode, hardware HSM, OTS confirm, L2 signer | B07 | Adapters fail-closed or labeled fixture. No invented tokens or txids. |
-| Production CD / edge TLS / Play publication | B08 | Lab Omarchy loopback plus ngrok is interim only. Product CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Do not use GHCR. If the default Octopus container is out of licenses, create a new Octopus container on PAYTON-DESKTOP; that is not deferral and not out of scope. This loop still must not invent a live Octopus green. |
+| Production CD / edge TLS / Play publication | B08 | Lab Omarchy loopback plus ngrok is interim only. Product CD is Octopus Deploy to LAB-OMARCHY (FR-RIDE-063). Do not use GHCR. If the default Octopus container is out of licenses, create a new Octopus container on LAB-OMARCHY; that is not deferral and not out of scope. This loop still must not invent a live Octopus green. |
 
 Do **not** weaken fail-closed behavior to manufacture greens.
 

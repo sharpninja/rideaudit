@@ -1,4 +1,4 @@
-# Vehicle fit checklist — ART-RIDE-MOUNT-001
+# Vehicle fit checklist - ART-RIDE-MOUNT-001
 
 Copyright (C) 2026 RideAudit contributors  
 License: GPL-2.0
@@ -6,9 +6,9 @@ License: GPL-2.0
 Complete this on a real headrest before calling the mount a road release. The CAD report does not check these boxes.
 
 Vehicle: ____________________  
-Post spacing (center-to-center, 120–170 mm): ________ mm  
-Post diameter (`post_od`, 10–14 mm): ________ mm  
-Clearance (`post_clearance`, 0.2–0.5 mm): ________ mm  
+Post spacing (center-to-center, 120-170 mm): ________ mm  
+Post diameter (`post_od`, 10-14 mm): ________ mm  
+Clearance (`post_clearance`, 0.2-0.5 mm): ________ mm  
 Coupon bore (`post_od` + clearance): ________ mm  
 Phone: closed Galaxy Z Fold 4, no case, landscape, cameras forward. USB-C against the hook. ____________  
 Date: ____________________

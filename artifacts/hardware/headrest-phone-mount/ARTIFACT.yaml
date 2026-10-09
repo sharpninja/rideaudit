@@ -1,4 +1,4 @@
-# RideAudit headrest phone mount — ART-RIDE-MOUNT-001
+# RideAudit headrest phone mount - ART-RIDE-MOUNT-001
 # Copyright (C) 2026 RideAudit contributors
 # SPDX-License-Identifier: GPL-2.0
 # License: GPL-2.0 (GPL-2.0-or-later as stated in LICENSE). Not Apache-2.0. Not MIT.
@@ -16,7 +16,7 @@ notices:
   - LICENSE
   - NOTICE
 relatedFrIds:
-  - FR-RIDE-041  # Dual-phone video capture — physical cradle fit only
+  - FR-RIDE-041  # Dual-phone video capture - physical cradle fit only
   - FR-RIDE-029  # GPL-2.0 licensing
   - FR-RIDE-030  # GPL2 notices on artifacts
 acceptance:
@@ -47,8 +47,8 @@ notes: >
   Two post blocks, one per headrest post. The post passes through the block
   and the rear of the collar is tangent to the pad. The collar is one
   cylinder, outside 25.5 mm and 33 mm thick along the post. The bore is
-  post_od plus 0.2–0.5 mm clearance. The default is a 14 mm post, so the
-  preview bore is 14.5 mm. Spacing in the CAD range is 120–170 mm; the
+  post_od plus 0.2-0.5 mm clearance. The default is a 14 mm post, so the
+  preview bore is 14.5 mm. Spacing in the CAD range is 120-170 mm; the
   preview is 150 mm. Each block has a horizontal 200 mm arm. The arm shares
   the collar bottom, and short blends rise into the 33 mm collar so the
   moment enters the tube around the post. Both arms slide into one shared
@@ -63,7 +63,8 @@ notes: >
   The cover screen sits flush on the vertical plate. Primary cameras face
   forward, out of the opening. A 12 mm hook at the USB-C end stops forward
   slip. Camera-bump height is not published and is not modeled.
-  Geometry is verified by verify-geometry.py. Not crash-rated. Not an on-vehicle
+  Geometry is verified by tools/RideAudit.HeadrestGeometry (dotnet run --project). Not crash-rated. Not an on-vehicle
   release until the operator checklist in verification/vehicle-fit-checklist.md
   is completed. Supports RideAudit phone capture; it does not implement
   the capture software.
+  Lab conduct receipts for toolchain changes live under docs/receipts/remediation/.
