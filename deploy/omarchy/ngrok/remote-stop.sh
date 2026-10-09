@@ -97,6 +97,22 @@ stop_systemd_unit() {
 # and the stop both fail, no agent can be ruled out, so the stop fails closed. That includes a
 # nohup-only host whose user bus is down; its nohup agents are still killed by the sweep.
 LOADED_UNIT_PID=""
+
+# The live ngrok agent that is the loaded unit's current MainPID, if any. systemd may restart the
+# unit after a kill, and the new MainPID is invisible to our_agents when the unit file is gone, so
+# the restart watch and the final check ask systemd again.
+unit_main_agent() {
+  local pid cmd
+  command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ] || return 0
+  pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null || true)"
+  [ -n "$pid" ] && [ "$pid" != "0" ] && kill -0 "$pid" 2>/dev/null || return 0
+  [ "$(awk '/^State/{print $2}' "/proc/$pid/status" 2>/dev/null)" != Z ] || return 0
+  cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+  case "$cmd" in
+    *ngrok\ http\ *) echo "$pid" ;;
+  esac
+}
+
 stop_loaded_unit_without_file() {
   local unit_pid unit_cmd stop_rc query_ok=1
   if ! unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null)"; then
@@ -122,6 +138,8 @@ stop_loaded_unit_without_file() {
   fi
   if kill -0 "$LOADED_UNIT_PID" 2>/dev/null; then
     [ -n "$SYSTEMD_FAIL" ] || SYSTEMD_FAIL="ngrok_systemd_agent_still_running pid=${LOADED_UNIT_PID}"
+    # Suppress Restart=on-failure before the kill, so systemd does not start a replacement.
+    systemctl --user mask --runtime rideaudit-ngrok.service >/dev/null 2>&1 || true
     kill "$LOADED_UNIT_PID" 2>/dev/null || true
     sleep 1
     kill -9 "$LOADED_UNIT_PID" 2>/dev/null || true
@@ -231,7 +249,7 @@ if [ -n "$SYSTEMD_FAIL" ]; then
   quiet=0
   for window in 1 2 3; do
     sleep $(( ${restart_sec:-3} + 2 ))
-    restarted="$(our_agents | tr '\n' ' ')"
+    restarted="$({ our_agents; unit_main_agent; } | sort -u | tr '\n' ' ')"
     if [ -z "${restarted// /}" ]; then
       quiet=1
       break
@@ -255,6 +273,10 @@ fi
 remaining="$(our_agents | tr '\n' ' ')"
 if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && { is_our_ngrok "$old" || is_recorded_agent "$old"; }; then
   remaining="$remaining $old"
+fi
+unit_now="$(unit_main_agent)"
+if [ -n "$unit_now" ] && [ "$unit_now" != "${LOADED_UNIT_PID:-}" ]; then
+  remaining="$remaining $unit_now"
 fi
 if [ -n "$LOADED_UNIT_PID" ] && kill -0 "$LOADED_UNIT_PID" 2>/dev/null \
   && [ "$(awk '/^State/{print $2}' "/proc/$LOADED_UNIT_PID/status" 2>/dev/null)" != Z ]; then

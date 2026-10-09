@@ -78,6 +78,15 @@ public sealed class PrivacyDesk
             ["data/dictionary.json"] = _store.Dictionary.Where(row => importIds.Contains(row.ImportId)).ToList(),
             ["data/unverified.json"] = _store.Unverified.Where(row => importIds.Contains(row.ImportId)).ToList(),
             ["data/access-log.json"] = SubjectAccessLog(subjectDriverId, submissions),
+            // The custody journal keeps each submission's full receipt core (vehicle, session, collector,
+            // key, collection time, provenance, attestation). It is held data about the subject, not
+            // sealed plaintext.
+            ["data/receipts.json"] = submissions.Select(row => new
+            {
+                row.SubmissionId,
+                row.CustodyState,
+                ReceiptCore = JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes))).RootElement,
+            }).ToList(),
         };
         if (_accounts is not null)
         {

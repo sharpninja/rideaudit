@@ -518,6 +518,12 @@ public class TestRide010012029031032
             Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/profiles.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Session.SessionId, Entry("account/sessions.json"), StringComparison.Ordinal);
 
+            // The retained receipt core of the subject's submission. The neighbor's is excluded by the loop below.
+            var receipts = Entry("data/receipts.json");
+            Assert.Contains(outcome.SubmissionId, receipts, StringComparison.Ordinal);
+            Assert.Contains(enrolled.Vehicle.VehicleId, receipts, StringComparison.Ordinal);
+            Assert.Contains(enrolled.Session.SessionId, receipts, StringComparison.Ordinal);
+
             // Access-log entries about the subject, including this export, with the neighbor's id replaced.
             var accessLog = Entry("data/access-log.json");
             Assert.Contains("\"Action\":\"list-vehicles\"", accessLog, StringComparison.Ordinal);
