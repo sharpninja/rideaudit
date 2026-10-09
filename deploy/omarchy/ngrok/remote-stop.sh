@@ -28,41 +28,49 @@ if [ -f "$UNIT_FILE" ]; then
   UNIT_EXEC="${UNIT_EXEC//%h/$HOME}"
 fi
 
-if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
-  if [ -f "$UNIT_FILE" ]; then
-    # Our unit is installed: every systemd step must succeed, or we cannot prove the tunnel stopped.
-    if ! unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null)"; then
-      echo "FAIL_CLOSED=ngrok_systemd_query_failed"
-      exit 1
-    fi
-    stop_rc=0
-    systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || stop_rc=$?
-    # 5 = unit not loaded (unit file written but never loaded), so there is nothing to stop.
-    if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
-      echo "FAIL_CLOSED=ngrok_systemd_stop_failed rc=${stop_rc}"
-      exit 1
-    fi
-    systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
-    if ! unit_state="$(systemctl --user show -p ActiveState --value rideaudit-ngrok.service 2>/dev/null)"; then
-      echo "FAIL_CLOSED=ngrok_systemd_query_failed"
-      exit 1
-    fi
-    case "$unit_state" in
-      inactive|failed) ;;
-      *)
-        echo "FAIL_CLOSED=ngrok_systemd_unit_still_active state=${unit_state}"
-        exit 1
+# A systemd failure is recorded, not returned at once: remote-start.sh can fall back to a nohup
+# agent while leaving the unit file behind, so the PID-file and sweep cleanup below must still run.
+# The recorded failure decides the final result.
+SYSTEMD_FAIL=""
+stop_systemd_unit() {
+  local unit_pid unit_state unit_cmd stop_rc
+  # Our unit is installed: every systemd step must succeed, or we cannot prove the tunnel stopped.
+  if ! unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null)"; then
+    SYSTEMD_FAIL="ngrok_systemd_query_failed"
+    return
+  fi
+  stop_rc=0
+  systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || stop_rc=$?
+  # 5 = unit not loaded (unit file written but never loaded), so there is nothing to stop.
+  if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
+    SYSTEMD_FAIL="ngrok_systemd_stop_failed rc=${stop_rc}"
+    return
+  fi
+  systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  if ! unit_state="$(systemctl --user show -p ActiveState --value rideaudit-ngrok.service 2>/dev/null)"; then
+    SYSTEMD_FAIL="ngrok_systemd_query_failed"
+    return
+  fi
+  case "$unit_state" in
+    inactive|failed) ;;
+    *)
+      SYSTEMD_FAIL="ngrok_systemd_unit_still_active state=${unit_state}"
+      return
+      ;;
+  esac
+  if [ -n "${unit_pid}" ] && [ "${unit_pid}" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
+    unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
+    case "$unit_cmd" in
+      *ngrok\ http\ *)
+        SYSTEMD_FAIL="ngrok_systemd_agent_still_running pid=${unit_pid}"
         ;;
     esac
-    if [ -n "${unit_pid}" ] && [ "${unit_pid}" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
-      unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
-      case "$unit_cmd" in
-        *ngrok\ http\ *)
-          echo "FAIL_CLOSED=ngrok_systemd_agent_still_running pid=${unit_pid}"
-          exit 1
-          ;;
-      esac
-    fi
+  fi
+}
+
+if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
+  if [ -f "$UNIT_FILE" ]; then
+    stop_systemd_unit
   else
     systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
     systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
@@ -160,7 +168,15 @@ if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && { is_our_ngrok "$old" || i
 fi
 if [ -n "${remaining// /}" ]; then
   # Keep the state files so a later stop can still identify the agent.
+  if [ -n "$SYSTEMD_FAIL" ]; then
+    echo "FAIL_CLOSED=${SYSTEMD_FAIL}"
+  fi
   echo "FAIL_CLOSED=ngrok_still_running pids=${remaining}"
+  exit 1
+fi
+if [ -n "$SYSTEMD_FAIL" ]; then
+  # The nohup agents are gone, but the systemd unit could not be proven stopped. Keep the state files.
+  echo "FAIL_CLOSED=${SYSTEMD_FAIL}"
   exit 1
 fi
 
