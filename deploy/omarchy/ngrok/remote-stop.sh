@@ -19,8 +19,24 @@ if [ -f "$CONFIG_FILE" ]; then
 fi
 
 if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
+  # The unit's agent logs to stdout, so is_our_ngrok below cannot see it. Track it by the
+  # unit's MainPID instead and fail closed if the unit or that process survives the stop.
+  unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null || true)"
   systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
   systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  if systemctl --user is-active --quiet rideaudit-ngrok.service 2>/dev/null; then
+    echo "FAIL_CLOSED=ngrok_systemd_unit_still_active"
+    exit 1
+  fi
+  if [ -n "${unit_pid}" ] && [ "${unit_pid}" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
+    unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
+    case "$unit_cmd" in
+      *ngrok\ http\ *)
+        echo "FAIL_CLOSED=ngrok_systemd_agent_still_running pid=${unit_pid}"
+        exit 1
+        ;;
+    esac
+  fi
 fi
 
 is_our_ngrok() {

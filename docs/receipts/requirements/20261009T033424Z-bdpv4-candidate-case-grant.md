@@ -7,6 +7,7 @@
 - **Revised:** r5, 2026-10-08 23:15 CT (20261009T041513Z). Answers Codex review 5465636315: the server binds viewer records to submissions by content hash, the offline viewer keeps a durable refusal outbox, and the tests add a successful grant lifecycle and a grant-cannot-decrypt negative.
 - **Revised:** r6, 2026-10-08 23:21 CT (20261009T042124Z). Answers Codex review 5465667258: every field the viewer displays must be bound to the resolved submission (sidecar grafting), and the mixed-bundle test asserts the refusal for the withheld record.
 - **Revised:** r7, 2026-10-09 10:22 CT (20261009T152241Z). Answers Codex review 5471995829: the viewer's Driver path also resolves every record server-side and accepts only the driver's own submissions; cross-driver bundle negative added.
+- **Revised:** r8, 2026-10-09 10:29 CT (20261009T152952Z). Answers Codex review 5472099862: exact title, brief-description and AC-text replacements; Driver-path viewer use record; grantees refused at every mutation endpoint.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -58,6 +59,14 @@ TR-RIDE-SEC-004:
 3. Scope is checked server-side on every call, before any data is read: grantee principal, case id, operation, expiry, revocation, and the import and submission lists. Each sink (coverage dictionary, online-hours, trip index, scores, location rows, access-export ZIP, verification report) filters to the granted ids.
 4. Use and refusal records are append-only and include the fields in FR-RIDE-079 AC 6.
 5. Desktop viewer (UC-RIDE-018, 019 and 026). The viewer identifies the caller by an authenticated principal (driver or grantee), not by a free-text reviewer role as `CourtViewer` takes today. On the Grantee path it shows a record of a bundle only after an online check with the server confirms that the grant is valid (not expired, not revoked), names this grantee and case, allows `verify`, and lists that record's submission. Records the grant does not list are withheld, even when they are in the same bundle. The server, not the bundle, decides which submission a record is: the viewer sends the content hash it recomputes from the sealed ciphertext plus the record's receipt, and the server resolves the submission id from its custody journal. Any submission id or label carried in the bundle is ignored, and a record whose hash matches no submission of the grantor fails closed. Every field the viewer displays for a record must be bound to that resolved submission: telematics cues, GPS and OBD2 presence, admission state and the OTS proof (today `ReviewRecord.Telematics`, `GpsPresent`, `Obd2Present`, `Admitted` and `Ots`, which `TimelineBuilder` renders straight from the bundle). A field is bound when the content hash covers it, when it matches a digest the server returns for that submission, or, for admission state, when the server supplies it. The OTS proof is bound only after it verifies against the resolved content hash. An unbound field is not displayed, and its withholding writes a refusal record. The Driver path uses the same server resolution: each record must resolve to a submission the authenticated driver owns, or it is withheld and a refusal is recorded. Holding a copied bundle never makes another driver's record "own data". The field-binding rules above apply on both paths. If the server cannot be reached, the Grantee path fails closed, and so does the Driver path for any record it cannot resolve. Each viewer check writes the use or refusal record in AC 4. When the server is unreachable, the viewer writes the refusal to a durable, append-only local outbox and uploads it to the server's refusal log on the next successful connection. Limit: the grant controls what RideAudit software shows. It cannot stop someone who already holds a copied bundle from recomputing ciphertext hashes with other tools. Plaintext stays behind the escrow release in every case.
+6. A grantee principal has no write path. These mutating RPCs refuse it with `TENANT_ISOLATION` before any state change, and each refusal writes a refusal record:
+   - `Identity.RegisterVehicle`, `UpdateVehicle` and `PutConfigurationProfile`;
+   - `Ingest.IngestPrivacyExport`, `IngestThirdParty` and `RecordManualScore`;
+   - `Privacy.RequestDeletion`;
+   - `Admission.OpenSession`, `SubmitSealed` and `UploadSealedChunk`;
+   - grant issuance and revocation (AC 2).
+
+   `Escrow.RequestCourtRelease`, `ApproveCourtRelease` and `OpenExpiringWorkingCopy` are authorized only by the court legal-process path, never by a grant (FR-RIDE-079 AC 5).
 
 TEST-RIDE-058:
 
@@ -85,7 +94,7 @@ TEST-RIDE-058:
    - an expired grant, a revoked grant, and another grantee's principal each show nothing and write one refusal record;
    - a relabeled record (S2's ciphertext and receipt presented under S1's id or label) is withheld, because the server resolves it to S2, and writes one refusal record;
    - with the server unreachable, the viewer shows nothing, reports the fail-closed reason, and writes one refusal record to the local outbox; after the server is reachable again, that record appears once in the server's refusal log;
-   - the Driver path shows the driver's own records with no grant, after the server resolves each one to a submission that driver owns;
+   - the Driver path shows the driver's own records with no grant, after the server resolves each one to a submission that driver owns, and writes exactly one use record per record naming the driver and the resolved submission;
    - cross-driver bundle: an authenticated driver opens a bundle holding another driver's record. The server resolves it to the other driver's submission, so the viewer withholds it with no grant fallback and writes one refusal record.
 7. Grant lifecycle through the real management calls (no fixture-seeded grant):
    - the grantor issues a grant, and the grant store shows it active with the listed ids, operations and expiry;
@@ -93,6 +102,7 @@ TEST-RIDE-058:
    - the grantor revokes it, and the grant store shows it revoked with the revocation time;
    - the same grantee call then fails with `TENANT_ISOLATION` and writes one refusal record.
 8. Decryption boundary: a valid grant that allows every operation, with no court legal-process authorization. Attempts at escrow release and at creating a working copy each fail closed. No key material, plaintext or working copy is returned, escrow release state is unchanged, and each attempt writes one refusal record.
+9. Read-only grant: with a valid grant that allows every operation, the grantee calls each mutating RPC in TR-RIDE-SEC-004 AC 6 against the grantor's data. Each call returns `TENANT_ISOLATION` and no data. The import, normalized, custody, vehicle, profile and key stores are unchanged, and each call writes one refusal record.
 
 ### Use-case changes that go with it (for AGREE)
 
@@ -123,7 +133,25 @@ r1 and r2 covered only the five use cases above. These also name a role actor to
 | UC-RIDE-027 | Reuse shared Avalonia UI under GPL-2.0 | Developer, Auditor | Developer | None (the flow names only Developer). |
 | UC-RIDE-031 | Prefer gRPC over interim OpenAPI companion | Developer, Auditor | Developer | None (the flow names only Developer). |
 
-After this, no use case names Admin, Auditor or Counsel. "Maintainer" and "Developer" have no access to driver data.
+
+#### Titles, brief descriptions and AC text that still name a role (r8)
+
+The actor and flow edits above leave these role names behind. Exact replacements:
+
+| Use case | Field | Today | Proposed |
+| --- | --- | --- | --- |
+| UC-RIDE-001 | briefDescription | Driver or auditor uploads a consented Lyft privacy-export ZIP; system parses DataDictionary files and tags unknowns Unverified. | Driver uploads a consented Lyft privacy-export ZIP; system parses DataDictionary files and tags unknowns Unverified. |
+| UC-RIDE-007 | briefDescription | Export available GPS, scores, and third-party events for a counsel time window. | Export available GPS, scores, and third-party events for a case time window, for the Driver or a Grantee under a case grant. |
+| UC-RIDE-010 | title | Counsel verification and decrypt path | Verification report and legal-process decrypt path |
+| UC-RIDE-010 | briefDescription | Counsel verifies hash, chain, attestation, escrow logs, then obtains an expiring RAES or RIDESEAL1 working copy only through the counsel and HSM path. Public admission does not decrypt. approval: Payton AGREE 2026-09-29 for the RAES AC. | Driver, or Grantee under a case grant, verifies hash, chain, attestation and escrow logs. An expiring RAES or RIDESEAL1 working copy is issued only through the escrow and HSM legal-process path (UC-RIDE-011). Public admission does not decrypt. approval: Payton AGREE 2026-09-29 for the RAES AC. |
+| UC-RIDE-010 | AC-UC-010-003 | RAES or RIDESEAL1 decrypt happens only as an expiring counsel working copy after HSM escrow release. Public admission stays fail-closed. | RAES or RIDESEAL1 decrypt happens only as an expiring working copy after HSM escrow release under court legal process. Public admission stays fail-closed. |
+| UC-RIDE-018 | title | Counsel composite playback | Composite playback |
+| UC-RIDE-019 | briefDescription | Reviewer uses GPL2 desktop viewer to verify and display RideBundle via escrow release path. | Driver, or Grantee under a case grant, uses the GPL2 desktop viewer to verify and display a RideBundle; decryption only via the escrow release path. |
+| UC-RIDE-026 | briefDescription | Counsel or auditor opens a RideBundle in the Avalonia UI 12 desktop court viewer. | Driver, or Grantee under a case grant, opens a RideBundle in the Avalonia UI 12 desktop court viewer. |
+
+AC-UC-010-003 is an AGREEd AC (RAES, 2026-09-29). Its rewording drops only the role word; the decrypt rule is unchanged.
+
+After this, no use case names Admin, Auditor or Counsel in its actors, title, brief description, basic flow or AC text. "Maintainer" and "Developer" have no access to driver data.
 
 TR-RIDE-SERVER-006 is unchanged. The grant is the explicit authorization its isolation rule already allows.
 
