@@ -1,20 +1,22 @@
 # BDPv4 candidate for Payton AGREE: driver-issued case grant (not in MCP)
 
 - **Written:** 2026-10-08 22:34 CT (America/Chicago), 20261009T033424Z.
+- **Revised:** r2, 2026-10-08 22:50 CT (20261009T035027Z). Answers Codex's review of r1 on PR #29 (HV pair `docs/reviews/hv-pairs/20261009T034331Z-pr29-codex-hv.json`, DISAGREE 96/92, ineligible model).
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
 
 ## Problem
 
-The server is own-submissions only: `PlatformAuth` yields a driver principal, and `CounselDesk.Verify` plus the three `AnalysisService` RPCs accept only the record owner. But four AGREEd use cases name other actors who act on a driver's records:
+The server is own-submissions only: `PlatformAuth` yields a driver principal, and `CounselDesk.Verify` plus the three `AnalysisService` RPCs accept only the record owner. But five AGREEd use cases name other actors who act on a driver's records:
 
 | Use case | Title | Actors today | Realizes |
 | --- | --- | --- | --- |
 | UC-RIDE-005 | Generate coverage matrix | Auditor, Counsel | FR-RIDE-007 Coverage matrix |
 | UC-RIDE-006 | Online-hours policy check | Auditor | FR-RIDE-008 Online-hours policy audit |
-| UC-RIDE-007 | Build incident time-window package | Auditor, Counsel | FR-RIDE-009 Time-window incident report, FR-RIDE-207 |
+| UC-RIDE-007 | Build incident time-window package | Auditor, Counsel | FR-RIDE-009 Time-window incident report, FR-RIDE-207 Portable audit ZIP export |
 | UC-RIDE-010 | Counsel verification and decrypt path | Counsel, Admin | FR-RIDE-020, FR-RIDE-021 Verification UI/report, FR-RIDE-028, FR-RIDE-214 |
+| UC-RIDE-011 | Escrow key and court release (included by UC-RIDE-010) | Admin, Counsel | FR-RIDE-022, 023, 024, 214, 216 |
 
 Codex raised two P1s on PR #26 about this mismatch.
 
@@ -22,47 +24,70 @@ Codex raised two P1s on PR #26 about this mismatch.
 
 ### Exact candidate sentence (BDPv4)
 
-A driver may grant a named counsel or auditor read-only access to specific submissions of their own for one case, through a revocable, expiring case grant. Without a valid grant, only the driver can verify or analyze those submissions. A grant is not a role, never covers another driver's data, and never decrypts a sealed record. Decryption stays on the escrow and HSM legal-process path.
+A driver may grant a named, authenticated counsel or auditor read-only access to specific imports and submissions of their own for one case, through a revocable, expiring case grant that lists the allowed operations. Without a valid grant, only the driver can verify, analyze or export that data. A grant is not a role, never covers another driver's data, and never decrypts a sealed record. Decryption stays on the escrow and HSM legal-process path, whose custodians act under court process, not under a case grant.
 
 ### Proposed ids (PROPOSED, not created)
 
 | Kind | Proposed id | Role |
 | --- | --- | --- |
-| FR | **FR-RIDE-079** | Functional rule: driver-issued, case-scoped, revocable, expiring read-only grant for verification and analysis |
-| TR | **TR-RIDE-SEC-004** | Technical: grant model, issuance, presentation, scope enforcement, expiry, revocation and access logging. SEC-002/003 were killed and are not reused. |
-| TEST | **TEST-RIDE-058** | Grant happy path and fail-closed negatives |
+| FR | **FR-RIDE-079** | Functional rule: driver-issued, case-scoped, revocable, expiring read-only grant to a named, authenticated grantee |
+| TR | **TR-RIDE-SEC-004** | Technical: grantee principal, grant model, issuance, scope enforcement at every data sink, expiry, revocation and use logging. SEC-002/003 were killed and are not reused. |
+| TEST | **TEST-RIDE-058** | Grant happy paths and fail-closed negatives, including scope binding and logging |
 
 ### Proposed acceptance criteria (for AGREE with the sentence)
 
 FR-RIDE-079:
-1. A grant names one grantor (the driver), one grantee, one case id, an explicit list of the grantor's own submission ids, the allowed operations (verify, coverage, online-hours, incident window), and an expiry.
-2. A grantee can call only the allowed operations, only for the listed submissions. Every other call fails closed with `TENANT_ISOLATION`.
-3. The driver can revoke a grant at any time, and revoked or expired grants fail closed.
-4. A grant never authorizes decryption, a working copy, or any record of another driver.
-5. Each use of a grant is recorded with grant id, grantee, operation and submission id.
+
+1. A grant names one grantor (the driver), one grantee principal, one case id, an explicit list of the grantor's own **import ids** and **submission ids**, the allowed operations, and an expiry. The allowed operations are drawn from: `verify`, `coverage`, `online-hours`, `incident-window` and `package-export`.
+2. A grantee call succeeds only when all of these hold: the authenticated caller is the named grantee, the case id matches, the operation is allowed, and every row read is in the granted import or submission list. Every other call fails closed with `TENANT_ISOLATION` and returns no data.
+3. Analysis and export results contain only rows whose import id is granted (coverage dictionary, online-hours, trips, scores, locations) and only granted submissions. A wide time window never pulls in an ungranted import.
+4. The driver can revoke a grant at any time. Revoked or expired grants fail closed.
+5. A grant never authorizes decryption, a working copy, escrow release, or any record of another driver.
+6. Each successful grant use is recorded once with grant id, grantee principal, case id, operation, and the import and submission ids returned. Each refused grantee call is recorded with grant id (if any), caller, operation and refusal reason.
+7. The driver's own access needs no grant. A driver principal acting on their own data keeps today's own-submissions authorization.
 
 TR-RIDE-SEC-004:
-1. Grants are stored with the grantor's driver id. Issuance and revocation accept only that driver's principal.
-2. Scope is checked server-side on every call: grant id, grantee, case id, submission id, operation, expiry and revocation.
-3. A grant secret, if used, is stored only as a hash and shown once at issuance.
+
+1. Grantees authenticate as their own principal kind (grantee account). Grants reference that principal. A grant secret alone never authorizes a call.
+2. Grants are stored with the grantor's driver id. Issuance and revocation accept only that driver's principal.
+3. Scope is checked server-side on every call, before any data is read: grantee principal, case id, operation, expiry, revocation, and the import and submission lists. Each sink (coverage dictionary, online-hours, trip index, scores, location rows, access-export ZIP, verification report) filters to the granted ids.
+4. Use and refusal records are append-only and include the fields in FR-RIDE-079 AC 6.
 
 TEST-RIDE-058:
-1. The happy path passes for a granted verify and each granted analysis operation.
-2. Failure cases (ungranted submission, other driver's submission, wrong operation, expired, revoked, missing grant) assert a clear `TENANT_ISOLATION` error and no data returned.
+
+1. Happy paths: a granted `verify`, `coverage`, `online-hours`, `incident-window` and `package-export` each succeed for granted data and write exactly one correctly attributed use record (grant id, grantee, case, operation, returned ids).
+2. Scope binding: with granted import I1 and ungranted import I2 from the same driver, a wide incident window, online-hours and coverage return only I1 rows. `package-export` contains only I1 and granted submissions.
+3. Failure cases, each asserting `TENANT_ISOLATION`, no data returned, and a refusal record:
+   - ungranted submission;
+   - another driver's data;
+   - operation not granted (for example `package-export` on a grant without it);
+   - wrong grantee (another authenticated principal presenting the grant id);
+   - wrong case id;
+   - expired grant;
+   - revoked grant;
+   - no grant.
+4. The driver path: the driver verifies, analyzes and exports their own data with no grant.
 
 ### Use-case changes that go with it (for AGREE)
 
-- UC-RIDE-005, 006, 007 and 010: replace the Auditor, Counsel and Admin actors with **Driver** plus **Grantee (counsel or auditor holding a case grant)**. Admin is removed (no roles). Add a precondition: "the driver has issued a case grant covering these submissions and this operation."
-- UC-RIDE-010 steps 4-5 (escrow release and working copy) stay on the escrow/HSM legal-process path (FR-RIDE-028, FR-RIDE-214). A case grant does not unlock them.
-- TR-RIDE-SERVER-006 is unchanged. The grant is the explicit authorization its isolation rule already allows.
+Actors: **Driver** and **Grantee** (an authenticated counsel or auditor holding a case grant). Auditor, Counsel and Admin are removed as role actors. Preconditions apply to the Grantee path only; the Driver path keeps own-data authorization.
 
-## Open choice before implementation: how the grantee authenticates
+| Use case | Actors | Precondition (Grantee path only) | Basic flow, exact text |
+| --- | --- | --- | --- |
+| UC-RIDE-005 | Driver, Grantee | Grant allows `coverage` for the imports shown. | 1. Driver, or Grantee under a case grant, opens the coverage view for the driver's own imports. 2. System lists Lyft-collected signal categories vs audit-available data, limited to granted imports for a Grantee. 3. System marks missing signals and shows API-gap notice. |
+| UC-RIDE-006 | Driver, Grantee | Grant allows `online-hours` for the imports read. | 1. Driver, or Grantee under a case grant, selects the policy profile for the driver's own data. 2. System loads available online intervals, limited to granted imports for a Grantee. 3. If data present, system evaluates 12h/6h and overrides. 4. System flags apparent violations only when hours data exists. |
+| UC-RIDE-007 | Driver, Grantee | Grant allows `incident-window` and, for step 3, `package-export`. | 1. Driver, or Grantee under a case grant, selects the interval for the driver's own data. 2. System assembles available sealed-record references and metadata, limited to granted imports and submissions for a Grantee. 3. System exports the portable package (CSV, PDF summary, provenance JSON; FR-RIDE-207) with provenance and verification stubs. |
+| UC-RIDE-010 | Driver, Grantee; steps 4-5 also Escrow custodians | Steps 1-3: grant allows `verify` for the submission. Steps 4-5: a court legal-process release under UC-RIDE-011, independent of any case grant. | 1. Driver, or Grantee under a case grant, opens the verification report for a sealed record. 2. System recomputes hash and checks on-chain receipt. 3. System verifies Play attestation and key binding. 4. Requesting party follows the documented legal process; escrow custodians release under UC-RIDE-011. 5. System issues an expiring authorized working copy and logs access. |
+| UC-RIDE-011 | Escrow custodians (M-of-N key holders), Requesting party under court process | Court process for the release. A case grant neither grants nor is required for release authority. | Flow text unchanged except step 3: "Escrow custodians provide M-of-N approvals after the legal-process check." |
 
-Identity issues driver principals only. Pick one:
+TR-RIDE-SERVER-006 is unchanged. The grant is the explicit authorization its isolation rule already allows.
 
-1. **Bearer capability (smallest change):** issuance returns a one-time grant secret that the driver hands to the grantee. The grantee presents it with each call. There are no new accounts, but anyone holding the secret can use it until it expires or is revoked.
-2. **Grantee account:** counsel or auditor enroll as their own principal (a new non-driver principal kind), and the grant names that principal. This is stronger binding, but it adds an identity flow.
+## Grantee authentication
+
+r1 offered a bearer-secret option. Codex showed it contradicts a *named* grantee: possession of a secret cannot prove who is calling, and the use log would attribute a forwarded secret's use to the wrong person. r2 therefore specifies **grantee accounts** (TR-RIDE-SEC-004 AC 1).
+
+If you prefer the bearer route anyway, the sentence and ACs must change so that the capability holder, not a named person, is the grantee, and logs must attribute use to the grant, not a person. That is a different AGREE.
 
 ## Not done
 
-No MCP write, no batch edit, no proto or code change, no tests. Once the sentence, ACs, use-case changes and the authentication choice are AGREEd, the next step is the MCP write (on LEGION2) plus the disk batch sync, then implementation and TEST-RIDE-058.
+No MCP write, no batch edit, no proto or code change, no tests. Once the sentence, ACs and use-case changes are AGREEd, the next step is the MCP write (on LEGION2) plus the disk batch sync, then implementation and TEST-RIDE-058.
