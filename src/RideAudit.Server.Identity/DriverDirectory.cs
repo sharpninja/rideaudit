@@ -32,6 +32,22 @@ public sealed record ConfigurationProfileRecord(
     string PolicyVersion,
     string Notes);
 
+public sealed record SubjectAccount(
+    string DriverId,
+    string TenantId,
+    string Email,
+    string DisplayName,
+    string Jurisdiction,
+    string Purpose,
+    string ConsentStatement,
+    long CreatedUnixMillis);
+
+public sealed record SubjectAccountExport(
+    SubjectAccount Account,
+    IReadOnlyList<VehicleRecord> Vehicles,
+    IReadOnlyList<ConfigurationProfileRecord> Profiles,
+    IReadOnlyList<AuditSessionRecord> Sessions);
+
 public sealed record AuditSessionRecord(
     string SessionId,
     string DriverId,
@@ -242,6 +258,25 @@ public sealed class DriverDirectory
         if (session.DriverId != caller.DriverId || session.Status != "open" || session.VehicleId != vehicleId)
             throw new RideAuditException(ErrorCodes.SessionInvalid, "Session is closed, mismatched, or not owned by the caller.");
         return session;
+    }
+
+    /// <summary>
+    /// FR-RIDE-010 access export: the subject's own account, vehicles, profiles and sessions.
+    /// Token and recovery hashes are credentials, not personal data about the subject, and are never exported.
+    /// </summary>
+    public SubjectAccountExport? ExportSubject(string driverId)
+    {
+        if (!_byId.TryGetValue(driverId, out var account))
+            return null;
+        var vehicles = _vehicles.Values.Where(row => row.DriverId == driverId).OrderBy(row => row.VehicleId, StringComparer.Ordinal).ToList();
+        var vehicleIds = vehicles.Select(row => row.VehicleId).ToHashSet(StringComparer.Ordinal);
+        var profiles = _profiles.Values.Where(row => vehicleIds.Contains(row.VehicleId)).OrderBy(row => row.ProfileId, StringComparer.Ordinal).ToList();
+        var sessions = _sessions.Values.Where(row => row.DriverId == driverId).OrderBy(row => row.SessionId, StringComparer.Ordinal).ToList();
+        return new SubjectAccountExport(
+            new SubjectAccount(account.DriverId, account.TenantId, account.Email, account.DisplayName, account.Jurisdiction, account.Purpose, account.ConsentStatement, account.CreatedUnixMillis),
+            vehicles,
+            profiles,
+            sessions);
     }
 
     public VehicleRecord RequireVehicle(DriverPrincipal caller, string vehicleId)

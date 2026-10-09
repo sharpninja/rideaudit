@@ -18,24 +18,53 @@ if [ -f "$CONFIG_FILE" ]; then
   RECORDED_CONFIG="$(cat "$CONFIG_FILE" || true)"
 fi
 
+# remote-start.sh writes this unit when it uses systemd. Its agent logs to stdout, so the
+# --log check in is_our_ngrok cannot see it; the unit's exact ExecStart identifies it instead.
+UNIT_FILE="$HOME/.config/systemd/user/rideaudit-ngrok.service"
+UNIT_EXEC=""
+if [ -f "$UNIT_FILE" ]; then
+  UNIT_EXEC="$(sed -n 's/^ExecStart=//p' "$UNIT_FILE" | head -n 1)"
+  UNIT_EXEC="${UNIT_EXEC//%h/$HOME}"
+fi
+
 if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
-  # The unit's agent logs to stdout, so is_our_ngrok below cannot see it. Track it by the
-  # unit's MainPID instead and fail closed if the unit or that process survives the stop.
-  unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null || true)"
-  systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
-  systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
-  if systemctl --user is-active --quiet rideaudit-ngrok.service 2>/dev/null; then
-    echo "FAIL_CLOSED=ngrok_systemd_unit_still_active"
-    exit 1
-  fi
-  if [ -n "${unit_pid}" ] && [ "${unit_pid}" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
-    unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
-    case "$unit_cmd" in
-      *ngrok\ http\ *)
-        echo "FAIL_CLOSED=ngrok_systemd_agent_still_running pid=${unit_pid}"
+  if [ -f "$UNIT_FILE" ]; then
+    # Our unit is installed: every systemd step must succeed, or we cannot prove the tunnel stopped.
+    if ! unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null)"; then
+      echo "FAIL_CLOSED=ngrok_systemd_query_failed"
+      exit 1
+    fi
+    stop_rc=0
+    systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || stop_rc=$?
+    # 5 = unit not loaded (unit file written but never loaded), so there is nothing to stop.
+    if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
+      echo "FAIL_CLOSED=ngrok_systemd_stop_failed rc=${stop_rc}"
+      exit 1
+    fi
+    systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+    if ! unit_state="$(systemctl --user show -p ActiveState --value rideaudit-ngrok.service 2>/dev/null)"; then
+      echo "FAIL_CLOSED=ngrok_systemd_query_failed"
+      exit 1
+    fi
+    case "$unit_state" in
+      inactive|failed) ;;
+      *)
+        echo "FAIL_CLOSED=ngrok_systemd_unit_still_active state=${unit_state}"
         exit 1
         ;;
     esac
+    if [ -n "${unit_pid}" ] && [ "${unit_pid}" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
+      unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
+      case "$unit_cmd" in
+        *ngrok\ http\ *)
+          echo "FAIL_CLOSED=ngrok_systemd_agent_still_running pid=${unit_pid}"
+          exit 1
+          ;;
+      esac
+    fi
+  else
+    systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
+    systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
   fi
 fi
 
@@ -51,6 +80,10 @@ is_our_ngrok() {
     *ngrok\ http\ *) ;;
     *) return 1 ;;
   esac
+  # The systemd-mode agent: its command line is exactly the installed unit's ExecStart.
+  if [ -n "$UNIT_EXEC" ] && [ "${cmd% }" = "$UNIT_EXEC" ]; then
+    return 0
+  fi
   case "$cmd" in
     *" --log $LOG_FILE "*) ;;
     *) return 1 ;;

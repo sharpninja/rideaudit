@@ -473,11 +473,23 @@ public class TestRide010012029031032
             Assert.NotNull(zip.GetEntry("data/online-hours.json"));
             Assert.NotNull(zip.GetEntry("data/locations.json"));
 
+            // Identity-side records held for the subject: account, vehicles, profiles and sessions.
+            Assert.Contains(enrolled.Driver.Email, Entry("account/account.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/vehicles.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/profiles.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Session.SessionId, Entry("account/sessions.json"), StringComparison.Ordinal);
+
             foreach (var entry in zip.Entries)
             {
                 using var reader = new StreamReader(entry.Open());
                 var text = reader.ReadToEnd();
                 Assert.DoesNotContain("RAWZIP-MARKER-9f3a", text, StringComparison.Ordinal);
+                Assert.DoesNotContain(enrolled.Driver.Token, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(enrolled.Driver.RecoveryCode, text, StringComparison.Ordinal);
+                Assert.DoesNotContain("TokenHash", text, StringComparison.Ordinal);
+                Assert.DoesNotContain("RecoveryHash", text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighbor.Vehicle.VehicleId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighbor.Session.SessionId, text, StringComparison.Ordinal);
                 Assert.DoesNotContain(neighbor.Driver.DriverId, text, StringComparison.Ordinal);
                 Assert.DoesNotContain(neighborImport.ImportId, text, StringComparison.Ordinal);
                 Assert.DoesNotContain(neighborImport.ContentHashHex, text, StringComparison.Ordinal);

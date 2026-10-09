@@ -16,6 +16,12 @@ public sealed record AccessExport(string ExportId, string Status, byte[] ZipByte
 
 public sealed record DeletionResult(string Status, bool Deleted, bool CustodyCiphertextRetained);
 
+/// <summary>FR-RIDE-010: the subject's identity-side records (account, vehicles, profiles, sessions) for the access export, keyed by archive path.</summary>
+public interface ISubjectAccountSource
+{
+    IReadOnlyDictionary<string, object> SubjectDatasets(string driverId);
+}
+
 /// <summary>Presents stored coordinates without masking (FR-RIDE-077).</summary>
 public static class GeoPresent
 {
@@ -36,14 +42,16 @@ public sealed class PrivacyDesk
     private readonly AppendOnlyAccessLog _access;
     private readonly IClock _clock;
     private readonly ISubmittedRecordSource _records;
+    private readonly ISubjectAccountSource? _accounts;
 
-    public PrivacyDesk(NormalizedStore store, ImportKeyRing keys, AppendOnlyAccessLog access, IClock clock, ISubmittedRecordSource records)
+    public PrivacyDesk(NormalizedStore store, ImportKeyRing keys, AppendOnlyAccessLog access, IClock clock, ISubmittedRecordSource records, ISubjectAccountSource? accounts = null)
     {
         _store = store;
         _keys = keys;
         _access = access;
         _clock = clock;
         _records = records;
+        _accounts = accounts;
     }
 
     public AccessExport Export(string actorId, string subjectDriverId)
@@ -64,6 +72,11 @@ public sealed class PrivacyDesk
             ["data/dictionary.json"] = _store.Dictionary.Where(row => importIds.Contains(row.ImportId)).ToList(),
             ["data/unverified.json"] = _store.Unverified.Where(row => importIds.Contains(row.ImportId)).ToList(),
         };
+        if (_accounts is not null)
+        {
+            foreach (var (name, rows) in _accounts.SubjectDatasets(subjectDriverId))
+                datasets[name] = rows;
+        }
         var manifest = new
         {
             subjectDriverId,
