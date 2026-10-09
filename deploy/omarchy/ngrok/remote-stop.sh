@@ -28,6 +28,26 @@ if [ -f "$UNIT_FILE" ]; then
   UNIT_EXEC="${UNIT_EXEC//%h/$HOME}"
 fi
 
+# Backends the sweep searches: the canonical :28080 and prior interim :18080, plus any address
+# this tree actually used. A RIDEAUDIT_NGROK_ADDR override reaches the unit's ExecStart (systemd
+# mode, no PID file) or ngrok.addr (nohup mode), so both are read, as is the current override.
+SWEEP_BACKENDS="192.168.1.182:28080 127.0.0.1:18080"
+add_backend() {
+  local addr="$1" known
+  [ -n "$addr" ] || return 0
+  for known in $SWEEP_BACKENDS; do
+    [ "$known" = "$addr" ] && return 0
+  done
+  SWEEP_BACKENDS="$SWEEP_BACKENDS $addr"
+}
+if [ -n "$UNIT_EXEC" ]; then
+  add_backend "$(printf '%s\n' "$UNIT_EXEC" | sed -n 's/.* http \([^ ]*\) .*/\1/p')"
+fi
+if [ -f "$ADDR_FILE" ]; then
+  add_backend "$(cat "$ADDR_FILE" || true)"
+fi
+add_backend "${RIDEAUDIT_NGROK_ADDR:-}"
+
 # A systemd failure is recorded, not returned at once: remote-start.sh can fall back to a nohup
 # agent while leaving the unit file behind, so the PID-file and sweep cleanup below must still run.
 # The recorded failure decides the final result.
@@ -134,10 +154,10 @@ is_recorded_agent() {
 }
 
 our_agents() {
-  # Agents this script family started, with or without a PID file (canonical :28080 and
-  # the prior interim :18080). Every candidate passes is_our_ngrok.
+  # Agents this script family started, with or without a PID file, on any backend in
+  # SWEEP_BACKENDS. Every candidate passes is_our_ngrok.
   local backend pid
-  for backend in 192.168.1.182:28080 127.0.0.1:18080; do
+  for backend in $SWEEP_BACKENDS; do
     for pid in $(pgrep -f "ngrok http $backend " 2>/dev/null || true); do
       if is_our_ngrok "$pid"; then
         echo "$pid"
