@@ -94,10 +94,28 @@ start_systemd() {
   return 0
 }
 
+is_our_ngrok() {
+  local pid="$1" cmd=""
+  if [ -r "/proc/$pid/cmdline" ]; then
+    cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+  fi
+  case "$cmd" in
+    *ngrok\ http\ *) return 0 ;;
+  esac
+  return 1
+}
+
 start_nohup() {
   local bin="$1"
   if [ -f "$PID_FILE" ]; then
     old="$(cat "$PID_FILE" || true)"
+    # A PID file can outlive its process and the PID can be reused. Only treat it as
+    # our agent when the live process is an ngrok http tunnel; otherwise drop the file.
+    if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && ! is_our_ngrok "$old"; then
+      echo "NGROK_STALE_PID=discarded"
+      rm -f "$PID_FILE" "$ADDR_FILE"
+      old=""
+    fi
     if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
       # Reuse the running agent only when it was started for this backend.
       if [ -f "$ADDR_FILE" ] && [ "$(cat "$ADDR_FILE" || true)" = "$ADDR" ]; then

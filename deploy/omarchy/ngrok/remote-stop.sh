@@ -12,9 +12,21 @@ if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
   systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
 fi
 
+is_our_ngrok() {
+  local pid="$1" cmd=""
+  if [ -r "/proc/$pid/cmdline" ]; then
+    cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+  fi
+  case "$cmd" in
+    *ngrok\ http\ *) return 0 ;;
+  esac
+  return 1
+}
+
 if [ -f "$PID_FILE" ]; then
   old="$(cat "$PID_FILE" || true)"
-  if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
+  # Only signal the recorded PID when it is still an ngrok http tunnel (PIDs get reused).
+  if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && is_our_ngrok "$old"; then
     kill "$old" || true
     sleep 1
     if kill -0 "$old" 2>/dev/null; then
