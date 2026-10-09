@@ -526,6 +526,16 @@ public class TestRide010012029031032
             Assert.Contains(outcome.SubmissionId, receipts, StringComparison.Ordinal);
             Assert.Contains(enrolled.Vehicle.VehicleId, receipts, StringComparison.Ordinal);
             Assert.Contains(enrolled.Session.SessionId, receipts, StringComparison.Ordinal);
+            // Each receipt carries its retained anchor proof; the neighbor's proof is not exported.
+            // Parsed, not matched as text: the writer escapes '+' in base64.
+            var anchor = world.App.Journal.Find(outcome.SubmissionId)!.Anchor!;
+            using var receiptRows = System.Text.Json.JsonDocument.Parse(receipts);
+            var exportedAnchors = receiptRows.RootElement.EnumerateArray().Select(row => row.GetProperty("Anchor")).ToList();
+            var exportedAnchor = Assert.Single(exportedAnchors);
+            Assert.Equal(anchor.ReceiptCoreDigest.ToBase64(), exportedAnchor.GetProperty("receiptCoreDigest").GetString());
+            Assert.Equal(anchor.TransactionReference, exportedAnchor.GetProperty("transactionReference").GetString());
+            Assert.Equal(anchor.ProofBytes.ToBase64(), exportedAnchor.GetProperty("proofBytes").GetString());
+            Assert.NotEqual(world.App.Journal.Find(neighborOutcome.SubmissionId)!.Anchor!.ReceiptCoreDigest.ToBase64(), exportedAnchor.GetProperty("receiptCoreDigest").GetString());
 
             // Access-log entries about the subject, including this export, with the neighbor's id replaced.
             var accessLog = Entry("data/access-log.json");

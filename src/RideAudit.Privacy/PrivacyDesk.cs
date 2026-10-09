@@ -79,13 +79,15 @@ public sealed class PrivacyDesk
             ["data/unverified.json"] = _store.Unverified.Where(row => importIds.Contains(row.ImportId)).ToList(),
             ["data/access-log.json"] = SubjectAccessLog(subjectDriverId, submissions),
             // The custody journal keeps each submission's full receipt core (vehicle, session, collector,
-            // key, collection time, provenance, attestation). It is held data about the subject, not
-            // sealed plaintext.
+            // key, collection time, provenance, attestation) and its anchor proof envelope (status, chain,
+            // transaction, block, write time, proof bytes). Both are held data about the subject, not
+            // sealed plaintext. A submission with no anchor yet exports a null Anchor.
             ["data/receipts.json"] = submissions.Select(row => new
             {
                 row.SubmissionId,
                 row.CustodyState,
                 ReceiptCore = JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes))).RootElement,
+                Anchor = row.Anchor is null ? (JsonElement?)null : JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(row.Anchor)).RootElement,
             }).ToList(),
         };
         if (_accounts is not null)
