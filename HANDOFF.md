@@ -1,6 +1,6 @@
 # RideAudit handoff update (cloud takeover)
 
-Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-08 07:48 CT.
+Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-08 22:33 CT.
 Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payton's direction (2026-10-08). Grok is unavailable for HV.
 
 ## Done this pass (pushed to cursor/capture-operator-reqs-b19f; merge commits only, no force-push)
@@ -10,7 +10,8 @@ Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payt
 - HV process amended (2026-10-08): Claude Code is an approved generator; gpt-6.1-sol at high is the opposing validator while Grok is unavailable. docs/process/hostile-validation.md, docs/process/code-generation.md
 - FR-RIDE-038 multi-driver bundle retired (Payton 2026-10-07). Contract 0.4.0. FR-RIDE-037 kept, "multi-driver" dropped. Ledger 547 (385 covered / 162 deferred / 0 missing). Receipt with the MCP sync list: docs/receipts/remediation/20261008T122143Z-pr26-retire-fr038-multidriver-bundle.md
 - Payton 2026-10-08: killed TR-RIDE-SERVER-007 and UC-RIDE-016 (bfab3ef); killed the TEST-RIDE-032 mappings for FR-RIDE-211/213 (366d3f9). Ledger 543 (385 covered / 158 deferred / 0 missing).
-- Review-thread triage: every open thread answered; small fixes in c956f06 (plan counts, README, UC-021 legal hold, Octopus receipt wording, ngrok full-address check, killed traits, Azure manifest). ngrok nohup stale-backend restart in 66b7891.
+- Review-thread triage: every open thread answered; small fixes in c956f06 (plan counts, README, UC-021 legal hold, Octopus receipt wording, ngrok full-address check, killed traits, Azure manifest). ngrok nohup stale-backend restart in 66b7891; stale-PID guard (never signal a reused PID) in 2e86ef1. README use-case inventory and capture-batch approval headers in dfb6356.
+- PR #26 squash-merged to master at Payton's request (2026-10-08 22:33 CT). The open items below are follow-ups on master.
 
 ## Open
 
@@ -20,7 +21,6 @@ Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payt
 - Open review threads: FR-065..074 phase assignment; generic deferral reasons; OTS smoke script findings (author-deferred, now five).
 - No HV run yet. gpt-6.1-sol at high is not reachable from this session.
 - Tests run on Linux with .NET SDK 10.0.112, OpenSCAD 2021.01 and PowerShell 7.6.6. global.json pins 10.0.401 and was relaxed locally only (not committed). Android and Windows host tests not run here.
-- Do not merge.
 
 ---
 # RideAudit handoff update (PAYTON-LEGION2)
