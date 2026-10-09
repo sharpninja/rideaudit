@@ -50,16 +50,30 @@ public sealed class PrivacyDesk
     {
         Authorize(actorId, subjectDriverId, "dsar-export");
         var imports = _store.Imports.Where(row => row.DriverId == subjectDriverId).ToList();
+        var importIds = imports.Select(row => row.ImportId).ToHashSet(StringComparer.Ordinal);
         var submissions = _records.ForDriver(subjectDriverId);
+        // FR-RIDE-010 / AC-RIDE-010-001: the export carries the audit-held rows for this subject, not just metadata.
+        // Rows with a driver id are filtered on it; import-keyed rows are filtered on the subject's import ids.
+        var datasets = new SortedDictionary<string, object>(StringComparer.Ordinal)
+        {
+            ["data/trips.json"] = _store.Trips.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/scores.json"] = _store.Scores.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/online-hours.json"] = _store.Hours.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/locations.json"] = _store.Locations.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/consents.json"] = _store.Consents.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/dictionary.json"] = _store.Dictionary.Where(row => importIds.Contains(row.ImportId)).ToList(),
+            ["data/unverified.json"] = _store.Unverified.Where(row => importIds.Contains(row.ImportId)).ToList(),
+        };
         var manifest = new
         {
             subjectDriverId,
             license = "GPL-2.0-only",
             sealedPlaintextIncluded = false,
             imports = imports.Select(row => new { row.ImportId, row.ContentHashHex, row.Version, row.ParserVersion, row.Provenance, row.Status }),
-            submissions = submissions.Select(row => new { row.SubmissionId, row.CustodyState, contentHash = Ids.Hex(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).ContentHash.ToByteArray()) })
+            submissions = submissions.Select(row => new { row.SubmissionId, row.CustodyState, contentHash = Ids.Hex(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).ContentHash.ToByteArray()) }),
+            datasets = datasets.Keys,
         };
-        var zip = BuildZip(manifest, subjectDriverId, imports);
+        var zip = BuildZip(manifest, subjectDriverId, imports, datasets);
         var status = imports.Count == 0 && submissions.Count == 0 ? "no-personal-imports" : "exported";
         return new AccessExport(Ids.New("exp-"), status, zip);
     }
@@ -91,7 +105,7 @@ public sealed class PrivacyDesk
             throw new RideAuditException(ErrorCodes.TenantIsolation, "Caller cannot access another driver.");
     }
 
-    private static byte[] BuildZip(object manifest, string driverId, IReadOnlyList<ImportRecord> imports)
+    private static byte[] BuildZip(object manifest, string driverId, IReadOnlyList<ImportRecord> imports, IReadOnlyDictionary<string, object> datasets)
     {
         using var stream = new MemoryStream();
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Create, true))
@@ -100,8 +114,10 @@ public sealed class PrivacyDesk
             Write(zip, "manifest.json", json);
             Write(zip, "provenance.json", json);
             Write(zip, "provenance.csv", ProvenanceCsv(imports));
+            foreach (var (name, rows) in datasets)
+                Write(zip, name, JsonSerializer.Serialize(rows));
             WriteBytes(zip, "summary.pdf", SummaryPdf("RideAudit audit summary. Sealed plaintext is not included. Subject " + driverId + "."));
-            Write(zip, "NOTICE.txt", "GPL-2.0-only. This portable audit ZIP lists hashes and provenance. It does not contain sealed plaintext. Subject " + driverId + ".");
+            Write(zip, "NOTICE.txt", "GPL-2.0-only. This access export lists hashes and provenance and carries the audit-held rows for this subject under data/. It does not contain sealed plaintext. Subject " + driverId + ".");
         }
         return stream.ToArray();
     }

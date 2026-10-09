@@ -460,10 +460,24 @@ public class TestRide010012029031032
             Assert.Contains(imported.ContentHashHex, manifest, StringComparison.Ordinal);
             Assert.Contains(outcome.SubmissionId, manifest, StringComparison.Ordinal);
             Assert.Contains("sealedPlaintextIncluded\":false", manifest.Replace(" ", ""), StringComparison.Ordinal);
+
+            // AC-RIDE-010-001: the export carries the audit-held rows, not only import and submission metadata.
+            string Entry(string name) => new StreamReader((zip.GetEntry(name) ?? throw new InvalidOperationException(name + " missing")).Open()).ReadToEnd();
+            var trips = Entry("data/trips.json");
+            Assert.Contains("\"TripId\":\"trip-1\"", trips, StringComparison.Ordinal);
+            Assert.Contains(enrolled.Driver.DriverId, trips, StringComparison.Ordinal);
+            Assert.Contains("\"Overall\":80", Entry("data/scores.json"), StringComparison.Ordinal);
+            Assert.Contains("smooth_cruiser", Entry("data/dictionary.json"), StringComparison.Ordinal);
+            Assert.Contains("note.txt", Entry("data/unverified.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Driver.DriverId, Entry("data/consents.json"), StringComparison.Ordinal);
+            Assert.NotNull(zip.GetEntry("data/online-hours.json"));
+            Assert.NotNull(zip.GetEntry("data/locations.json"));
+
             foreach (var entry in zip.Entries)
             {
                 using var reader = new StreamReader(entry.Open());
                 var text = reader.ReadToEnd();
+                Assert.DoesNotContain("RAWZIP-MARKER-9f3a", text, StringComparison.Ordinal);
                 Assert.DoesNotContain(neighbor.Driver.DriverId, text, StringComparison.Ordinal);
                 Assert.DoesNotContain(neighborImport.ImportId, text, StringComparison.Ordinal);
                 Assert.DoesNotContain(neighborImport.ContentHashHex, text, StringComparison.Ordinal);
