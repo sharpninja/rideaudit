@@ -127,22 +127,47 @@ is_our_ngrok() {
   return 1
 }
 
+is_recorded_agent() {
+  # The agent named by the PID file, identified by the backend recorded in ngrok.addr and
+  # this tree's --log path. This covers an agent launched under a config that is neither
+  # current nor recorded (one started before ngrok.config existed, then RIDEAUDIT_NGROK_CONFIG
+  # changed), so its state is not discarded and its tunnel is not orphaned.
+  local pid="$1" cmd="" rec_addr=""
+  if [ -f "$ADDR_FILE" ]; then
+    rec_addr="$(cat "$ADDR_FILE" || true)"
+  fi
+  [ -n "$rec_addr" ] || return 1
+  if [ -r "/proc/$pid/cmdline" ]; then
+    cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+  fi
+  case "$cmd" in
+    *"ngrok http $rec_addr "*) ;;
+    *) return 1 ;;
+  esac
+  case "$cmd" in
+    *" --log $LOG_FILE "*) return 0 ;;
+  esac
+  return 1
+}
+
 start_nohup() {
   local bin="$1"
   if [ -f "$PID_FILE" ]; then
     old="$(cat "$PID_FILE" || true)"
     # A PID file can outlive its process and the PID can be reused. Only treat it as
-    # our agent when the live process is an ngrok http tunnel; otherwise drop the file.
-    if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && ! is_our_ngrok "$old"; then
+    # our agent when the live process is our ngrok http tunnel; otherwise drop the file.
+    if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && ! is_our_ngrok "$old" && ! is_recorded_agent "$old"; then
       echo "NGROK_STALE_PID=discarded"
       rm -f "$PID_FILE" "$ADDR_FILE" "$CONFIG_FILE"
       old=""
     fi
     if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
-      # Reuse the running agent only when it was started for this backend and config.
-      # An agent from before the config was recorded passed is_our_ngrok on $CONFIG alone.
+      # Reuse the running agent only when it was started for this backend and its live
+      # command line carries the current --config. Anything else (including a legacy agent
+      # on an old config) is stopped below before a new one starts.
+      old_cmd="$(tr '\0' ' ' < "/proc/$old/cmdline" 2>/dev/null || true)"
       if [ -f "$ADDR_FILE" ] && [ "$(cat "$ADDR_FILE" || true)" = "$ADDR" ] \
-        && { [ -z "$RECORDED_CONFIG" ] || [ "$RECORDED_CONFIG" = "$CONFIG" ]; }; then
+        && [[ "$old_cmd" == *" --config $CONFIG "* ]]; then
         printf '%s\n' "$CONFIG" > "$CONFIG_FILE"
         echo "NGROK_MODE=nohup-existing"
         return 0

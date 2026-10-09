@@ -7,6 +7,7 @@ STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 PID_FILE="$STATE_DIR/ngrok.pid"
 CONFIG_FILE="$STATE_DIR/ngrok.config"
 CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
+ADDR_FILE="$STATE_DIR/ngrok.addr"
 LOG_FILE="$STATE_DIR/ngrok.log"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
@@ -97,6 +98,29 @@ is_our_ngrok() {
   return 1
 }
 
+is_recorded_agent() {
+  # The agent named by the PID file, identified by the backend recorded in ngrok.addr and
+  # this tree's --log path. This covers an agent launched under a config that is neither
+  # current nor recorded (one started before ngrok.config existed, then RIDEAUDIT_NGROK_CONFIG
+  # changed), so its state is not discarded and its tunnel is not orphaned.
+  local pid="$1" cmd="" rec_addr=""
+  if [ -f "$ADDR_FILE" ]; then
+    rec_addr="$(cat "$ADDR_FILE" || true)"
+  fi
+  [ -n "$rec_addr" ] || return 1
+  if [ -r "/proc/$pid/cmdline" ]; then
+    cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+  fi
+  case "$cmd" in
+    *"ngrok http $rec_addr "*) ;;
+    *) return 1 ;;
+  esac
+  case "$cmd" in
+    *" --log $LOG_FILE "*) return 0 ;;
+  esac
+  return 1
+}
+
 our_agents() {
   # Agents this script family started, with or without a PID file (canonical :28080 and
   # the prior interim :18080). Every candidate passes is_our_ngrok.
@@ -113,7 +137,7 @@ our_agents() {
 if [ -f "$PID_FILE" ]; then
   old="$(cat "$PID_FILE" || true)"
   # Only signal the recorded PID when it is still our ngrok agent (PIDs get reused).
-  if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && is_our_ngrok "$old"; then
+  if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && { is_our_ngrok "$old" || is_recorded_agent "$old"; }; then
     kill "$old" || true
     sleep 1
     if kill -0 "$old" 2>/dev/null; then
@@ -131,7 +155,7 @@ for pid in $(our_agents); do
 done
 
 remaining="$(our_agents | tr '\n' ' ')"
-if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && is_our_ngrok "$old"; then
+if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && { is_our_ngrok "$old" || is_recorded_agent "$old"; }; then
   remaining="$remaining $old"
 fi
 if [ -n "${remaining// /}" ]; then
@@ -140,6 +164,6 @@ if [ -n "${remaining// /}" ]; then
   exit 1
 fi
 
-rm -f "$PID_FILE" "$CONFIG_FILE" "$STATE_DIR/ngrok.addr"
+rm -f "$PID_FILE" "$CONFIG_FILE" "$ADDR_FILE"
 echo "NGROK_STOPPED=1"
 echo "PUBLIC_URL_ADVERTISED=0"
