@@ -188,15 +188,32 @@ done
 
 if [ -n "$SYSTEMD_FAIL" ]; then
   # systemd could not be proven to have stopped the unit, so it may still restart the agent the
-  # sweep killed. Wait out the unit's RestartSec (plus margin), then kill and report any restart.
+  # sweep killed. Each kill of a restarted agent can schedule another restart, so watch up to
+  # three RestartSec windows (plus margin). In each window, retry stop and a runtime mask, and kill
+  # any restart. Report a supervisor that is still restarting after the last window.
   restart_sec="$(sed -n 's/^RestartSec=\([0-9][0-9]*\)$/\1/p' "$UNIT_FILE" 2>/dev/null | head -n 1)"
-  sleep $(( ${restart_sec:-3} + 2 ))
-  restarted="$(our_agents | tr '\n' ' ')"
-  if [ -n "${restarted// /}" ]; then
+  restarts=""
+  quiet=0
+  for window in 1 2 3; do
+    sleep $(( ${restart_sec:-3} + 2 ))
+    restarted="$(our_agents | tr '\n' ' ')"
+    if [ -z "${restarted// /}" ]; then
+      quiet=1
+      break
+    fi
+    restarts="$restarts $restarted"
+    systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
+    systemctl --user mask --runtime rideaudit-ngrok.service >/dev/null 2>&1 || true
     for pid in $restarted; do
       kill -9 "$pid" 2>/dev/null || true
     done
-    SYSTEMD_FAIL="$SYSTEMD_FAIL ngrok_restarted_by_supervisor pids=${restarted}"
+  done
+  if [ -n "${restarts// /}" ]; then
+    SYSTEMD_FAIL="$SYSTEMD_FAIL ngrok_restarted_by_supervisor pids=${restarts# }"
+    if [ "$quiet" -eq 0 ]; then
+      # The last window still saw a restart, so supervision is active and the tunnel may return.
+      SYSTEMD_FAIL="$SYSTEMD_FAIL ngrok_supervisor_still_restarting"
+    fi
   fi
 fi
 

@@ -91,6 +91,8 @@ start_systemd() {
     return 1
   fi
   write_unit "$bin"
+  # remote-stop.sh may have runtime-masked the unit when systemd ignored its stop.
+  systemctl --user unmask --runtime rideaudit-ngrok.service >/dev/null 2>&1 || true
   if ! systemctl --user daemon-reload; then
     return 1
   fi
