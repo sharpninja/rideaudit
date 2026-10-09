@@ -1,6 +1,6 @@
 # RideAudit handoff update (cloud takeover)
 
-Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-09 10:50 CT.
+Written: 2026-10-08 07:25 CT (America/Chicago). Updated: 2026-10-09 14:55 CT.
 Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payton's direction (2026-10-08). Grok is unavailable for HV.
 
 ## Done this pass (pushed to cursor/capture-operator-reqs-b19f; merge commits only, no force-push)
@@ -18,6 +18,8 @@ Author: Claude Code (Anthropic), cloud session. Takes over from Grok Bot at Payt
 - MCP SoT is not reachable from the cloud session. On PAYTON-LEGION2 apply the MCP sync lists in the 20261008T12* receipts under docs/receipts/remediation/ (FR-038 retire; TR-SERVER-007 / UC-016 kill; FR-211/213 TEST mappings), then regenerate both wikis.
 - Also on LEGION2: export FR-RIDE-075/076, TR-RIDE-A11Y-001, TR-RIDE-VIDEO-018 and TEST-RIDE-056/057 (with mappings) from MCP into a disk batch. They are in MCP and the wikis but in no batch; the wiki lacks AC ids and priority, so they were not rebuilt by hand. Recount the ledger after.
 - Payton decisions pending: (1) AGREE on the driver-issued case-grant candidate, current revision only (see the newest "Revised" line in docs/receipts/requirements/20261009T033424Z-bdpv4-candidate-case-grant.md; earlier revisions are superseded). It answers counsel verification and the role actors on all 15 use cases. The Codex security threads on PR #29 that each revision answered are left unresolved for his decision, not because they are unaddressed: the unresolved threads on that file in PR #29 are the live list. (2) Approved review-app UX files that still describe multi-driver bundles (list in the FR-038 receipt).
+- Owner choices named inside the case-grant candidate (r29): escrow fix scope and custodian model (provisioning, legacy binding, replacement, quorum by slot); court authority (custodian quorum plus document hash); grantee accounts driver-invited or operator-provisioned; DSAR deletion (a) closes the account or (b) needs a separate closure request; how a disabled grantee relationship is restored. Recommended: AGREE or pause Codex rounds on the candidate, since each round adds scope.
+- Pre-existing, not fixed in PR #29 (recorded in docs/receipts/remediation/20261009T195221Z-pr29-self-review-e1f6e0d.md): in systemd mode ngrok remote-start does not stop an existing nohup agent; `DriverDirectory.UpdateVehicle` treats an empty make or model as a new value.
 - Open review threads: FR-065..074 phase assignment; generic deferral reasons; OTS smoke script findings (author-deferred, now five).
 - No eligible HV run yet. Codex HV replies on PR #26 (partial) and PR #29 (gpt-5.6-sol, completed-ineligible, DISAGREE 96/92) are recorded under docs/reviews/hv-pairs/. gpt-6.1-sol at high is not reachable from this session.
 - Tests run on Linux with .NET SDK 10.0.112, OpenSCAD 2021.01 and PowerShell 7.6.6. global.json pins 10.0.401 and was relaxed locally only (not committed). Android and Windows host tests not run here.
