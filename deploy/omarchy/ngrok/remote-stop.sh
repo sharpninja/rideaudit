@@ -181,6 +181,14 @@ if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
   else
     stop_loaded_unit_without_file
   fi
+elif [ -L "$WANTS_LINK" ] || [ -e "$WANTS_LINK" ]; then
+  # No user manager to ask (between logins, or no systemctl), so no unit agent can be running.
+  # An explicit stop must still keep the unit from starting at the next login.
+  rm -f "$WANTS_LINK"
+  echo "remote-stop: no user systemd manager; removed ${WANTS_LINK}" >&2
+  if [ -L "$WANTS_LINK" ] || [ -e "$WANTS_LINK" ]; then
+    SYSTEMD_FAIL="ngrok_systemd_still_enabled link=${WANTS_LINK} no_user_manager"
+  fi
 fi
 
 is_our_ngrok() {

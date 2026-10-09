@@ -81,13 +81,18 @@ public sealed class PrivacyDesk
             // The custody journal keeps each submission's full receipt core (vehicle, session, collector,
             // key, collection time, provenance, attestation) and its anchor proof envelope (status, chain,
             // transaction, block, write time, proof bytes). Both are held data about the subject, not
-            // sealed plaintext. A submission with no anchor yet exports a null Anchor.
+            // sealed plaintext. A submission with no anchor yet exports a null Anchor. Custody carries every
+            // other retained custody field (sealed record id, idempotency key, body hash, nonce, collection
+            // state and the per-submission audit lines), never the ciphertext or the sealed envelope. The
+            // journal-wide failure lines carry no driver or submission id, so they cannot be attributed to a
+            // subject and are not exported.
             ["data/receipts.json"] = submissions.Select(row => new
             {
                 row.SubmissionId,
                 row.CustodyState,
                 ReceiptCore = JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes))).RootElement,
                 Anchor = row.Anchor is null ? (JsonElement?)null : JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(row.Anchor)).RootElement,
+                row.Custody,
             }).ToList(),
         };
         if (_accounts is not null)

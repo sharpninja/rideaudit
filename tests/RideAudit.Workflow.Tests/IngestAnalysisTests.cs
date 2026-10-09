@@ -536,6 +536,19 @@ public class TestRide010012029031032
             Assert.Equal(anchor.TransactionReference, exportedAnchor.GetProperty("transactionReference").GetString());
             Assert.Equal(anchor.ProofBytes.ToBase64(), exportedAnchor.GetProperty("proofBytes").GetString());
             Assert.NotEqual(world.App.Journal.Find(neighborOutcome.SubmissionId)!.Anchor!.ReceiptCoreDigest.ToBase64(), exportedAnchor.GetProperty("receiptCoreDigest").GetString());
+            // Every other retained custody field, including the per-submission audit lines, but never the sealed bytes.
+            var held = world.App.Journal.Find(outcome.SubmissionId)!;
+            var custody = Assert.Single(receiptRows.RootElement.EnumerateArray().Select(row => row.GetProperty("Custody")).ToList());
+            Assert.Equal(held.SealedRecordId, custody.GetProperty("SealedRecordId").GetString());
+            Assert.Equal(held.IdempotencyKey, custody.GetProperty("IdempotencyKey").GetString());
+            Assert.Equal(RideAudit.Contracts.Ids.Hex(held.BodyHash), custody.GetProperty("BodyHashHex").GetString());
+            Assert.Equal(held.Nonce, custody.GetProperty("Nonce").GetString());
+            Assert.Equal(held.CollectionComplete, custody.GetProperty("CollectionComplete").GetBoolean());
+            Assert.NotEmpty(held.Audit);
+            Assert.Equal(held.Audit, custody.GetProperty("Audit").EnumerateArray().Select(line => line.GetString()!).ToList());
+            Assert.DoesNotContain("Ciphertext", receipts, StringComparison.Ordinal);
+            Assert.DoesNotContain("EnvelopeBytes", receipts, StringComparison.Ordinal);
+            Assert.DoesNotContain(world.App.Journal.Find(neighborOutcome.SubmissionId)!.SealedRecordId, receipts, StringComparison.Ordinal);
 
             // Access-log entries about the subject, including this export, with the neighbor's id replaced.
             var accessLog = Entry("data/access-log.json");
