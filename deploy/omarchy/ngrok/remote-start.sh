@@ -10,10 +10,18 @@ STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 UNIT_DIR="$HOME/.config/systemd/user"
 PID_FILE="$STATE_DIR/ngrok.pid"
 ADDR_FILE="$STATE_DIR/ngrok.addr"
+CONFIG_FILE="$STATE_DIR/ngrok.config"
 LOG_FILE="$STATE_DIR/ngrok.log"
 API_URL="http://127.0.0.1:4040/api/tunnels"
 
 mkdir -p "$STATE_DIR" "$UNIT_DIR" "$HOME/.local/bin"
+
+# The config a nohup agent was launched with, so ownership survives a changed
+# RIDEAUDIT_NGROK_CONFIG (remote-stop.sh reads the same file).
+RECORDED_CONFIG=""
+if [ -f "$CONFIG_FILE" ]; then
+  RECORDED_CONFIG="$(cat "$CONFIG_FILE" || true)"
+fi
 
 probe_local() {
   local code=""
@@ -95,10 +103,10 @@ start_systemd() {
 }
 
 is_our_ngrok() {
-  # True only for the agent this script starts: an ngrok http tunnel using this
-  # script's --config and --log paths. Any other process (including another
-  # ngrok tunnel under the same account) is never signaled.
-  local pid="$1" cmd=""
+  # True only for the agent this script family starts: an ngrok http tunnel using the
+  # current or recorded --config path and this tree's --log path. Any other process
+  # (including another ngrok tunnel under the same account) is never signaled.
+  local pid="$1" cmd="" cfg
   if [ -r "/proc/$pid/cmdline" ]; then
     cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
   fi
@@ -107,12 +115,15 @@ is_our_ngrok() {
     *) return 1 ;;
   esac
   case "$cmd" in
-    *" --config $CONFIG "*) ;;
+    *" --log $LOG_FILE "*) ;;
     *) return 1 ;;
   esac
-  case "$cmd" in
-    *" --log $LOG_FILE "*) return 0 ;;
-  esac
+  for cfg in "$CONFIG" "$RECORDED_CONFIG"; do
+    [ -n "$cfg" ] || continue
+    case "$cmd" in
+      *" --config $cfg "*) return 0 ;;
+    esac
+  done
   return 1
 }
 
@@ -124,12 +135,15 @@ start_nohup() {
     # our agent when the live process is an ngrok http tunnel; otherwise drop the file.
     if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && ! is_our_ngrok "$old"; then
       echo "NGROK_STALE_PID=discarded"
-      rm -f "$PID_FILE" "$ADDR_FILE"
+      rm -f "$PID_FILE" "$ADDR_FILE" "$CONFIG_FILE"
       old=""
     fi
     if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null; then
-      # Reuse the running agent only when it was started for this backend.
-      if [ -f "$ADDR_FILE" ] && [ "$(cat "$ADDR_FILE" || true)" = "$ADDR" ]; then
+      # Reuse the running agent only when it was started for this backend and config.
+      # An agent from before the config was recorded passed is_our_ngrok on $CONFIG alone.
+      if [ -f "$ADDR_FILE" ] && [ "$(cat "$ADDR_FILE" || true)" = "$ADDR" ] \
+        && { [ -z "$RECORDED_CONFIG" ] || [ "$RECORDED_CONFIG" = "$CONFIG" ]; }; then
+        printf '%s\n' "$CONFIG" > "$CONFIG_FILE"
         echo "NGROK_MODE=nohup-existing"
         return 0
       fi
@@ -150,6 +164,7 @@ start_nohup() {
     >"$STATE_DIR/ngrok.out" 2>&1 &
   echo $! > "$PID_FILE"
   printf '%s\n' "$ADDR" > "$ADDR_FILE"
+  printf '%s\n' "$CONFIG" > "$CONFIG_FILE"
   echo "NGROK_MODE=nohup"
 }
 

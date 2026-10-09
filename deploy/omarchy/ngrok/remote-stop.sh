@@ -5,9 +5,18 @@ set -euo pipefail
 
 STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 PID_FILE="$STATE_DIR/ngrok.pid"
+CONFIG_FILE="$STATE_DIR/ngrok.config"
 CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
 LOG_FILE="$STATE_DIR/ngrok.log"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+# remote-start.sh records the config the agent was launched with. Ownership follows that
+# recorded path as well as the current one, so a changed RIDEAUDIT_NGROK_CONFIG cannot
+# orphan a running tunnel.
+RECORDED_CONFIG=""
+if [ -f "$CONFIG_FILE" ]; then
+  RECORDED_CONFIG="$(cat "$CONFIG_FILE" || true)"
+fi
 
 if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
   systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
@@ -15,10 +24,10 @@ if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
 fi
 
 is_our_ngrok() {
-  # True only for the agent this script starts: an ngrok http tunnel using this
-  # script's --config and --log paths. Any other process (including another
-  # ngrok tunnel under the same account) is never signaled.
-  local pid="$1" cmd=""
+  # True only for the agent this script family starts: an ngrok http tunnel using the
+  # current or recorded --config path and this tree's --log path. Any other process
+  # (including another ngrok tunnel under the same account) is never signaled.
+  local pid="$1" cmd="" cfg
   if [ -r "/proc/$pid/cmdline" ]; then
     cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
   fi
@@ -27,18 +36,34 @@ is_our_ngrok() {
     *) return 1 ;;
   esac
   case "$cmd" in
-    *" --config $CONFIG "*) ;;
+    *" --log $LOG_FILE "*) ;;
     *) return 1 ;;
   esac
-  case "$cmd" in
-    *" --log $LOG_FILE "*) return 0 ;;
-  esac
+  for cfg in "$CONFIG" "$RECORDED_CONFIG"; do
+    [ -n "$cfg" ] || continue
+    case "$cmd" in
+      *" --config $cfg "*) return 0 ;;
+    esac
+  done
   return 1
+}
+
+our_agents() {
+  # Agents this script family started, with or without a PID file (canonical :28080 and
+  # the prior interim :18080). Every candidate passes is_our_ngrok.
+  local backend pid
+  for backend in 192.168.1.182:28080 127.0.0.1:18080; do
+    for pid in $(pgrep -f "ngrok http $backend " 2>/dev/null || true); do
+      if is_our_ngrok "$pid"; then
+        echo "$pid"
+      fi
+    done
+  done
 }
 
 if [ -f "$PID_FILE" ]; then
   old="$(cat "$PID_FILE" || true)"
-  # Only signal the recorded PID when it is still an ngrok http tunnel (PIDs get reused).
+  # Only signal the recorded PID when it is still our ngrok agent (PIDs get reused).
   if [ -n "${old}" ] && kill -0 "$old" 2>/dev/null && is_our_ngrok "$old"; then
     kill "$old" || true
     sleep 1
@@ -46,19 +71,26 @@ if [ -f "$PID_FILE" ]; then
       kill -9 "$old" || true
     fi
   fi
-  rm -f "$PID_FILE"
 fi
-rm -f "$STATE_DIR/ngrok.addr"
 
-# Sweep agents this script family started without a PID file (canonical :28080 and the
-# prior interim :18080). Every candidate passes is_our_ngrok before it is signaled, so a
-# tunnel with another config or log path is left running.
-for backend in 192.168.1.182:28080 127.0.0.1:18080; do
-  for pid in $(pgrep -f "ngrok http $backend " 2>/dev/null || true); do
-    if is_our_ngrok "$pid"; then
-      kill "$pid" 2>/dev/null || true
-    fi
-  done
+for pid in $(our_agents); do
+  kill "$pid" 2>/dev/null || true
 done
+sleep 1
+for pid in $(our_agents); do
+  kill -9 "$pid" 2>/dev/null || true
+done
+
+remaining="$(our_agents | tr '\n' ' ')"
+if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && is_our_ngrok "$old"; then
+  remaining="$remaining $old"
+fi
+if [ -n "${remaining// /}" ]; then
+  # Keep the state files so a later stop can still identify the agent.
+  echo "FAIL_CLOSED=ngrok_still_running pids=${remaining}"
+  exit 1
+fi
+
+rm -f "$PID_FILE" "$CONFIG_FILE" "$STATE_DIR/ngrok.addr"
 echo "NGROK_STOPPED=1"
 echo "PUBLIC_URL_ADVERTISED=0"

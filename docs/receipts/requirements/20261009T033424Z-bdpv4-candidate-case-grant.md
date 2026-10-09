@@ -3,6 +3,7 @@
 - **Written:** 2026-10-08 22:34 CT (America/Chicago), 20261009T033424Z.
 - **Revised:** r2, 2026-10-08 22:50 CT (20261009T035027Z). Answers Codex's review of r1 on PR #29 (HV pair `docs/reviews/hv-pairs/20261009T034331Z-pr29-codex-hv.json`, DISAGREE 96/92, ineligible model).
 - **Revised:** r3, 2026-10-08 22:59 CT (20261009T035928Z). Answers Codex review 5465551807 (UC-RIDE-021 left out; no grantor-only issuance or revocation tests). r3 lists every use case in `docs/Project/Use-Cases-Batch.yaml` that still names Admin, Auditor or Counsel, not only the five r1 named.
+- **Revised:** r4, 2026-10-08 23:08 CT (20261009T040851Z). Answers Codex review 5465599386: desktop viewer flows now need an online grant check (TR-RIDE-SEC-004 AC 5, TEST-RIDE-058 item 6), and refused grant management is logged and tested.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -44,7 +45,7 @@ FR-RIDE-079:
 3. Analysis and export results contain only rows whose import id is granted (coverage dictionary, online-hours, trips, scores, locations) and only granted submissions. A wide time window never pulls in an ungranted import.
 4. The driver can revoke a grant at any time. Revoked or expired grants fail closed.
 5. A grant never authorizes decryption, a working copy, escrow release, or any record of another driver.
-6. Each successful grant use is recorded once with grant id, grantee principal, case id, operation, and the import and submission ids returned. Each refused grantee call is recorded with grant id (if any), caller, operation and refusal reason.
+6. Each successful grant use is recorded once with grant id, grantee principal, case id, operation, and the import and submission ids returned. Each refused grantee call, and each refused grant issuance or revocation, is recorded with grant id (if any), caller, operation and refusal reason.
 7. The driver's own access needs no grant. A driver principal acting on their own data keeps today's own-submissions authorization.
 
 TR-RIDE-SEC-004:
@@ -53,6 +54,7 @@ TR-RIDE-SEC-004:
 2. Grants are stored with the grantor's driver id. Issuance and revocation accept only that driver's principal. Issuance rejects any import or submission id the grantor does not own. A refused issuance or revocation changes no grant state.
 3. Scope is checked server-side on every call, before any data is read: grantee principal, case id, operation, expiry, revocation, and the import and submission lists. Each sink (coverage dictionary, online-hours, trip index, scores, location rows, access-export ZIP, verification report) filters to the granted ids.
 4. Use and refusal records are append-only and include the fields in FR-RIDE-079 AC 6.
+5. Desktop viewer (UC-RIDE-018, 019 and 026). The viewer identifies the caller by an authenticated principal (driver or grantee), not by a free-text reviewer role as `CourtViewer` takes today. On the Grantee path it shows a record of a bundle only after an online check with the server confirms that the grant is valid (not expired, not revoked), names this grantee and case, allows `verify`, and lists that record's submission. Records the grant does not list are withheld, even when they are in the same bundle. If the server cannot be reached, the Grantee path fails closed. Each viewer check writes the use or refusal record in AC 4. Limit: the grant controls what RideAudit software shows. It cannot stop someone who already holds a copied bundle from recomputing ciphertext hashes with other tools. Plaintext stays behind the escrow release in every case.
 
 TEST-RIDE-058:
 
@@ -68,12 +70,17 @@ TEST-RIDE-058:
    - revoked grant;
    - no grant.
 4. The driver path: the driver verifies, analyzes and exports their own data with no grant.
-5. Grant management, each refused with `TENANT_ISOLATION` and asserting that the grant store is unchanged (no grant created, the target grant still active):
+5. Grant management, each refused with `TENANT_ISOLATION`, asserting that the grant store is unchanged (no grant created, the target grant still active) and that exactly one refusal record names the caller, operation (`issue` or `revoke`) and reason:
    - a grantee issues a grant over the grantor's ids;
    - another driver issues a grant over the grantor's ids;
    - the grantor issues a grant listing another driver's import or submission id;
    - a grantee revokes the grantor's grant;
    - another driver revokes the grantor's grant.
+6. Desktop viewer, Grantee path, with a bundle that mixes granted submission S1 and ungranted submission S2:
+   - a valid grant shows S1 and withholds S2, and writes one use record;
+   - an expired grant, a revoked grant, and another grantee's principal each show nothing and write one refusal record;
+   - with the server unreachable, the viewer shows nothing and reports the fail-closed reason;
+   - the Driver path shows the driver's own records with no grant.
 
 ### Use-case changes that go with it (for AGREE)
 
