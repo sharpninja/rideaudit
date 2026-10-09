@@ -86,7 +86,7 @@ stop_systemd_unit() {
     # A failed query does not prove the user manager is gone. Still ask it to stop and disable the
     # unit, so it does not restart (Restart=on-failure) the agent the sweep below kills.
     systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
-    systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+    ensure_disabled || true
     return
   fi
   stop_rc=0
@@ -94,6 +94,9 @@ stop_systemd_unit() {
   # 5 = unit not loaded (unit file written but never loaded), so there is nothing to stop.
   if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
     SYSTEMD_FAIL="ngrok_systemd_stop_failed rc=${stop_rc}"
+    # The stop already fails closed, but it is still an explicit stop: keep the unit from
+    # starting at the next login.
+    ensure_disabled || true
     return
   fi
   ensure_disabled || return 0
