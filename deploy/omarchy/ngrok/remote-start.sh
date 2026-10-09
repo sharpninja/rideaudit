@@ -95,12 +95,23 @@ start_systemd() {
 }
 
 is_our_ngrok() {
+  # True only for the agent this script starts: an ngrok http tunnel using this
+  # script's --config and --log paths. Any other process (including another
+  # ngrok tunnel under the same account) is never signaled.
   local pid="$1" cmd=""
   if [ -r "/proc/$pid/cmdline" ]; then
     cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
   fi
   case "$cmd" in
-    *ngrok\ http\ *) return 0 ;;
+    *ngrok\ http\ *) ;;
+    *) return 1 ;;
+  esac
+  case "$cmd" in
+    *" --config $CONFIG "*) ;;
+    *) return 1 ;;
+  esac
+  case "$cmd" in
+    *" --log $LOG_FILE "*) return 0 ;;
   esac
   return 1
 }

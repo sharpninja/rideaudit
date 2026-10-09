@@ -31,7 +31,7 @@ records:
       if those names resolve together, and do not treat the loopback cutover as
       Octopus CD complete. Not a live Play FR.
       Update 2026-09-29: recorded path on file is container octopus-rideaudit on
-      LAB-OMARCHY (docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md).
+      PAYTON-DESKTOP (docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md).
       That receipt does not mark these ACs satisfied and does not authorize GHCR.
       approval: Payton AGREE 2026-09-29 for that note.
     acceptanceCriteria:

@@ -93,11 +93,14 @@ public sealed class WindowsBleDiscoveryBus : IDiscoveryBus, IDisposable
         }
         catch (ArgumentException)
         {
-            // Unpackaged test hosts may reject a custom service UUID. Scan still uses a real watcher.
+            // Unpackaged test hosts may reject a custom service UUID. The watcher then runs unfiltered,
+            // so every advertisement is checked for the RideAudit service UUID below (fail closed).
         }
 
         watcher.Received += (_, args) =>
         {
+            if (!ApiBoundary.AdvertisesRideAuditService(args.Advertisement.ServiceUuids))
+                return;
             var name = args.Advertisement.LocalName;
             if (string.IsNullOrWhiteSpace(name))
                 return;

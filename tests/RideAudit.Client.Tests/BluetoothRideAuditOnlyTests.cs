@@ -59,5 +59,17 @@ public class BluetoothRideAuditOnlyTests
 
         Assert.Contains("ApiBoundary.RideAuditBluetoothService", File.ReadAllText(sources.Single(path => path.EndsWith("AndroidDiscoveryBus.cs", StringComparison.Ordinal))), StringComparison.Ordinal);
         Assert.Contains("ApiBoundary.RideAuditBluetoothService", File.ReadAllText(sources.Single(path => path.EndsWith("WindowsBleDiscoveryBus.cs", StringComparison.Ordinal))), StringComparison.Ordinal);
+
+        // The Windows watcher can fall back to an unfiltered scan on unpackaged hosts, so each
+        // advertisement must carry the RideAudit service UUID before it is surfaced.
+        Assert.True(ApiBoundary.AdvertisesRideAuditService(new[] { Guid.NewGuid(), ApiBoundary.RideAuditBluetoothService }));
+        Assert.False(ApiBoundary.AdvertisesRideAuditService(new[] { Guid.NewGuid() }));
+        Assert.False(ApiBoundary.AdvertisesRideAuditService(Array.Empty<Guid>()));
+        Assert.False(ApiBoundary.AdvertisesRideAuditService(null));
+        var windows = File.ReadAllText(sources.Single(path => path.EndsWith("WindowsBleDiscoveryBus.cs", StringComparison.Ordinal)));
+        var received = windows.IndexOf("watcher.Received +=", StringComparison.Ordinal);
+        Assert.True(received >= 0, "Windows scan handler not found");
+        var handler = windows.Substring(received, Math.Min(400, windows.Length - received));
+        Assert.Contains("if (!ApiBoundary.AdvertisesRideAuditService(args.Advertisement.ServiceUuids))", handler, StringComparison.Ordinal);
     }
 }

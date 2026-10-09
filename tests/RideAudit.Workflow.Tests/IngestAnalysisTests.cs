@@ -433,11 +433,41 @@ public class TestRide010012029031032
     [Fact]
     [Trait("TEST", "TEST-RIDE-010")]
     [Trait("FR", "FR-RIDE-010")]
-    [Trait("NOTE", "AC-RIDE-010-002-removed-with-legal-hold")]
-    [Trait("AC", "AC-UC-008-001")]
-    [Trait("AC", "AC-UC-008-002")]
+    [Trait("AC", "AC-RIDE-010-001")]
     [Trait("AC", "AC-TEST-010-001")]
     [Trait("AC", "AC-TEST-010-002")]
+    public void Dsar_access_export_returns_the_subjects_own_data_and_refuses_other_callers()
+    {
+        var world = ServerWorld.Create();
+        var enrolled = world.Enroll();
+        var ready = world.SealReady(enrolled.Driver, enrolled.Session);
+        var outcome = world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce);
+        var imported = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(enrolled.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, true), "driver-upload");
+
+        var export = world.App.Privacy.Export(enrolled.Driver.DriverId, enrolled.Driver.DriverId);
+        Assert.Equal("exported", export.Status);
+        using (var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read))
+        {
+            var manifest = new StreamReader(zip.GetEntry("manifest.json")!.Open()).ReadToEnd();
+            Assert.Contains(enrolled.Driver.DriverId, manifest, StringComparison.Ordinal);
+            Assert.Contains(imported.ContentHashHex, manifest, StringComparison.Ordinal);
+            Assert.Contains(outcome.SubmissionId, manifest, StringComparison.Ordinal);
+            Assert.Contains("sealedPlaintextIncluded\":false", manifest.Replace(" ", ""), StringComparison.Ordinal);
+        }
+
+        var other = world.Register();
+        var refused = Assert.Throws<RideAuditException>(() => world.App.Privacy.Export(other.DriverId, enrolled.Driver.DriverId));
+        Assert.Equal(ErrorCodes.TenantIsolation, refused.Code);
+        var empty = world.App.Privacy.Export(other.DriverId, other.DriverId);
+        Assert.Equal("no-personal-imports", empty.Status);
+    }
+
+    [Fact]
+    [Trait("FR", "FR-RIDE-010")]
+    [Trait("NOTE", "AC-RIDE-010-002-removed-with-legal-hold")]
+    [Trait("NOTE", "TEST-RIDE-010-is-access-export-only")]
+    [Trait("AC", "AC-UC-008-001")]
+    [Trait("AC", "AC-UC-008-002")]
     public void Dsar_deletes_personal_imports_and_retains_custody_ciphertext()
     {
         var world = ServerWorld.Create();

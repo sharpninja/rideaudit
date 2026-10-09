@@ -27,7 +27,7 @@
 
 ### 1.1 Problem / V²
 
-Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-of-N, counsel multi-driver APIs, ingest pipelines, privacy/retention — all on **gRPC .NET 10 containers**. Clients are out of scope here (see Android plan).
+Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-of-N, counsel per-record verification APIs, ingest pipelines, privacy/retention — all on **gRPC .NET 10 containers**. Clients are out of scope here (see Android plan).
 
 ### 1.2 Goals
 
@@ -84,7 +84,7 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | FR-RIDE-034 | high | Configuration profile gate | TR-RIDE-SERVER-002 | TEST-RIDE-021 | UC-RIDE-014 | AC-RIDE-034-001, AC-RIDE-034-002 | P2 |
 | FR-RIDE-035 | critical | Sealed-only submission API | TR-RIDE-SERVER-003 | TEST-RIDE-022 | UC-RIDE-015 | AC-RIDE-035-001, AC-RIDE-035-002 | P2 |
 | FR-RIDE-036 | critical | Admission verification chain | TR-RIDE-SERVER-004 | TEST-RIDE-022 | UC-RIDE-015 | AC-RIDE-036-001, AC-RIDE-036-002 | P2 |
-| FR-RIDE-037 | critical | Multi-driver per-record provenance | ~~TR-RIDE-SERVER-007~~ | TEST-RIDE-023 | UC-RIDE-015, ~~UC-RIDE-016~~ | AC-RIDE-037-001, AC-RIDE-037-002 | P8 |
+| FR-RIDE-037 | critical | Per-record provenance | ~~TR-RIDE-SERVER-007~~ | TEST-RIDE-023 | UC-RIDE-015, ~~UC-RIDE-016~~ | AC-RIDE-037-001, AC-RIDE-037-002 | P8 |
 | ~~FR-RIDE-038~~ | high | Counsel multi-driver bundle | ~~TR-RIDE-SERVER-007~~ | TEST-RIDE-023 | UC-RIDE-007, ~~UC-RIDE-016~~ | ~~AC-RIDE-038-001~~, ~~AC-RIDE-038-002~~ | P8 |
 | FR-RIDE-039 | critical | Public-server abuse controls | TR-RIDE-SERVER-004, TR-RIDE-SERVER-005 | TEST-RIDE-024 | UC-RIDE-015 | AC-RIDE-039-001, AC-RIDE-039-002, AC-RIDE-039-003 | P2 |
 | FR-RIDE-040 | critical | Multi-tenant isolation | TR-RIDE-SERVER-006 | TEST-RIDE-024 | UC-RIDE-015 | AC-RIDE-040-001, AC-RIDE-040-002 | P2 |
@@ -230,7 +230,7 @@ Public sealed-only admission, custody receipts (Bitcoin OTS primary), escrow M-o
 | --- | --- | --- |
 | Admission | Sealed-only submit; verify; no decrypt | FR-RIDE-035, 036, 059, 061 |
 | Identity / vehicle | Driver account, vehicle, profiles | FR-RIDE-032–034 |
-| Counsel | Multi-driver bundle, disclosure | FR-RIDE-037 (~~FR-RIDE-038~~ retired 2026-10-07) |
+| Counsel | Per-record verification, disclosure | FR-RIDE-037 (~~FR-RIDE-038~~ retired 2026-10-07) |
 | Chain writer | OTS primary; optional L2 | FR-RIDE-018, 212 |
 
 Custody contracts: parent §4.5 (immutable receipt-core, OTS semantics, fail-closed states) remain binding before S1 implementation — see portfolio index §4.5.

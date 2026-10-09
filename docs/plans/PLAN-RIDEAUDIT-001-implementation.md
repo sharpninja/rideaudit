@@ -185,7 +185,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | FR-RIDE-034 | high | Configuration profile gate | TR-RIDE-SERVER-002 | TEST-RIDE-021 | UC-RIDE-014 | AC-RIDE-034-001, AC-RIDE-034-002 | P2 |
 | FR-RIDE-035 | critical | Sealed-only submission API | TR-RIDE-SERVER-003 | TEST-RIDE-022 | UC-RIDE-015 | AC-RIDE-035-001, AC-RIDE-035-002 | P2 |
 | FR-RIDE-036 | critical | Admission verification chain | TR-RIDE-SERVER-004 | TEST-RIDE-022 | UC-RIDE-015 | AC-RIDE-036-001, AC-RIDE-036-002 | P2 |
-| FR-RIDE-037 | critical | Multi-driver per-record provenance | ~~TR-RIDE-SERVER-007~~ | TEST-RIDE-023 | UC-RIDE-015, ~~UC-RIDE-016~~ | AC-RIDE-037-001, AC-RIDE-037-002 | P8 |
+| FR-RIDE-037 | critical | Per-record provenance | ~~TR-RIDE-SERVER-007~~ | TEST-RIDE-023 | UC-RIDE-015, ~~UC-RIDE-016~~ | AC-RIDE-037-001, AC-RIDE-037-002 | P8 |
 | ~~FR-RIDE-038~~ | high | Counsel multi-driver bundle | ~~TR-RIDE-SERVER-007~~ | TEST-RIDE-023 | UC-RIDE-007, ~~UC-RIDE-016~~ | ~~AC-RIDE-038-001~~, ~~AC-RIDE-038-002~~ | P8 |
 | FR-RIDE-039 | critical | Public-server abuse controls | TR-RIDE-SERVER-004, TR-RIDE-SERVER-005 | TEST-RIDE-024 | UC-RIDE-015 | AC-RIDE-039-001, AC-RIDE-039-002, AC-RIDE-039-003 | P2 |
 | FR-RIDE-040 | critical | Multi-tenant isolation | TR-RIDE-SERVER-006 | TEST-RIDE-024 | UC-RIDE-015 | AC-RIDE-040-001, AC-RIDE-040-002 | P2 |
@@ -334,7 +334,7 @@ Section 2.3 lists **FR-owned ACs only** and must not be described as the complet
 | TEST-RIDE-020 | GPL-2.0 licensing and distribution | AC-TEST-020-001, AC-TEST-020-002 | FR-RIDE-029, FR-RIDE-030, FR-RIDE-031, FR-RIDE-217 |
 | TEST-RIDE-021 | Driver account vehicle config | AC-TEST-021-001, AC-TEST-021-002 | FR-RIDE-032, FR-RIDE-033, FR-RIDE-034 |
 | TEST-RIDE-022 | Sealed-only submit and admission verify | AC-TEST-022-001, AC-TEST-022-002 | FR-RIDE-035, FR-RIDE-036 |
-| TEST-RIDE-023 | Multi-driver provenance and counsel bundle | AC-TEST-023-001, AC-TEST-023-002 | FR-RIDE-037, ~~FR-RIDE-038~~ |
+| TEST-RIDE-023 | Per-record provenance | AC-TEST-023-001, AC-TEST-023-002 | FR-RIDE-037, ~~FR-RIDE-038~~ |
 | TEST-RIDE-024 | Abuse controls and tenant isolation | AC-TEST-024-001, AC-TEST-024-002 | FR-RIDE-039, FR-RIDE-040, FR-RIDE-218 |
 | TEST-RIDE-025 | Dual-phone sync and composite | AC-TEST-025-001, AC-TEST-025-002 | FR-RIDE-041, FR-RIDE-042, FR-RIDE-043, FR-RIDE-044 |
 | TEST-RIDE-026 | Composite seal optional raw and metadata | AC-TEST-026-001, AC-TEST-026-002 | FR-RIDE-045, FR-RIDE-046, FR-RIDE-048 |
@@ -1273,9 +1273,9 @@ Phase numbering does not authorize bypassing a dependency.
 
 **BDPv4 notes:** BDPv4
 
-### P8 — Counsel multi-driver bundle + analysis working copy
+### P8 — Per-record counsel verification + analysis working copy
 
-**Goal:** Multi-driver provenance, counsel bundle, authorized working-copy analytics; counsel container evidence for FR-059/TEST-036
+**Goal:** Per-record provenance (each submission verified on its own record; the counsel multi-driver bundle, FR-RIDE-038, is retired), authorized working-copy analytics; counsel container evidence for FR-059/TEST-036
 
 | Field | Value |
 | --- | --- |
@@ -1404,7 +1404,7 @@ Phase numbering does not authorize bypassing a dependency.
 | --- | --- | --- |
 | Admission | Sealed-only submit; verify; no decrypt | FR-RIDE-035, 036, 059, 061 |
 | Identity / vehicle | Driver account, vehicle registry, profiles | FR-RIDE-032–034 |
-| Counsel | Multi-driver bundle, disclosure | FR-RIDE-037 (~~FR-RIDE-038~~ retired 2026-10-07); container evidence in P8 for FR-059/TEST-036 |
+| Counsel | Per-record verification, disclosure | FR-RIDE-037 (~~FR-RIDE-038~~ retired 2026-10-07); container evidence in P8 for FR-059/TEST-036 |
 | Chain writer | OTS primary; optional L2 | FR-RIDE-018, 212 |
 
 Proto authority: `RideAudit.Protos` GPL-2.0 (FR-RIDE-060). OpenAPI companion non-authoritative (FR-RIDE-062).

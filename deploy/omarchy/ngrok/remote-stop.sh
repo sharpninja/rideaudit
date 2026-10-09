@@ -5,6 +5,8 @@ set -euo pipefail
 
 STATE_DIR="$HOME/.local/state/rideaudit-ngrok"
 PID_FILE="$STATE_DIR/ngrok.pid"
+CONFIG="${RIDEAUDIT_NGROK_CONFIG:-$HOME/.config/ngrok/ngrok.yml}"
+LOG_FILE="$STATE_DIR/ngrok.log"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
 if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
@@ -13,12 +15,23 @@ if command -v systemctl >/dev/null 2>&1 && [ -d "$XDG_RUNTIME_DIR" ]; then
 fi
 
 is_our_ngrok() {
+  # True only for the agent this script starts: an ngrok http tunnel using this
+  # script's --config and --log paths. Any other process (including another
+  # ngrok tunnel under the same account) is never signaled.
   local pid="$1" cmd=""
   if [ -r "/proc/$pid/cmdline" ]; then
     cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
   fi
   case "$cmd" in
-    *ngrok\ http\ *) return 0 ;;
+    *ngrok\ http\ *) ;;
+    *) return 1 ;;
+  esac
+  case "$cmd" in
+    *" --config $CONFIG "*) ;;
+    *) return 1 ;;
+  esac
+  case "$cmd" in
+    *" --log $LOG_FILE "*) return 0 ;;
   esac
   return 1
 }
