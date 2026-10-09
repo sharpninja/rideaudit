@@ -37,6 +37,10 @@ stop_systemd_unit() {
   # Our unit is installed: every systemd step must succeed, or we cannot prove the tunnel stopped.
   if ! unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null)"; then
     SYSTEMD_FAIL="ngrok_systemd_query_failed"
+    # A failed query does not prove the user manager is gone. Still ask it to stop and disable the
+    # unit, so it does not restart (Restart=on-failure) the agent the sweep below kills.
+    systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || true
+    systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
     return
   fi
   stop_rc=0
@@ -161,6 +165,20 @@ sleep 1
 for pid in $(our_agents); do
   kill -9 "$pid" 2>/dev/null || true
 done
+
+if [ -n "$SYSTEMD_FAIL" ]; then
+  # systemd could not be proven to have stopped the unit, so it may still restart the agent the
+  # sweep killed. Wait out the unit's RestartSec (plus margin), then kill and report any restart.
+  restart_sec="$(sed -n 's/^RestartSec=\([0-9][0-9]*\)$/\1/p' "$UNIT_FILE" 2>/dev/null | head -n 1)"
+  sleep $(( ${restart_sec:-3} + 2 ))
+  restarted="$(our_agents | tr '\n' ' ')"
+  if [ -n "${restarted// /}" ]; then
+    for pid in $restarted; do
+      kill -9 "$pid" 2>/dev/null || true
+    done
+    SYSTEMD_FAIL="$SYSTEMD_FAIL ngrok_restarted_by_supervisor pids=${restarted}"
+  fi
+fi
 
 remaining="$(our_agents | tr '\n' ' ')"
 if [ -n "${old:-}" ] && kill -0 "$old" 2>/dev/null && { is_our_ngrok "$old" || is_recorded_agent "$old"; }; then
