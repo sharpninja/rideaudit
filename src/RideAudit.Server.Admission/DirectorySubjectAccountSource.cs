@@ -19,6 +19,7 @@ public sealed class DirectorySubjectAccountSource : ISubjectAccountSource
         {
             ["account/account.json"] = export.Account,
             ["account/vehicles.json"] = export.Vehicles,
+            ["account/vehicle-versions.json"] = export.RetainedVehicleVersions,
             ["account/profiles.json"] = export.Profiles,
             ["account/sessions.json"] = export.Sessions,
         };

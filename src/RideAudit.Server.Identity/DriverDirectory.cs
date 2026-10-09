@@ -45,6 +45,7 @@ public sealed record SubjectAccount(
 public sealed record SubjectAccountExport(
     SubjectAccount Account,
     IReadOnlyList<VehicleRecord> Vehicles,
+    IReadOnlyList<VehicleRecord> RetainedVehicleVersions,
     IReadOnlyList<ConfigurationProfileRecord> Profiles,
     IReadOnlyList<AuditSessionRecord> Sessions);
 
@@ -261,7 +262,7 @@ public sealed class DriverDirectory
     }
 
     /// <summary>
-    /// FR-RIDE-010 access export: the subject's own account, vehicles, profiles and sessions.
+    /// FR-RIDE-010 access export: the subject's own account, vehicles (current and every version the application database retains), profiles and sessions.
     /// Token and recovery hashes are credentials, not personal data about the subject, and are never exported.
     /// </summary>
     public SubjectAccountExport? ExportSubject(string driverId)
@@ -272,9 +273,12 @@ public sealed class DriverDirectory
         var vehicleIds = vehicles.Select(row => row.VehicleId).ToHashSet(StringComparer.Ordinal);
         var profiles = _profiles.Values.Where(row => vehicleIds.Contains(row.VehicleId)).OrderBy(row => row.ProfileId, StringComparer.Ordinal).ToList();
         var sessions = _sessions.Values.Where(row => row.DriverId == driverId).OrderBy(row => row.SessionId, StringComparer.Ordinal).ToList();
+        // UpdateVehicle replaces only the current entry; the application database still holds the version first registered.
+        var retained = _database.Vehicles.Where(row => row.DriverId == driverId).ToList();
         return new SubjectAccountExport(
             new SubjectAccount(account.DriverId, account.TenantId, account.Email, account.DisplayName, account.Jurisdiction, account.Purpose, account.ConsentStatement, account.CreatedUnixMillis),
             vehicles,
+            retained,
             profiles,
             sessions);
     }

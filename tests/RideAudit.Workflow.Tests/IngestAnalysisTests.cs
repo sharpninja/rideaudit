@@ -478,6 +478,10 @@ public class TestRide010012029031032
         var neighborImport = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(neighbor.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, false), "driver-upload");
         Assert.NotEqual(imported.ContentHashHex, neighborImport.ContentHashHex);
 
+        // A vehicle update leaves the first-registered version in the application database; the export must carry both.
+        var originalLabel = enrolled.Vehicle.Label;
+        world.App.Identity.UpdateVehicle(world.Require(enrolled.Driver), enrolled.Vehicle.VehicleId, "Renamed-DSAR-7c41", "", "", 0, "label correction");
+
         var export = world.App.Privacy.Export(enrolled.Driver.DriverId, enrolled.Driver.DriverId);
         Assert.Equal("exported", export.Status);
         using (var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read))
@@ -503,6 +507,8 @@ public class TestRide010012029031032
             // Identity-side records held for the subject: account, vehicles, profiles and sessions.
             Assert.Contains(enrolled.Driver.Email, Entry("account/account.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/vehicles.json"), StringComparison.Ordinal);
+            Assert.Contains("Renamed-DSAR-7c41", Entry("account/vehicles.json"), StringComparison.Ordinal);
+            Assert.Contains("\"Label\":" + System.Text.Json.JsonSerializer.Serialize(originalLabel), Entry("account/vehicle-versions.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/profiles.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Session.SessionId, Entry("account/sessions.json"), StringComparison.Ordinal);
 
