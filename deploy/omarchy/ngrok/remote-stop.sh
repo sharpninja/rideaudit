@@ -93,12 +93,16 @@ stop_systemd_unit() {
 }
 
 # The unit file can be gone while the unit is still loaded and running. Its agent logs to stdout,
-# so is_our_ngrok cannot see it. Identify it by the loaded unit's MainPID instead. If the unit is
-# not loaded, or the query fails, there is nothing to prove and the stop stays best-effort.
+# so is_our_ngrok cannot see it. Identify it by the loaded unit's MainPID instead. If the query
+# and the stop both fail, no agent can be ruled out, so the stop fails closed. That includes a
+# nohup-only host whose user bus is down; its nohup agents are still killed by the sweep.
 LOADED_UNIT_PID=""
 stop_loaded_unit_without_file() {
-  local unit_pid unit_cmd stop_rc
-  unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null || true)"
+  local unit_pid unit_cmd stop_rc query_ok=1
+  if ! unit_pid="$(systemctl --user show -p MainPID --value rideaudit-ngrok.service 2>/dev/null)"; then
+    query_ok=0
+    unit_pid=""
+  fi
   if [ -n "$unit_pid" ] && [ "$unit_pid" != "0" ] && kill -0 "$unit_pid" 2>/dev/null; then
     unit_cmd="$(tr '\0' ' ' < "/proc/$unit_pid/cmdline" 2>/dev/null || true)"
     case "$unit_cmd" in
@@ -108,6 +112,10 @@ stop_loaded_unit_without_file() {
   stop_rc=0
   systemctl --user stop rideaudit-ngrok.service >/dev/null 2>&1 || stop_rc=$?
   systemctl --user disable rideaudit-ngrok.service >/dev/null 2>&1 || true
+  if [ "$query_ok" -eq 0 ] && [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
+    SYSTEMD_FAIL="ngrok_systemd_unverified query_failed stop_rc=${stop_rc}"
+    return 0
+  fi
   [ -n "$LOADED_UNIT_PID" ] || return 0
   if [ "$stop_rc" -ne 0 ] && [ "$stop_rc" -ne 5 ]; then
     SYSTEMD_FAIL="ngrok_systemd_stop_failed rc=${stop_rc}"
