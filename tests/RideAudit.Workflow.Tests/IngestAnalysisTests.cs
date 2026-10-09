@@ -444,6 +444,13 @@ public class TestRide010012029031032
         var outcome = world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce);
         var imported = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(enrolled.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, true), "driver-upload");
 
+        // Another subject's import and submission exist before the export, so a missing driver filter would leak them.
+        var neighbor = world.Enroll();
+        var neighborReady = world.SealReady(neighbor.Driver, neighbor.Session);
+        var neighborOutcome = world.Submit(neighbor.Driver, neighborReady.Package, neighborReady.Token, neighborReady.Nonce);
+        var neighborImport = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(neighbor.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, false), "driver-upload");
+        Assert.NotEqual(imported.ContentHashHex, neighborImport.ContentHashHex);
+
         var export = world.App.Privacy.Export(enrolled.Driver.DriverId, enrolled.Driver.DriverId);
         Assert.Equal("exported", export.Status);
         using (var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read))
@@ -453,11 +460,20 @@ public class TestRide010012029031032
             Assert.Contains(imported.ContentHashHex, manifest, StringComparison.Ordinal);
             Assert.Contains(outcome.SubmissionId, manifest, StringComparison.Ordinal);
             Assert.Contains("sealedPlaintextIncluded\":false", manifest.Replace(" ", ""), StringComparison.Ordinal);
+            foreach (var entry in zip.Entries)
+            {
+                using var reader = new StreamReader(entry.Open());
+                var text = reader.ReadToEnd();
+                Assert.DoesNotContain(neighbor.Driver.DriverId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighborImport.ImportId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighborImport.ContentHashHex, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighborOutcome.SubmissionId, text, StringComparison.Ordinal);
+            }
         }
 
-        var other = world.Register();
-        var refused = Assert.Throws<RideAuditException>(() => world.App.Privacy.Export(other.DriverId, enrolled.Driver.DriverId));
+        var refused = Assert.Throws<RideAuditException>(() => world.App.Privacy.Export(neighbor.Driver.DriverId, enrolled.Driver.DriverId));
         Assert.Equal(ErrorCodes.TenantIsolation, refused.Code);
+        var other = world.Register();
         var empty = world.App.Privacy.Export(other.DriverId, other.DriverId);
         Assert.Equal("no-personal-imports", empty.Status);
     }

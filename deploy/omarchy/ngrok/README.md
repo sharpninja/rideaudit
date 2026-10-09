@@ -58,7 +58,7 @@ pwsh -NoProfile -File deploy/omarchy/ngrok/Stop-Ngrok.ps1
 pwsh -NoProfile -File deploy/omarchy/ngrok/Start-Ngrok.ps1
 ```
 
-Stop first so the prior interim agent (`ngrok http 127.0.0.1:18080`) is killed before the canonical agent starts. `remote-stop.sh` stops both the `:28080` agent and the prior `:18080` agent.
+Stop first so the prior interim agent (`ngrok http 127.0.0.1:18080`) is killed before the canonical agent starts. `remote-stop.sh` stops both the `:28080` agent and the prior `:18080` agent, but only processes started with this tree's `--config` and `--log` paths. Other ngrok tunnels under the same account are left running.
 
 On the tunnel host, if the systemd user unit is active:
 

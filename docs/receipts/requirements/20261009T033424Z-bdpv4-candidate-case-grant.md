@@ -2,6 +2,7 @@
 
 - **Written:** 2026-10-08 22:34 CT (America/Chicago), 20261009T033424Z.
 - **Revised:** r2, 2026-10-08 22:50 CT (20261009T035027Z). Answers Codex's review of r1 on PR #29 (HV pair `docs/reviews/hv-pairs/20261009T034331Z-pr29-codex-hv.json`, DISAGREE 96/92, ineligible model).
+- **Revised:** r3, 2026-10-08 22:59 CT (20261009T035928Z). Answers Codex review 5465551807 (UC-RIDE-021 left out; no grantor-only issuance or revocation tests). r3 lists every use case in `docs/Project/Use-Cases-Batch.yaml` that still names Admin, Auditor or Counsel, not only the five r1 named.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -49,7 +50,7 @@ FR-RIDE-079:
 TR-RIDE-SEC-004:
 
 1. Grantees authenticate as their own principal kind (grantee account). Grants reference that principal. A grant secret alone never authorizes a call.
-2. Grants are stored with the grantor's driver id. Issuance and revocation accept only that driver's principal.
+2. Grants are stored with the grantor's driver id. Issuance and revocation accept only that driver's principal. Issuance rejects any import or submission id the grantor does not own. A refused issuance or revocation changes no grant state.
 3. Scope is checked server-side on every call, before any data is read: grantee principal, case id, operation, expiry, revocation, and the import and submission lists. Each sink (coverage dictionary, online-hours, trip index, scores, location rows, access-export ZIP, verification report) filters to the granted ids.
 4. Use and refusal records are append-only and include the fields in FR-RIDE-079 AC 6.
 
@@ -67,6 +68,12 @@ TEST-RIDE-058:
    - revoked grant;
    - no grant.
 4. The driver path: the driver verifies, analyzes and exports their own data with no grant.
+5. Grant management, each refused with `TENANT_ISOLATION` and asserting that the grant store is unchanged (no grant created, the target grant still active):
+   - a grantee issues a grant over the grantor's ids;
+   - another driver issues a grant over the grantor's ids;
+   - the grantor issues a grant listing another driver's import or submission id;
+   - a grantee revokes the grantor's grant;
+   - another driver revokes the grantor's grant.
 
 ### Use-case changes that go with it (for AGREE)
 
@@ -79,6 +86,25 @@ Actors: **Driver** and **Grantee** (an authenticated counsel or auditor holding 
 | UC-RIDE-007 | Driver, Grantee | Grant allows `incident-window` and, for step 3, `package-export`. | 1. Driver, or Grantee under a case grant, selects the interval for the driver's own data. 2. System assembles available sealed-record references and metadata, limited to granted imports and submissions for a Grantee. 3. System exports the portable package (CSV, PDF summary, provenance JSON; FR-RIDE-207) with provenance and verification stubs. |
 | UC-RIDE-010 | Driver, Grantee; steps 4-5 also Escrow custodians | Steps 1-3: grant allows `verify` for the submission. Steps 4-5: a court legal-process release under UC-RIDE-011, independent of any case grant. | 1. Driver, or Grantee under a case grant, opens the verification report for a sealed record. 2. System recomputes hash and checks on-chain receipt. 3. System verifies Play attestation and key binding. 4. Requesting party follows the documented legal process; escrow custodians release under UC-RIDE-011. 5. System issues an expiring authorized working copy and logs access. |
 | UC-RIDE-011 | Escrow custodians (M-of-N key holders), Requesting party under court process | Court process for the release. A case grant neither grants nor is required for release authority. | Flow text unchanged except step 3: "Escrow custodians provide M-of-N approvals after the legal-process check." |
+
+#### Other use cases that still name Admin, Auditor or Counsel (r3)
+
+r1 and r2 covered only the five use cases above. These also name a role actor today. Applying the candidate without them would leave a role authority in place.
+
+| Use case | Title | Actors today | Proposed actors | Flow change, exact text |
+| --- | --- | --- | --- | --- |
+| UC-RIDE-001 | Ingest privacy-export ZIP | Driver, Auditor | Driver | "Actor" becomes "Driver" in steps 1-2. A grant is read-only, so no grantee ingests on the driver's behalf. |
+| UC-RIDE-002 | Record Smooth Cruiser evidence | Driver, Auditor | Driver | "Actor" becomes "Driver" in steps 1 and 3. Same reason. |
+| UC-RIDE-004 | Import third-party telematics | Driver, Auditor | Driver | Step 1: "Driver uploads third-party export." Same reason. |
+| UC-RIDE-013 | GPL-2.0 publish and notice | Admin | Maintainer | None (the flow names no actor). The maintainer publishes source and notices and has no access to driver data. |
+| UC-RIDE-018 | Counsel composite playback | Counsel | Driver, Grantee; step 3 also Escrow custodians | 1. Driver, or Grantee under a case grant that allows `verify`, opens the composite record. 2. (unchanged) 3. On success, and only after a court legal-process release under UC-RIDE-011, system decrypts an expiring working copy for playback. 4. (unchanged) |
+| UC-RIDE-019 | Desktop court viewer review | Counsel, Auditor | Driver, Grantee; step 3 also Escrow custodians | 1. Driver, or Grantee under a case grant that allows `verify`, opens the RideBundle in the desktop viewer on Win/Linux/macOS. Steps 2-5 unchanged. Step 3 already decrypts only via escrow release (UC-RIDE-011). |
+| UC-RIDE-021 | Cross-cutting compliance and quality gates | Admin, Auditor, Counsel | Maintainer, Driver, Grantee | 1. Maintainer reviews compliance configuration. 2. Driver, or Grantee under a case grant that allows `package-export`, exports the portable audit ZIP (FR-RIDE-207) when needed, limited to granted imports and submissions for a Grantee. Steps 3-4 unchanged. |
+| UC-RIDE-026 | Review sealed bundle with Avalonia desktop viewer | Counsel, Auditor | Driver, Grantee; step 2 decrypt also Escrow custodians | 1. Driver, or Grantee under a case grant that allows `verify`, launches the Avalonia UI 12 desktop viewer on Win, Linux, or macOS. 2. Viewer verifies, then decrypts only via escrow release under UC-RIDE-011. 3. Driver or Grantee inspects the synchronized timeline. |
+| UC-RIDE-027 | Reuse shared Avalonia UI under GPL-2.0 | Developer, Auditor | Developer | None (the flow names only Developer). |
+| UC-RIDE-031 | Prefer gRPC over interim OpenAPI companion | Developer, Auditor | Developer | None (the flow names only Developer). |
+
+After this, no use case names Admin, Auditor or Counsel. "Maintainer" and "Developer" have no access to driver data.
 
 TR-RIDE-SERVER-006 is unchanged. The grant is the explicit authorization its isolation rule already allows.
 

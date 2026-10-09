@@ -50,7 +50,15 @@ if [ -f "$PID_FILE" ]; then
 fi
 rm -f "$STATE_DIR/ngrok.addr"
 
-pkill -f 'ngrok http 192.168.1.182:28080' >/dev/null 2>&1 || true
-pkill -f 'ngrok http 127.0.0.1:18080' >/dev/null 2>&1 || true
+# Sweep agents this script family started without a PID file (canonical :28080 and the
+# prior interim :18080). Every candidate passes is_our_ngrok before it is signaled, so a
+# tunnel with another config or log path is left running.
+for backend in 192.168.1.182:28080 127.0.0.1:18080; do
+  for pid in $(pgrep -f "ngrok http $backend " 2>/dev/null || true); do
+    if is_our_ngrok "$pid"; then
+      kill "$pid" 2>/dev/null || true
+    fi
+  done
+done
 echo "NGROK_STOPPED=1"
 echo "PUBLIC_URL_ADVERTISED=0"

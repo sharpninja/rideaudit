@@ -71,5 +71,11 @@ public class BluetoothRideAuditOnlyTests
         Assert.True(received >= 0, "Windows scan handler not found");
         var handler = windows.Substring(received, Math.Min(400, windows.Length - received));
         Assert.Contains("if (!ApiBoundary.AdvertisesRideAuditService(args.Advertisement.ServiceUuids))", handler, StringComparison.Ordinal);
+
+        // The Windows publisher must not fall back to a name-only advertise that every scanner drops.
+        var advertise = windows.Substring(windows.IndexOf("public void Advertise(", StringComparison.Ordinal));
+        advertise = advertise.Substring(0, advertise.IndexOf("public IReadOnlyList<Advertisement> Scan(", StringComparison.Ordinal));
+        Assert.Contains("Windows BLE advertise cannot carry the RideAudit service UUID on this host.", advertise, StringComparison.Ordinal);
+        Assert.Contains("catch (Exception ex) when (ex is not RideAuditFailClosedException)", advertise, StringComparison.Ordinal);
     }
 }

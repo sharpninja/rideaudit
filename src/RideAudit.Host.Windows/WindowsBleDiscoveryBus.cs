@@ -65,12 +65,17 @@ public sealed class WindowsBleDiscoveryBus : IDiscoveryBus, IDisposable
             }
             catch (ArgumentException)
             {
-                // Unpackaged test hosts may reject a custom service UUID. Local name is still a real advertise.
+                // Unpackaged hosts may reject a custom service UUID. Scanners accept only advertisements
+                // that carry it, so a name-only advertise would never be discovered: fail closed instead.
+                throw new RideAuditFailClosedException(
+                    ErrorCodes.BluetoothDisabled,
+                    "FR-RIDE-053",
+                    "Windows BLE advertise cannot carry the RideAudit service UUID on this host.");
             }
             publisher.Start();
             _publisher = publisher;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not RideAuditFailClosedException)
         {
             throw new RideAuditFailClosedException(
                 ErrorCodes.BluetoothDisabled,
