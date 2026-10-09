@@ -10,6 +10,7 @@
 - **Revised:** r8, 2026-10-09 10:29 CT (20261009T152952Z). Answers Codex review 5472099862: exact title, brief-description and AC-text replacements; Driver-path viewer use record; grantees refused at every mutation endpoint.
 - **Revised:** r9, 2026-10-09 10:36 CT (20261009T153644Z). Answers Codex review 5472175684: an explicit operation-to-RPC map, with every other read RPC refusing a grantee (TR-RIDE-SEC-004 AC 7, TEST-RIDE-058 item 10); the grafting negative includes the OTS proof.
 - **Revised:** r10, 2026-10-09 10:50 CT (20261009T155020Z). Answers Codex review 5472262525: grant context transport on every mapped RPC (TR-RIDE-SEC-004 AC 8, TEST-RIDE-058 item 11); interval-bound package export; Driver-path grafting and offline negatives.
+- **Revised:** r11, 2026-10-09 11:00 CT (20261009T160019Z). Answers Codex review 5472419763: the interval is a public request field and its test uses the public RPC; grantee packages exclude the driver's identity datasets.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -48,7 +49,7 @@ FR-RIDE-079:
 
 1. A grant names one grantor (the driver), one grantee principal, one case id, an explicit list of the grantor's own **import ids** and **submission ids**, the allowed operations, and an expiry. The allowed operations are drawn from: `verify`, `coverage`, `online-hours`, `incident-window` and `package-export`.
 2. A grantee call succeeds only when all of these hold: the authenticated caller is the named grantee, the case id matches, the operation is allowed, and every row read is in the granted import or submission list. Every other call fails closed with `TENANT_ISOLATION` and returns no data.
-3. Analysis and export results contain only rows whose import id is granted (coverage dictionary, online-hours, trips, scores, locations) and only granted submissions. A wide time window never pulls in an ungranted import. A `package-export` for UC-RIDE-007 carries the selected interval, and rows outside it are excluded.
+3. Analysis and export results contain only rows whose import id is granted (coverage dictionary, online-hours, trips, scores, locations) and only granted submissions. A wide time window never pulls in an ungranted import. A `package-export` for UC-RIDE-007 carries the selected interval, and rows outside it are excluded. A grantee package never contains the identity datasets of the driver's own access export (`account/` entries: account, vehicles, profiles, sessions), because a grant cannot name them.
 4. The driver can revoke a grant at any time. Revoked or expired grants fail closed.
 5. A grant never authorizes decryption, a working copy, escrow release, or any record of another driver.
 6. Each successful grant use is recorded once with grant id, grantee principal, case id, operation, and the import and submission ids returned. Each refused grantee call, and each refused grant issuance or revocation, is recorded with grant id (if any), caller, operation and refusal reason.
@@ -82,12 +83,12 @@ TR-RIDE-SEC-004:
 
    All other read RPCs refuse a grantee with `TENANT_ISOLATION`, return no data, and write a refusal record. These include `Identity.ListVehicles`, `GetConfigurationProfile`, `Admission.GetAdmissionStatus`, `Escrow.GetEscrowStatus` and `Privacy.ViewLocations`.
 
-8. Grant transport. Every grantee call carries an authoritative grant context, `{grant_id, case_id}`, as a request field on each mapped RPC. This is a contract change: a `GrantContext` message is added to each request in the AC 7 map, and the minor contract version is bumped. The server authorizes against that one grant only. It never infers a grant from the caller and never unions several grants. A grantee call without a grant context, or whose grant id is not the caller's, is refused with `TENANT_ISOLATION`. The use or refusal record names the presented grant id.
+8. Grant transport. Every grantee call carries an authoritative grant context, `{grant_id, case_id}`, as a request field on each mapped RPC. `Privacy.RequestAccessExport` also gains an `interval {start_unix_millis, end_unix_millis}` field, which a grantee `package-export` must set. This is a contract change: a `GrantContext` message is added to each request in the AC 7 map, and the minor contract version is bumped. The server authorizes against that one grant only. It never infers a grant from the caller and never unions several grants. A grantee call without a grant context, or whose grant id is not the caller's, is refused with `TENANT_ISOLATION`. The use or refusal record names the presented grant id.
 
 TEST-RIDE-058:
 
 1. Happy paths: a granted `verify`, `coverage`, `online-hours`, `incident-window` and `package-export` each succeed for granted data and write exactly one correctly attributed use record (grant id, grantee, case, operation, returned ids).
-2. Scope binding: with granted import I1 and ungranted import I2 from the same driver, a wide incident window, online-hours and coverage return only I1 rows. `package-export` contains only I1 and granted submissions. An interval-bound `package-export` (UC-RIDE-007 step 3) contains no row outside the selected interval, even from a granted import.
+2. Scope binding: with granted import I1 and ungranted import I2 from the same driver, a wide incident window, online-hours and coverage return only I1 rows. `package-export` contains only I1 and granted submissions. An interval-bound `package-export` (UC-RIDE-007 step 3), requested through the public `Privacy.RequestAccessExport` gRPC call with the interval field, contains no row outside the interval, even from a granted import, and contains no `account/` entry.
 3. Failure cases, each asserting `TENANT_ISOLATION`, no data returned, and a refusal record:
    - ungranted submission;
    - another driver's data;

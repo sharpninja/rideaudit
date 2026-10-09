@@ -143,6 +143,33 @@ public class TestRide001Through006And011And030
     }
 
     [Fact]
+    [Trait("FR", "FR-RIDE-005")]
+    [Trait("FR", "FR-RIDE-010")]
+    public void Non_finite_or_out_of_range_coordinates_are_skipped_and_the_access_export_still_builds()
+    {
+        var world = ServerWorld.Create();
+        var driver = world.Register();
+        var csv = "observed_unix_millis,latitude,longitude,speed_mps\n"
+            + "1700000000000,NaN,-122.4194,1.5\n"
+            + "1700000001000,37.7749,Infinity,1.5\n"
+            + "1700000002000,91,-122.4194,1.5\n"
+            + "1700000003000,37.7749,-181,1.5\n"
+            + "1700000004000,37.7749,-122.4194,1.5\n";
+        world.App.Ingest.IngestThirdParty(Consent(driver.DriverId), Encoding.UTF8.GetBytes(csv), "mileage-export");
+        var kept = Assert.Single(world.App.Imports.Locations);
+        Assert.Equal(1700000004000, kept.ObservedUnixMillis);
+
+        // A non-finite value already in the store must not abort the subject's whole export.
+        world.App.Imports.Locations.Add(kept with { SampleId = "loc-nan", Latitude = double.NaN });
+        var export = world.App.Privacy.Export(driver.DriverId, driver.DriverId);
+        Assert.Equal("exported", export.Status);
+        using var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read);
+        var locations = new StreamReader(zip.GetEntry("data/locations.json")!.Open()).ReadToEnd();
+        Assert.Contains("loc-nan", locations, StringComparison.Ordinal);
+        Assert.Contains("\"NaN\"", locations, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [Trait("TEST", "TEST-RIDE-006")]
     [Trait("FR", "FR-RIDE-006")]
     [Trait("AC", "AC-RIDE-006-001")]

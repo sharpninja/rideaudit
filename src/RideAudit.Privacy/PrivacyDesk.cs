@@ -44,6 +44,9 @@ public sealed class PrivacyDesk
     private readonly ISubmittedRecordSource _records;
     private readonly ISubjectAccountSource? _accounts;
 
+    // Stored rows are exported as held. A non-finite number must not abort the whole export (FR-RIDE-010).
+    private static readonly JsonSerializerOptions DatasetJson = new() { NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals };
+
     public PrivacyDesk(NormalizedStore store, ImportKeyRing keys, AppendOnlyAccessLog access, IClock clock, ISubmittedRecordSource records, ISubjectAccountSource? accounts = null)
     {
         _store = store;
@@ -128,7 +131,7 @@ public sealed class PrivacyDesk
             Write(zip, "provenance.json", json);
             Write(zip, "provenance.csv", ProvenanceCsv(imports));
             foreach (var (name, rows) in datasets)
-                Write(zip, name, JsonSerializer.Serialize(rows));
+                Write(zip, name, JsonSerializer.Serialize(rows, DatasetJson));
             WriteBytes(zip, "summary.pdf", SummaryPdf("RideAudit audit summary. Sealed plaintext is not included. Subject " + driverId + "."));
             Write(zip, "NOTICE.txt", "GPL-2.0-only. This access export lists hashes and provenance and carries the audit-held rows for this subject under data/. It does not contain sealed plaintext. Subject " + driverId + ".");
         }
