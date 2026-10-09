@@ -13,6 +13,7 @@
 - **Revised:** r11, 2026-10-09 11:00 CT (20261009T160019Z). Answers Codex review 5472419763: the interval is a public request field and its test uses the public RPC; grantee packages exclude the driver's identity datasets.
 - **Revised:** r12, 2026-10-09 11:16 CT (20261009T161621Z). Answers Codex review 5472589691: public contracts for grantee accounts, grant management and viewer authorization; escrow binding; duplicate case id; interval only for UC-RIDE-007 packages (TEST-RIDE-058 items 12 and 13).
 - **Revised:** r13, 2026-10-09 11:24 CT (20261009T162405Z). Answers Codex review 5472671546: viewer RPCs are in the operation map (refusal upload is an authenticated exception); DisableGrantee is per-grantor; the viewer uses the server-authoritative case, not the bundle's.
+- **Revised:** r14, 2026-10-09 11:31 CT (20261009T163117Z). Answers Codex review 5472741454: AC 7 exceptions for ListMyGrants, CloseAccount and the court path (with a positive court-authorized grantee test); Identity.CloseAccount defined.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -71,7 +72,7 @@ TR-RIDE-SEC-004:
    - `Admission.OpenSession`, `SubmitSealed` and `UploadSealedChunk`;
    - grant issuance and revocation (AC 2).
 
-   `Escrow.RequestCourtRelease`, `ApproveCourtRelease` and `OpenExpiringWorkingCopy` are authorized only by the court legal-process path, never by a grant (FR-RIDE-079 AC 5).
+   `Escrow.RequestCourtRelease`, `ApproveCourtRelease` and `OpenExpiringWorkingCopy` are authorized only by the court legal-process path, never by a grant (FR-RIDE-079 AC 5; see the exceptions under AC 7).
 
 7. Every RPC refuses a grantee unless it is mapped to an operation the grant allows. The mapping is:
 
@@ -84,7 +85,11 @@ TR-RIDE-SEC-004:
    | `package-export` | `Privacy.RequestAccessExport`, filtered per AC 3 |
    | `verify` | `Grants.ResolveViewerRecords` (Grantee path; the Driver path needs no grant) |
 
-   `Grants.UploadViewerRefusals` is the one authenticated exception: it needs no currently valid grant, because it reports refusals that often arise from expired, revoked or missing grants. It accepts only refusal entries about the caller's own attempts, and it returns no data.
+   A grant authorizes only the mapped calls above. These calls are authorized on their own terms, independent of any grant:
+   - `Grants.UploadViewerRefusals` needs no currently valid grant, because it reports refusals that often arise from expired, revoked or missing grants. It accepts only refusal entries about the caller's own attempts, and it returns no data.
+   - `Grants.ListMyGrants` lists only grants naming the caller (metadata, no data), so a grantee can learn the grant ids it must present in `GrantContext`.
+   - `Identity.CloseAccount` lets an authenticated principal close their own account (see "Public contracts").
+   - `Escrow.RequestCourtRelease`, `ApproveCourtRelease` and `OpenExpiringWorkingCopy` follow the court legal-process path (UC-RIDE-011, with the escrow binding in "Public contracts"). A grantee who is also the authenticated requesting party under court process may use them on that authority, never on a grant's.
 
    All other read RPCs refuse a grantee with `TENANT_ISOLATION`, return no data, and write a refusal record. These include `Identity.ListVehicles`, `GetConfigurationProfile`, `Admission.GetAdmissionStatus`, `Escrow.GetEscrowStatus` and `Privacy.ViewLocations`.
 
@@ -131,7 +136,9 @@ TEST-RIDE-058:
 11. Grant transport, through the public gRPC contracts: the same grantee holds grant A (case CA, import IA) and grant B (case CB, import IB). A call presenting grant A returns only IA rows and logs grant A. A call presenting grant A's id with case CB is refused. A call with no grant context is refused. Each refusal writes one refusal record naming the presented grant id, if any.
 12. Public contracts, through gRPC (see "Public contracts" below):
     - a grantee invited by the driver registers with the invite code, authenticates, and is the grantee used by item 7;
-    - after driver A calls `DisableGrantee` on a grantee who also holds a grant from driver B, A's grants are refused and B's still work (two-grantor isolation); a self-closed grantee account is refused everywhere;
+    - after driver A calls `DisableGrantee` on a grantee who also holds a grant from driver B, A's grants are refused and B's still work (two-grantor isolation); a grantee who calls `Identity.CloseAccount` is then refused everywhere, including with the old token and recovery code;
+    - `Grants.ListMyGrants` returns only the caller's grants, and works with no `GrantContext`;
+    - a grantee who is also the authenticated requesting party under a court process obtains a working copy after M-of-N custodian approval, through the court-path RPCs and with no grant involved;
     - viewer resolution and refusal upload run through `Grants.ResolveViewerRecords` and `Grants.UploadViewerRefusals`, and replaying the same outbox entry records it once;
     - a `VerificationReportRequest` whose `case_id` differs from `GrantContext.case_id` is refused;
     - a UC-RIDE-021 portable export with no interval returns the whole granted scope, and nothing outside it;
@@ -148,7 +155,7 @@ TEST-RIDE-058:
 
 These come with the same minor contract-version bump as `GrantContext` (TR-RIDE-SEC-004 AC 8).
 
-- **Grantee accounts.** The driver invites a grantee with `Grants.InviteGrantee {email, display_name}`. The server returns a one-time invite code, and the driver delivers it out of band; the server sends nothing itself. The grantee redeems it with `Identity.RegisterGrantee {invite_code, email, display_name}` and receives a grantee principal, an access token and a recovery code, under the same credential rules as drivers. `Identity.RecoverAccount` works for grantees. The inviting driver can call `Grants.DisableGrantee {grantee_id}`. This disables only the relationship between that driver and that grantee: it revokes that driver's grants and blocks new ones from that driver, and grants from other drivers are unaffected. Disabling the grantee account itself is reserved for the account owner (self-close) or an authorized operator. A grantee with no live grant can do nothing. *Choice for Payton: driver-invited grantee accounts, as written here, or operator-provisioned ones.*
+- **Grantee accounts.** The driver invites a grantee with `Grants.InviteGrantee {email, display_name}`. The server returns a one-time invite code, and the driver delivers it out of band; the server sends nothing itself. The grantee redeems it with `Identity.RegisterGrantee {invite_code, email, display_name}` and receives a grantee principal, an access token and a recovery code, under the same credential rules as drivers. `Identity.RecoverAccount` works for grantees. The inviting driver can call `Grants.DisableGrantee {grantee_id}`. This disables only the relationship between that driver and that grantee: it revokes that driver's grants and blocks new ones from that driver, and grants from other drivers are unaffected. Disabling the grantee account itself is reserved for the account owner, through `Identity.CloseAccount {}` (authenticated; it revokes the caller's tokens and recovery code, ends every grant naming the caller, and cannot be undone), or for an authorized operator. A grantee with no live grant can do nothing. *Choice for Payton: driver-invited grantee accounts, as written here, or operator-provisioned ones.*
 - **Grant management.** These calls take the driver principal only:
   - `Grants.IssueGrant {grantee_id, case_id, import_ids[], submission_ids[], operations[], expires_unix_millis}` returns `Grant`;
   - `Grants.RevokeGrant {grant_id}` returns `Grant`;
