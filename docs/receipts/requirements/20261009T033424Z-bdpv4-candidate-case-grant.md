@@ -4,6 +4,7 @@
 - **Revised:** r2, 2026-10-08 22:50 CT (20261009T035027Z). Answers Codex's review of r1 on PR #29 (HV pair `docs/reviews/hv-pairs/20261009T034331Z-pr29-codex-hv.json`, DISAGREE 96/92, ineligible model).
 - **Revised:** r3, 2026-10-08 22:59 CT (20261009T035928Z). Answers Codex review 5465551807 (UC-RIDE-021 left out; no grantor-only issuance or revocation tests). r3 lists every use case in `docs/Project/Use-Cases-Batch.yaml` that still names Admin, Auditor or Counsel, not only the five r1 named.
 - **Revised:** r4, 2026-10-08 23:08 CT (20261009T040851Z). Answers Codex review 5465599386: desktop viewer flows now need an online grant check (TR-RIDE-SEC-004 AC 5, TEST-RIDE-058 item 6), and refused grant management is logged and tested.
+- **Revised:** r5, 2026-10-08 23:15 CT (20261009T041513Z). Answers Codex review 5465636315: the server binds viewer records to submissions by content hash, the offline viewer keeps a durable refusal outbox, and the tests add a successful grant lifecycle and a grant-cannot-decrypt negative.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -54,7 +55,7 @@ TR-RIDE-SEC-004:
 2. Grants are stored with the grantor's driver id. Issuance and revocation accept only that driver's principal. Issuance rejects any import or submission id the grantor does not own. A refused issuance or revocation changes no grant state.
 3. Scope is checked server-side on every call, before any data is read: grantee principal, case id, operation, expiry, revocation, and the import and submission lists. Each sink (coverage dictionary, online-hours, trip index, scores, location rows, access-export ZIP, verification report) filters to the granted ids.
 4. Use and refusal records are append-only and include the fields in FR-RIDE-079 AC 6.
-5. Desktop viewer (UC-RIDE-018, 019 and 026). The viewer identifies the caller by an authenticated principal (driver or grantee), not by a free-text reviewer role as `CourtViewer` takes today. On the Grantee path it shows a record of a bundle only after an online check with the server confirms that the grant is valid (not expired, not revoked), names this grantee and case, allows `verify`, and lists that record's submission. Records the grant does not list are withheld, even when they are in the same bundle. If the server cannot be reached, the Grantee path fails closed. Each viewer check writes the use or refusal record in AC 4. Limit: the grant controls what RideAudit software shows. It cannot stop someone who already holds a copied bundle from recomputing ciphertext hashes with other tools. Plaintext stays behind the escrow release in every case.
+5. Desktop viewer (UC-RIDE-018, 019 and 026). The viewer identifies the caller by an authenticated principal (driver or grantee), not by a free-text reviewer role as `CourtViewer` takes today. On the Grantee path it shows a record of a bundle only after an online check with the server confirms that the grant is valid (not expired, not revoked), names this grantee and case, allows `verify`, and lists that record's submission. Records the grant does not list are withheld, even when they are in the same bundle. The server, not the bundle, decides which submission a record is: the viewer sends the content hash it recomputes from the sealed ciphertext plus the record's receipt, and the server resolves the submission id from its custody journal. Any submission id or label carried in the bundle is ignored, and a record whose hash matches no submission of the grantor fails closed. If the server cannot be reached, the Grantee path fails closed. Each viewer check writes the use or refusal record in AC 4. When the server is unreachable, the viewer writes the refusal to a durable, append-only local outbox and uploads it to the server's refusal log on the next successful connection. Limit: the grant controls what RideAudit software shows. It cannot stop someone who already holds a copied bundle from recomputing ciphertext hashes with other tools. Plaintext stays behind the escrow release in every case.
 
 TEST-RIDE-058:
 
@@ -79,8 +80,15 @@ TEST-RIDE-058:
 6. Desktop viewer, Grantee path, with a bundle that mixes granted submission S1 and ungranted submission S2:
    - a valid grant shows S1 and withholds S2, and writes one use record;
    - an expired grant, a revoked grant, and another grantee's principal each show nothing and write one refusal record;
-   - with the server unreachable, the viewer shows nothing and reports the fail-closed reason;
+   - a relabeled record (S2's ciphertext and receipt presented under S1's id or label) is withheld, because the server resolves it to S2, and writes one refusal record;
+   - with the server unreachable, the viewer shows nothing, reports the fail-closed reason, and writes one refusal record to the local outbox; after the server is reachable again, that record appears once in the server's refusal log;
    - the Driver path shows the driver's own records with no grant.
+7. Grant lifecycle through the real management calls (no fixture-seeded grant):
+   - the grantor issues a grant, and the grant store shows it active with the listed ids, operations and expiry;
+   - the grantee's call in scope then succeeds;
+   - the grantor revokes it, and the grant store shows it revoked with the revocation time;
+   - the same grantee call then fails with `TENANT_ISOLATION` and writes one refusal record.
+8. Decryption boundary: a valid grant that allows every operation, with no court legal-process authorization. Attempts at escrow release and at creating a working copy each fail closed. No key material, plaintext or working copy is returned, escrow release state is unchanged, and each attempt writes one refusal record.
 
 ### Use-case changes that go with it (for AGREE)
 
