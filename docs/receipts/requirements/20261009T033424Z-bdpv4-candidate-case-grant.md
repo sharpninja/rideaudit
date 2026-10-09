@@ -8,6 +8,7 @@
 - **Revised:** r6, 2026-10-08 23:21 CT (20261009T042124Z). Answers Codex review 5465667258: every field the viewer displays must be bound to the resolved submission (sidecar grafting), and the mixed-bundle test asserts the refusal for the withheld record.
 - **Revised:** r7, 2026-10-09 10:22 CT (20261009T152241Z). Answers Codex review 5471995829: the viewer's Driver path also resolves every record server-side and accepts only the driver's own submissions; cross-driver bundle negative added.
 - **Revised:** r8, 2026-10-09 10:29 CT (20261009T152952Z). Answers Codex review 5472099862: exact title, brief-description and AC-text replacements; Driver-path viewer use record; grantees refused at every mutation endpoint.
+- **Revised:** r9, 2026-10-09 10:36 CT (20261009T153644Z). Answers Codex review 5472175684: an explicit operation-to-RPC map, with every other read RPC refusing a grantee (TR-RIDE-SEC-004 AC 7, TEST-RIDE-058 item 10); the grafting negative includes the OTS proof.
 - **Author:** Claude Code (Anthropic) cloud session.
 - **Status:** awaiting Payton AGREE. Not in MCP, not in the disk batches, no code.
 - **Direction chosen by Payton (2026-10-08):** a per-case permission the driver grants, not a role.
@@ -68,6 +69,18 @@ TR-RIDE-SEC-004:
 
    `Escrow.RequestCourtRelease`, `ApproveCourtRelease` and `OpenExpiringWorkingCopy` are authorized only by the court legal-process path, never by a grant (FR-RIDE-079 AC 5).
 
+7. Every RPC refuses a grantee unless it is mapped to an operation the grant allows. The mapping is:
+
+   | Operation | RPC |
+   | --- | --- |
+   | `verify` | `Counsel.BuildVerificationReport`, `Escrow.VerifyForCounsel` |
+   | `coverage` | `Counsel.AnalyzeCoverage` |
+   | `online-hours` | `Counsel.AnalyzeOnlineHours` |
+   | `incident-window` | `Counsel.AnalyzeIncidentWindow` |
+   | `package-export` | `Privacy.RequestAccessExport`, filtered per AC 3 |
+
+   All other read RPCs refuse a grantee with `TENANT_ISOLATION`, return no data, and write a refusal record. These include `Identity.ListVehicles`, `GetConfigurationProfile`, `Admission.GetAdmissionStatus`, `Escrow.GetEscrowStatus` and `Privacy.ViewLocations`.
+
 TEST-RIDE-058:
 
 1. Happy paths: a granted `verify`, `coverage`, `online-hours`, `incident-window` and `package-export` each succeed for granted data and write exactly one correctly attributed use record (grant id, grantee, case, operation, returned ids).
@@ -90,7 +103,7 @@ TEST-RIDE-058:
    - another driver revokes the grantor's grant.
 6. Desktop viewer, Grantee path, with a bundle that mixes granted submission S1 and ungranted submission S2:
    - a valid grant shows S1 and withholds S2, and writes exactly one use record for S1 and one refusal record for S2, each naming the grant, grantee, case and resolved submission;
-   - sidecar grafting: S2's telematics, GPS and OBD2 flags, and admission state attached to S1's sealed record. S1's verified core is shown, but none of the grafted fields are, and one refusal record names S1 and the withheld fields;
+   - sidecar grafting: S2's telematics, GPS and OBD2 flags, admission state and OTS proof attached to S1's sealed record. S1's verified core is shown, but none of the grafted fields are (the grafted OTS proof fails verification against S1's content hash and is withheld), and one refusal record names S1 and the withheld fields;
    - an expired grant, a revoked grant, and another grantee's principal each show nothing and write one refusal record;
    - a relabeled record (S2's ciphertext and receipt presented under S1's id or label) is withheld, because the server resolves it to S2, and writes one refusal record;
    - with the server unreachable, the viewer shows nothing, reports the fail-closed reason, and writes one refusal record to the local outbox; after the server is reachable again, that record appears once in the server's refusal log;
@@ -103,6 +116,7 @@ TEST-RIDE-058:
    - the same grantee call then fails with `TENANT_ISOLATION` and writes one refusal record.
 8. Decryption boundary: a valid grant that allows every operation, with no court legal-process authorization. Attempts at escrow release and at creating a working copy each fail closed. No key material, plaintext or working copy is returned, escrow release state is unchanged, and each attempt writes one refusal record.
 9. Read-only grant: with a valid grant that allows every operation, the grantee calls each mutating RPC in TR-RIDE-SEC-004 AC 6 against the grantor's data. Each call returns `TENANT_ISOLATION` and no data. The import, normalized, custody, vehicle, profile and key stores are unchanged, and each call writes one refusal record.
+10. Unmapped reads: with a valid grant that allows every operation, the grantee calls each read RPC outside the AC 7 mapping (`Identity.ListVehicles`, `GetConfigurationProfile`, `Admission.GetAdmissionStatus`, `Escrow.GetEscrowStatus`, `Privacy.ViewLocations`). Each call returns `TENANT_ISOLATION` and no data, and writes one refusal record.
 
 ### Use-case changes that go with it (for AGREE)
 
