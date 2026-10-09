@@ -173,7 +173,7 @@ public sealed class PrivacyDesk
             foreach (var (name, rows) in datasets)
                 Write(zip, name, JsonSerializer.Serialize(rows, DatasetJson));
             WriteBytes(zip, "summary.pdf", SummaryPdf("RideAudit audit summary. Sealed plaintext is not included. Subject " + driverId + "."));
-            Write(zip, "NOTICE.txt", "GPL-2.0-only. This access export lists hashes and provenance and carries the audit-held rows for this subject under data/. It does not contain sealed plaintext. Subject " + driverId + ".");
+            Write(zip, "NOTICE.txt", "GPL-2.0-only. This access export lists hashes and provenance and carries the audit-held rows for this subject under data/ and the subject's account records under account/. It does not contain sealed plaintext. Subject " + driverId + ".");
         }
         return stream.ToArray();
     }

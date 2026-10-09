@@ -515,6 +515,9 @@ public class TestRide010012029031032
             Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/vehicles.json"), StringComparison.Ordinal);
             Assert.Contains("Renamed-DSAR-7c41", Entry("account/vehicles.json"), StringComparison.Ordinal);
             Assert.Contains("\"Label\":" + System.Text.Json.JsonSerializer.Serialize(originalLabel), Entry("account/vehicle-versions.json"), StringComparison.Ordinal);
+            // The retained version is reported as it was: the later change is only on the current version.
+            Assert.DoesNotContain("label correction", Entry("account/vehicle-versions.json"), StringComparison.Ordinal);
+            Assert.Contains("label correction", Entry("account/vehicles.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/profiles.json"), StringComparison.Ordinal);
             Assert.Contains(enrolled.Session.SessionId, Entry("account/sessions.json"), StringComparison.Ordinal);
 

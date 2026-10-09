@@ -192,9 +192,14 @@ public sealed class DriverDirectory
             Label = string.IsNullOrWhiteSpace(label) ? record.Label : label.Trim(),
             Make = make?.Trim() ?? record.Make,
             Model = model?.Trim() ?? record.Model,
-            Year = year == 0 ? record.Year : year
+            Year = year == 0 ? record.Year : year,
+            // A fresh list: `with` would otherwise share Changes with the retained earlier version,
+            // which the access export reports as it was (FR-RIDE-010).
+            Changes = new List<VehicleChangeRecord>(record.Changes)
+            {
+                new(_clock.UtcNow.ToUnixTimeMilliseconds(), caller.DriverId, changeReason.Trim())
+            }
         };
-        updated.Changes.Add(new VehicleChangeRecord(_clock.UtcNow.ToUnixTimeMilliseconds(), caller.DriverId, changeReason.Trim()));
         _vehicles[vehicleId] = updated;
         return updated;
     }

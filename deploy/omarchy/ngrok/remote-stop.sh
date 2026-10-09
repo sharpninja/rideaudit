@@ -209,9 +209,11 @@ is_recorded_agent() {
 our_agents() {
   # Agents this script family started, with or without a PID file, on any backend in
   # SWEEP_BACKENDS. Every candidate passes is_our_ngrok.
-  local backend pid
+  local backend pattern pid
   for backend in $SWEEP_BACKENDS; do
-    for pid in $(pgrep -f "ngrok http $backend " 2>/dev/null || true); do
+    # pgrep takes a regex; escape the address (dots, IPv6 brackets) so it matches literally.
+    pattern="$(printf '%s' "$backend" | sed 's/[][\\.*^$+?(){}|]/\\&/g')"
+    for pid in $(pgrep -f -- "ngrok http $pattern " 2>/dev/null || true); do
       if is_our_ngrok "$pid"; then
         echo "$pid"
       fi
