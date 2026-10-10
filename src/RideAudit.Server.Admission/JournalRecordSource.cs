@@ -6,13 +6,8 @@ namespace RideAudit.Server.Admission;
 public sealed class JournalRecordSource : ISubmittedRecordSource
 {
     private readonly CustodyJournal _journal;
-    private readonly AttestationArchive? _attestations;
 
-    public JournalRecordSource(CustodyJournal journal, AttestationArchive? attestations = null)
-    {
-        _journal = journal;
-        _attestations = attestations;
-    }
+    public JournalRecordSource(CustodyJournal journal) => _journal = journal;
 
     public SubmittedRecordView? Find(string submissionId)
     {
@@ -23,7 +18,7 @@ public sealed class JournalRecordSource : ISubmittedRecordSource
     public IReadOnlyList<SubmittedRecordView> ForDriver(string driverId) =>
         _journal.Snapshot().Where(record => record.DriverId == driverId).Select(Map).ToArray();
 
-    private SubmittedRecordView Map(CustodyRecord record)
+    private static SubmittedRecordView Map(CustodyRecord record)
     {
         var core = ReceiptCore.Parser.ParseFrom(record.ReceiptCoreBytes);
         return new SubmittedRecordView(
@@ -43,6 +38,6 @@ public sealed class JournalRecordSource : ISubmittedRecordSource
                 record.Nonce,
                 record.CollectionComplete,
                 record.Audit.ToArray(),
-                _attestations?.Find(record.SubmissionId)));
+                record.AttestationToken));
     }
 }

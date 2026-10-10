@@ -96,12 +96,6 @@ public sealed class AttestationArchive
             _tokens[submissionId] = token;
     }
 
-    public string? Find(string submissionId)
-    {
-        lock (_gate)
-            return _tokens.TryGetValue(submissionId, out var token) ? token : null;
-    }
-
     public bool ContainsToken(string token)
     {
         lock (_gate)
@@ -310,6 +304,7 @@ public sealed class AdmissionCoordinator
         _identity.Database.SubmissionReceipts.RemoveAll(c => c.AsSpan().SequenceEqual(record.ReceiptCoreBytes));
         _identity.Database.SubmissionReceipts.Add(record.ReceiptCoreBytes.ToArray());
         _archive.Put(record.SubmissionId, command.AttestationToken);
+        record.AttestationToken = command.AttestationToken;
 
         var anchorRequest = new AnchorRequest(expected.Bytes, expected.Digest, _policyVersion, profile.ChainProfile);
         AnchorAttempt anchored;
