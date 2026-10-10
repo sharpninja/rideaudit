@@ -25,7 +25,8 @@ public sealed record CustodyMetadata(
     string BodyHashHex,
     string Nonce,
     bool CollectionComplete,
-    IReadOnlyList<string> Audit);
+    IReadOnlyList<string> Audit,
+    string? AttestationToken = null);
 
 public interface ISubmittedRecordSource
 {

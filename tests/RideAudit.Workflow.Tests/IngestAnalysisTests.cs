@@ -549,6 +549,9 @@ public class TestRide010012029031032
             Assert.DoesNotContain("Ciphertext", receipts, StringComparison.Ordinal);
             Assert.DoesNotContain("EnvelopeBytes", receipts, StringComparison.Ordinal);
             Assert.DoesNotContain(world.App.Journal.Find(neighborOutcome.SubmissionId)!.SealedRecordId, receipts, StringComparison.Ordinal);
+            // The retained Play Integrity token for the subject's submission, and never the neighbor's.
+            Assert.Equal(ready.Token, custody.GetProperty("AttestationToken").GetString());
+            Assert.DoesNotContain(neighborReady.Token, receipts, StringComparison.Ordinal);
 
             // Access-log entries about the subject, including this export, with the neighbor's id replaced.
             var accessLog = Entry("data/access-log.json");

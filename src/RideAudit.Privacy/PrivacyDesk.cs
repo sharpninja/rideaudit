@@ -83,7 +83,8 @@ public sealed class PrivacyDesk
             // transaction, block, write time, proof bytes). Both are held data about the subject, not
             // sealed plaintext. A submission with no anchor yet exports a null Anchor. Custody carries every
             // other retained custody field (sealed record id, idempotency key, body hash, nonce, collection
-            // state and the per-submission audit lines), never the ciphertext or the sealed envelope. The
+            // state, the per-submission audit lines and the retained attestation token), never the ciphertext
+            // or the sealed envelope. The
             // journal-wide failure lines carry no driver or submission id, so they cannot be attributed to a
             // subject and are not exported.
             ["data/receipts.json"] = submissions.Select(row => new

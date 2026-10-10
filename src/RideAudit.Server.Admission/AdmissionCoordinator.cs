@@ -94,6 +94,12 @@ public sealed class AttestationArchive
             _tokens[sealedRecordId] = token;
     }
 
+    public string? Find(string sealedRecordId)
+    {
+        lock (_gate)
+            return _tokens.TryGetValue(sealedRecordId, out var token) ? token : null;
+    }
+
     public bool ContainsToken(string token)
     {
         lock (_gate)

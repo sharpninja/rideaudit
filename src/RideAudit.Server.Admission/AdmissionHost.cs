@@ -159,7 +159,7 @@ public static class AdmissionHost
         var keys = new ImportKeyRing();
         var ingest = new IngestPipeline(imports, keys, clockService);
         var analysis = new AnalysisService(imports);
-        var recordSource = new JournalRecordSource(journal);
+        var recordSource = new JournalRecordSource(journal, archive);
         var counsel = new CounselDesk(recordSource);
         var privacy = new PrivacyDesk(imports, keys, access, clockService, recordSource, new DirectorySubjectAccountSource(identity));
         var algorithms = new AlgorithmRegistry(RideAuditPolicy.AlgorithmId);
