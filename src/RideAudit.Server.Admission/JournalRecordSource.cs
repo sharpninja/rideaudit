@@ -43,6 +43,6 @@ public sealed class JournalRecordSource : ISubmittedRecordSource
                 record.Nonce,
                 record.CollectionComplete,
                 record.Audit.ToArray(),
-                _attestations?.Find(record.SealedRecordId)));
+                _attestations?.Find(record.SubmissionId)));
     }
 }
