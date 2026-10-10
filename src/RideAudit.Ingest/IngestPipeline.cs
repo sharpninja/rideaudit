@@ -22,6 +22,9 @@ public sealed record ImportResult(
 
 public sealed class IngestPipeline
 {
+    /// <summary>NaN, infinities and out-of-range values are not coordinates; such rows are skipped like other malformed rows.</summary>
+    private static bool IsCoordinate(double value, double limit) => double.IsFinite(value) && Math.Abs(value) <= limit;
+
     private readonly NormalizedStore _store;
     private readonly ImportKeyRing _keys;
     private readonly IClock _clock;
@@ -74,7 +77,8 @@ public sealed class IngestPipeline
         foreach (var row in PrivacyExportParser.ReadCsv(text).Skip(1))
         {
             if (row.Count < 4 || !long.TryParse(row[0], out var when) || !double.TryParse(row[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lat)
-                || !double.TryParse(row[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lng))
+                || !double.TryParse(row[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lng)
+                || !IsCoordinate(lat, 90) || !IsCoordinate(lng, 180))
                 continue;
             _store.Locations.Add(new LocationRow(Ids.New("loc-"), importId, command.DriverId, command.Jurisdiction, when, lat, lng, ProvenanceTags.ThirdParty, "third-party-sample"));
         }

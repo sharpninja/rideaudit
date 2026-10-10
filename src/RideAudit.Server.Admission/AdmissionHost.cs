@@ -161,7 +161,7 @@ public static class AdmissionHost
         var analysis = new AnalysisService(imports);
         var recordSource = new JournalRecordSource(journal);
         var counsel = new CounselDesk(recordSource);
-        var privacy = new PrivacyDesk(imports, keys, access, clockService, recordSource);
+        var privacy = new PrivacyDesk(imports, keys, access, clockService, recordSource, new DirectorySubjectAccountSource(identity));
         var algorithms = new AlgorithmRegistry(RideAuditPolicy.AlgorithmId);
         var sealer = new CollectionBoundarySealer(play, hsm, hsm, clockService, algorithms);
         return new AdmissionComposition

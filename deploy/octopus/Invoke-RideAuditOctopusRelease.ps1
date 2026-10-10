@@ -142,6 +142,12 @@ function Ensure-LinuxTarget {
             $existing.Roles = @($TargetRole)
             $dirty = $true
         }
+        $missingEnvironments = @(@($EnvironmentIds) | Where-Object { @($existing.EnvironmentIds) -notcontains $_ })
+        if ($missingEnvironments.Count -gt 0) {
+            # The deploy pins SpecificMachineIds, so the reused target must be in the deploy environment.
+            $existing.EnvironmentIds = @(@($existing.EnvironmentIds) + $missingEnvironments)
+            $dirty = $true
+        }
         if ($dirty) {
             $existing = Invoke-RideAuditOctopusApi -Connection $Connection -Method PUT -Path "/api/Spaces-1/machines/$($existing.Id)" -Body $existing
             Write-Host ("updated machine {0} host={1} roles={2}" -f $existing.Id, $existing.Endpoint.Host, (($existing.Roles) -join ","))
@@ -176,21 +182,30 @@ function Ensure-LinuxTarget {
 }
 
 function Wait-RoleTarget {
-    param($Connection, [int]$TimeoutSec = 240)
+    param($Connection, [string]$EnvironmentId, [int]$TimeoutSec = 240)
+    if ([string]::IsNullOrWhiteSpace($EnvironmentId)) {
+        throw "Wait-RoleTarget needs the $EnvironmentName environment id; refuse to pick a target outside it"
+    }
     $deadline = (Get-Date).AddSeconds($TimeoutSec)
     do {
         $machines = @(Get-OctopusItems -Connection $Connection -Path "/api/machines/all")
         $namedMatches = @(@($machines) | Where-Object { $_.Name -eq $TargetName })
-        $roledMatches = @(@($machines) | Where-Object { @($_.Roles) -contains $TargetRole })
+        # Only a target in the deploy environment with the deploy role can be pinned with SpecificMachineIds.
+        $roledMatches = @(@($machines) | Where-Object { (@($_.Roles) -contains $TargetRole) -and (@($_.EnvironmentIds) -contains $EnvironmentId) })
 
         if (-not [string]::IsNullOrWhiteSpace($TargetName)) {
-            if ($namedMatches.Count -eq 1) {
-                $hit = $namedMatches[0]
-                Write-Host ("using target {0} name={1} health={2} style={3}" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
-                return $hit
-            }
             if ($namedMatches.Count -gt 1) {
                 throw "ambiguous Octopus targets named $TargetName count=$($namedMatches.Count)"
+            }
+            if ($namedMatches.Count -eq 1) {
+                $hit = $namedMatches[0]
+                $inEnvironment = @($hit.EnvironmentIds) -contains $EnvironmentId
+                $hasRole = @($hit.Roles) -contains $TargetRole
+                if (-not ($inEnvironment -and $hasRole)) {
+                    throw ("Octopus target {0} ({1}) is not eligible: in {2}={3}, role {4}={5}; refuse to pin a deploy to it" -f $TargetName, $hit.Id, $EnvironmentName, $inEnvironment, $TargetRole, $hasRole)
+                }
+                Write-Host ("using target {0} name={1} health={2} style={3}" -f $hit.Id, $hit.Name, $hit.HealthStatus, $hit.Endpoint.CommunicationStyle)
+                return $hit
             }
             if ($roledMatches.Count -gt 1) {
                 $names = ($roledMatches | ForEach-Object { $_.Name }) -join ", "
@@ -217,7 +232,7 @@ function Wait-RoleTarget {
         Write-Host "waiting for tentacle/target name=$TargetName role=$TargetRole"
         Start-Sleep -Seconds 5
     } while ((Get-Date) -lt $deadline)
-    throw "no Octopus target with name $TargetName or unique role $TargetRole after $TimeoutSec seconds"
+    throw "no Octopus target with name $TargetName or unique role $TargetRole in $EnvironmentName after $TimeoutSec seconds"
 }
 
 function Start-MachineHealth {
@@ -391,7 +406,7 @@ if (-not $SkipSync) {
 $environment = Ensure-Environment -Connection $cx -Name $EnvironmentName
 $machine = $null
 if ($WorkerMode -eq "Tentacle") {
-    $machine = Wait-RoleTarget -Connection $cx -TimeoutSec 240
+    $machine = Wait-RoleTarget -Connection $cx -EnvironmentId $environment.Id -TimeoutSec 240
 }
 elseif ($WorkerMode -eq "Ssh") {
     $account = Ensure-SshAccount -Connection $cx

@@ -88,10 +88,12 @@ public sealed class AttestationArchive
     private readonly object _gate = new();
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
 
-    public void Put(string sealedRecordId, string token)
+    // Keyed by the server-assigned submission id. The sealed record id comes from the client's envelope
+    // and is not unique, so keying by it would let one submission overwrite another's token.
+    public void Put(string submissionId, string token)
     {
         lock (_gate)
-            _tokens[sealedRecordId] = token;
+            _tokens[submissionId] = token;
     }
 
     public bool ContainsToken(string token)
@@ -301,7 +303,8 @@ public sealed class AdmissionCoordinator
         _identity.Database.SubmissionCiphertexts.Add(record.Ciphertext.ToArray());
         _identity.Database.SubmissionReceipts.RemoveAll(c => c.AsSpan().SequenceEqual(record.ReceiptCoreBytes));
         _identity.Database.SubmissionReceipts.Add(record.ReceiptCoreBytes.ToArray());
-        _archive.Put(parsed.Header.SealedRecordId, command.AttestationToken);
+        _archive.Put(record.SubmissionId, command.AttestationToken);
+        record.AttestationToken = command.AttestationToken;
 
         var anchorRequest = new AnchorRequest(expected.Bytes, expected.Digest, _policyVersion, profile.ChainProfile);
         AnchorAttempt anchored;

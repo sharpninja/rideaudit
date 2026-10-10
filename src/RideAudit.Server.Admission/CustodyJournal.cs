@@ -22,6 +22,8 @@ public sealed class CustodyRecord
     public CustodyState State { get; set; }
     public bool CollectionComplete { get; set; }
     public AnchorProofEnvelope? Anchor { get; set; }
+    // The raw Play Integrity token retained for this submission, carried by Export and Import.
+    public string? AttestationToken { get; set; }
     public List<string> Audit { get; } = new();
 
     public AdmissionOutcome ToOutcome() => new(
@@ -135,6 +137,7 @@ public sealed class CustodyJournal
             State = record.State.ToString(),
             CollectionComplete = record.CollectionComplete,
             Anchor = record.Anchor?.ToByteArray() is { } bytes ? Convert.ToBase64String(bytes) : null,
+            AttestationToken = record.AttestationToken,
             Audit = record.Audit.ToArray()
         }).ToArray();
         return JsonSerializer.SerializeToUtf8Bytes(dto);
@@ -164,7 +167,8 @@ public sealed class CustodyJournal
                 ContentHashHex = item.ContentHashHex,
                 State = Enum.Parse<CustodyState>(item.State),
                 CollectionComplete = item.CollectionComplete,
-                Anchor = item.Anchor is null ? null : AnchorProofEnvelope.Parser.ParseFrom(Convert.FromBase64String(item.Anchor))
+                Anchor = item.Anchor is null ? null : AnchorProofEnvelope.Parser.ParseFrom(Convert.FromBase64String(item.Anchor)),
+                AttestationToken = item.AttestationToken
             };
             record.Audit.AddRange(item.Audit);
             _byId[record.SubmissionId] = record;
@@ -191,6 +195,7 @@ public sealed class CustodyJournal
         public string State { get; set; } = "";
         public bool CollectionComplete { get; set; }
         public string? Anchor { get; set; }
+        public string? AttestationToken { get; set; }
         public string[] Audit { get; set; } = Array.Empty<string>();
     }
 }
