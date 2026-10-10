@@ -14,7 +14,18 @@ public sealed record SubmittedRecordView(
     byte[] ReceiptCoreBytes,
     byte[] Ciphertext,
     string CustodyState,
-    AnchorProofEnvelope? Anchor);
+    AnchorProofEnvelope? Anchor,
+    CustodyMetadata? Custody = null);
+
+// Retained custody fields about a submission other than its sealed bytes (ciphertext and envelope),
+// for the subject's own access export.
+public sealed record CustodyMetadata(
+    string SealedRecordId,
+    string IdempotencyKey,
+    string BodyHashHex,
+    string Nonce,
+    bool CollectionComplete,
+    IReadOnlyList<string> Audit);
 
 public interface ISubmittedRecordSource
 {

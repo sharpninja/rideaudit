@@ -115,6 +115,10 @@ public class NgrokDeploySecretsTests
         Assert.Contains("$deployBody[\"SpecificMachineIds\"] = @($MachineId)", octopusRelease, StringComparison.Ordinal);
         Assert.Contains("-MachineId $machineIdForDeploy", octopusRelease, StringComparison.Ordinal);
         Assert.Contains("refuse role-wide deploy", octopusRelease, StringComparison.Ordinal);
+        // A named target is pinned only when it is in the deploy environment and carries the deploy role.
+        Assert.Contains("Wait-RoleTarget -Connection $cx -EnvironmentId $environment.Id", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("(@($_.Roles) -contains $TargetRole) -and (@($_.EnvironmentIds) -contains $EnvironmentId)", octopusRelease, StringComparison.Ordinal);
+        Assert.Contains("refuse to pin a deploy to it", octopusRelease, StringComparison.Ordinal);
         var tentacleCompose = File.ReadAllText(Path.Combine(root, "deploy", "octopus", "new-instance", "compose.yaml"));
         Assert.Contains("TargetRole: rideaudit-host-lab-omarchy", tentacleCompose, StringComparison.Ordinal);
 

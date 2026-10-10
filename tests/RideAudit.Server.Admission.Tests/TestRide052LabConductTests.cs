@@ -74,7 +74,6 @@ public class TestRide052LabConductTests
     [Trait("TR", "TR-RIDE-LAB-004")]
     [Trait("AC", "AC-TEST-052-002")]
     [Trait("AC", "AC-RIDE-072-003")]
-    [Trait("AC", "AC-RIDE-072-005")]
     public void Committed_lab_toolchain_has_no_python_and_csharp_geometry_entrypoint_exists()
     {
         var root = FindRepoRoot();

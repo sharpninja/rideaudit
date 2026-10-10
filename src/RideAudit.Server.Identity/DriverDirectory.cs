@@ -32,6 +32,23 @@ public sealed record ConfigurationProfileRecord(
     string PolicyVersion,
     string Notes);
 
+public sealed record SubjectAccount(
+    string DriverId,
+    string TenantId,
+    string Email,
+    string DisplayName,
+    string Jurisdiction,
+    string Purpose,
+    string ConsentStatement,
+    long CreatedUnixMillis);
+
+public sealed record SubjectAccountExport(
+    SubjectAccount Account,
+    IReadOnlyList<VehicleRecord> Vehicles,
+    IReadOnlyList<VehicleRecord> RetainedVehicleVersions,
+    IReadOnlyList<ConfigurationProfileRecord> Profiles,
+    IReadOnlyList<AuditSessionRecord> Sessions);
+
 public sealed record AuditSessionRecord(
     string SessionId,
     string DriverId,
@@ -175,9 +192,14 @@ public sealed class DriverDirectory
             Label = string.IsNullOrWhiteSpace(label) ? record.Label : label.Trim(),
             Make = make?.Trim() ?? record.Make,
             Model = model?.Trim() ?? record.Model,
-            Year = year == 0 ? record.Year : year
+            Year = year == 0 ? record.Year : year,
+            // A fresh list: `with` would otherwise share Changes with the retained earlier version,
+            // which the access export reports as it was (FR-RIDE-010).
+            Changes = new List<VehicleChangeRecord>(record.Changes)
+            {
+                new(_clock.UtcNow.ToUnixTimeMilliseconds(), caller.DriverId, changeReason.Trim())
+            }
         };
-        updated.Changes.Add(new VehicleChangeRecord(_clock.UtcNow.ToUnixTimeMilliseconds(), caller.DriverId, changeReason.Trim()));
         _vehicles[vehicleId] = updated;
         return updated;
     }
@@ -242,6 +264,28 @@ public sealed class DriverDirectory
         if (session.DriverId != caller.DriverId || session.Status != "open" || session.VehicleId != vehicleId)
             throw new RideAuditException(ErrorCodes.SessionInvalid, "Session is closed, mismatched, or not owned by the caller.");
         return session;
+    }
+
+    /// <summary>
+    /// FR-RIDE-010 access export: the subject's own account, vehicles (current and every version the application database retains), profiles and sessions.
+    /// Token and recovery hashes are credentials, not personal data about the subject, and are never exported.
+    /// </summary>
+    public SubjectAccountExport? ExportSubject(string driverId)
+    {
+        if (!_byId.TryGetValue(driverId, out var account))
+            return null;
+        var vehicles = _vehicles.Values.Where(row => row.DriverId == driverId).OrderBy(row => row.VehicleId, StringComparer.Ordinal).ToList();
+        var vehicleIds = vehicles.Select(row => row.VehicleId).ToHashSet(StringComparer.Ordinal);
+        var profiles = _profiles.Values.Where(row => vehicleIds.Contains(row.VehicleId)).OrderBy(row => row.ProfileId, StringComparer.Ordinal).ToList();
+        var sessions = _sessions.Values.Where(row => row.DriverId == driverId).OrderBy(row => row.SessionId, StringComparer.Ordinal).ToList();
+        // UpdateVehicle replaces only the current entry; the application database still holds the version first registered.
+        var retained = _database.Vehicles.Where(row => row.DriverId == driverId).ToList();
+        return new SubjectAccountExport(
+            new SubjectAccount(account.DriverId, account.TenantId, account.Email, account.DisplayName, account.Jurisdiction, account.Purpose, account.ConsentStatement, account.CreatedUnixMillis),
+            vehicles,
+            retained,
+            profiles,
+            sessions);
     }
 
     public VehicleRecord RequireVehicle(DriverPrincipal caller, string vehicleId)

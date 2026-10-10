@@ -16,6 +16,15 @@ public sealed record AccessExport(string ExportId, string Status, byte[] ZipByte
 
 public sealed record DeletionResult(string Status, bool Deleted, bool CustodyCiphertextRetained);
 
+/// <summary>FR-RIDE-010: the subject's identity-side records (account, vehicles, profiles, sessions) for the access export, keyed by archive path.</summary>
+public interface ISubjectAccountSource
+{
+    IReadOnlyDictionary<string, object> SubjectDatasets(string driverId);
+
+    /// <summary>The subject's tenant id, used to attribute access-log entries to the subject.</summary>
+    string? SubjectTenant(string driverId) => null;
+}
+
 /// <summary>Presents stored coordinates without masking (FR-RIDE-077).</summary>
 public static class GeoPresent
 {
@@ -36,32 +45,100 @@ public sealed class PrivacyDesk
     private readonly AppendOnlyAccessLog _access;
     private readonly IClock _clock;
     private readonly ISubmittedRecordSource _records;
+    private readonly ISubjectAccountSource? _accounts;
 
-    public PrivacyDesk(NormalizedStore store, ImportKeyRing keys, AppendOnlyAccessLog access, IClock clock, ISubmittedRecordSource records)
+    // Stored rows are exported as held. A non-finite number must not abort the whole export (FR-RIDE-010).
+    private static readonly JsonSerializerOptions DatasetJson = new() { NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals };
+
+    public PrivacyDesk(NormalizedStore store, ImportKeyRing keys, AppendOnlyAccessLog access, IClock clock, ISubmittedRecordSource records, ISubjectAccountSource? accounts = null)
     {
         _store = store;
         _keys = keys;
         _access = access;
         _clock = clock;
         _records = records;
+        _accounts = accounts;
     }
 
     public AccessExport Export(string actorId, string subjectDriverId)
     {
         Authorize(actorId, subjectDriverId, "dsar-export");
         var imports = _store.Imports.Where(row => row.DriverId == subjectDriverId).ToList();
+        var importIds = imports.Select(row => row.ImportId).ToHashSet(StringComparer.Ordinal);
         var submissions = _records.ForDriver(subjectDriverId);
+        // FR-RIDE-010 / AC-RIDE-010-001: the export carries the audit-held rows for this subject, not just metadata.
+        // Rows with a driver id are filtered on it; import-keyed rows are filtered on the subject's import ids.
+        var datasets = new SortedDictionary<string, object>(StringComparer.Ordinal)
+        {
+            ["data/trips.json"] = _store.Trips.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/scores.json"] = _store.Scores.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/online-hours.json"] = _store.Hours.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/locations.json"] = _store.Locations.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/consents.json"] = _store.Consents.Where(row => row.DriverId == subjectDriverId).ToList(),
+            ["data/dictionary.json"] = _store.Dictionary.Where(row => importIds.Contains(row.ImportId)).ToList(),
+            ["data/unverified.json"] = _store.Unverified.Where(row => importIds.Contains(row.ImportId)).ToList(),
+            ["data/access-log.json"] = SubjectAccessLog(subjectDriverId, submissions),
+            // The custody journal keeps each submission's full receipt core (vehicle, session, collector,
+            // key, collection time, provenance, attestation) and its anchor proof envelope (status, chain,
+            // transaction, block, write time, proof bytes). Both are held data about the subject, not
+            // sealed plaintext. A submission with no anchor yet exports a null Anchor. Custody carries every
+            // other retained custody field (sealed record id, idempotency key, body hash, nonce, collection
+            // state and the per-submission audit lines), never the ciphertext or the sealed envelope. The
+            // journal-wide failure lines carry no driver or submission id, so they cannot be attributed to a
+            // subject and are not exported.
+            ["data/receipts.json"] = submissions.Select(row => new
+            {
+                row.SubmissionId,
+                row.CustodyState,
+                ReceiptCore = JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes))).RootElement,
+                Anchor = row.Anchor is null ? (JsonElement?)null : JsonDocument.Parse(Google.Protobuf.JsonFormatter.Default.Format(row.Anchor)).RootElement,
+                row.Custody,
+            }).ToList(),
+        };
+        if (_accounts is not null)
+        {
+            foreach (var (name, rows) in _accounts.SubjectDatasets(subjectDriverId))
+                datasets[name] = rows;
+        }
         var manifest = new
         {
             subjectDriverId,
             license = "GPL-2.0-only",
             sealedPlaintextIncluded = false,
             imports = imports.Select(row => new { row.ImportId, row.ContentHashHex, row.Version, row.ParserVersion, row.Provenance, row.Status }),
-            submissions = submissions.Select(row => new { row.SubmissionId, row.CustodyState, contentHash = Ids.Hex(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).ContentHash.ToByteArray()) })
+            submissions = submissions.Select(row => new { row.SubmissionId, row.CustodyState, contentHash = Ids.Hex(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).ContentHash.ToByteArray()) }),
+            datasets = datasets.Keys,
         };
-        var zip = BuildZip(manifest, subjectDriverId, imports);
+        var zip = BuildZip(manifest, subjectDriverId, imports, datasets);
         var status = imports.Count == 0 && submissions.Count == 0 ? "no-personal-imports" : "exported";
         return new AccessExport(Ids.New("exp-"), status, zip);
+    }
+
+    // FR-RIDE-010: access-log entries about the subject, including the export event Authorize just wrote.
+    // An entry is the subject's when the subject acted or when it targets the subject's driver id, tenant
+    // or a submission. Any other principal's ids in a kept entry are replaced, so the export never
+    // discloses another person's identifiers.
+    private List<AccessLogEntry> SubjectAccessLog(string subjectDriverId, IReadOnlyList<SubmittedRecordView> submissions)
+    {
+        var own = new HashSet<string>(StringComparer.Ordinal) { subjectDriverId };
+        foreach (var row in submissions)
+        {
+            own.Add(row.SubmissionId);
+            own.Add(RideAudit.Protos.Custody.V1.ReceiptCore.Parser.ParseFrom(row.ReceiptCoreBytes).TenantId);
+        }
+        var tenant = _accounts?.SubjectTenant(subjectDriverId);
+        if (!string.IsNullOrEmpty(tenant))
+            own.Add(tenant);
+        own.Remove("");
+        return _access.Entries
+            .Where(entry => entry.ActorId == subjectDriverId || own.Contains(entry.TenantId) || own.Contains(entry.ResourceId))
+            .Select(entry => entry with
+            {
+                ActorId = entry.ActorId == subjectDriverId ? entry.ActorId : "other-principal",
+                TenantId = own.Contains(entry.TenantId) ? entry.TenantId : "other-subject",
+                ResourceId = own.Contains(entry.ResourceId) ? entry.ResourceId : "other-subject",
+            })
+            .ToList();
     }
 
     public DeletionResult Delete(string actorId, string subjectDriverId, string caseId)
@@ -91,7 +168,7 @@ public sealed class PrivacyDesk
             throw new RideAuditException(ErrorCodes.TenantIsolation, "Caller cannot access another driver.");
     }
 
-    private static byte[] BuildZip(object manifest, string driverId, IReadOnlyList<ImportRecord> imports)
+    private static byte[] BuildZip(object manifest, string driverId, IReadOnlyList<ImportRecord> imports, IReadOnlyDictionary<string, object> datasets)
     {
         using var stream = new MemoryStream();
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Create, true))
@@ -100,8 +177,10 @@ public sealed class PrivacyDesk
             Write(zip, "manifest.json", json);
             Write(zip, "provenance.json", json);
             Write(zip, "provenance.csv", ProvenanceCsv(imports));
+            foreach (var (name, rows) in datasets)
+                Write(zip, name, JsonSerializer.Serialize(rows, DatasetJson));
             WriteBytes(zip, "summary.pdf", SummaryPdf("RideAudit audit summary. Sealed plaintext is not included. Subject " + driverId + "."));
-            Write(zip, "NOTICE.txt", "GPL-2.0-only. This portable audit ZIP lists hashes and provenance. It does not contain sealed plaintext. Subject " + driverId + ".");
+            Write(zip, "NOTICE.txt", "GPL-2.0-only. This access export lists hashes and provenance and carries the audit-held rows for this subject under data/ and the subject's account records under account/. It does not contain sealed plaintext. Subject " + driverId + ".");
         }
         return stream.ToArray();
     }

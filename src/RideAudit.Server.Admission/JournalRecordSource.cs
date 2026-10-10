@@ -30,6 +30,13 @@ public sealed class JournalRecordSource : ISubmittedRecordSource
             record.ReceiptCoreBytes,
             record.Ciphertext,
             Contracts.CustodyStateNames.ToWire(record.State),
-            record.Anchor);
+            record.Anchor,
+            new CustodyMetadata(
+                record.SealedRecordId,
+                record.IdempotencyKey,
+                Contracts.Ids.Hex(record.BodyHash),
+                record.Nonce,
+                record.CollectionComplete,
+                record.Audit.ToArray()));
     }
 }

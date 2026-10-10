@@ -143,6 +143,33 @@ public class TestRide001Through006And011And030
     }
 
     [Fact]
+    [Trait("FR", "FR-RIDE-005")]
+    [Trait("FR", "FR-RIDE-010")]
+    public void Non_finite_or_out_of_range_coordinates_are_skipped_and_the_access_export_still_builds()
+    {
+        var world = ServerWorld.Create();
+        var driver = world.Register();
+        var csv = "observed_unix_millis,latitude,longitude,speed_mps\n"
+            + "1700000000000,NaN,-122.4194,1.5\n"
+            + "1700000001000,37.7749,Infinity,1.5\n"
+            + "1700000002000,91,-122.4194,1.5\n"
+            + "1700000003000,37.7749,-181,1.5\n"
+            + "1700000004000,37.7749,-122.4194,1.5\n";
+        world.App.Ingest.IngestThirdParty(Consent(driver.DriverId), Encoding.UTF8.GetBytes(csv), "mileage-export");
+        var kept = Assert.Single(world.App.Imports.Locations);
+        Assert.Equal(1700000004000, kept.ObservedUnixMillis);
+
+        // A non-finite value already in the store must not abort the subject's whole export.
+        world.App.Imports.Locations.Add(kept with { SampleId = "loc-nan", Latitude = double.NaN });
+        var export = world.App.Privacy.Export(driver.DriverId, driver.DriverId);
+        Assert.Equal("exported", export.Status);
+        using var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read);
+        var locations = new StreamReader(zip.GetEntry("data/locations.json")!.Open()).ReadToEnd();
+        Assert.Contains("loc-nan", locations, StringComparison.Ordinal);
+        Assert.Contains("\"NaN\"", locations, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [Trait("TEST", "TEST-RIDE-006")]
     [Trait("FR", "FR-RIDE-006")]
     [Trait("AC", "AC-RIDE-006-001")]
@@ -433,11 +460,134 @@ public class TestRide010012029031032
     [Fact]
     [Trait("TEST", "TEST-RIDE-010")]
     [Trait("FR", "FR-RIDE-010")]
-    [Trait("NOTE", "AC-RIDE-010-002-removed-with-legal-hold")]
-    [Trait("AC", "AC-UC-008-001")]
-    [Trait("AC", "AC-UC-008-002")]
+    [Trait("AC", "AC-RIDE-010-001")]
     [Trait("AC", "AC-TEST-010-001")]
     [Trait("AC", "AC-TEST-010-002")]
+    public void Dsar_access_export_returns_the_subjects_own_data_and_refuses_other_callers()
+    {
+        var world = ServerWorld.Create();
+        var enrolled = world.Enroll();
+        var ready = world.SealReady(enrolled.Driver, enrolled.Session);
+        var outcome = world.Submit(enrolled.Driver, ready.Package, ready.Token, ready.Nonce);
+        var imported = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(enrolled.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, true), "driver-upload");
+
+        // Another subject's import and submission exist before the export, so a missing driver filter would leak them.
+        var neighbor = world.Enroll();
+        var neighborReady = world.SealReady(neighbor.Driver, neighbor.Session);
+        var neighborOutcome = world.Submit(neighbor.Driver, neighborReady.Package, neighborReady.Token, neighborReady.Nonce);
+        var neighborImport = world.App.Ingest.IngestPrivacyExport(TestRide001Through006And011And030.Consent(neighbor.Driver.DriverId), TestRide001Through006And011And030.ExportZip(true, false), "driver-upload");
+        Assert.NotEqual(imported.ContentHashHex, neighborImport.ContentHashHex);
+
+        // A vehicle update leaves the first-registered version in the application database; the export must carry both.
+        var originalLabel = enrolled.Vehicle.Label;
+        world.App.Identity.UpdateVehicle(world.Require(enrolled.Driver), enrolled.Vehicle.VehicleId, "Renamed-DSAR-7c41", "", "", 0, "label correction");
+
+        // Access-log entries: the subject's own read, a refused attempt by the neighbor against the subject,
+        // and the neighbor's own read, which must not appear in the subject's export.
+        world.App.Identity.ListVehicles(world.Require(enrolled.Driver));
+        Assert.Throws<RideAuditException>(() => world.App.Privacy.ViewLocations(neighbor.Driver.DriverId, enrolled.Driver.DriverId));
+        world.App.Identity.ListVehicles(world.Require(neighbor.Driver));
+
+        var export = world.App.Privacy.Export(enrolled.Driver.DriverId, enrolled.Driver.DriverId);
+        Assert.Equal("exported", export.Status);
+        using (var zip = new ZipArchive(new MemoryStream(export.ZipBytes), ZipArchiveMode.Read))
+        {
+            var manifest = new StreamReader(zip.GetEntry("manifest.json")!.Open()).ReadToEnd();
+            Assert.Contains(enrolled.Driver.DriverId, manifest, StringComparison.Ordinal);
+            Assert.Contains(imported.ContentHashHex, manifest, StringComparison.Ordinal);
+            Assert.Contains(outcome.SubmissionId, manifest, StringComparison.Ordinal);
+            Assert.Contains("sealedPlaintextIncluded\":false", manifest.Replace(" ", ""), StringComparison.Ordinal);
+
+            // AC-RIDE-010-001: the export carries the audit-held rows, not only import and submission metadata.
+            string Entry(string name) => new StreamReader((zip.GetEntry(name) ?? throw new InvalidOperationException(name + " missing")).Open()).ReadToEnd();
+            var trips = Entry("data/trips.json");
+            Assert.Contains("\"TripId\":\"trip-1\"", trips, StringComparison.Ordinal);
+            Assert.Contains(enrolled.Driver.DriverId, trips, StringComparison.Ordinal);
+            Assert.Contains("\"Overall\":80", Entry("data/scores.json"), StringComparison.Ordinal);
+            Assert.Contains("smooth_cruiser", Entry("data/dictionary.json"), StringComparison.Ordinal);
+            Assert.Contains("note.txt", Entry("data/unverified.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Driver.DriverId, Entry("data/consents.json"), StringComparison.Ordinal);
+            Assert.NotNull(zip.GetEntry("data/online-hours.json"));
+            Assert.NotNull(zip.GetEntry("data/locations.json"));
+
+            // Identity-side records held for the subject: account, vehicles, profiles and sessions.
+            Assert.Contains(enrolled.Driver.Email, Entry("account/account.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/vehicles.json"), StringComparison.Ordinal);
+            Assert.Contains("Renamed-DSAR-7c41", Entry("account/vehicles.json"), StringComparison.Ordinal);
+            Assert.Contains("\"Label\":" + System.Text.Json.JsonSerializer.Serialize(originalLabel), Entry("account/vehicle-versions.json"), StringComparison.Ordinal);
+            // The retained version is reported as it was: the later change is only on the current version.
+            Assert.DoesNotContain("label correction", Entry("account/vehicle-versions.json"), StringComparison.Ordinal);
+            Assert.Contains("label correction", Entry("account/vehicles.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Vehicle.VehicleId, Entry("account/profiles.json"), StringComparison.Ordinal);
+            Assert.Contains(enrolled.Session.SessionId, Entry("account/sessions.json"), StringComparison.Ordinal);
+
+            // The retained receipt core of the subject's submission. The neighbor's is excluded by the loop below.
+            var receipts = Entry("data/receipts.json");
+            Assert.Contains(outcome.SubmissionId, receipts, StringComparison.Ordinal);
+            Assert.Contains(enrolled.Vehicle.VehicleId, receipts, StringComparison.Ordinal);
+            Assert.Contains(enrolled.Session.SessionId, receipts, StringComparison.Ordinal);
+            // Each receipt carries its retained anchor proof; the neighbor's proof is not exported.
+            // Parsed, not matched as text: the writer escapes '+' in base64.
+            var anchor = world.App.Journal.Find(outcome.SubmissionId)!.Anchor!;
+            using var receiptRows = System.Text.Json.JsonDocument.Parse(receipts);
+            var exportedAnchors = receiptRows.RootElement.EnumerateArray().Select(row => row.GetProperty("Anchor")).ToList();
+            var exportedAnchor = Assert.Single(exportedAnchors);
+            Assert.Equal(anchor.ReceiptCoreDigest.ToBase64(), exportedAnchor.GetProperty("receiptCoreDigest").GetString());
+            Assert.Equal(anchor.TransactionReference, exportedAnchor.GetProperty("transactionReference").GetString());
+            Assert.Equal(anchor.ProofBytes.ToBase64(), exportedAnchor.GetProperty("proofBytes").GetString());
+            Assert.NotEqual(world.App.Journal.Find(neighborOutcome.SubmissionId)!.Anchor!.ReceiptCoreDigest.ToBase64(), exportedAnchor.GetProperty("receiptCoreDigest").GetString());
+            // Every other retained custody field, including the per-submission audit lines, but never the sealed bytes.
+            var held = world.App.Journal.Find(outcome.SubmissionId)!;
+            var custody = Assert.Single(receiptRows.RootElement.EnumerateArray().Select(row => row.GetProperty("Custody")).ToList());
+            Assert.Equal(held.SealedRecordId, custody.GetProperty("SealedRecordId").GetString());
+            Assert.Equal(held.IdempotencyKey, custody.GetProperty("IdempotencyKey").GetString());
+            Assert.Equal(RideAudit.Contracts.Ids.Hex(held.BodyHash), custody.GetProperty("BodyHashHex").GetString());
+            Assert.Equal(held.Nonce, custody.GetProperty("Nonce").GetString());
+            Assert.Equal(held.CollectionComplete, custody.GetProperty("CollectionComplete").GetBoolean());
+            Assert.NotEmpty(held.Audit);
+            Assert.Equal(held.Audit, custody.GetProperty("Audit").EnumerateArray().Select(line => line.GetString()!).ToList());
+            Assert.DoesNotContain("Ciphertext", receipts, StringComparison.Ordinal);
+            Assert.DoesNotContain("EnvelopeBytes", receipts, StringComparison.Ordinal);
+            Assert.DoesNotContain(world.App.Journal.Find(neighborOutcome.SubmissionId)!.SealedRecordId, receipts, StringComparison.Ordinal);
+
+            // Access-log entries about the subject, including this export, with the neighbor's id replaced.
+            var accessLog = Entry("data/access-log.json");
+            Assert.Contains("\"Action\":\"list-vehicles\"", accessLog, StringComparison.Ordinal);
+            Assert.Contains("\"Action\":\"dsar-export\"", accessLog, StringComparison.Ordinal);
+            Assert.Contains("\"ActorId\":\"other-principal\",\"TenantId\":" + System.Text.Json.JsonSerializer.Serialize(enrolled.Driver.DriverId) + ",\"Action\":\"view-location\"", accessLog, StringComparison.Ordinal);
+            Assert.Single(System.Text.RegularExpressions.Regex.Matches(accessLog, "\"Action\":\"list-vehicles\""));
+
+            foreach (var entry in zip.Entries)
+            {
+                using var reader = new StreamReader(entry.Open());
+                var text = reader.ReadToEnd();
+                Assert.DoesNotContain("RAWZIP-MARKER-9f3a", text, StringComparison.Ordinal);
+                Assert.DoesNotContain(enrolled.Driver.Token, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(enrolled.Driver.RecoveryCode, text, StringComparison.Ordinal);
+                Assert.DoesNotContain("TokenHash", text, StringComparison.Ordinal);
+                Assert.DoesNotContain("RecoveryHash", text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighbor.Vehicle.VehicleId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighbor.Session.SessionId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighbor.Driver.DriverId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighborImport.ImportId, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighborImport.ContentHashHex, text, StringComparison.Ordinal);
+                Assert.DoesNotContain(neighborOutcome.SubmissionId, text, StringComparison.Ordinal);
+            }
+        }
+
+        var refused = Assert.Throws<RideAuditException>(() => world.App.Privacy.Export(neighbor.Driver.DriverId, enrolled.Driver.DriverId));
+        Assert.Equal(ErrorCodes.TenantIsolation, refused.Code);
+        var other = world.Register();
+        var empty = world.App.Privacy.Export(other.DriverId, other.DriverId);
+        Assert.Equal("no-personal-imports", empty.Status);
+    }
+
+    [Fact]
+    [Trait("FR", "FR-RIDE-010")]
+    [Trait("NOTE", "AC-RIDE-010-002-removed-with-legal-hold")]
+    [Trait("NOTE", "TEST-RIDE-010-is-access-export-only")]
+    [Trait("AC", "AC-UC-008-001")]
+    [Trait("AC", "AC-UC-008-002")]
     public void Dsar_deletes_personal_imports_and_retains_custody_ciphertext()
     {
         var world = ServerWorld.Create();
