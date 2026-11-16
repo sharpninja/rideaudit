@@ -4,7 +4,7 @@
 **License:** GPL-2.0
 **Source:** `docs/Project/Use-Cases-Batch.yaml`
 **Actors field:** Auditor, Counsel
-**Realizes:** FR-RIDE-009, FR-RIDE-038, FR-RIDE-207
+**Realizes:** FR-RIDE-009, FR-RIDE-207
 
 **Goal:** Export available GPS, scores, and third-party events for a counsel time window.
 

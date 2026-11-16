@@ -139,7 +139,7 @@ navigation:
   path: Storyboards
   children:
   - title: Mobile Dual-Phone
-    path: Storyboards
+    path: Mobile Dual-Phone
     children:
     - document: sb-01-pairing
     - document: sb-02-driver-coordinate
@@ -148,7 +148,7 @@ navigation:
     - document: sb-05-submit-admission
     - document: sb-06-counsel-viewer
   - title: Review App
-    path: Storyboards
+    path: Review App
     children:
     - document: sb-r-01-open-bundle
     - document: sb-r-02-verification-gate

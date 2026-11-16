@@ -49,22 +49,6 @@ records:
         text: "Missing fields not invented."
         isSatisfied: false
   - kind: tr
-    id: TR-RIDE-INGEST-004
-    title: "Concierge OAuth and status poller"
-    description: "Optional Concierge client using documented OAuth and /concierge/rides/{id}/status only for org-booked active rides."
-    priority: medium
-    area: RIDE
-    subarea: INGEST
-    status: pending
-    notes: "Implements/supports: FR-RIDE-004, FR-RIDE-012"
-    acceptanceCriteria:
-      - id: AC-RIDE-INGEST-004-001
-        text: "Uses documented Concierge status endpoint only."
-        isSatisfied: false
-      - id: AC-RIDE-INGEST-004-002
-        text: "Disabled when partnership denied."
-        isSatisfied: false
-  - kind: tr
     id: TR-RIDE-INGEST-005
     title: "Third-party telematics importers"
     description: "CSV/JSON importers for GPS, speed, harsh events with third_party_telematics provenance."
@@ -83,7 +67,7 @@ records:
   - kind: tr
     id: TR-RIDE-INGEST-006
     title: "Honesty provenance tagging"
-    description: "Tag each field with provenance enum: lyft_privacy_export | lyft_concierge_api | in_app_manual | third_party_telematics | unverified."
+    description: "Tag each field with provenance enum: lyft_privacy_export | in_app_manual | third_party_telematics | unverified."
     priority: high
     area: RIDE
     subarea: INGEST
@@ -128,19 +112,12 @@ records:
   - kind: tr
     id: TR-RIDE-STORE-003
     title: "Jurisdiction retention engine"
-    description: "Configurable retention by jurisdiction with legal-hold suspension of deletion."
+    description: "Configurable retention by jurisdiction."
     priority: high
     area: RIDE
     subarea: STORE
     status: pending
-    notes: "Implements/supports: FR-RIDE-010, FR-RIDE-210, FR-RIDE-208"
-    acceptanceCriteria:
-      - id: AC-RIDE-STORE-003-001
-        text: "Per-jurisdiction retention timers apply."
-        isSatisfied: false
-      - id: AC-RIDE-STORE-003-002
-        text: "Legal hold suspends deletion."
-        isSatisfied: false
+    notes: "Implements/supports: FR-RIDE-010"
   - kind: tr
     id: TR-RIDE-ANAL-001
     title: "Authorized working-copy analysis"
@@ -277,13 +254,19 @@ records:
     area: RIDE
     subarea: CHAIN
     status: pending
-    notes: "Implements/supports: FR-RIDE-018, FR-RIDE-212"
+    notes: "Implements/supports: FR-RIDE-018, FR-RIDE-212. Update 2026-09-29: live public OpenTimestamps submit may stay pending (PR #23). approval: Payton AGREE 2026-09-29."
     acceptanceCriteria:
       - id: AC-RIDE-CHAIN-002-001
         text: "Chain configurable by env/jurisdiction."
         isSatisfied: false
       - id: AC-RIDE-CHAIN-002-002
         text: "Confirmation metadata recorded."
+        isSatisfied: false
+      - id: AC-RIDE-CHAIN-002-003
+        text: "A live public OpenTimestamps calendar submit that returns a pending proof is recorded as pending. It does not fill transaction hash, block height, or live_bitcoin_metadata. Fixture calendars are not this AC."
+        isSatisfied: false
+      - id: AC-RIDE-CHAIN-002-004
+        text: "Confirmation and Bitcoin txid stay unsatisfied until a later upgrade succeeds."
         isSatisfied: false
   - kind: tr
     id: TR-RIDE-CHAIN-003
@@ -437,13 +420,16 @@ records:
     area: RIDE
     subarea: GPL
     status: pending
-    notes: "Implements/supports: FR-RIDE-030"
+    notes: "Implements/supports: FR-RIDE-030. Update 2026-09-29: mount scad, README, BOM, and ARTIFACT carry GPL notices. approval: Payton AGREE 2026-09-29."
     acceptanceCriteria:
       - id: AC-RIDE-GPL-002-001
         text: "LicenseMetadata attached to shared artifacts."
         isSatisfied: false
       - id: AC-RIDE-GPL-002-002
         text: "Sealed payloads remain access-controlled."
+        isSatisfied: false
+      - id: AC-RIDE-GPL-002-003
+        text: "Headrest mount scad, README, BOM, and ARTIFACT carry GPL notices."
         isSatisfied: false
   - kind: tr
     id: TR-RIDE-GPL-003
@@ -558,22 +544,6 @@ records:
         text: "Aggregate indexes require explicit authorization."
         isSatisfied: false
   - kind: tr
-    id: TR-RIDE-SERVER-007
-    title: "Counsel multi-driver bundle builder"
-    description: "Assemble many drivers independently admitted submissions with per-record verification reports."
-    priority: high
-    area: RIDE
-    subarea: SERVER
-    status: pending
-    notes: "Implements/supports: FR-RIDE-037, FR-RIDE-038"
-    acceptanceCriteria:
-      - id: AC-RIDE-SERVER-007-001
-        text: "Bundle preserves per-record custody."
-        isSatisfied: false
-      - id: AC-RIDE-SERVER-007-002
-        text: "Per-record VerificationReport included."
-        isSatisfied: false
-  - kind: tr
     id: TR-RIDE-VIDEO-001
     title: "Dual-phone capture session"
     description: "Coordinate two approved phones for one authorized vehicle/session with per-device identity, attestation, camera metadata, timestamps."
@@ -677,7 +647,7 @@ records:
     area: RIDE
     subarea: VIEW
     status: pending
-    notes: "Implements/supports: FR-RIDE-049, FR-RIDE-222"
+    notes: "Implements/supports: FR-RIDE-049, FR-RIDE-222. Update 2026-09-29: macOS codesign and macOS publish are deferred (Windows-only lab builds for now). AC-RIDE-VIEW-001-001 stays unsatisfied for the macOS leg. Lab Authenticode policy is TR-RIDE-VIEW-006. approval: Payton AGREE 2026-09-29."
     acceptanceCriteria:
       - id: AC-RIDE-VIEW-001-001
         text: "Builds on Win/Linux/macOS."
@@ -747,36 +717,17 @@ records:
         text: "Consent ledger fields required for ingest admission."
         isSatisfied: false
   - kind: tr
-    id: TR-RIDE-PRIV-002
-    title: "Sensitive geolocation masking"
-    description: "Classify precise geolocation as sensitive; mask exact coordinates in default UI except authorized roles."
-    priority: critical
-    area: RIDE
-    subarea: PRIV
-    status: pending
-    notes: "Implements/supports: FR-RIDE-202, FR-RIDE-014"
-    acceptanceCriteria:
-      - id: AC-RIDE-PRIV-002-001
-        text: "Default UI masks coordinates."
-        isSatisfied: false
-      - id: AC-RIDE-PRIV-002-002
-        text: "Authorized roles can unmask with access log."
-        isSatisfied: false
-  - kind: tr
     id: TR-RIDE-PRIV-003
     title: "DSAR access and deletion"
-    description: "Support subject access export and deletion subject to legal holds and custody documentation."
+    description: "Support subject access export and deletion subject to custody documentation."
     priority: critical
     area: RIDE
     subarea: PRIV
     status: pending
-    notes: "Implements/supports: FR-RIDE-010, FR-RIDE-210"
+    notes: "Implements/supports: FR-RIDE-010"
     acceptanceCriteria:
       - id: AC-RIDE-PRIV-003-001
         text: "Access export available."
-        isSatisfied: false
-      - id: AC-RIDE-PRIV-003-002
-        text: "Deletion respects legal holds."
         isSatisfied: false
   - kind: tr
     id: TR-RIDE-SEC-001
@@ -793,35 +744,6 @@ records:
         isSatisfied: false
       - id: AC-RIDE-SEC-001-002
         text: "Secret scan of logs finds no plaintext tokens."
-        isSatisfied: false
-  - kind: tr
-    id: TR-RIDE-SEC-002
-    title: "RBAC least privilege"
-    description: "Roles auditor, subject (driver), admin with least privilege for precise location views."
-    priority: critical
-    area: RIDE
-    subarea: SEC
-    status: pending
-    notes: "Implements/supports: FR-RIDE-014"
-    acceptanceCriteria:
-      - id: AC-RIDE-SEC-002-001
-        text: "Role matrix enforced."
-        isSatisfied: false
-      - id: AC-RIDE-SEC-002-002
-        text: "Location views least-privilege."
-        isSatisfied: false
-  - kind: tr
-    id: TR-RIDE-SEC-003
-    title: "Append-only sensitive access logs"
-    description: "Immutable append-only logs for views/exports of sensitive location and identity data."
-    priority: critical
-    area: RIDE
-    subarea: SEC
-    status: pending
-    notes: "Implements/supports: FR-RIDE-203"
-    acceptanceCriteria:
-      - id: AC-RIDE-SEC-003-001
-        text: "Access events appended immutably."
         isSatisfied: false
   - kind: tr
     id: TR-RIDE-PERF-001
@@ -868,3 +790,22 @@ records:
       - id: AC-RIDE-PERF-003-002
         text: "Below-threshold composites not admitted."
         isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-007
+    title: "Technical: SEI NAL units carry real-time per-picture accelerometer and precise location matched to each picture"
+    description: "SEI NAL units carry real-time per-picture accelerometer and precise location matched to each picture"
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: "approval: Payton AGREE 2026-10-07. BDPv4 Candidate A. Replaces killed FR-RIDE-014/202, TR-RIDE-PRIV-002/SEC-002. Source: docs/receipts/requirements/20261007-bdpv4-candidates-for-agree.md. No mask/RBAC/legal-hold. No invented AC."
+  - kind: tr
+    id: TR-RIDE-PRIV-004
+    title: "Technical: retention timers must not apply CA third-party 30-day / location 180-day deletion frames to driver-owned vehicle evidentiary capture"
+    description: "retention timers must not apply CA third-party 30-day / location 180-day deletion frames to driver-owned vehicle evidentiary capture"
+    priority: high
+    area: RIDE
+    subarea: PRIV
+    status: pending
+    notes: "approval: Payton AGREE 2026-10-07. BDPv4 Candidate B. Replaces killed FR-RIDE-208. Source: docs/receipts/requirements/20261007-bdpv4-candidates-for-agree.md. No third-party/legal-hold invent. No invented AC."

@@ -20,7 +20,7 @@ public static class DistributionReceipts
     ];
 
     /// <summary>
-    /// Pointer to the Octopus PAYTON-DESKTOP receipt on file. Status is receipt-on-file.
+    /// Pointer to the committed Octopus PAYTON-DESKTOP receipt on file (historical; forward deploy target is LAB-OMARCHY 192.168.1.182 per FR-RIDE-063/064). Status is receipt-on-file.
     /// This constant is not a live probe and is not a GHCR row. Dev/Staging/Prod stay in <see cref="ServerPortions"/>.
     /// </summary>
     public static CdEnvironmentReceipt OctopusDesktopOnFile { get; } =

@@ -1,4 +1,4 @@
-# Shared SSH helper for PAYTON-OMARCHY. Remote login shell is pwsh and prints
+# Shared SSH helper for LAB-OMARCHY. Remote login shell is pwsh and prints
 # profile banners, so scp/sftp fail. Commands run under
 # `exec /usr/bin/bash --noprofile --norc`. SPDX-License-Identifier: GPL-2.0-only
 
@@ -13,7 +13,7 @@ function Get-OmarchySshExe {
 function Invoke-OmarchyBash {
     param(
         [Parameter(Mandatory = $true)][string]$Command,
-        [string]$SshHost = "PAYTON-OMARCHY"
+        [string]$SshHost = "LAB-OMARCHY"
     )
     $sshExe = Get-OmarchySshExe
     & $sshExe -o BatchMode=yes -o ConnectTimeout=15 $SshHost "exec /usr/bin/bash --noprofile --norc -c '$Command'"
@@ -24,7 +24,7 @@ function Copy-OmarchyStdinFile {
     param(
         [Parameter(Mandatory = $true)][string]$LocalPath,
         [Parameter(Mandatory = $true)][string]$RemotePath,
-        [string]$SshHost = "PAYTON-OMARCHY"
+        [string]$SshHost = "LAB-OMARCHY"
     )
     if (-not (Test-Path -LiteralPath $LocalPath)) { throw "missing $LocalPath" }
     $sshExe = Get-OmarchySshExe

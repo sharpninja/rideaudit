@@ -18,7 +18,7 @@ function ConvertFrom-RideAuditSecurePlain {
 function Get-RideAuditOctopusConnection {
     [CmdletBinding()]
     param(
-        [string]$CredPath = (Join-Path $env:USERPROFILE ".creds\octopus-desktop.cred.xml"),
+        [string]$CredPath = (Join-Path $env:USERPROFILE ".creds\octopus-lab-omarchy.cred.xml"),
         [string]$ApiBase = ""
     )
     if (-not (Test-Path -LiteralPath $CredPath)) {
@@ -34,7 +34,7 @@ function Get-RideAuditOctopusConnection {
         # HTTPS portal on :8444 is the operator URL. HTTP :8066 is the
         # reachable API from PAYTON-LEGION2 (self-signed TLS on 8444 fails
         # hostname checks against the LAN IP).
-        $base = "http://192.168.0.149:8066"
+        $base = "http://192.168.1.182:8066"
     }
     $portal = [string]$stored.ServerUrl
     if ([string]::IsNullOrWhiteSpace($portal)) { $portal = $base }
@@ -111,7 +111,7 @@ function Get-RideAuditYamlMap {
 }
 
 function Get-RideAuditSshFingerprint {
-    param([string]$SshHost = "PAYTON-DESKTOP")
+    param([string]$SshHost = "LAB-OMARCHY")
     $here = Split-Path -Parent $PSCommandPath
     . (Join-Path $here "..\omarchy\OmarchySsh.ps1")
     $raw = & (Get-OmarchySshExe) -o BatchMode=yes -o ConnectTimeout=15 $SshHost "exec /usr/bin/bash --noprofile --norc -c 'ssh-keygen -E md5 -lf /etc/ssh/ssh_host_ed25519_key.pub'"

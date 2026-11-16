@@ -51,6 +51,43 @@ public class LiveChainClientTests
     }
 
     [Fact]
+    [Trait("UC", "UC-RIDE-009")]
+    [Trait("AC", "AC-UC-009-003")]
+    public void Public_ots_submit_is_pending_only_and_does_not_confirm_until_upgrade()
+    {
+        var digest = Ids.Sha256(Encoding.UTF8.GetBytes("uc-009-pending-only"));
+        var request = new AnchorRequest(digest, digest, RideAuditPolicy.Version, ChainProfileIds.BtcOts);
+        using var handler = new ScriptedHandler(HttpStatusCode.OK, new byte[] { 0x0a, 0x0b, 0x0c });
+        using var client = new PublicOtsCalendarClient(PublicOtsCalendarClient.AliceCalendar, handler);
+
+        // A public calendar submit is pending only: no txid, chain id, block height, or write time.
+        var submit = client.Submit(digest);
+        Assert.Equal("pending", submit.Status);
+        Assert.Null(submit.TransactionReference);
+        Assert.Null(submit.ChainId);
+        Assert.Null(submit.BlockHeight);
+        Assert.Null(submit.WriteTimeUnixMillis);
+        Assert.Contains("RIDEOTS-PENDING-1", Encoding.UTF8.GetString(submit.ProofBytes), StringComparison.Ordinal);
+
+        // A pending proof is not the happy-path confirmation. Custody is quarantined, so admission stays open.
+        var pending = new BtcOtsAnchor(client).Anchor(request);
+        Assert.False(pending.Confirmed);
+        Assert.Equal(RideAudit.Contracts.CustodyState.Quarantined, pending.State);
+        Assert.Equal(ErrorCodes.ChainUnconfirmed, pending.FailureCode);
+        Assert.Equal("pending", pending.Envelope.Status);
+        Assert.False(pending.Envelope.HasTransactionReference);
+        Assert.False(pending.Envelope.HasBlockHeight);
+        Assert.False(pending.Envelope.LiveBitcoinMetadata);
+
+        // Confirmation follows only an upgrade. The documented fixture stands in; it is not a live txid.
+        var upgraded = new BtcOtsAnchor(new DocumentedFixtureOtsCalendar { Mode = FixtureCalendarMode.UpgradeImmediately }).Anchor(request);
+        Assert.True(upgraded.Confirmed);
+        Assert.Equal(RideAudit.Contracts.CustodyState.Confirmed, upgraded.State);
+        Assert.StartsWith("fixture:", upgraded.Envelope.TransactionReference, StringComparison.Ordinal);
+        Assert.False(upgraded.Envelope.LiveBitcoinMetadata);
+    }
+
+    [Fact]
     public void Public_l2_client_refuses_to_invent_a_transaction_id()
     {
         var digest = Ids.Sha256(Encoding.UTF8.GetBytes("l2-nosigner"));

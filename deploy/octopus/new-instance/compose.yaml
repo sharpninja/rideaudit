@@ -1,4 +1,4 @@
-# New Octopus Server on PAYTON-DESKTOP when the default octopus-legion2
+# New Octopus Server on LAB-OMARCHY when the default octopus-legion2
 # instance cannot run tasks (FR-RIDE-063 AC-RIDE-063-002).
 # Secrets come from a non-git .env generated on LEGION2.
 # Do not compose down octopus-legion2, SQL, Caddy, or rideaudit-omarchy.
@@ -26,7 +26,7 @@ services:
       - db
     environment:
       ACCEPT_EULA: "Y"
-      OCTOPUS_SERVER_NODE_NAME: payton-desktop-rideaudit
+      OCTOPUS_SERVER_NODE_NAME: LAB-OMARCHY-rideaudit
       DB_CONNECTION_STRING: ${DB_CONNECTION_STRING}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
@@ -36,8 +36,8 @@ services:
       DISABLE_DIND: "Y"
       TASK_CAP: "5"
     ports:
-      - "192.168.0.149:18066:8080"
-      - "192.168.0.149:19112:10943"
+      - "192.168.1.182:18066:8080"
+      - "192.168.1.182:19112:10943"
     volumes:
       - octopus-rideaudit-repository:/repository
       - octopus-rideaudit-artifacts:/artifacts
@@ -57,8 +57,8 @@ services:
       ServerUrl: http://octopus:8080
       ServerPort: "10943"
       TargetEnvironment: Development
-      TargetRole: rideaudit-host
-      TargetName: PAYTON-DESKTOP-DOCKER
+      TargetRole: rideaudit-host-lab-omarchy
+      TargetName: LAB-OMARCHY-DOCKER
       Space: Default
     extra_hosts:
       - "host.docker.internal:host-gateway"

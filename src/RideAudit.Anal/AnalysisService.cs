@@ -1,6 +1,5 @@
 using RideAudit.Contracts;
 using RideAudit.Ingest;
-using RideAudit.Sec;
 
 namespace RideAudit.Anal;
 
@@ -14,14 +13,14 @@ public sealed record IncidentReport(int TripCount, int ScoreCount, string GapNot
 
 public sealed class AnalysisService
 {
-    private static readonly string[] Signals = ["trip_records", "smooth_cruiser", "online_hours", "precise_gps", "imu", "concierge_location"];
+    private static readonly string[] Signals = ["trip_records", "smooth_cruiser", "online_hours", "precise_gps", "imu"];
     private readonly NormalizedStore _store;
 
     public AnalysisService(NormalizedStore store) => _store = store;
 
-    public CoverageMatrix Coverage(string actorId, string actorRole, string driverId, string? importId)
+    public CoverageMatrix Coverage(string actorId, string driverId, string? importId)
     {
-        Authorize(actorId, actorRole, driverId);
+        Authorize(actorId, driverId);
         var dictionary = _store.Dictionary.Where(row => row.ImportId.Length > 0 && (string.IsNullOrEmpty(importId) || row.ImportId == importId) && Owns(driverId, row.ImportId)).ToList();
         var cells = new List<CoverageCell>();
         foreach (var signal in Signals)
@@ -31,15 +30,15 @@ public sealed class AnalysisService
             var available = Available(driverId, importId, signal);
             var explicitlyMissing = rows.Any(row => row.Availability is "not_collected" or "unknown");
             var missing = !available && (collected || explicitlyMissing || (rows.Count == 0 && signal is "smooth_cruiser" or "imu" or "precise_gps"));
-            var notice = missing && signal is "smooth_cruiser" or "imu" or "precise_gps" or "concierge_location" ? ApiGapNotice.Text : "";
+            var notice = missing && signal is "smooth_cruiser" or "imu" or "precise_gps" ? ApiGapNotice.Text : "";
             cells.Add(new CoverageCell(signal, collected, available, missing, notice));
         }
         return new CoverageMatrix(driverId, cells);
     }
 
-    public OnlineHoursAudit OnlineHours(string actorId, string actorRole, string driverId, string jurisdiction, int maxHours, int breakHours)
+    public OnlineHoursAudit OnlineHours(string actorId, string driverId, string jurisdiction, int maxHours, int breakHours)
     {
-        Authorize(actorId, actorRole, driverId);
+        Authorize(actorId, driverId);
         var max = maxHours <= 0 ? 12 : maxHours;
         var rest = breakHours <= 0 ? 6 : breakHours;
         var policy = "max " + max + "h then " + rest + "h break" + (maxHours > 0 || breakHours > 0 ? " (regional override)" : " (default 12h / 6h)");
@@ -63,9 +62,9 @@ public sealed class AnalysisService
         return new OnlineHoursAudit(true, violations, policy);
     }
 
-    public IncidentReport Incident(string actorId, string actorRole, string driverId, long startUnixMillis, long endUnixMillis)
+    public IncidentReport Incident(string actorId, string driverId, long startUnixMillis, long endUnixMillis)
     {
-        Authorize(actorId, actorRole, driverId);
+        Authorize(actorId, driverId);
         if (endUnixMillis <= startUnixMillis)
             throw new RideAuditException(ErrorCodes.ValidationFailed, "Incident window end must be after the start.");
         var trips = _store.TripIndex.Window(startUnixMillis, endUnixMillis).Where(row => row.DriverId == driverId).ToList();
@@ -83,7 +82,6 @@ public sealed class AnalysisService
         "smooth_cruiser" => _store.Scores.Any(row => Match(row.DriverId, row.ImportId, driverId, importId) && row.Provenance is ProvenanceTags.PrivacyExport or ProvenanceTags.Manual),
         "online_hours" => _store.Hours.Any(row => Match(row.DriverId, row.ImportId, driverId, importId)),
         "precise_gps" => _store.Locations.Any(row => Match(row.DriverId, row.ImportId, driverId, importId) && row.Provenance == ProvenanceTags.ThirdParty),
-        "concierge_location" => _store.Locations.Any(row => Match(row.DriverId, row.ImportId, driverId, importId) && row.Provenance == ProvenanceTags.Concierge),
         _ => false
     };
 
@@ -93,11 +91,11 @@ public sealed class AnalysisService
     private static bool Match(string rowDriver, string rowImport, string driverId, string? importId) =>
         rowDriver == driverId && (string.IsNullOrEmpty(importId) || rowImport == importId);
 
-    private static void Authorize(string actorId, string actorRole, string driverId)
+    private static void Authorize(string actorId, string driverId)
     {
         if (string.IsNullOrWhiteSpace(driverId))
             throw new RideAuditException(ErrorCodes.ValidationFailed, "Driver id is required.");
-        if (!RoleDirectory.IsElevated(actorRole) && !string.Equals(actorId, driverId, StringComparison.Ordinal))
-            throw new RideAuditException(ErrorCodes.TenantIsolation, "Subject role cannot read another driver.");
+        if (!string.Equals(actorId, driverId, StringComparison.Ordinal))
+            throw new RideAuditException(ErrorCodes.TenantIsolation, "Caller cannot read another driver.");
     }
 }

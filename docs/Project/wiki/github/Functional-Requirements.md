@@ -26,15 +26,6 @@ Scope: layer-1+
 - [ ] Trip records are created when export or Business report fields are present.
 - [ ] Missing trip fields are left null and flagged, not invented.
 
-## FR-RIDE-004 Optional Concierge/Business API integration
-
-Optionally integrate Lyft Concierge/Business API: OAuth client credentials, program linkage, poll /concierge/rides/{id}/status for driver_location during active organizational rides only.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] OAuth client-credentials flow works when Business partnership is approved.
-- [ ] Polling is limited to active organizational rides the org booked.
-- [ ] No undocumented Lyft endpoints are called. Concierge location is coarse lat/lng only.
-
 ## FR-RIDE-005 Import third-party telematics
 
 Import third-party telematics files (CSV/JSON) for GPS track, speed, harsh brake/accel events from devices the driver/fleet controls.
@@ -83,7 +74,6 @@ Support data subject access and deletion workflows for data the audit app stores
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Subject can request access export of audit-held data.
-- [ ] Deletion honors legal holds and documents custody impact.
 
 ## FR-RIDE-011 No undocumented Lyft private APIs
 
@@ -93,14 +83,6 @@ Scope: layer-1+
 - [ ] Product features list excludes private API scraping and traffic interception.
 - [ ] Build and review gates reject such implementations.
 
-## FR-RIDE-012 Admin partnership gates
-
-Admin UI to mark partnerships (Business API approved / denied) and disable Concierge features when ungated access is unavailable.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Admin can set Business API partnership status.
-- [ ] Concierge features are disabled when status is denied or unavailable.
-
 ## FR-RIDE-013 Hash and version raw imports
 
 Hash and version raw imports; show integrity status on audit reports.
@@ -108,14 +90,6 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Raw imports receive content hashes and version identifiers.
 - [ ] Audit reports display integrity status.
-
-## FR-RIDE-014 Role-based access
-
-Role-based access: auditor, subject (driver), admin; least privilege for precise location views.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Roles auditor, subject, and admin exist with least-privilege defaults.
-- [ ] Precise location views require authorized roles.
 
 ## FR-RIDE-015 Seal and encrypt at collection
 
@@ -150,6 +124,8 @@ Scope: layer-1+
 - [ ] Receipt write is synchronous with or immediately after sealing in the same collection boundary.
 - [ ] Chain ID, tx hash, block height, and write time are recorded on confirmation.
 - [ ] Chain brand is configurable, not hard-coded to one mainnet.
+- [ ] A live OpenTimestamps public calendar submit may be receipted as pending when the calendar returns HTTP success and a pending attestation. A documented fixture calendar is not this AC. A pending proof is not confirmation.
+- [ ] Bitcoin confirmation, transaction id, and block height stay unsatisfied (Class C) until a later upgrade succeeds. A pending calendar body is not stored as transaction_reference, does not set live_bitcoin_metadata, and does not admit the record.
 
 ## FR-RIDE-019 Blockchain write failure policy
 
@@ -168,6 +144,7 @@ Scope: layer-1+
 - [ ] Documentation identifies custodians, legal process, escrow jurisdiction, dual-control, working-copy scope/expiry.
 - [ ] Receipt proof boundaries are explicit (what it proves and does not prove).
 - [ ] Implementation matches documented path.
+- [ ] An RAES or RIDESEAL1 envelope is decrypted only as an expiring counsel working copy after HSM escrow release. Public admission does not decrypt.
 
 ## FR-RIDE-021 Verification UI/report
 
@@ -248,11 +225,12 @@ Scope: layer-1+
 
 ## FR-RIDE-030 GPL2 notices on artifacts
 
-Attach a GPL2 license/version and source-commit notice to shared software, schema, receipt, attestation, and verification artifacts, while ensuring that crowdsourced evidence payloads remain sealed and subject to consent, privacy controls, access policy, and legal holds rather than being exposed merely because the code is open source.
+Attach a GPL2 license/version and source-commit notice to shared software, schema, receipt, attestation, and verification artifacts, while ensuring that crowdsourced evidence payloads remain sealed and subject to consent, privacy controls, access policy rather than being exposed merely because the code is open source.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Shared software/schema/receipt/attestation/verification artifacts carry GPL2 and commit notice.
 - [ ] Sealed evidence payloads remain access-controlled despite open-source code.
+- [ ] Headrest mount scad, README, BOM, and ARTIFACT carry GPL notices. CAD is not a road release.
 
 ## FR-RIDE-031 Publish client via Play and source repo
 
@@ -338,15 +316,19 @@ Scope: layer-1+
 
 ## FR-RIDE-041 Dual-phone video capture
 
-Support two approved phones collecting video for the same authorized vehicle/session, retaining each source stream device identity, app attestation, camera metadata, and capture timestamps.
+Support two approved phones collecting video for the same authorized vehicle/session, retaining each source stream device identity, app attestation, camera metadata, and capture timestamps. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Two approved phones can collect for one authorized session.
 - [ ] Each stream retains device identity, attestation, camera metadata, timestamps.
+- [ ] The lab secondary phone for dual-phone roles is a Motorola edge 2024 reached by wireless adb. It is not a substitute for the Fold 4 primary proof and does not by itself satisfy AC-UC-025-001.
+- [ ] The headrest tray securely holds a Galaxy Z Fold 4 CLOSED, LANDSCAPE, with primary cameras facing FORWARD and not blocked by the cradle.
+- [ ] The mount uses dual post-blocks, slotted arms, thumbscrews, and a cradle grid. CAD measurement is not a road release.
+- [ ] HW1 on-vehicle print stays open until the operator vehicle checklist is filled.
 
 ## FR-RIDE-042 Shared session clock sync
 
-Establish a shared session clock between phones, record SyncClockOffset and drift/uncertainty, and align video frames, telematics, and accelerometer samples to that clock, including dropped-frame or unsynchronized intervals.
+Establish a shared session clock between phones, record SyncClockOffset and drift/uncertainty, and align video frames, telematics, and accelerometer samples to that clock, including dropped-frame or unsynchronized intervals. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Shared session clock and SyncClockOffset/drift are recorded.
@@ -354,7 +336,7 @@ Scope: layer-1+
 
 ## FR-RIDE-043 On-device/edge compositing
 
-Run an on-device or trusted-edge compositing pipeline that produces one time-synchronized combined video stream from both source streams before public submission.
+Run an on-device or trusted-edge compositing pipeline that produces one time-synchronized combined video stream from both source streams before public submission. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Composite is produced on-device or trusted edge before public submission.
@@ -362,7 +344,7 @@ Scope: layer-1+
 
 ## FR-RIDE-044 Spider-graph overlay
 
-Overlay telematics and accelerometer data in real time as a spider graph below the corresponding video stream, with frame-aligned timestamps and a versioned overlay/timeline manifest.
+Overlay telematics and accelerometer data in real time as a spider graph below the corresponding video stream, with frame-aligned timestamps and a versioned overlay/timeline manifest. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Spider graph overlays telematics/accel below corresponding video.
@@ -370,7 +352,7 @@ Scope: layer-1+
 
 ## FR-RIDE-045 Seal composite as first-class evidence
 
-Seal and encrypt the composited artifact at the collection-device boundary as a first-class SealedRecord, generate its custody receipt, and write the receipt to the configured public immutable blockchain under the same admission policy as raw sensor data.
+Seal and encrypt the composited artifact at the collection-device boundary as a first-class SealedRecord, generate its custody receipt, and write the receipt to the configured public immutable blockchain under the same admission policy as raw sensor data. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Composite is sealed at collection-device boundary as SealedRecord.
@@ -378,7 +360,7 @@ Scope: layer-1+
 
 ## FR-RIDE-046 Optional raw stream sealing
 
-Optionally seal each raw source video stream as its own first-class sealed artifact, linked to the composite, when the driver consents and storage/bandwidth/retention budgets allow; never replace a sealed source or composite by re-encoding plaintext on the public server.
+Optionally seal each raw source video stream as its own first-class sealed artifact, linked to the composite, when the driver consents and storage/bandwidth/retention budgets allow; never replace a sealed source or composite by re-encoding plaintext on the public server. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Optional raw streams can be sealed and linked to composite with consent and budget checks.
@@ -386,7 +368,7 @@ Scope: layer-1+
 
 ## FR-RIDE-047 Counsel composite playback
 
-Provide counsel playback of an authorized expiring working copy of the sealed composite only after verifying its payload hash, blockchain receipt, source-stream links, clock offsets, overlay timeline, and app-attestation evidence; clearly report any missing or inconsistent component.
+Provide counsel playback of an authorized expiring working copy of the sealed composite only after verifying its payload hash, blockchain receipt, source-stream links, clock offsets, overlay timeline, and app-attestation evidence; clearly report any missing or inconsistent component. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Playback requires verification of hash, receipt, source links, clock offsets, overlay, attestation.
@@ -394,7 +376,7 @@ Scope: layer-1+
 
 ## FR-RIDE-048 Composite metadata in custody package
 
-Include composite, source-stream, synchronization, overlay, codec, compression, dropped-frame, and device metadata in the custody and verification package without exposing plaintext to the public submission server at ingest.
+Include composite, source-stream, synchronization, overlay, codec, compression, dropped-frame, and device metadata in the custody and verification package without exposing plaintext to the public submission server at ingest. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Custody/verification package includes listed metadata fields.
@@ -418,7 +400,7 @@ Scope: layer-1+
 
 ## FR-RIDE-051 Synchronized timeline display
 
-Display all collected data on a synchronized timeline, including composite video, telematics, accelerometer spider graph, GPS, and OBD2 where available, independently of the original collection device.
+Display all collected data on a synchronized timeline, including composite video, telematics, accelerometer spider graph, GPS, and OBD2 where available, independently of the original collection device. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Timeline shows composite, telematics, spider graph, GPS, and OBD2 when available.
@@ -439,10 +421,11 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Phones discover peers via Bluetooth and only complete pairing when both sides confirm driver vs passenger role and shared session intent.
 - [ ] Pairing fails closed if Bluetooth discovery, role confirmation, or session binding fails.
+- [ ] Pairing uses the RideAudit Bluetooth session only. It does not call a Lyft Bluetooth API.
 
 ## FR-RIDE-054 Driver phone session coordination
 
-The driver phone is the session coordinator. It owns session start/stop, shared clock mastership, admission readiness checks, and submission orchestration for the paired session.
+The driver phone is the session coordinator. It owns session start/stop, shared clock mastership, admission readiness checks, and submission orchestration for the paired session. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Only the driver-role phone may start or stop an admitted dual-phone session after pairing.
@@ -450,7 +433,7 @@ Scope: layer-1+
 
 ## FR-RIDE-055 Passenger phone video sync join and telematics overlay
 
-The passenger phone performs video synchronization, joins/composites the dual streams, and adds realtime telematics (including accelerometer spider graph) aligned to the shared session clock.
+The passenger phone performs video synchronization, joins/composites the dual streams, and adds realtime telematics (including accelerometer spider graph) aligned to the shared session clock. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Passenger phone syncs video to the driver-published session clock and records SyncClockOffset.
@@ -458,11 +441,12 @@ Scope: layer-1+
 
 ## FR-RIDE-056 Avalonia UI 12 Android dual-phone capture client
 
-Implement the Android dual-phone capture client (driver coordinator and passenger compositor) with Avalonia UI 12 as the sole UI framework for capture surfaces.
+Implement the Android dual-phone capture client (driver coordinator and passenger compositor) with Avalonia UI 12 as the sole UI framework for capture surfaces. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Android capture client builds and runs with Avalonia UI 12 for driver and passenger roles.
 - [ ] Capture UX does not depend on a non-Avalonia UI framework for primary screens.
+- [ ] Primary device proof for AC-UC-025 class runtime is a Samsung Galaxy Z Fold 4 attached by USB. Emulator-only runs do not satisfy that runtime class. A lab shell receipt is not semantic closure of AC-UC-025-001.
 
 ## FR-RIDE-057 Avalonia UI 12 desktop court viewer
 
@@ -512,6 +496,148 @@ Scope: layer-1+
 - [ ] Documentation and ARTIFACT metadata state that OpenAPI is non-authoritative versus gRPC protos.
 - [ ] Client and server conformance tests bind to gRPC contracts, not OpenAPI, when they disagree.
 
+## FR-RIDE-063 Octopus Deploy CD to LAB-OMARCHY
+
+Build RideAudit admission, counsel, and related container images through Octopus Deploy and deploy those images to LAB-OMARCHY. Octopus is the container build and deploy path. GitHub Container Registry is not the distribution path. If the default Octopus container is out of licenses, provision a new Octopus container on LAB-OMARCHY and continue from that instance. Release receipts must name the Octopus instance or container and the target machine. Receipts must never claim GHCR greens.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Octopus Deploy builds RideAudit admission, counsel, and related images from deploy/containers (or the documented successor path) and deploys them to LAB-OMARCHY.
+- [ ] If the default Octopus container is out of licenses, a new Octopus container is provisioned on LAB-OMARCHY and subsequent releases use that instance.
+- [ ] Release receipts record the Octopus instance or container and the target machine, and never claim GHCR as the distribution path or a GHCR green.
+- [ ] LAB-OMARCHY compose cutover is prior interim evidence. It is not the Octopus CD green for LAB-OMARCHY.
+
+## FR-RIDE-064 ngrok ingress for RideAudit service
+
+The running RideAudit public service (admission and any documented companion HTTP or gRPC front doors) must be reachable through a configured ngrok tunnel. Checked-in deploy docs and scripts describe the tunnel. The ngrok auth token and related secrets come from a secret store or environment variable and are never committed. If ngrok is misconfigured or the tunnel is not live, the system fails closed and does not advertise a public URL. Docs must state which host currently terminates the tunnel. The canonical tunnel target is LAB-OMARCHY admission 192.168.1.182:28080 after the Octopus path in FR-RIDE-063. Omarchy loopback 127.0.0.1:18080 is the prior interim and may remain bound.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] A configured ngrok tunnel reaches the running RideAudit admission health or documented companion HTTP/gRPC front door.
+- [ ] ngrok token and related secrets are supplied from a secret store or environment and are not committed to git.
+- [ ] Misconfigured or non-live ngrok does not advertise a public URL. Docs name the current tunnel host and distinguish Omarchy loopback interim from LAB-OMARCHY target.
+
+## FR-RIDE-065 Caddy edge TLS distinct from ngrok
+
+RideAudit edge TLS is terminated by Caddy and is distinct from ngrok HTTPS. ngrok HTTPS remains FR-RIDE-064 and is not this requirement. Omarchy or PAYTON-DESKTOP loopback or LAN HTTP is not a Caddy TLS receipt. This item is Class C and may still be in flight.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Caddy presents edge TLS for the documented RideAudit edge host.
+- [ ] An ngrok HTTPS URL is not accepted as the Caddy edge TLS receipt.
+- [ ] Loopback or LAN HTTP is not accepted as the Caddy edge TLS receipt. The item stays open while Class C.
+
+## FR-RIDE-066 Larger durable default Android UI font
+
+The Android capture UI sets a larger durable default font in application styles. Operating system accessibility font scaling is not a substitute for that application default.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Capture UI default font is defined in application styles and is larger than the prior FontSize 20 title default.
+- [ ] OS accessibility font scaling alone does not satisfy the default font AC.
+
+## FR-RIDE-067 Avalonia RemoteControl visual-tree debugging
+
+Android debug sessions integrate SharpNinja.Avalonia.RemoteControl so an operator can inspect the live visual tree. ADB UI tapping is not the required method for that inspection.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] The Android capture client integrates SharpNinja.Avalonia.RemoteControl for live visual-tree inspection.
+- [ ] ADB tapping is not the required debug path for that visual-tree inspection.
+
+## FR-RIDE-069 Cursor agents on PAYTON-LEGION2 private worker
+
+When RideAudit lab work uses Cursor cloud coding agents, those agents run on the PAYTON-LEGION2 private worker so mcpserver-grok-plugin stays available to the agent.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Cursor cloud coding agents for this repo run on the PAYTON-LEGION2 private worker.
+- [ ] That worker path keeps mcpserver-grok-plugin available. An agent path that cannot use the plugin is not the required lab path.
+- [ ] Cursor Desktop is installed on PAYTON-LEGION2 for this lab path.
+- [ ] Agents on that path use the identity ninja@thesharp.ninja.
+
+## FR-RIDE-070 Hostile validation opposing-model JSONL
+
+RideAudit hostile validation uses an opposing agent and model. The HV request and response are retained as JSONL and committed immediately. An AGREE requires accuracy and completeness at or above 98. An HV AGREE does not backdate plan section 8.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Hostile validation is performed by an opposing agent and model, not by the implementer model scoring its own work.
+- [ ] The HV request and response JSONL are retained and committed immediately.
+- [ ] AGREE requires accuracy and completeness at or above 98.
+- [ ] An HV AGREE does not backdate plan section 8.
+
+## FR-RIDE-071 Class A AC coverage name-or-defer ledger
+
+Class A acceptance criteria are either named to a test source or explicitly deferred. For live third-party acceptance criteria, an explicit deferral wins over a test-source name. A covered ledger row is not whole-AC closure. A count such as 401 covered, 23 deferred, 0 missing, 424 total is not P11b done.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Every Class A acceptance criterion is named to a test source or explicitly deferred.
+- [ ] For a live third-party acceptance criterion, an explicit deferral wins over a test-source name.
+- [ ] A covered ledger row is not whole-AC closure.
+- [ ] Ledger totals, including 401 covered, 23 deferred, 0 missing, and 424 total, are not P11b done.
+
+## FR-RIDE-072 Lab conduct for RideAudit work
+
+RideAudit lab work prefers accuracy over convenience and keeps a receipt for the path and the result. Paths are not silently substituted. Python is not used in the committed in-repo lab toolchain (for example artifacts/hardware/headrest-phone-mount and its docs); this FR does not constrain languages installed on a physical LAB-OMARCHY host. Committed lab text does not use em or en dashes. Execution waits for approval, except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Lab work records a receipt for the path taken and the result, and prefers an accurate receipt over a convenient substitute.
+- [ ] A required path is not silently replaced with a different path.
+- [ ] The committed in-repo RideAudit lab toolchain (artifacts/hardware and related lab docs that invoke it) does not use Python.
+- [ ] Committed lab text does not contain em dashes or en dashes.
+- [ ] Execution waits for approval, except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
+
+## FR-RIDE-073 Android visual regression with SharpNinja.aiUnit
+
+The RideAudit Android Avalonia client references SharpNinja.aiUnit and runs automated visual regression tests on a connected Android device. Each wireframe is a single-screen compare unless that wireframe says otherwise. Each storyboard is a step sequence: the test drives the running app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) and compares a screenshot at each frame. Screenshot validation includes usability validation in addition to baseline comparison. The comparison threshold is documented. A mismatch fails closed. A usability defect fails closed even when pixels match the baseline. A static single-shot screenshot does not satisfy a storyboard.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] The Android Avalonia client references the SharpNinja.aiUnit package.
+- [ ] Each wireframe in the repo has a single-screen device screenshot compared to that wireframe baseline, unless that wireframe document specifies otherwise.
+- [ ] Each storyboard is navigated as its step sequence by interacting with the running Avalonia Android app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote). A screenshot is captured and compared at each storyboard frame. A static single-shot screenshot alone does not satisfy this AC.
+- [ ] The visual regression run executes on PAYTON-LEGION2 against a connected Android device. An emulator-only run does not satisfy this AC.
+- [ ] The run writes a receipt that names the host, the connected device, the documented comparison threshold, the pass or fail result for each wireframe, the pass or fail result for each storyboard frame, and any usability defect found.
+- [ ] A baseline is not silently skipped. A skip is a failure unless the receipt documents the reason for that baseline.
+- [ ] The comparison threshold is documented. A mismatch against a baseline fails closed.
+- [ ] Screenshot validation includes usability validation in addition to baseline comparison. The run fails closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects detectable from the screenshot or the AvaloniaRemote visual tree.
+- [ ] A pixel match alone does not satisfy screenshot validation when a usability defect is present.
+- [ ] SharpNinja.aiUnit for RideAudit Android visual and usability tests is configured to use the codex-subscription profile. Another profile does not satisfy this AC.
+
+## FR-RIDE-074 About view holds copyright and third-party attributions
+
+The RideAudit UI shows its copyright and its third-party attributions (licenses and credits) on a dedicated About view. Copyright alone does not satisfy this requirement. The bottom panel includes an About control that opens that view. Copyright does not remain on the previous chrome location, the top title bar. GPL licensing of the code stays FR-RIDE-029. GPL notices on shared artifacts stay FR-RIDE-030. Source-file copyright headers stay in place.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [x] A dedicated About view shows the RideAudit UI copyright.
+- [x] The bottom panel includes an About control that opens the About view.
+- [x] The previous chrome location, the top title bar, does not show the copyright notice.
+- [x] Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
+- [x] The About view includes third-party attributions, meaning licenses and credits. An About view that shows copyright only does not satisfy this AC.
+
+## FR-RIDE-075 Capture UI ADA/WCAG contrast for authorized slate colors
+
+The RideAudit capture UI and its approved wireframes meet WCAG 2.x AA contrast for text and UI components on the authorized capture chrome slate colors #394656 and #3D4A5A. Normal text contrast is at least 4.5:1. Large text and UI components meet at least 3:1 as applicable under WCAG AA. Wireframe assets and the running Avalonia capture app must use the same authorized slate colors and both must pass the same contrast rules. A wireframe-only pass or an app-only pass does not satisfy this requirement.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] Authorized capture chrome slate colors are #394656 and #3D4A5A in both approved wireframe assets and the Avalonia capture app chrome/SVG fills that represent that chrome.
+- [ ] Normal text on those slate backgrounds meets WCAG 2.x AA contrast of at least 4.5:1 in the wireframes and in the running app.
+- [ ] Large text and UI components on those slate backgrounds meet WCAG 2.x AA contrast of at least 3:1 as applicable in the wireframes and in the running app.
+- [ ] Wireframe assets and the Avalonia capture app both pass the same contrast rules for the same chrome. A mismatch between wireframe colors and app colors fails this AC.
+
+## FR-RIDE-076 Visual verification primary verdict is wireframe controls/layout/style fidelity
+
+Visual verification for RideAudit capture UI treats controls, layout, and style fidelity to the approved wireframes as the primary pass/fail verdict. Pixel-by-pixel screenshot comparison is advisory only and is not sufficient alone to pass or to fail when controls, layout, or style diverge from the approved wireframes. Approved wireframes under docs/ux are the source of truth for control presence, placement, hierarchy, and style. This requirement is distinct from FR-RIDE-073 usability fail-closed ACs; it states the primary fidelity gate explicitly.
+Scope: layer-1+
+**Acceptance Criteria:**
+- [ ] The documented primary visual verdict for capture UI verification is controls, layout, and style fidelity to the approved wireframes under docs/ux.
+- [ ] Pixel-by-pixel screenshot comparison is documented as advisory only. A pixel match alone does not satisfy visual verification when controls, layout, or style diverge from the approved wireframe.
+- [ ] A controls/layout/style fidelity failure against the approved wireframe fails closed even when pixel comparison is within an advisory threshold.
+- [ ] Verification receipts name the primary fidelity verdict separately from any advisory pixel metric.
+
+## FR-RIDE-077 Functional rule: unmasked capture; accel + precise location in H.264 SEI per picture
+
+Precise location and other capture data stay unmasked; accelerometer and precise location are embedded in the H.264 stream as real-time per-picture SEI for certifiable legal data.
+Scope: layer-1+
+
+## FR-RIDE-078 Functional rule: driver-collected evidentiary retention is not third-party retention
+
+Retention does not treat the driver as a third party; do not apply California 30-day or 180-day location third-party deletion frames to driver-collected evidentiary data in their own vehicle.
+Scope: layer-1+
+
 ## FR-RIDE-201 TLS and secrets vault
 
 Security: encryption in transit (TLS 1.2+) and at rest; secrets in a vault; no plaintext API tokens in logs.
@@ -519,29 +645,6 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] TLS 1.2+ enforced for network traffic.
 - [ ] Secrets stored in vault; no plaintext API tokens in logs.
-
-## FR-RIDE-202 Geolocation sensitive masking
-
-Privacy-by-design: precise geolocation fields classified as sensitive; default UI masks exact coordinates except for authorized roles.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Precise geolocation classified as sensitive PI.
-- [ ] Default UI masks exact coordinates except authorized roles.
-
-## FR-RIDE-203 Append-only access logs
-
-Auditability: immutable append-only access logs for views/exports of sensitive location and identity data.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Views/exports of sensitive location and identity write append-only access logs.
-
-## FR-RIDE-204 Concierge ingestion resilience
-
-Reliability: Concierge ingestion must tolerate API rate limits and partial outages without corrupting stored rides.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Rate-limit and outage conditions do not corrupt stored rides.
-- [ ] Retries are idempotent.
 
 ## FR-RIDE-205 Scale multi-year histories
 
@@ -551,14 +654,6 @@ Scope: layer-1+
 - [ ] UI paginates or downsamples large GPS tracks.
 - [ ] Multi-year histories load without UI freezes.
 
-## FR-RIDE-206 No false Smooth Cruiser labeling
-
-Accuracy: never present inferred speed/brake events from sparse Concierge lat/lng polls as Lyft Smooth Cruiser equivalents; label derived metrics clearly.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Derived metrics from Concierge lat/lng are labeled as derived, not Smooth Cruiser.
-- [ ] No false equivalence claims.
-
 ## FR-RIDE-207 Portable audit ZIP export
 
 Portability: export audit packages as ZIP (CSV + PDF summary + provenance JSON).
@@ -566,27 +661,12 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Export produces ZIP with CSV, PDF summary, and provenance JSON.
 
-## FR-RIDE-208 Per-state retention config
-
-Compliance config: per-state retention and deletion timers; California sensitive-PI handling as default strict profile.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Retention/deletion timers are per-state configurable.
-- [ ] CA sensitive-PI strict profile is default.
-
 ## FR-RIDE-209 In-product API gap notice
 
 Documentation: in-product API gap notice stating Lyft does not offer a public driver telematics API (as of research date).
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] In-product notice states no public driver telematics API as of research date 2026-09-27.
-
-## FR-RIDE-210 Legal hold suspends deletion
-
-Legal hold: ability to suspend deletion for designated cases under counsel instruction.
-Scope: layer-1+
-**Acceptance Criteria:**
-- [ ] Counsel can designate legal hold that suspends deletion for a case.
 
 ## FR-RIDE-211 Cryptographic agility
 
@@ -656,7 +736,7 @@ Scope: layer-1+
 
 ## FR-RIDE-219 Video storage and bandwidth quotas
 
-Video storage and bandwidth: define per-driver/session quotas and maximum composite/raw-stream sizes; use documented lossless or approved lossy compression, resumable chunked transfer, integrity-checked chunks, retention tiers, lifecycle deletion/legal holds, and separate capacity budgets for composite output and optional raw streams.
+Video storage and bandwidth: define per-driver/session quotas and maximum composite/raw-stream sizes; use H.264, resumable chunked transfer, integrity-checked chunks, retention tiers, lifecycle deletion, and separate capacity budgets for composite output and optional raw streams. Accelerometer and location are embedded in the H.264 video and matched to each picture.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Per-driver/session quotas and max sizes defined.
@@ -665,7 +745,7 @@ Scope: layer-1+
 
 ## FR-RIDE-220 Video performance thresholds
 
-Video performance: measure device/edge CPU, memory, battery, thermal load, encoding latency, clock-sync error, frame drops, public-server ingress/egress, and counsel playback bandwidth; do not admit a composite whose synchronization or sealing quality falls below configured thresholds.
+Video performance: measure device/edge CPU, memory, battery, thermal load, encoding latency, clock-sync error, frame drops, public-server ingress/egress, and counsel playback bandwidth; do not admit a composite whose synchronization or sealing quality falls below configured thresholds. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Listed performance metrics are measured.
@@ -673,7 +753,7 @@ Scope: layer-1+
 
 ## FR-RIDE-221 Composite integrity for playback
 
-Composite integrity and playback: preserve codec/compression and overlay-manifest versions, source-to-output hashes, sync offsets, frame/timestamp mapping, and verification status so counsel can reproduce the integrity check before playback.
+Composite integrity and playback: preserve codec/compression and overlay-manifest versions, source-to-output hashes, sync offsets, frame/timestamp mapping, and verification status so counsel can reproduce the integrity check before playback. The ride video codec is H.264.
 Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Codec, overlay versions, hashes, sync offsets, frame mapping, verification status preserved.
@@ -686,4 +766,7 @@ Scope: layer-1+
 **Acceptance Criteria:**
 - [ ] Signed/reproducible GPL2 builds tested on Windows, Linux, macOS.
 - [ ] Viewer does not decrypt/render on any verification failure.
+- [ ] Lab builds on PAYTON-LEGION2 may use a self-signed Authenticode certificate with subject CN=RideAudit Lab Self-Signed. Unrelated store certificates are refused and no pfx is committed. That lab signature is not Public Trust and does not satisfy AC-RIDE-222-001.
+- [ ] Public Trust commercial signing is deferred and must not be purchased yet. Publisher identity is the individual Payton Byrd using IV plus eSigner. An organization OV certificate is not the publisher identity. The lab certificate does not satisfy this AC.
+- [ ] macOS codesign is deferred. Current desktop publish scope is Windows only. Linux Authenticode does not apply. AC-RIDE-222-001 remains unsatisfied.
 

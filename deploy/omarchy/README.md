@@ -1,10 +1,10 @@
-# PAYTON-OMARCHY deploy from PAYTON-LEGION2
+# LAB-OMARCHY deploy from PAYTON-LEGION2
 
-GPL-2.0-only. SSH host aliases: `PAYTON-OMARCHY`, `OMARCHY`, `PAYTON-DESKTOP` → `192.168.0.149` as `sharpninja`.
+GPL-2.0-only. SSH host aliases: `LAB-OMARCHY`, `OMARCHY`, `LAB-OMARCHY` → `192.168.1.182` as `sharpninja`.
 
 This is a lab deploy path. It is not a continuous-delivery receipt and not a production cutover.
 
-Product CD (FR-RIDE-063): Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. Omarchy loopback plus ngrok is interim admission hosting only. Existing Octopus/SQL/Caddy containers on this lab host are not a RideAudit Octopus CD green.
+Product CD (FR-RIDE-063): Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. Omarchy loopback plus ngrok is interim admission hosting only. Existing Octopus/SQL/Caddy containers on this lab host are not a RideAudit Octopus CD green.
 
 ## What LEGION2 cannot do
 
@@ -40,7 +40,7 @@ After this branch is merged, the coordinator may instead `git clone` / `git pull
 pwsh -NoProfile -File deploy/omarchy/Publish-Admission.ps1
 pwsh -NoProfile -File deploy/omarchy/Sync-FromLegion2.ps1
 pwsh -NoProfile -File deploy/omarchy/Sync-Publish.ps1
-ssh PAYTON-OMARCHY "exec /usr/bin/bash --noprofile --norc -c 'bash /home/sharpninja/github/rideaudit/deploy/omarchy/remote-runtime-build.sh'"
+ssh LAB-OMARCHY "exec /usr/bin/bash --noprofile --norc -c 'bash /home/sharpninja/github/rideaudit/deploy/omarchy/remote-runtime-build.sh'"
 ```
 
 That tags `rideaudit-admission:local` (and `rideaudit-counsel:local` as the same bits). Counsel is `RIDEAUDIT_SERVICE_ROLE=counsel` on the same host. Building an image is not a CD green.
@@ -48,7 +48,7 @@ That tags `rideaudit-admission:local` (and `rideaudit-counsel:local` as the same
 ## Alternate: full SDK rebuild on Omarchy (no start)
 
 ```bash
-ssh PAYTON-OMARCHY "exec /usr/bin/bash --noprofile --norc -c 'bash /home/sharpninja/github/rideaudit/deploy/omarchy/remote-build.sh'"
+ssh LAB-OMARCHY "exec /usr/bin/bash --noprofile --norc -c 'bash /home/sharpninja/github/rideaudit/deploy/omarchy/remote-build.sh'"
 ```
 
 ## Coordinator cutover (after merge, not this agent)
@@ -65,7 +65,7 @@ This agent does not pass `-ConfirmCutover`.
 
 ## ngrok (canonical public URL)
 
-Omarchy compose still binds admission on loopback `:18080`. That bind is the prior interim. The canonical public tunnel targets PAYTON-DESKTOP admission `192.168.0.149:28080` (FR-RIDE-064). Token via `~/.creds/ngrok.yml`, never git. See [ngrok/README.md](ngrok/README.md).
+Omarchy compose still binds admission on loopback `:18080`. That bind is the prior interim. The canonical public tunnel targets LAB-OMARCHY admission `192.168.1.182:28080` (FR-RIDE-064). Token via `~/.creds/ngrok.yml`, never git. See [ngrok/README.md](ngrok/README.md).
 
 ```powershell
 pwsh -NoProfile -File deploy/omarchy/ngrok/Start-Ngrok.ps1

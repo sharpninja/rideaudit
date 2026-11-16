@@ -28,7 +28,7 @@ flowchart LR
     INC1(["Review compliance configuration"])
     INC2(["Export portable audit ZIP"])
     INC3(["Enforce accuracy labeling<br/>and remaining NFR gates"])
-    INC4(["Confirm legal-hold<br/>and privacy controls"])
+    INC4(["Apply own-submissions<br/>privacy deletion"])
     UC -.->|"«include»"| INC1
     UC -.->|"«include»"| INC2
     UC -.->|"«include»"| INC3
@@ -40,7 +40,6 @@ flowchart LR
   A_Admin --- INC1
   A_Auditor --- INC2
   A_Auditor --- INC3
-  A_Counsel --- INC4
 ```
 
 ## Relationships
@@ -48,7 +47,7 @@ flowchart LR
 - «include» review compliance configuration: basic flow step 1, Admin.
 - «include» portable audit ZIP: basic flow step 2, Auditor.
 - «include» accuracy labeling and remaining NFR gates: basic flow step 3.
-- «include» confirm legal-hold and privacy controls: basic flow step 4, Counsel. This confirms the controls. It does not perform DSAR deletion.
+- «include» own-submissions privacy deletion: basic flow step 4, System. There are no legal-hold controls (legal hold was removed).
 
 ## Constraints
 
@@ -60,4 +59,4 @@ Where source data is missing, accuracy labeling stays visible. Do not fill gaps 
 
 ## Related
 
-- DSAR access and deletion under legal hold: [UC-RIDE-008](UC-RIDE-008.md).
+- DSAR access and deletion of the driver's own data: [UC-RIDE-008](UC-RIDE-008.md).

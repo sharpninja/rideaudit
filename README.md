@@ -32,7 +32,7 @@ export ASPNETCORE_URLS=http://127.0.0.1:8080
 dotnet run --project src/RideAudit.Server.Admission
 ```
 
-Counsel, ingest, and privacy RPCs are on the same host. L2 profiles need `RIDEAUDIT_L2_CALENDAR=documented-fixture` and still record `fixture:` references, not live chain transactions. See [deploy/containers/counsel/README.md](deploy/containers/counsel/README.md). Container CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063). Do not use GHCR. If the default Octopus container is out of licenses, create a new Octopus container on PAYTON-DESKTOP. Octopus receipts are `not-run` until a named instance and target exist ([docs/receipts/distribution/cd-receipts.md](docs/receipts/distribution/cd-receipts.md)). Omarchy plus ngrok is interim admission hosting.
+Counsel, ingest, and privacy RPCs are on the same host. L2 profiles need `RIDEAUDIT_L2_CALENDAR=documented-fixture` and still record `fixture:` references, not live chain transactions. See [deploy/containers/counsel/README.md](deploy/containers/counsel/README.md). Container CD is Octopus Deploy to LAB-OMARCHY (FR-RIDE-063). Do not use GHCR. If the default Octopus container is out of licenses, create a new Octopus container on LAB-OMARCHY. Octopus receipts are `not-run` until a named instance and target exist ([docs/receipts/distribution/cd-receipts.md](docs/receipts/distribution/cd-receipts.md)). Omarchy plus ngrok is interim admission hosting.
 
 ```bash
 dotnet test RideAudit.sln

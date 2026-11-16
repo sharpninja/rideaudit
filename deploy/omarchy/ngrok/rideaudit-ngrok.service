@@ -1,11 +1,11 @@
 [Unit]
-Description=RideAudit ngrok HTTP tunnel to PAYTON-DESKTOP admission 192.168.0.149:28080
+Description=RideAudit ngrok HTTP tunnel to LAB-OMARCHY admission 192.168.1.182:28080
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=%h/.local/bin/ngrok http 192.168.0.149:28080 --config %h/.config/ngrok/ngrok.yml --log stdout --log-format logfmt
+ExecStart=%h/.local/bin/ngrok http 192.168.1.182:28080 --config %h/.config/ngrok/ngrok.yml --log stdout --log-format logfmt
 Restart=on-failure
 RestartSec=3
 

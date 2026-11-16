@@ -1,7 +1,7 @@
 {
   "schema": "mcp-requirements-wiki/v1",
   "platform": "github",
-  "generatedAtUtc": "2026-09-27T21:18:32.5243149+00:00",
+  "generatedAtUtc": "2026-10-07T15:11:58.3576083+00:00",
   "documents": [
     "Home.md",
     "Functional-Requirements.md",
@@ -9,17 +9,17 @@
     "Testing-Requirements.md",
     "TR-per-FR-Mapping.md",
     "Requirements-Matrix.md",
-    "Storyboards/SB-01-Pairing.md",
-    "Storyboards/SB-02-Driver-Coordinate.md",
-    "Storyboards/SB-03-Passenger-Composite.md",
-    "Storyboards/SB-04-Seal-Receipt.md",
-    "Storyboards/SB-05-Submit-Admission.md",
-    "Storyboards/SB-06-Counsel-Viewer.md",
-    "Storyboards/Review-App/SB-R-01-Open-Bundle.md",
-    "Storyboards/Review-App/SB-R-02-Verification-Gate.md",
-    "Storyboards/Review-App/SB-R-03-Escrow-Release.md",
-    "Storyboards/Review-App/SB-R-04-Timeline-Playback.md",
-    "Storyboards/Review-App/SB-R-05-Multi-Driver-Counsel-Bundle.md",
-    "Storyboards/Review-App/SB-R-06-Export-Disclosure.md"
+    "SB-01-Pairing.md",
+    "SB-02-Driver-Coordinate.md",
+    "SB-03-Passenger-Composite.md",
+    "SB-04-Seal-Receipt.md",
+    "SB-05-Submit-Admission.md",
+    "SB-06-Counsel-Viewer.md",
+    "SB-R-01-Open-Bundle.md",
+    "SB-R-02-Verification-Gate.md",
+    "SB-R-03-Escrow-Release.md",
+    "SB-R-04-Timeline-Playback.md",
+    "SB-R-05-Multi-Driver-Counsel-Bundle.md",
+    "SB-R-06-Export-Disclosure.md"
   ]
 }

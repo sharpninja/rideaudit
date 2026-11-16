@@ -33,7 +33,7 @@ public class PathTo98RemediationTests
         var fixture = Fixtures.CaptureHappy();
         Assert.Equal(PlayIntegrityProviders.Fixture, fixture.Capture.SealedComposite.Receipt.AttestationProvider);
         Assert.False(string.IsNullOrEmpty(fixture.Capture.SealedComposite.Receipt.StubNotice));
-        var outcome = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "counsel", Fixtures.Release(fixture.Clock));
+        var outcome = Fixtures.ViewerFor(fixture).Review(fixture.Bundle, "reviewer", Fixtures.Release(fixture.Clock));
         Assert.Contains(outcome.Report.Checks, check => check.Name == "play_attestation" && !check.Passed);
         Assert.False(outcome.DisplayAllowed);
         Assert.Equal(ReviewPhase.FailClosed, outcome.Phase);

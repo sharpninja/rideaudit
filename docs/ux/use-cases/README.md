@@ -60,7 +60,6 @@ Package view of every actor and every use case: [overview.md](overview.md).
 | --- | --- | --- | --- | --- |
 | UC-RIDE-001 | Ingest privacy-export ZIP | Driver, Auditor | [UC-RIDE-001.md](UC-RIDE-001.md) | 1 include |
 | UC-RIDE-002 | Record Smooth Cruiser evidence | Driver, Auditor | [UC-RIDE-002.md](UC-RIDE-002.md) | 1 include, 1 extend |
-| UC-RIDE-003 | Optional Concierge ride location poll | Admin, Auditor | [UC-RIDE-003.md](UC-RIDE-003.md) | 1 extend |
 | UC-RIDE-004 | Import third-party telematics | Driver, Auditor | [UC-RIDE-004.md](UC-RIDE-004.md) | 1 include |
 | UC-RIDE-005 | Generate coverage matrix | Auditor, Counsel | [UC-RIDE-005.md](UC-RIDE-005.md) | associations only |
 | UC-RIDE-006 | Online-hours policy check | Auditor | [UC-RIDE-006.md](UC-RIDE-006.md) | 1 extend |
@@ -73,11 +72,9 @@ Package view of every actor and every use case: [overview.md](overview.md).
 | UC-RIDE-013 | GPL-2.0 publish and notice | Admin | [UC-RIDE-013.md](UC-RIDE-013.md) | associations only |
 | UC-RIDE-014 | Driver self-registers on public server | Driver, PublicServer | [UC-RIDE-014.md](UC-RIDE-014.md) | associations only |
 | UC-RIDE-015 | Submit sealed package to public server | Driver, PublicServer | [UC-RIDE-015.md](UC-RIDE-015.md) | 1 extend |
-| UC-RIDE-016 | Counsel multi-driver bundle | Counsel, Admin | [UC-RIDE-016.md](UC-RIDE-016.md) | associations only |
 | UC-RIDE-017 | Dual-phone composite evidence | Driver | [UC-RIDE-017.md](UC-RIDE-017.md) | 5 include, 1 extend |
 | UC-RIDE-018 | Counsel composite playback | Counsel | [UC-RIDE-018.md](UC-RIDE-018.md) | 2 include, 1 extend |
 | UC-RIDE-019 | Desktop court viewer review | Counsel, Auditor | [UC-RIDE-019.md](UC-RIDE-019.md) | 2 include, 1 extend |
-| UC-RIDE-020 | Admin RBAC and partnership gates | Admin | [UC-RIDE-020.md](UC-RIDE-020.md) | 1 extend |
 | UC-RIDE-021 | Cross-cutting compliance and quality gates | Admin, Auditor, Counsel | [UC-RIDE-021.md](UC-RIDE-021.md) | 4 include |
 | UC-RIDE-022 | Pair driver and passenger phones over Bluetooth | DriverPhone, PassengerPhone | [UC-RIDE-022.md](UC-RIDE-022.md) | 1 extend |
 | UC-RIDE-023 | Driver coordinates dual-phone session | DriverPhone, PassengerPhone | [UC-RIDE-023.md](UC-RIDE-023.md) | 2 include |
@@ -93,8 +90,6 @@ Package view of every actor and every use case: [overview.md](overview.md).
 ## House rules
 
 - License for the in-scope application, schemas, and evidence-network components: GPL-2.0.
-- No Lyft private APIs are introduced. Concierge appears only as the documented status poll inside UC-RIDE-003.
 - Bluetooth pairing is RideAudit device pairing, not a Lyft Bluetooth API.
 - Unverified gaps are labeled on the use case page when that use case depends on them.
 - Custody receipt anchor default in architecture is Bitcoin OpenTimestamps (`btc-ots`). Diagrams say configured public chain, matching the use case text.
-

@@ -1,4 +1,4 @@
-# RideAudit admission + counsel on PAYTON-DESKTOP via Octopus (FR-RIDE-063).
+# RideAudit admission + counsel on LAB-OMARCHY via Octopus (FR-RIDE-063).
 # Distinct from the Omarchy interim stack on 127.0.0.1:18080.
 # Images stay on the local Docker engine. No GHCR. Do not compose down
 # octopus-legion2, SQL, Caddy, or rideaudit-omarchy.
@@ -20,7 +20,7 @@ services:
       RIDEAUDIT_PLAY_INTEGRITY: ${RIDEAUDIT_PLAY_INTEGRITY:-}
       RIDEAUDIT_TLS_CERT_PATH: ${RIDEAUDIT_TLS_CERT_PATH:-}
     ports:
-      - "192.168.0.149:28080:8080"
+      - "192.168.1.182:28080:8080"
     restart: unless-stopped
 
   counsel:
@@ -36,5 +36,5 @@ services:
       RIDEAUDIT_L2_RPC: ${RIDEAUDIT_L2_RPC:-}
       RIDEAUDIT_PLAY_INTEGRITY: ${RIDEAUDIT_PLAY_INTEGRITY:-}
     ports:
-      - "192.168.0.149:28081:8080"
+      - "192.168.1.182:28081:8080"
     restart: unless-stopped

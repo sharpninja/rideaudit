@@ -1,0 +1,198 @@
+{
+    "TimestampUtc":  "2026-09-29T15:03:31Z",
+    "ValidatorIdentity":  "GrokSubagentHostile",
+    "Workspace":  "F:\\GitHub\\rideaudit",
+    "Branch":  "cursor/dual-phone-fold-moto-8aa2",
+    "Commit":  "282cfdeda88ef8c7267fca2e51ecf9bdf2672080",
+    "ReceiptUnderAttack":  "docs/receipts/android/20260929T145412Z-dual-phone-fold4-edge.md",
+    "AddProfileExecuted":  "yes",
+    "ProfileFileCount":  19,
+    "RequestClass":  "mixed",
+    "Accuracy":  99,
+    "Completeness":  98,
+    "OverallVerdict":  "AGREE",
+    "FailList":  [
+
+                 ],
+    "UnknownList":  [
+
+                    ],
+    "Claims":  [
+                   {
+                       "Claim":  "Commit 282cfde contains the dual-phone receipt, uiautomator XML, and the AC-UC-025-001 deferral reason update, and does not change product source.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "git show --name-status: 33 docs/receipts paths, src and tests count 0. Deferral and ledger are one-line reason replacements.",
+                       "Surface":  "A",
+                       "Id":  "A1"
+                   },
+                   {
+                       "Claim":  "fold-02-driver.xml ScreenId is WF-04 and PairingStatus is Role confirmed: driver coordinator.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Parsed XML resource-id ScreenId=WF-04 and PairingStatus=Role confirmed: driver coordinator.",
+                       "Surface":  "A",
+                       "Id":  "A2"
+                   },
+                   {
+                       "Claim":  "fold-03-discover.xml ScreenId is WF-02 and PairingStatus is RideAudit Bluetooth discovery on android-ble. No Lyft private API.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Parsed XML ScreenId=WF-02 and PairingStatus equals that full string.",
+                       "Surface":  "A",
+                       "Id":  "A3"
+                   },
+                   {
+                       "Claim":  "fold-04-start.xml ScreenId is WF-08, FailClosedText contains CAMERA_UNAVAILABLE and ATTESTATION_FAILED, StartButton enabled=false.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Parsed XML ScreenId=WF-08, FailClosedText contains both tokens, StartButton enabled=false.",
+                       "Surface":  "A",
+                       "Id":  "A4"
+                   },
+                   {
+                       "Claim":  "moto-02-passenger.xml ScreenId is WF-05 and PairingStatus is Role confirmed: passenger compositor.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Parsed XML ScreenId=WF-05 and PairingStatus=Role confirmed: passenger compositor.",
+                       "Surface":  "A",
+                       "Id":  "A5"
+                   },
+                   {
+                       "Claim":  "moto-04-start.xml FailClosedText is Only the driver phone may start the session. and ScreenId is WF-08.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Parsed XML FailClosedText equals that sentence and ScreenId=WF-08.",
+                       "Surface":  "A",
+                       "Id":  "A6"
+                   },
+                   {
+                       "Claim":  "CaptureShellView.OnDiscover does not call Scan or Advertise.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "CaptureShellView.axaml.cs lines 96-112. Scan count 0. Advertise count 0.",
+                       "Surface":  "A",
+                       "Id":  "A7"
+                   },
+                   {
+                       "Claim":  "AC-UC-025-001 in Use-Cases-Batch.yaml still has isSatisfied: false.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "git grep at 282cfde docs/Project/Use-Cases-Batch.yaml lines 675-677 isSatisfied: false. Yaml not in the commit.",
+                       "Surface":  "A",
+                       "Id":  "A8"
+                   },
+                   {
+                       "Claim":  "Ledger row AC-UC-025-001 status is deferred and the reason matches explicit-deferrals.txt.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "reasons-equal=True. Both reason strings length 388. Status word remains deferred.",
+                       "Surface":  "A",
+                       "Id":  "A9"
+                   },
+                   {
+                       "Claim":  "The receipt says adb pair failed and does not claim a confirmed Bluetooth peer, Play publication, OTS, Caddy, or HSM closure.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Receipt lines 63-69 and 157-165 deny pair success, peer, Play, OTS, Caddy, and HSM closure. isSatisfied: true count 0.",
+                       "Surface":  "A",
+                       "Id":  "A10"
+                   },
+                   {
+                       "Claim":  "MainView.axaml title FontSize is still 20 and this commit does not change that file.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "MainView.axaml line 7 FontSize=20. Path absent from commit name list.",
+                       "Surface":  "A",
+                       "Id":  "A11"
+                   },
+                   {
+                       "Claim":  "No em dash or en dash was added in the new receipt or the deferral line.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "New receipt U+2014=0 U+2013=0. Deferral line U+2014=0 U+2013=0.",
+                       "Surface":  "A",
+                       "Id":  "A12"
+                   },
+                   {
+                       "Claim":  "Honesty: receipt quotes match committed evidence and do not overclaim closure.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Dual and fold4 XML text nodes match the receipt. src diff 3c93980..8550105 is empty. bring-the-receipts.md.",
+                       "Surface":  "B",
+                       "Id":  "B1"
+                   },
+                   {
+                       "Claim":  "A durable lab receipt was committed with commands and a not-proven section.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "docs/receipts/android/20260929T145412Z-dual-phone-fold4-edge.md TimestampUtc 2026-09-29T14:54:12Z.",
+                       "Surface":  "B",
+                       "Id":  "B2"
+                   },
+                   {
+                       "Claim":  "MCP requirement store was not hand-edited to mark the AC satisfied.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Use-Cases-Batch.yaml not in commit. isSatisfied stays false. No TODO or session-log path in the commit.",
+                       "Surface":  "B",
+                       "Id":  "B3"
+                   },
+                   {
+                       "Claim":  "Committed lab artifacts do not use Python.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "No .py path. git grep -i python on the receipt and deferral file found no matches.",
+                       "Surface":  "B",
+                       "Id":  "B4"
+                   },
+                   {
+                       "Claim":  "Look-before-delete: this commit does not delete files.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "git show --diff-filter=D --name-only is empty.",
+                       "Surface":  "B",
+                       "Id":  "B5"
+                   },
+                   {
+                       "Claim":  "Byrd v4 is not violated because no AC or plan step was claimed complete.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Receipt and commit message keep AC-UC-025-001 deferred. Plan diff empty. hostile-ops-vs-requirements.md.",
+                       "Surface":  "B",
+                       "Id":  "B6"
+                   },
+                   {
+                       "Claim":  "AC-UC-025-001 isSatisfied remains false.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Use-Cases-Batch.yaml at commit lines 675-677.",
+                       "Surface":  "C",
+                       "Id":  "C1"
+                   },
+                   {
+                       "Claim":  "Deferral edit does not claim semantic closure.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Deferral text says not a dual-phone session and not semantic closure. Ledger status deferred.",
+                       "Surface":  "C",
+                       "Id":  "C2"
+                   },
+                   {
+                       "Claim":  "No new FR is required for the adb session.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Class-2 lab action. hostile-ops-vs-requirements.md. No product source in the commit.",
+                       "Surface":  "C",
+                       "Id":  "C3"
+                   },
+                   {
+                       "Claim":  "Deferral, ledger, and yaml stay consistent.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "isSatisfied false, ledger deferred, reason strings equal. AC-RIDE-056 rows were not the edited hunk.",
+                       "Surface":  "C",
+                       "Id":  "C4"
+                   },
+                   {
+                       "Claim":  "Plan files were not changed by this commit.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "git diff 282cfde^ 282cfde -- docs/plans/ is empty.",
+                       "Surface":  "D",
+                       "Id":  "D1"
+                   },
+                   {
+                       "Claim":  "Android, P6, and P11b checkboxes were not marked done by this commit.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Empty plan diff. ANDROID.md lines 215-217 still [ ]. Implementation plan line 1382 Full P11b exit still [ ].",
+                       "Surface":  "D",
+                       "Id":  "D2"
+                   },
+                   {
+                       "Claim":  "The lab session was not required to close an unrelated product plan.",
+                       "Verdict":  "PASS",
+                       "Evidence":  "Receipt says plan checkboxes were not changed. No plan-step completion claim.",
+                       "Surface":  "D",
+                       "Id":  "D3"
+                   }
+               ],
+    "MarkdownTwin":  "docs/receipts/hostile-validator-20260929T150331Z.md"
+}

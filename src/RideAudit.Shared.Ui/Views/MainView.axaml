@@ -1,12 +1,16 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="RideAudit.Shared.Ui.Views.MainView">
   <DockPanel>
-    <Border DockPanel.Dock="Top" Padding="12" Background="#111827">
+    <Border x:Name="TitleBar" DockPanel.Dock="Top" Padding="12" Background="#111827">
       <StackPanel Orientation="Horizontal" Spacing="16">
         <TextBlock Text="RideAudit" FontSize="20" />
-        <TextBlock x:Name="LicenseNotice" />
         <TextBlock x:Name="FrameworkNotice" />
+      </StackPanel>
+    </Border>
+    <Border x:Name="BottomPanel" DockPanel.Dock="Bottom" Padding="12" Background="#111827">
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <Button x:Name="AboutButton" Content="About" />
       </StackPanel>
     </Border>
     <ContentControl x:Name="Body" Margin="12" />

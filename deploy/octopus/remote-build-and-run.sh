@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# Octopus target script: build RideAudit images on PAYTON-DESKTOP and run them.
+# Octopus target script: build RideAudit images on LAB-OMARCHY and run them.
 # FR-RIDE-063 / UC-RIDE-032 / TR-RIDE-DEPLOY-001. No GHCR.
 # SPDX-License-Identifier: GPL-2.0-only
 set -eu
@@ -72,22 +72,22 @@ else
     -e ASPNETCORE_ENVIRONMENT=Production \
     -e ASPNETCORE_URLS=http://+:8080 \
     -e RIDEAUDIT_EDGE_TLS=true \
-    -p 192.168.0.149:28080:8080 \
+    -p 192.168.1.182:28080:8080 \
     rideaudit-admission:octopus
   docker run -d --name rideaudit-octopus-counsel-1 --restart unless-stopped \
     -e ASPNETCORE_ENVIRONMENT=Production \
     -e ASPNETCORE_URLS=http://+:8080 \
     -e RIDEAUDIT_EDGE_TLS=true \
     -e RIDEAUDIT_SERVICE_ROLE=counsel \
-    -p 192.168.0.149:28081:8080 \
+    -p 192.168.1.182:28081:8080 \
     rideaudit-counsel:octopus
 fi
 
-echo "Waiting for admission on 192.168.0.149:28080"
+echo "Waiting for admission on 192.168.1.182:28080"
 ok=0
 if command -v curl >/dev/null 2>&1; then
   for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
-    code="$(curl -s -o /tmp/rideaudit-octopus-admission-body.txt -w '%{http_code}' --max-time 5 http://192.168.0.149:28080/ || true)"
+    code="$(curl -s -o /tmp/rideaudit-octopus-admission-body.txt -w '%{http_code}' --max-time 5 http://192.168.1.182:28080/ || true)"
     echo "ADMISSION_HTTP=$code attempt=$i"
     if [ "$code" = "200" ]; then
       ok=1

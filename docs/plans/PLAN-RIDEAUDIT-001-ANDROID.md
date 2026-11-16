@@ -1,7 +1,7 @@
 # PLAN-RIDEAUDIT-001-ANDROID — Avalonia clients (Android + desktop review)
 
 **Plan ID:** PLAN-RIDEAUDIT-001-ANDROID  
-**Revision:** r1.1 — server CD is Octopus to PAYTON-DESKTOP (FR-RIDE-063); no GHCR  
+**Revision:** r1.1 — server CD is Octopus to LAB-OMARCHY (FR-RIDE-063); no GHCR  
 
 **Kind:** Clients — Avalonia UI 12 Android dual-phone + desktop court/counsel review  
 **Artifacts:** [ART-RIDE-ANDROID-001](../../artifacts/android/), [ART-RIDE-UX-001](../ux/), [ART-RIDE-UX-REVIEW-001](../ux/review-app/)  
@@ -38,7 +38,7 @@ RideAudit clients: (1) **Android dual-phone** capture (driver coordinator + pass
 - Headrest mount fabrication (see [BRACKET](./PLAN-RIDEAUDIT-001-BRACKET.md)).
 - gRPC admission containers, chain writers, ingest pipelines (see [SERVER](./PLAN-RIDEAUDIT-001-SERVER.md)).
 - Lyft private APIs; claiming Play publication complete without receipts.
-- Publishing server images through GHCR or a GitHub Actions container registry. Server CD is Octopus Deploy to PAYTON-DESKTOP (FR-RIDE-063).
+- Publishing server images through GHCR or a GitHub Actions container registry. Server CD is Octopus Deploy to LAB-OMARCHY (FR-RIDE-063).
 
 ### 1.4 Baseline
 
@@ -171,7 +171,7 @@ Parent phase mapping: A2↔P3/P4 client · A3↔P6 · A4↔P7 · A5↔P11b clien
 
 ### A5 — Client distribution (parent P11b client portion)
 
-**Goal:** Play + source publication receipts for client; signed desktop builds Win/Linux/macOS contribution. Server container CD is not this slice: it is Octopus to PAYTON-DESKTOP (FR-RIDE-063), not GHCR.
+**Goal:** Play + source publication receipts for client; signed desktop builds Win/Linux/macOS contribution. Server container CD is not this slice: it is Octopus to LAB-OMARCHY (FR-RIDE-063), not GHCR.
 
 | Field | Value |
 | --- | --- |

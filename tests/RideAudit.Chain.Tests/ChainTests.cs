@@ -237,12 +237,11 @@ public class TestRide015ChainFailure
 }
 
 /// <summary>
-/// TEST-RIDE-032 latency partition. FR-RIDE-213. Retention is covered by the privacy tests.
+/// FR-RIDE-213 seal/receipt latency budget. TEST-RIDE-032 is killed and FR-RIDE-213 maps to no TEST (Payton 2026-10-08).
 /// </summary>
 public class TestRide032Latency
 {
     [Fact]
-    [Trait("TEST", "TEST-RIDE-032")]
     [Trait("FR", "FR-RIDE-213")]
     [Trait("AC", "AC-RIDE-213-001")]
     [Trait("AC", "AC-RIDE-213-002")]

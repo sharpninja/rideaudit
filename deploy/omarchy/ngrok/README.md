@@ -4,18 +4,18 @@ GPL-2.0-only. Implements FR-RIDE-064 / UC-RIDE-033 / TR-RIDE-EDGE-001.
 
 This is an operator tunnel. It is not Octopus CD, not GHCR, not Play Store, and not a Caddy TLS cutover.
 
-Product CD is FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to PAYTON-DESKTOP. If you are out of licenses on the default container, create a new Octopus container on PAYTON-DESKTOP. Do not use GHCR. That path is recorded in `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`. This wrapper publishes the live admission front door. It does not replace the Octopus receipt.
+Product CD is FR-RIDE-063: Use Octopus Deploy. Build containers and deploy to LAB-OMARCHY. If you are out of licenses on the default container, create a new Octopus container on LAB-OMARCHY. Do not use GHCR. The only live Octopus receipt, `docs/receipts/distribution/20260929T015822Z-octopus-payton-desktop.md`, records the earlier PAYTON-DESKTOP Docker host (`192.168.0.149`). No LAB-OMARCHY Octopus receipt exists yet. This wrapper publishes the live admission front door. It does not replace the Octopus receipt.
 
 ## Current vs prior interim
 
 | Role | Host | Binding | Status |
 | --- | --- | --- | --- |
-| Canonical terminator | PAYTON-DESKTOP (SSH alias; Linux hostname on this box is PAYTON-OMARCHY) | `192.168.0.149:28080` -> Octopus admission container `8080` | Current public tunnel target |
-| Prior interim | PAYTON-OMARCHY loopback | `127.0.0.1:18080` -> `rideaudit-omarchy` admission | Kept running. Not the canonical tunnel. |
+| Canonical terminator | LAB-OMARCHY (SSH alias; Linux hostname on this box is LAB-OMARCHY) | `192.168.1.182:28080` -> Octopus admission container `8080` | Current public tunnel target |
+| Prior interim | LAB-OMARCHY loopback | `127.0.0.1:18080` -> `rideaudit-omarchy` admission | Kept running. Not the canonical tunnel. |
 
-`127.0.0.1:28080` is not the bind. Compose publishes admission on `192.168.0.149:28080` only. Counsel stays on `192.168.0.149:28081` and is not the public tunnel.
+`127.0.0.1:28080` is not the bind. Compose publishes admission on `192.168.1.182:28080` only. Counsel stays on `192.168.1.182:28081` and is not the public tunnel.
 
-SSH aliases `PAYTON-DESKTOP`, `PAYTON-OMARCHY`, and `OMARCHY` resolve to `192.168.0.149`. Do not invent a second machine from the alias list.
+SSH aliases `LAB-OMARCHY`, `LAB-OMARCHY`, and `OMARCHY` resolve to `192.168.1.182`. Do not invent a second machine from the alias list.
 
 ## Secrets
 
@@ -37,12 +37,12 @@ pwsh -NoProfile -File deploy/omarchy/ngrok/Stop-Ngrok.ps1
 
 `Start-Ngrok.ps1` defaults:
 
-- `-SshHost PAYTON-DESKTOP`
-- `-Addr 192.168.0.149:28080`
+- `-SshHost LAB-OMARCHY`
+- `-Addr 192.168.1.182:28080`
 
 It:
 
-1. Confirms admission `GET http://192.168.0.149:28080/` on that host returns HTTP 200.
+1. Confirms admission `GET http://192.168.1.182:28080/` on that host returns HTTP 200.
 2. Installs official Linux amd64 ngrok under `~/.local/bin` if missing, or reuses an existing binary.
 3. Copies the token file with `Copy-OmarchyStdinFile` (no `scp`).
 4. Starts a systemd user unit `rideaudit-ngrok.service` when a user bus is available, otherwise `nohup`.
@@ -58,7 +58,7 @@ pwsh -NoProfile -File deploy/omarchy/ngrok/Stop-Ngrok.ps1
 pwsh -NoProfile -File deploy/omarchy/ngrok/Start-Ngrok.ps1
 ```
 
-Stop first so the prior interim agent (`ngrok http 127.0.0.1:18080`) is killed before the canonical agent starts. `remote-stop.sh` stops both the `:28080` agent and the prior `:18080` agent.
+Stop first so the prior interim agent (`ngrok http 127.0.0.1:18080`) is killed before the canonical agent starts. `remote-stop.sh` stops both the `:28080` agent and the prior `:18080` agent, but only processes started with this tree's `--config` and `--log` paths. The sweep also covers any backend this tree actually used: the address in the unit's `ExecStart`, the recorded `ngrok.addr`, and the current `RIDEAUDIT_NGROK_ADDR`. Other ngrok tunnels under the same account are left running. A nohup start records its config path in `~/.local/state/rideaudit-ngrok/ngrok.config`, so a later stop still finds the agent after `RIDEAUDIT_NGROK_CONFIG` changes. An agent started before that file existed is still recognized through the PID file, the backend recorded in `ngrok.addr` and this tree's `--log` path. A start with a different config stops that agent before launching a new one, and a stop with a different config still kills it. A running agent is reused only when its live command line has the current `--config`. If one of our agents survives `kill -9`, the stop prints `FAIL_CLOSED=ngrok_still_running` and keeps the state files. A systemd-mode agent is tracked by the unit's MainPID; if the unit stays active or that process survives `systemctl --user stop`, the stop prints `FAIL_CLOSED` and exits 1. A systemd failure does not skip the rest of the stop. `remote-start.sh` can fall back to a nohup agent and leave its unit file behind, so the stop still kills this tree's agents through the PID file and the sweep before it reports `FAIL_CLOSED` and keeps the state files. If the first systemd query fails, the stop still asks systemd to stop and disable the unit. It then waits out the unit's `RestartSec` plus 2 seconds, kills any agent the user manager restarted, and adds `ngrok_restarted_by_supervisor` to the `FAIL_CLOSED` line. Killing a restarted agent can schedule yet another restart, so the stop watches up to three restart windows. In each window it retries `systemctl --user stop` and a runtime mask, then kills any restart. If the last window still sees one, it adds `ngrok_supervisor_still_restarting`: the tunnel may come back, and the unit needs manual attention. `remote-start.sh` removes the runtime mask before it starts the unit again. If the unit file is gone but the unit is still loaded, the stop finds the agent through the loaded unit's `MainPID`. If `systemctl stop` fails or that agent survives, the stop applies a runtime mask, kills the agent and reports `FAIL_CLOSED`. The restart watch and the final check ask systemd for the current `MainPID` again, so an agent that systemd restarts is seen even without the unit file. If the `MainPID` query and the stop both fail, the stop cannot rule out a running unit agent, so it reports `FAIL_CLOSED=ngrok_systemd_unverified`. It does not kill such an agent blind, because a stdout-logging process cannot be told apart from another tunnel on the same ngrok config. A host with no unit whose user bus is down therefore also fails closed, but its nohup agents are still stopped. A stop is an explicit request, so it must leave the tunnel stopped after the next login too, including on the paths where the systemd query or `systemctl stop` fails and the stop already fails closed. With no user systemd manager to ask (for example between logins), the stop removes that link directly and logs it. A stale `XDG_RUNTIME_DIR` does not count as "no manager": the stop falls back to `/run/user/<uid>`, where a running user manager keeps its runtime directory, and stops the unit through systemd. Likewise, a `systemctl` missing from `PATH` is looked for in `/usr/bin` and `/bin` before the stop concludes there is no user manager. If `systemctl --user disable` fails, the stop removes the unit's `default.target.wants` link itself and logs the failure, with its exit code, on stderr. If the unit still reads as enabled, the stop prints `FAIL_CLOSED=ngrok_systemd_still_enabled` and exits 1. A start is not a stop: if `systemctl --user enable` fails, `remote-start.sh` logs the failure with its exit code and goes on, so the tunnel runs now but will not start at the next login.
 
 On the tunnel host, if the systemd user unit is active:
 
@@ -67,13 +67,13 @@ export XDG_RUNTIME_DIR=/run/user/$(id -u)
 systemctl --user restart rideaudit-ngrok.service
 ```
 
-Restart alone reuses the unit written by the last `remote-start.sh`. After this tree change, run `Start-Ngrok.ps1` once so the unit `ExecStart` address becomes `192.168.0.149:28080`.
+Restart alone reuses the unit written by the last `remote-start.sh`. After this tree change, run `Start-Ngrok.ps1` once so the unit `ExecStart` address becomes `192.168.1.182:28080`.
 
 ## Probe notes
 
-Admission's documented companion HTTP front door is `GET /` on `192.168.0.149:28080`. A live tunnel must return that same 200 body. Free ngrok interstitial pages are skipped on the LEGION2 probe with `ngrok-skip-browser-warning: 1`.
+Admission's documented companion HTTP front door is `GET /` on `192.168.1.182:28080`. A live tunnel must return that same 200 body. Free ngrok interstitial pages are skipped on the LEGION2 probe with `ngrok-skip-browser-warning: 1`.
 
-This wrapper starts `ngrok http 192.168.0.149:28080`. gRPC clients that require HTTP/2 end-to-end can be added later; do not advertise a URL unless the HTTP health probe succeeds.
+This wrapper starts `ngrok http 192.168.1.182:28080`. gRPC clients that require HTTP/2 end-to-end can be added later; do not advertise a URL unless the HTTP health probe succeeds.
 
 ## Fail closed
 

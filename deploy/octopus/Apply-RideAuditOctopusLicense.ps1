@@ -4,8 +4,8 @@
 
 [CmdletBinding()]
 param(
-    [string]$SourceApiBase = "http://192.168.0.149:8066",
-    [string]$DestApiBase = "http://192.168.0.149:18066",
+    [string]$SourceApiBase = "http://192.168.1.182:8066",
+    [string]$DestApiBase = "http://192.168.1.182:18066",
     [string]$SourceCredPath = "",
     [string]$DestCredPath = (Join-Path $env:USERPROFILE ".creds\octopus-rideaudit.cred.xml")
 )

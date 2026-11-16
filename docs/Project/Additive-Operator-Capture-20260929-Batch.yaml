@@ -1,0 +1,1285 @@
+# Additive batch: operator capture after plan approval (2026-09-29)
+# BDPv4. approval: Payton AGREE 2026-09-29 for the original capture records (FR-RIDE-065..073 and their TR, TEST and UC rows). Their acceptance criteria stay unsatisfied.
+# Exception: FR-RIDE-074, TR-RIDE-VIEW-007 and TEST-RIDE-055 are Payton AGREE 2026-10-07 (About view); their ACs are satisfied only with test proof.
+# UC-RIDE-044 stays Draft until a separate use-case AGREE.
+# Plan section 9 Astra/Payton acceptance boxes are not open work (Payton 2026-09-29).
+# Does not mark AC-RIDE-222-001, AC-UC-025-001, live OTS confirmation, or Caddy TLS satisfied.
+# Reconciled updates to existing IDs live in the source batch that already defines that ID.
+# This file holds new IDs only. FR-RIDE-068 was withdrawn. Cradle criteria live on FR-RIDE-041.
+# Author: Sharp Ninja
+records:
+  - kind: fr
+    id: FR-RIDE-065
+    title: Caddy edge TLS distinct from ngrok
+    description: >
+      RideAudit edge TLS is terminated by Caddy and is distinct from ngrok HTTPS.
+      ngrok HTTPS remains FR-RIDE-064 and is not this requirement. Omarchy or
+      LAB-OMARCHY loopback or LAN HTTP is not a Caddy TLS receipt. This item
+      is Class C and may still be in flight.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29 from plan section 11. approval: Payton AGREE 2026-09-29.
+      Does not treat the ngrok public URL as edge TLS.
+    acceptanceCriteria:
+      - id: AC-RIDE-065-001
+        text: Caddy presents edge TLS for the documented RideAudit edge host.
+        isSatisfied: false
+      - id: AC-RIDE-065-002
+        text: An ngrok HTTPS URL is not accepted as the Caddy edge TLS receipt.
+        isSatisfied: false
+      - id: AC-RIDE-065-003
+        text: Loopback or LAN HTTP is not accepted as the Caddy edge TLS receipt. The item stays open while Class C.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-066
+    title: Larger durable default Android UI font
+    description: >
+      The Android capture UI sets a larger durable default font in application
+      styles. Operating system accessibility font scaling is not a substitute
+      for that application default.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. approval: Payton AGREE 2026-09-29.
+      docs/receipts/android/20260929T145412Z-dual-phone-fold4-edge.md left
+      MainView.axaml FontSize 20 unchanged. That prior size does not satisfy
+      this FR. Does not close AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-RIDE-066-001
+        text: Capture UI default font is defined in application styles and is larger than the prior FontSize 20 title default.
+        isSatisfied: false
+      - id: AC-RIDE-066-002
+        text: OS accessibility font scaling alone does not satisfy the default font AC.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-067
+    title: Avalonia RemoteControl visual-tree debugging
+    description: >
+      Android debug sessions integrate SharpNinja.Avalonia.RemoteControl so an
+      operator can inspect the live visual tree. ADB UI tapping is not the
+      required method for that inspection.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. approval: Payton AGREE 2026-09-29.
+      Does not claim the package is already referenced.
+    acceptanceCriteria:
+      - id: AC-RIDE-067-001
+        text: The Android capture client integrates SharpNinja.Avalonia.RemoteControl for live visual-tree inspection.
+        isSatisfied: false
+      - id: AC-RIDE-067-002
+        text: ADB tapping is not the required debug path for that visual-tree inspection.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-069
+    title: Cursor agents on PAYTON-LEGION2 private worker
+    description: >
+      When RideAudit lab work uses Cursor cloud coding agents, those agents
+      run on the PAYTON-LEGION2 private worker so mcpserver-grok-plugin stays
+      available to the agent.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29. Lab process requirement, included because
+      RideAudit requirements already cover lab CD and ingress process.
+      approval: Payton AGREE 2026-09-29.
+      A single session on that host does not satisfy this AC.
+      Cursor Desktop is installed on PAYTON-LEGION2. Agent identity is ninja@thesharp.ninja.
+    acceptanceCriteria:
+      - id: AC-RIDE-069-001
+        text: Cursor cloud coding agents for this repo run on the PAYTON-LEGION2 private worker.
+        isSatisfied: false
+      - id: AC-RIDE-069-002
+        text: That worker path keeps mcpserver-grok-plugin available. An agent path that cannot use the plugin is not the required lab path.
+        isSatisfied: false
+      - id: AC-RIDE-069-003
+        text: Cursor Desktop is installed on PAYTON-LEGION2 for this lab path.
+        isSatisfied: false
+      - id: AC-RIDE-069-004
+        text: Agents on that path use the identity ninja@thesharp.ninja.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-034
+    title: Operator publishes a lab-signed Windows desktop build
+    actors:
+      - Operator
+    briefDescription: >
+      Operator signs a Windows lab desktop build with CN=RideAudit Lab Self-Signed
+      and records that the result is not Public Trust. Commercial signing is
+      individual Payton Byrd using IV plus eSigner, not an organization OV
+      certificate, and must not be purchased yet. macOS codesign stays deferred.
+      approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator publishes the framework-dependent win-x64 desktop build on PAYTON-LEGION2.
+      2. Operator signs it with the lab certificate subject CN=RideAudit Lab Self-Signed and refuses unrelated store certificates.
+      3. Operator records that signtool sees a signature and that verify /pa does not establish Public Trust.
+      4. Operator leaves commercial signing deferred. Publisher identity is the individual Payton Byrd using IV plus eSigner. An organization OV certificate is not the publisher identity. Do not buy a certificate yet. macOS codesign stays deferred.
+      5. Operator does not treat the lab signature as AC-RIDE-222-001.
+    acceptanceCriteria:
+      - id: AC-UC-034-001
+        text: Lab win-x64 signing uses CN=RideAudit Lab Self-Signed, is not Public Trust, and does not close AC-RIDE-222-001.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-222
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-035
+    title: Operator proves Caddy edge TLS apart from ngrok
+    actors:
+      - Operator
+    briefDescription: >
+      Operator shows Caddy edge TLS for RideAudit and does not cite ngrok HTTPS
+      or loopback HTTP as that proof. approval: Payton AGREE 2026-09-29. Class C.
+    basicFlow: |
+      1. Operator identifies the Caddy edge host for RideAudit.
+      2. Operator records a Caddy TLS receipt for that host.
+      3. Operator keeps the ngrok HTTPS tunnel under FR-RIDE-064 and does not reuse it as the Caddy receipt.
+      4. If Caddy TLS is not up, the AC stays open.
+    acceptanceCriteria:
+      - id: AC-UC-035-001
+        text: Caddy edge TLS is shown apart from ngrok HTTPS and apart from loopback HTTP, or the AC stays open.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-065
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-036
+    title: Driver reads capture UI at the app default font
+    actors:
+      - Driver
+    briefDescription: >
+      Driver uses the Android capture UI whose default font comes from application
+      styles and is larger than the prior FontSize 20 default. approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Driver opens the Avalonia Android capture UI.
+      2. The default font is the application style, not an OS accessibility override.
+      3. That default is larger than the prior FontSize 20 title default.
+    acceptanceCriteria:
+      - id: AC-UC-036-001
+        text: The capture UI default font is an application style larger than FontSize 20, without relying on OS accessibility scaling.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-066
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-037
+    title: Operator inspects the Android visual tree with RemoteControl
+    actors:
+      - Operator
+    briefDescription: >
+      Operator debugs the Android capture UI through SharpNinja.Avalonia.RemoteControl
+      instead of ADB tapping. approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator attaches the capture client debug session.
+      2. SharpNinja.Avalonia.RemoteControl shows the live visual tree.
+      3. Operator does not use ADB taps as the required inspection method.
+    acceptanceCriteria:
+      - id: AC-UC-037-001
+        text: Live visual-tree inspection uses SharpNinja.Avalonia.RemoteControl rather than ADB tapping.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-067
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-038
+    title: Operator seats a closed Fold 4 in the forward camera tray
+    actors:
+      - Operator
+    briefDescription: >
+      Operator places a closed Galaxy Z Fold 4 in the headrest tray in landscape
+      with primary cameras facing forward. The mount uses dual post-blocks,
+      slotted arms, thumbscrews, and a cradle grid. This use case realizes
+      FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate. approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator closes the Galaxy Z Fold 4.
+      2. Operator seats it in the tray in landscape.
+      3. Primary cameras face forward, out of the opening, and are not blocked.
+      4. The mount uses dual post-blocks, slotted arms, thumbscrews, and a cradle grid.
+      5. CAD fit is not a road release. HW1 on-vehicle print stays open.
+    acceptanceCriteria:
+      - id: AC-UC-038-001
+        text: A closed Fold 4 stays seated landscape with primary cameras facing forward and not blocked. The mount uses dual post-blocks, slotted arms, thumbscrews, and a cradle grid. CAD is not a road release.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-041
+        linkType: Realizes
+
+  - kind: usecase
+    localId: UC-RIDE-039
+    title: Operator runs Cursor cloud agents on the LEGION2 private worker
+    actors:
+      - Operator
+    briefDescription: >
+      Operator places Cursor cloud coding agents for RideAudit on the
+      PAYTON-LEGION2 private worker so the MCP plugin stays available.
+      Cursor Desktop is installed on that host. Agent identity is ninja@thesharp.ninja.
+      approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator installs Cursor Desktop on PAYTON-LEGION2 and signs in as ninja@thesharp.ninja.
+      2. Operator targets the PAYTON-LEGION2 private worker for a Cursor cloud coding agent.
+      3. The agent can use mcpserver-grok-plugin.
+      4. An agent that cannot use the plugin is not accepted as the lab path.
+    acceptanceCriteria:
+      - id: AC-UC-039-001
+        text: The Cursor cloud agent runs on the PAYTON-LEGION2 private worker, Cursor Desktop is installed there, the agent identity is ninja@thesharp.ninja, and the agent can use mcpserver-grok-plugin.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-069
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-VIEW-006
+    title: Lab Authenticode interim and deferred public trust
+    description: >
+      Allow a non-exportable lab Authenticode certificate with subject
+      CN=RideAudit Lab Self-Signed on PAYTON-LEGION2 for win-x64 lab builds.
+      Refuse unrelated store certificates. Do not commit a pfx. Treat verify /pa
+      failure and SmartScreen warning as expected for that lab certificate.
+      Defer Public Trust. The deferred commercial path is individual publisher
+      Payton Byrd using IV plus eSigner. An organization OV certificate is not
+      the publisher identity. Do not buy a certificate yet. Defer macOS
+      codesign. Linux Authenticode does not apply.
+    priority: high
+    area: RIDE
+    subarea: VIEW
+    status: pending
+    notes: >
+      Implements FR-RIDE-222. Operator capture 2026-09-29. PR #22.
+      approval: Payton AGREE 2026-09-29. Does not satisfy AC-RIDE-222-001.
+     
+    acceptanceCriteria:
+      - id: AC-RIDE-VIEW-006-001
+        text: Lab win-x64 on PAYTON-LEGION2 may be signed with CN=RideAudit Lab Self-Signed. Unrelated store certificates are refused. No pfx is committed.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-006-002
+        text: signtool may see the lab signature while verify /pa fails closed on Public Trust. A SmartScreen warning is expected. That result is not Public Trust.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-006-003
+        text: Commercial signing stays deferred and must not be purchased yet. Publisher identity is the individual Payton Byrd using IV plus eSigner. An organization OV certificate is not the publisher identity.
+        isSatisfied: false
+      - id: AC-RIDE-VIEW-006-004
+        text: macOS codesign stays deferred. Linux Authenticode does not apply. Windows-only lab builds do not satisfy AC-RIDE-222-001.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-EDGE-002
+    title: Caddy edge TLS separate from the ngrok tunnel
+    description: >
+      Terminate RideAudit edge TLS with Caddy. Keep that certificate path
+      distinct from the ngrok HTTPS tunnel and from loopback or LAN HTTP.
+    priority: high
+    area: RIDE
+    subarea: EDGE
+    status: pending
+    notes: >
+      Implements FR-RIDE-065. Operator capture 2026-09-29. Class C.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-EDGE-002-001
+        text: Caddy is the edge TLS terminator for the documented RideAudit edge.
+        isSatisfied: false
+      - id: AC-RIDE-EDGE-002-002
+        text: ngrok HTTPS and loopback HTTP are excluded from the Caddy TLS evidence.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-013
+    title: Application style default font
+    description: >
+      Set the Android capture default UI font in application styles, larger
+      than the prior FontSize 20 title default. Do not rely on OS accessibility
+      scaling as the only control.
+    priority: medium
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-066. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-013-001
+        text: Application styles define a default UI font larger than FontSize 20.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-013-002
+        text: The style default remains in effect when OS accessibility scaling is at the platform default.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-014
+    title: SharpNinja.Avalonia.RemoteControl debug attach
+    description: >
+      Reference SharpNinja.Avalonia.RemoteControl from the Android capture
+      client and expose the live visual tree to the operator during debug.
+    priority: medium
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-067. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-014-001
+        text: The capture client references SharpNinja.Avalonia.RemoteControl.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-014-002
+        text: A debug session can read the live visual tree without ADB taps as the inspection method.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-015
+    title: Fold 4 USB primary device proof
+    description: >
+      Treat a Samsung Galaxy Z Fold 4 attached by USB as the primary device
+      for AC-UC-025 class runtime proof. Emulator-only runs are not that proof.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-056. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29. Does not mark AC-UC-025-001 satisfied.
+     
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-015-001
+        text: Primary runtime evidence names a Galaxy Z Fold 4 on USB.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-015-002
+        text: Emulator-only evidence is rejected for that runtime class.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-016
+    title: Motorola edge 2024 wireless adb secondary
+    description: >
+      Use a Motorola edge 2024 reached by wireless adb as the lab secondary
+      phone for dual-phone roles. It does not replace the Fold 4 primary.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-041. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-016-001
+        text: The secondary lab phone is a Motorola edge 2024 over wireless adb.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-016-002
+        text: The secondary phone is not accepted as the Fold 4 primary proof.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-HW-001
+    title: Fold 4 closed landscape tray geometry
+    description: >
+      Size the phone tray so a Galaxy Z Fold 4 fits while CLOSED, in LANDSCAPE,
+      with primary cameras facing FORWARD and not blocked. The mount uses dual
+      post-blocks, slotted arms, thumbscrews, and a cradle grid.
+    priority: high
+    area: RIDE
+    subarea: HW
+    status: pending
+    notes: >
+      Implements FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate of HW-AC-MOUNT-001 on FR-RIDE-041.
+      Operator capture 2026-09-29. approval: Payton AGREE 2026-09-29.
+      Does not close the bracket on-vehicle print.
+    acceptanceCriteria:
+      - id: AC-RIDE-HW-001-001
+        text: Tray geometry is specified for Fold 4 CLOSED, LANDSCAPE, primary cameras FORWARD and not blocked.
+        isSatisfied: false
+      - id: AC-RIDE-HW-001-002
+        text: A fit check shows the closed phone remains seated in that pose. The mount uses dual post-blocks, slotted arms, thumbscrews, and a cradle grid. CAD is not a road release.
+        isSatisfied: false
+
+  - kind: tr
+    id: TR-RIDE-LAB-001
+    title: Private worker hosts Cursor cloud agents
+    description: >
+      Install Cursor Desktop on PAYTON-LEGION2. Configure Cursor cloud coding
+      agents for this repo to run on the PAYTON-LEGION2 private worker as
+      ninja@thesharp.ninja so mcpserver-grok-plugin is reachable.
+    priority: high
+    area: RIDE
+    subarea: LAB
+    status: pending
+    notes: >
+      Implements FR-RIDE-069. Operator capture 2026-09-29. Lab process.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-LAB-001-001
+        text: Agent runs for this repo target the PAYTON-LEGION2 private worker.
+        isSatisfied: false
+      - id: AC-RIDE-LAB-001-002
+        text: The worker path can invoke mcpserver-grok-plugin.
+        isSatisfied: false
+      - id: AC-RIDE-LAB-001-003
+        text: Cursor Desktop is installed on PAYTON-LEGION2 and the agent identity is ninja@thesharp.ninja.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-041
+    title: Lab Authenticode is not Public Trust
+    description: >
+      Verify a lab win-x64 signature with subject CN=RideAudit Lab Self-Signed
+      is recorded as signed and not Public Trust, that unrelated store
+      certificates are refused, that no pfx is committed, and that commercial
+      signing for individual Payton Byrd using IV plus eSigner is not purchased
+      yet. An organization OV certificate is not the publisher identity.
+      macOS codesign stays deferred.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-222. Operator capture 2026-09-29. PR #22.
+      approval: Payton AGREE 2026-09-29. Does not close AC-RIDE-222-001.
+    acceptanceCriteria:
+      - id: AC-TEST-041-001
+        text: Evidence shows CN=RideAudit Lab Self-Signed on win-x64, signtool sees a signature, and verify /pa does not establish Public Trust.
+        isSatisfied: false
+      - id: AC-TEST-041-002
+        text: Evidence shows commercial signing for individual Payton Byrd using IV plus eSigner is not purchased yet, an organization OV certificate is not the publisher identity, macOS codesign remains deferred, and AC-RIDE-222-001 stays unsatisfied.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-042
+    title: Live OTS calendar submit without txid
+    description: >
+      Verify a live OpenTimestamps public calendar submit can be receipted as
+      pending, and that confirmation, Bitcoin txid, block height, admission,
+      and live_bitcoin_metadata stay false until upgrade succeeds.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-018. Operator capture 2026-09-29. PR #23.
+      approval: Payton AGREE 2026-09-29. Class C for confirmation.
+    acceptanceCriteria:
+      - id: AC-TEST-042-001
+        text: A live public calendar submit receipt shows HTTP success and a pending attestation, and it is not a documented fixture calendar.
+        isSatisfied: false
+      - id: AC-TEST-042-002
+        text: The same evidence has no Bitcoin txid or block height, does not set live_bitcoin_metadata, and does not admit a record.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-043
+    title: Fold 4 USB primary, not emulator-only
+    description: >
+      Verify AC-UC-025 class runtime proof names a Samsung Galaxy Z Fold 4
+      attached by USB. Emulator-only runs fail this test. The test does not
+      mark AC-UC-025-001 satisfied.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-056. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-043-001
+        text: Runtime evidence identifies a Galaxy Z Fold 4 on USB as the primary device.
+        isSatisfied: false
+      - id: AC-TEST-043-002
+        text: Emulator-only evidence is a failure for this runtime class, and AC-UC-025-001 remains unsatisfied.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-044
+    title: Motorola edge 2024 wireless secondary
+    description: >
+      Verify the lab secondary phone for dual-phone roles is a Motorola edge
+      2024 over wireless adb, and that it is not substituted for the Fold 4 primary.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-041. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-TEST-044-001
+        text: Evidence shows a Motorola edge 2024 connected by wireless adb in the secondary role.
+        isSatisfied: false
+      - id: AC-TEST-044-002
+        text: The secondary attachment is not scored as Fold 4 primary proof or as AC-UC-025-001 closure.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-045
+    title: Caddy TLS receipt excludes ngrok
+    description: >
+      Verify edge TLS evidence names Caddy and does not use ngrok HTTPS or
+      loopback HTTP as the pass condition.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-065. Operator capture 2026-09-29. Class C.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-045-001
+        text: The receipt names Caddy as the TLS terminator.
+        isSatisfied: false
+      - id: AC-TEST-045-002
+        text: ngrok HTTPS and loopback or LAN HTTP are recorded as non-proof for this test.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-046
+    title: App style font larger than FontSize 20
+    description: >
+      Verify application styles set a capture UI default font larger than
+      FontSize 20 and that OS accessibility scaling is not the only control.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-066. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-046-001
+        text: A style or test asserts the default UI font is larger than FontSize 20.
+        isSatisfied: false
+      - id: AC-TEST-046-002
+        text: The assertion targets application styles, not only OS accessibility settings.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-047
+    title: RemoteControl visual tree without ADB taps
+    description: >
+      Verify SharpNinja.Avalonia.RemoteControl is integrated and that visual-tree
+      debug evidence does not depend on ADB tapping.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-067. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-047-001
+        text: The capture project references SharpNinja.Avalonia.RemoteControl.
+        isSatisfied: false
+      - id: AC-TEST-047-002
+        text: Debug evidence for the visual tree does not require ADB taps.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-048
+    title: Fold 4 closed landscape tray fit
+    description: >
+      Verify tray dimensions or a fit receipt hold a Galaxy Z Fold 4 CLOSED,
+      LANDSCAPE, with primary cameras facing FORWARD.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-041. FR-RIDE-068 was withdrawn as a duplicate. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-048-001
+        text: Fit evidence states CLOSED, LANDSCAPE, and primary cameras FORWARD for a Galaxy Z Fold 4.
+        isSatisfied: false
+      - id: AC-TEST-048-002
+        text: The phone remains secure in that pose. A generic cradle note without those three conditions fails.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-049
+    title: LEGION2 private worker agent path
+    description: >
+      Verify Cursor Desktop is installed on PAYTON-LEGION2, Cursor cloud coding
+      agents for this repo are targeted at the PAYTON-LEGION2 private worker as
+      ninja@thesharp.ninja, and mcpserver-grok-plugin is available there.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-069. Operator capture 2026-09-29. Lab process.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-049-001
+        text: Agent target evidence names the PAYTON-LEGION2 private worker.
+        isSatisfied: false
+      - id: AC-TEST-049-002
+        text: Plugin availability on that worker is shown. A host that cannot load the plugin fails.
+        isSatisfied: false
+      - id: AC-TEST-049-003
+        text: Evidence shows Cursor Desktop on PAYTON-LEGION2 and agent identity ninja@thesharp.ninja.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-070
+    title: Hostile validation opposing-model JSONL
+    description: >
+      RideAudit hostile validation uses an opposing agent and model. The HV
+      request and response are retained as JSONL and committed immediately.
+      An AGREE requires accuracy and completeness at or above 98. An HV AGREE
+      does not backdate plan section 8.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29 from full conversation history.
+      approval: Payton AGREE 2026-09-29.
+      CODE-HV READY is not product complete.
+    acceptanceCriteria:
+      - id: AC-RIDE-070-001
+        text: Hostile validation is performed by an opposing agent and model, not by the implementer model scoring its own work.
+        isSatisfied: false
+      - id: AC-RIDE-070-002
+        text: The HV request and response JSONL are retained and committed immediately.
+        isSatisfied: false
+      - id: AC-RIDE-070-003
+        text: AGREE requires accuracy and completeness at or above 98.
+        isSatisfied: false
+      - id: AC-RIDE-070-004
+        text: An HV AGREE does not backdate plan section 8.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-040
+    title: Operator retains an opposing-model HV pair
+    actors:
+      - Operator
+      - OpposingValidator
+    briefDescription: >
+      Operator sends hostile validation to an opposing agent and model, commits
+      the request and response JSONL immediately, and treats AGREE as requiring
+      accuracy and completeness at or above 98. approval: Payton AGREE 2026-09-29.
+     
+    basicFlow: |
+      1. Operator sends the validation request to an opposing agent and model.
+      2. Operator retains the request and response as JSONL.
+      3. Operator commits that JSONL immediately.
+      4. AGREE is accepted only when accuracy and completeness are at or above 98.
+      5. Operator does not backdate plan section 8 from that AGREE.
+    acceptanceCriteria:
+      - id: AC-UC-040-001
+        text: An opposing agent and model produce the HV response, the JSONL pair is committed immediately, and AGREE requires accuracy and completeness at or above 98.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-070
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-LAB-002
+    title: Opposing-model HV JSONL retention
+    description: >
+      Store each hostile-validation request and response as JSONL under the
+      documented HV receipt path and commit that pair immediately. The validator
+      model must differ from the implementer model. Score AGREE only at accuracy
+      and completeness of 98 or higher.
+    priority: high
+    area: RIDE
+    subarea: LAB
+    status: pending
+    notes: >
+      Implements FR-RIDE-070. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-LAB-002-001
+        text: HV request and response JSONL are written and committed in the same change as the claim they support.
+        isSatisfied: false
+      - id: AC-RIDE-LAB-002-002
+        text: The validator is an opposing model. AGREE is refused below accuracy or completeness 98.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-050
+    title: HV JSONL pair and 98 AGREE gate
+    description: >
+      Verify a hostile-validation receipt names an opposing model, includes
+      committed request and response JSONL, and withholds AGREE below accuracy
+      or completeness 98.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-070. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-050-001
+        text: Evidence names an opposing model and points at committed request and response JSONL.
+        isSatisfied: false
+      - id: AC-TEST-050-002
+        text: An AGREE below accuracy or completeness 98 fails.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-071
+    title: Class A AC coverage name-or-defer ledger
+    description: >
+      Class A acceptance criteria are either named to a test source or explicitly
+      deferred. For live third-party acceptance criteria, an explicit deferral
+      wins over a test-source name. A covered ledger row is not whole-AC closure.
+      A count such as 401 covered, 23 deferred, 0 missing, 424 total is not P11b
+      done.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29 from full conversation history and plan r3.6.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-071-001
+        text: Every Class A acceptance criterion is named to a test source or explicitly deferred.
+        isSatisfied: false
+      - id: AC-RIDE-071-002
+        text: For a live third-party acceptance criterion, an explicit deferral wins over a test-source name.
+        isSatisfied: false
+      - id: AC-RIDE-071-003
+        text: A covered ledger row is not whole-AC closure.
+        isSatisfied: false
+      - id: AC-RIDE-071-004
+        text: Ledger totals, including 401 covered, 23 deferred, 0 missing, and 424 total, are not P11b done.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-041
+    title: Operator names or defers each Class A AC
+    actors:
+      - Operator
+    briefDescription: >
+      Operator keeps the Class A ledger so each acceptance criterion is named
+      to a test source or explicitly deferred. Deferred wins for live third-party
+      criteria. approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator lists Class A acceptance criteria.
+      2. Operator names a test source or records an explicit deferral for each one.
+      3. For a live third-party criterion, an explicit deferral replaces a test-source name.
+      4. Operator does not treat a covered row or a ledger total as whole-AC closure or as P11b done.
+    acceptanceCriteria:
+      - id: AC-UC-041-001
+        text: Each Class A AC is named or deferred, deferred wins for live third-party ACs, and ledger totals do not close those ACs.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-071
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-LAB-003
+    title: Name-or-defer ledger rule
+    description: >
+      Maintain the Class A coverage ledger as name-or-defer. When a live
+      third-party acceptance criterion is deferred, that deferral is the row
+      outcome even if a test file name also exists. Do not mark the AC satisfied
+      from the covered count alone.
+    priority: high
+    area: RIDE
+    subarea: LAB
+    status: pending
+    notes: >
+      Implements FR-RIDE-071. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-LAB-003-001
+        text: The ledger row for each Class A AC is either a test-source name or an explicit deferral.
+        isSatisfied: false
+      - id: AC-RIDE-LAB-003-002
+        text: A deferred live third-party row stays deferred when a test-source name is also present.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-051
+    title: Deferred live third-party AC wins over a name
+    description: >
+      Verify the Class A ledger names or defers every AC, that an explicit
+      deferral wins for live third-party ACs, and that 401/23/0/424 is not
+      scored as P11b done.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-071. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-051-001
+        text: A fixture deferred live third-party row remains deferred even when a test-source name is present.
+        isSatisfied: false
+      - id: AC-TEST-051-002
+        text: The test fails if a ledger total is treated as whole-AC closure or P11b done.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-072
+    title: Lab conduct for RideAudit work
+    description: >
+      RideAudit lab work prefers accuracy over convenience and keeps a receipt
+      for the path and the result. Paths are not silently substituted. Python
+      is not used in the committed in-repo lab toolchain (for example
+      artifacts/hardware/headrest-phone-mount and its docs); this FR does not
+      constrain languages installed on a physical LAB-OMARCHY host. Committed
+      lab text does not use em or en dashes. Execution waits for approval,
+      except lab work on PAYTON-DESKTOP and PAYTON-LEGION2 which is go-by-default.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator capture 2026-09-29 from full conversation history process rules.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-072-001
+        text: Lab work records a receipt for the path taken and the result, and prefers an accurate receipt over a convenient substitute.
+        isSatisfied: false
+      - id: AC-RIDE-072-002
+        text: A required path is not silently replaced with a different path.
+        isSatisfied: false
+      - id: AC-RIDE-072-003
+        text: The committed in-repo RideAudit lab toolchain (artifacts/hardware and related lab docs that invoke it) does not use Python.
+        isSatisfied: false
+      - id: AC-RIDE-072-004
+        text: Committed lab text does not contain em dashes or en dashes.
+        isSatisfied: false
+      - id: AC-RIDE-072-005
+        text: Execution waits for approval, except lab work on LAB-OMARCHY and PAYTON-LEGION2 which is go-by-default.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-042
+    title: Operator follows lab conduct on DESKTOP and LEGION2
+    actors:
+      - Operator
+    briefDescription: >
+      Operator runs RideAudit lab work with receipts, no silent path
+      substitution, no Python, and no em or en dashes. Lab work on
+      LAB-OMARCHY and PAYTON-LEGION2 is go-by-default. Other execution
+      waits for approval. approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator selects the documented path and does not swap it without a receipt.
+      2. Operator runs the lab step without Python.
+      3. Operator writes the receipt in text that has no em or en dashes.
+      4. On LAB-OMARCHY or PAYTON-LEGION2 the lab step proceeds go-by-default. Elsewhere the operator waits for approval.
+    acceptanceCriteria:
+      - id: AC-UC-042-001
+        text: The lab step has a receipt, uses the documented path, avoids Python and em or en dashes, and waits for approval except on LAB-OMARCHY and PAYTON-LEGION2.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-072
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-LAB-004
+    title: Lab conduct checks
+    description: >
+      Check RideAudit committed lab toolchain under artifacts/hardware for a
+      receipt, an unchanged documented path, absence of Python lab tooling,
+      absence of em and en dashes, and the approve-before-execute rule with
+      go-by-default only on PAYTON-DESKTOP and PAYTON-LEGION2.
+    priority: high
+    area: RIDE
+    subarea: LAB
+    status: pending
+    notes: >
+      Implements FR-RIDE-072. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-RIDE-LAB-004-001
+        text: A lab change cites its receipt and the path it actually used.
+        isSatisfied: false
+      - id: AC-RIDE-LAB-004-002
+        text: Lab scripts under the committed lab toolchain are not Python, committed lab text has no em or en dash, and non-lab hosts still require approval.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-052
+    title: Lab conduct receipt and dash scan
+    description: >
+      Verify the committed in-repo lab toolchain under artifacts/hardware
+      includes a receipt reference, does not silently substitute paths, does
+      not use Python lab tooling, and does not contain em or en dashes.
+      Confirm go-by-default is limited to PAYTON-DESKTOP and PAYTON-LEGION2.
+      Scope is in-repo lab artifacts (for example headrest-phone-mount), not
+      languages on a physical LAB-OMARCHY host.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-072. Operator capture 2026-09-29.
+      approval: Payton AGREE 2026-09-29.
+    acceptanceCriteria:
+      - id: AC-TEST-052-001
+        text: A scan of the committed lab tree under artifacts/hardware finds a receipt reference and no em or en dash characters.
+        isSatisfied: false
+      - id: AC-TEST-052-002
+        text: The committed lab toolchain under artifacts/hardware does not use Python lab tooling and does not describe a silent path substitution. Go-by-default is named only for PAYTON-DESKTOP and PAYTON-LEGION2.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-073
+    title: Android visual regression with SharpNinja.aiUnit
+    description: >
+      The RideAudit Android Avalonia client references SharpNinja.aiUnit and
+      runs automated visual regression tests on a connected Android device.
+      Each wireframe is a single-screen compare unless that wireframe says
+      otherwise. Each storyboard is a step sequence: the test drives the
+      running app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote)
+      and compares a screenshot at each frame. Screenshot validation includes
+      usability validation in addition to baseline comparison. The comparison
+      threshold is documented. A mismatch fails closed. A usability defect
+      fails closed even when pixels match the baseline. A static single-shot
+      screenshot does not satisfy a storyboard.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Operator add 2026-09-29, updated the same day for storyboard navigation
+      and for usability checks in addition to pixel comparison.
+      Android visual and usability tests use the SharpNinja.aiUnit codex-subscription profile.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
+      Baselines are the mobile wireframe and storyboard documents under docs/ux/wireframes and docs/ux/storyboards. Desktop court/counsel review-app baselines (docs/ux/review-app WF-R/SB-R) are out of scope for the Android harness and belong to the desktop review client.
+      Storyboard steps are the beats in those documents. Each beat is a frame.
+      Storyboard driving uses SharpNinja.Avalonia.RemoteControl, required by FR-RIDE-067.
+      ADB taps are not the storyboard step driver.
+      Current client project is src/RideAudit.Client.Android/RideAudit.Client.Android.csproj.
+      An emulator-only run does not satisfy device-connected execution.
+      Package version is not invented here.
+    acceptanceCriteria:
+      - id: AC-RIDE-073-001
+        text: The Android Avalonia client references the SharpNinja.aiUnit package.
+        isSatisfied: false
+      - id: AC-RIDE-073-002
+        text: Each wireframe in the repo has a single-screen device screenshot compared to that wireframe baseline, unless that wireframe document specifies otherwise.
+        isSatisfied: false
+      - id: AC-RIDE-073-003
+        text: Each storyboard is navigated as its step sequence by interacting with the running Avalonia Android app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote). A screenshot is captured and compared at each storyboard frame. A static single-shot screenshot alone does not satisfy this AC.
+        isSatisfied: false
+      - id: AC-RIDE-073-004
+        text: The visual regression run executes on PAYTON-LEGION2 against a connected Android device. An emulator-only run does not satisfy this AC.
+        isSatisfied: false
+      - id: AC-RIDE-073-005
+        text: The run writes a receipt that names the host, the connected device, the documented comparison threshold, the pass or fail result for each wireframe, the pass or fail result for each storyboard frame, and any usability defect found.
+        isSatisfied: false
+      - id: AC-RIDE-073-006
+        text: A baseline is not silently skipped. A skip is a failure unless the receipt documents the reason for that baseline.
+        isSatisfied: false
+      - id: AC-RIDE-073-007
+        text: The comparison threshold is documented. A mismatch against a baseline fails closed.
+        isSatisfied: false
+      - id: AC-RIDE-073-008
+        text: Screenshot validation includes usability validation in addition to baseline comparison. The run fails closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects detectable from the screenshot or the AvaloniaRemote visual tree.
+        isSatisfied: false
+      - id: AC-RIDE-073-009
+        text: A pixel match alone does not satisfy screenshot validation when a usability defect is present.
+        isSatisfied: false
+      - id: AC-RIDE-073-010
+        text: SharpNinja.aiUnit for RideAudit Android visual and usability tests is configured to use the codex-subscription profile. Another profile does not satisfy this AC.
+        isSatisfied: false
+
+  - kind: usecase
+    localId: UC-RIDE-043
+    title: Operator runs device visual regression for every baseline
+    actors:
+      - Operator
+    briefDescription: >
+      Operator runs SharpNinja.aiUnit visual regression from the Android Avalonia
+      client on PAYTON-LEGION2 against a connected Android device. Each wireframe
+      is a single-screen compare. Each storyboard is driven step by step through
+      SharpNinja.Avalonia.RemoteControl (AvaloniaRemote), with a screenshot compared
+      at each frame. The same screenshots are checked for usability defects.
+      A pixel match does not pass when a usability defect is present.
+      approval: Payton AGREE 2026-09-29.
+    basicFlow: |
+      1. Operator confirms the Android Avalonia client references SharpNinja.aiUnit and SharpNinja.Avalonia.RemoteControl, and that aiUnit uses the codex-subscription profile.
+      2. Operator connects an Android device to PAYTON-LEGION2 and starts the Avalonia Android app.
+      3. For each wireframe, the run captures one screen and compares it to that baseline, unless the wireframe specifies otherwise.
+      4. For each storyboard, AvaloniaRemote interacts with the running app through the step sequence and compares a screenshot at each frame.
+      5. A static single-shot screenshot does not satisfy a storyboard. A mismatch fails closed.
+      6. The run checks each captured screen for usability defects using the screenshot and the AvaloniaRemote visual tree. Cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other detectable layout defects fail closed even when the pixels match.
+      7. Operator writes a receipt of the run, including each storyboard frame and any usability defect. A baseline skip without a documented reason fails the run.
+    acceptanceCriteria:
+      - id: AC-UC-043-001
+        text: The Android client references SharpNinja.aiUnit before the run starts.
+        isSatisfied: false
+      - id: AC-UC-043-002
+        text: The run covers each wireframe with a single-screen device compare, unless that wireframe document specifies otherwise.
+        isSatisfied: false
+      - id: AC-UC-043-003
+        text: The run walks each storyboard step sequence by interacting with the running app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) and compares a screenshot at each frame. A static single-shot screenshot alone does not satisfy the storyboard.
+        isSatisfied: false
+      - id: AC-UC-043-004
+        text: Execution is on PAYTON-LEGION2 with a connected Android device. Emulator-only execution fails this use case.
+        isSatisfied: false
+      - id: AC-UC-043-005
+        text: The operator records a receipt of the run, including host, device, threshold, each wireframe result, each storyboard frame result, and any usability defect.
+        isSatisfied: false
+      - id: AC-UC-043-006
+        text: The run does not silently skip a baseline. A skip without a documented reason fails closed.
+        isSatisfied: false
+      - id: AC-UC-043-007
+        text: Screenshot validation includes usability checks in addition to baseline comparison. Cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other layout defects detectable from the screenshot or the AvaloniaRemote visual tree fail closed.
+        isSatisfied: false
+      - id: AC-UC-043-008
+        text: A pixel match alone does not satisfy the use case when a usability defect is present.
+        isSatisfied: false
+      - id: AC-UC-043-009
+        text: The operator configures SharpNinja.aiUnit to the codex-subscription profile before the Android visual and usability run. Another profile fails this use case.
+        isSatisfied: false
+    frLinks:
+      - frId: FR-RIDE-073
+        linkType: Realizes
+      - frId: FR-RIDE-067
+        linkType: Realizes
+
+  - kind: tr
+    id: TR-RIDE-VIDEO-017
+    title: aiUnit device screenshot compare on LEGION2
+    description: >
+      Add a SharpNinja.aiUnit package reference to the Android Avalonia client.
+      On PAYTON-LEGION2, compare one connected-device screenshot to each wireframe
+      unless that wireframe specifies otherwise. For each storyboard, drive the
+      running app through SharpNinja.Avalonia.RemoteControl (AvaloniaRemote)
+      along the step sequence, and capture and compare a screenshot at each frame.
+      Document the threshold, fail closed on mismatch, write a run receipt, and
+      refuse a silent skip. A static single-shot screenshot does not satisfy a storyboard.
+      Usability validation runs in addition to baseline comparison and fails closed
+      on layout defects even when the pixels match.
+    priority: high
+    area: RIDE
+    subarea: VIDEO
+    status: pending
+    notes: >
+      Implements FR-RIDE-073 and uses the RemoteControl path from FR-RIDE-067.
+      Operator update 2026-09-29 for storyboard step sequences and usability checks.
+      approval: Payton AGREE 2026-09-29.
+      Do not invent a package version. ADB taps are not the storyboard driver.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIDEO-017-001
+        text: RideAudit.Client.Android references SharpNinja.aiUnit.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-002
+        text: The test set includes one single-screen device screenshot comparison for each mobile wireframe under docs/ux/wireframes (not docs/ux/review-app), unless that wireframe specifies otherwise.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-003
+        text: For each mobile storyboard under docs/ux/storyboards (not docs/ux/review-app), the harness drives the running Android app with SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) through that storyboard step sequence and compares a screenshot at each frame.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-004
+        text: The harness runs on PAYTON-LEGION2 and requires a connected Android device. Emulator-only mode is not a pass.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-005
+        text: The harness writes a receipt with host, device, documented threshold, and a result for every baseline.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-006
+        text: Omitting a baseline or a storyboard frame without a documented reason in that receipt fails the run.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-007
+        text: A storyboard result that is only a static single-shot screenshot fails. Wireframe compares stay single-screen unless the wireframe specifies otherwise.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-008
+        text: The harness checks usability from the screenshot or the AvaloniaRemote visual tree, in addition to baseline comparison. It fails closed on cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other detectable layout defects.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-009
+        text: A pixel match does not produce a pass when a usability defect is present.
+        isSatisfied: false
+      - id: AC-RIDE-VIDEO-017-010
+        text: The aiUnit harness configuration for these Android visual and usability tests selects the codex-subscription profile.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-053
+    title: Device visual regression covers every baseline
+    description: >
+      Verify the Android Avalonia client references SharpNinja.aiUnit and that a
+      PAYTON-LEGION2 run against a connected Android device compares one screen
+      to every wireframe unless that wireframe specifies otherwise. For every
+      storyboard, SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) walks the
+      step sequence and compares a screenshot at each frame. A static single-shot
+      screenshot does not pass a storyboard. The threshold is documented. A
+      mismatch fails closed. The run is receipted. A baseline is not silently skipped.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-073. Operator update 2026-09-29 for storyboard RemoteControl sequences.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-TEST-053-001
+        text: The Android client project file references SharpNinja.aiUnit. A missing reference fails.
+        isSatisfied: false
+      - id: AC-TEST-053-002
+        text: Evidence lists one single-screen device comparison for each wireframe in the repo, unless that wireframe specifies otherwise. A missing wireframe without a documented reason fails.
+        isSatisfied: false
+      - id: AC-TEST-053-003
+        text: Evidence shows SharpNinja.Avalonia.RemoteControl (AvaloniaRemote) walked each storyboard step sequence on the running app and compared a screenshot at each frame. A storyboard covered only by a static single-shot screenshot fails.
+        isSatisfied: false
+      - id: AC-TEST-053-004
+        text: Evidence shows the run host is PAYTON-LEGION2 and the screenshot source is a connected Android device. Emulator-only evidence fails.
+        isSatisfied: false
+      - id: AC-TEST-053-005
+        text: A run receipt names host, device, documented threshold, and per-baseline pass or fail. A mismatch is a failed test.
+        isSatisfied: false
+      - id: AC-TEST-053-006
+        text: A wireframe, storyboard, or storyboard frame omitted from the receipt with no documented reason fails closed.
+        isSatisfied: false
+
+  - kind: test
+    id: TEST-RIDE-054
+    title: Usability defects fail closed despite pixel match
+    description: >
+      Verify screenshot validation checks usability in addition to baseline
+      comparison. A pixel match does not pass when the screenshot or the
+      AvaloniaRemote visual tree shows cut-off, truncated, or clipped text,
+      a missing icon, overlapping controls, text overflow, or another layout defect.
+    priority: high
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-073. Operator add 2026-09-29 for usability validation.
+      approval: Payton AGREE 2026-09-29. Does not close AC-UC-025-001.
+    acceptanceCriteria:
+      - id: AC-TEST-054-001
+        text: Evidence shows a usability check, from the screenshot or the AvaloniaRemote visual tree, in addition to the baseline pixel comparison.
+        isSatisfied: false
+      - id: AC-TEST-054-002
+        text: Cut-off, truncated, or clipped text, missing icons, overlapping controls, text overflow, and other detectable layout defects fail the run.
+        isSatisfied: false
+      - id: AC-TEST-054-003
+        text: A case that matches the baseline pixels and still has a usability defect is a failure. Pixel match alone does not satisfy the AC.
+        isSatisfied: false
+      - id: AC-TEST-054-004
+        text: Evidence shows SharpNinja.aiUnit is configured with the codex-subscription profile for the Android visual and usability run. A different profile fails.
+        isSatisfied: false
+
+  - kind: fr
+    id: FR-RIDE-074
+    title: About view holds copyright and third-party attributions
+    description: >
+      The RideAudit UI shows its copyright and its third-party attributions
+      (licenses and credits) on a dedicated About view. Copyright alone does
+      not satisfy this requirement. The bottom panel includes an About control
+      that opens that view. Copyright does not remain on the previous chrome
+      location, the top title bar. GPL licensing of the code stays FR-RIDE-029.
+      GPL notices on shared artifacts stay FR-RIDE-030. Source-file copyright
+      headers stay in place.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Operator delta 2026-09-29, plus the same-day addon that About includes
+      third-party attributions. approval: Payton AGREE 2026-10-07.
+      Not part of the 2026-09-29 capture AGREE. Cross-links FR-RIDE-029 and
+      FR-RIDE-030. Does not satisfy those FRs. Does not satisfy AC-UC-025-001.
+      The Avalonia UI 12 framework label is not this copyright notice.
+      ACs marked satisfied 2026-10-07 with TestRide055AboutTests proof.
+    acceptanceCriteria:
+      - id: AC-RIDE-074-001
+        text: A dedicated About view shows the RideAudit UI copyright.
+        isSatisfied: true
+      - id: AC-RIDE-074-002
+        text: The bottom panel includes an About control that opens the About view.
+        isSatisfied: true
+      - id: AC-RIDE-074-003
+        text: The previous chrome location, the top title bar, does not show the copyright notice.
+        isSatisfied: true
+      - id: AC-RIDE-074-004
+        text: Source-file copyright headers and FR-RIDE-030 artifact GPL notices remain. Showing copyright on About does not by itself satisfy FR-RIDE-029 or FR-RIDE-030.
+        isSatisfied: true
+      - id: AC-RIDE-074-005
+        text: The About view includes third-party attributions, meaning licenses and credits. An About view that shows copyright only does not satisfy this AC.
+        isSatisfied: true
+
+  - kind: usecase
+    localId: UC-RIDE-044
+    title: Driver opens About and reads copyright and attributions
+    actors:
+      - Driver
+    briefDescription: >
+      Driver uses the About control in the bottom panel, reads the copyright
+      and the third-party attributions (licenses and credits) on the About view,
+      and does not see that copyright on the top title bar.
+      approval: pending separate Payton AGREE. Draft.
+    basicFlow: |
+      1. Driver is on a RideAudit screen that has the bottom panel.
+      2. Driver activates the About control in the bottom panel.
+      3. The About view opens and shows the UI copyright and the third-party attributions.
+      4. Driver confirms the top title bar does not show that copyright.
+    acceptanceCriteria:
+      - id: AC-UC-044-001
+        text: The bottom-panel About control opens an About view that shows the UI copyright and third-party attributions (licenses and credits), and the top title bar does not show that copyright.
+        isSatisfied: true
+      - id: AC-UC-044-002
+        text: An About view that shows copyright and omits third-party attributions does not satisfy this use case.
+        isSatisfied: true
+    frLinks:
+      - frId: FR-RIDE-074
+        linkType: Realizes
+      - frId: FR-RIDE-029
+        linkType: Relates
+      - frId: FR-RIDE-030
+        linkType: Relates
+
+  - kind: tr
+    id: TR-RIDE-VIEW-007
+    title: About view with copyright and third-party attributions
+    description: >
+      Add a dedicated About view to the shared Avalonia UI. Put an About control
+      in the bottom panel that opens it. Show the UI copyright and the
+      third-party attributions (licenses and credits) on that view. Copyright
+      alone is not enough. Remove the copyright notice from the top title bar.
+      Leave source-file copyright headers and artifact GPL notices in place.
+    priority: medium
+    area: RIDE
+    subarea: VIEW
+    status: pending
+    notes: >
+      Implements FR-RIDE-074. Operator delta 2026-09-29. approval: Payton AGREE 2026-10-07.
+      The current top-bar LicenseNotice is the previous chrome
+      location. The Avalonia UI 12 framework label is not the copyright notice.
+      Third-party attributions are licenses and credits shown on About.
+      ACs marked satisfied 2026-10-07 with TestRide055AboutTests proof.
+    acceptanceCriteria:
+      - id: AC-RIDE-VIEW-007-001
+        text: The shared UI has an About view whose content includes the UI copyright.
+        isSatisfied: true
+      - id: AC-RIDE-VIEW-007-002
+        text: A bottom-panel About control navigates to that About view.
+        isSatisfied: true
+      - id: AC-RIDE-VIEW-007-003
+        text: The top title bar does not render the copyright notice.
+        isSatisfied: true
+      - id: AC-RIDE-VIEW-007-004
+        text: The About view includes third-party attributions (licenses and credits). Copyright without those attributions does not satisfy this AC.
+        isSatisfied: true
+
+  - kind: test
+    id: TEST-RIDE-055
+    title: About shows copyright and attributions, not top-bar copyright
+    description: >
+      Verify the bottom panel About control opens the About view, the About view
+      shows the UI copyright and third-party attributions (licenses and credits),
+      and the top title bar does not show that copyright. Copyright alone fails.
+    priority: medium
+    area: RIDE
+    status: pending
+    notes: >
+      Covers FR-RIDE-074. Operator delta 2026-09-29. approval: Payton AGREE 2026-10-07.
+      Does not satisfy FR-RIDE-029 or FR-RIDE-030. ACs marked satisfied 2026-10-07 with TestRide055AboutTests proof.
+    acceptanceCriteria:
+      - id: AC-TEST-055-001
+        text: Activating the bottom-panel About control opens the About view.
+        isSatisfied: true
+      - id: AC-TEST-055-002
+        text: The About view shows the RideAudit UI copyright.
+        isSatisfied: true
+      - id: AC-TEST-055-003
+        text: The top title bar does not show the copyright notice. A copyright string left on that chrome fails.
+        isSatisfied: true
+      - id: AC-TEST-055-004
+        text: The About view includes third-party attributions (licenses and credits). An About view that shows copyright only fails.
+        isSatisfied: true
+
+# Mappings intentionally omitted here.
+# New capture FR-RIDE-065..074: Additive-Operator-Capture-20260929-Mappings.yaml
+# Updated existing FRs (018/041/056/063/222): Requirements-Mappings-Batch.yaml / Additive-PostPlanning-Deploy-Ngrok-Mappings.yaml
+# Do not re-embed mappings in this batch file; createMapping would collide on a clean rebuild.

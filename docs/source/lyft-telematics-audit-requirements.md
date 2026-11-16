@@ -219,7 +219,6 @@ The application, custody-receipt schema, verification tooling, and crowdsourced 
 ## 6. Non-functional requirements
 
 - **NFR-1** Security: encryption in transit (TLS 1.2+) and at rest; secrets in a vault; no plaintext API tokens in logs.
-- **NFR-2** Privacy-by-design: precise geolocation fields classified as sensitive; default UI masks exact coordinates except for authorized roles.
 - **NFR-3** Auditability: immutable append-only access logs for views/exports of sensitive location and identity data.
 - **NFR-4** Reliability: Concierge ingestion must tolerate API rate limits and partial outages without corrupting stored rides.
 - **NFR-5** Scalability: support multi-year trip histories and multi-Hz GPS tracks from third-party devices without UI freezes (paginate / downsample for display).

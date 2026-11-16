@@ -108,12 +108,11 @@ public class TestRide019SealGate
 }
 
 /// <summary>
-/// TEST-RIDE-032 cryptographic agility partition. FR-RIDE-211. Retention is deferred to S7.
+/// FR-RIDE-211 cryptographic agility. TEST-RIDE-032 is killed and FR-RIDE-211 maps to no TEST (Payton 2026-10-08).
 /// </summary>
 public class TestRide032Agility
 {
     [Fact]
-    [Trait("TEST", "TEST-RIDE-032")]
     [Trait("FR", "FR-RIDE-211")]
     [Trait("AC", "AC-RIDE-211-001")]
         [Trait("AC", "AC-RIDE-211-002")]

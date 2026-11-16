@@ -228,7 +228,6 @@ public class TestRide024AbuseAndTenant
         [Trait("AC", "AC-RIDE-SERVER-005-002")]
         [Trait("AC", "AC-RIDE-218-001")]
         [Trait("AC", "AC-RIDE-039-003")]
-        [Trait("AC", "AC-RIDE-204-001")]
         [Trait("AC", "AC-TEST-024-001")]
         [Trait("AC", "AC-TEST-024-002")]
     public void Rate_limit_replay_and_backpressure_never_admit()
@@ -276,7 +275,6 @@ public class TestRide024AbuseAndTenant
     [Trait("FR", "FR-RIDE-040")]
         [Trait("AC", "AC-RIDE-040-001")]
         [Trait("AC", "AC-RIDE-SERVER-006-001")]
-        [Trait("AC", "AC-RIDE-SEC-003-001")]
         [Trait("AC", "AC-RIDE-032-002")]
         [Trait("AC", "AC-RIDE-040-002")]
         [Trait("AC", "AC-UC-015-002")]
@@ -333,6 +331,7 @@ public class TestRide029Security
     [Trait("AC", "AC-RIDE-201-001")]
         [Trait("AC", "AC-RIDE-201-002")]
         [Trait("AC", "AC-RIDE-SEC-001-002")]
+        [Trait("AC", "AC-RIDE-SEC-001-001")]
     public void Tls_policy_vault_and_log_redaction_hold()
     {
         #pragma warning disable SYSLIB0039

@@ -4,7 +4,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$SshHost = "PAYTON-OMARCHY",
+    [string]$SshHost = "LAB-OMARCHY",
     [string]$RemoteAbs = "/home/sharpninja/github/rideaudit",
     [switch]$ConfirmCutover
 )

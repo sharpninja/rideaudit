@@ -1,0 +1,148 @@
+﻿--------- beginning of main
+09-29 09:44:55.221 I/g.rideaudit.app( 2976): Using generational CollectorTypeCMC GC.
+09-29 09:44:55.227 D/nativeloader( 2976): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+09-29 09:44:55.228 D/ActivityThread( 2976): setConscryptValidator
+09-29 09:44:55.228 D/ActivityThread( 2976): setConscryptValidator - put
+09-29 09:44:55.235 I/ActivityThread( 2976): Relaunch all activities: onCoreSettingsChange
+09-29 09:44:55.239 D/ApplicationLoaders( 2976): Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+09-29 09:44:55.239 D/ApplicationLoaders( 2976): Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+09-29 09:44:55.286 D/nativeloader( 2976): Configuring clns-9 for other apk /data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/lib/arm64:/data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/org.rideaudit.app
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976): Currently set values for:
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976):   angle_gl_driver_selection_pkgs=[]
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976):   angle_gl_driver_selection_values=[]
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976): org.rideaudit.app is not listed in per-application setting
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976): ANGLE allowlist from config: 
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976): org.rideaudit.app is not listed in ANGLE allowlist or settings, returning default
+09-29 09:44:55.291 V/GraphicsEnvironment( 2976): App is not on the allowlist for updatable production driver.
+09-29 09:44:55.297 D/nativeloader( 2976): Load /data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/lib/arm64/libmonosgen-2.0.so using class loader ns clns-9 (caller=/data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/base.apk): ok
+09-29 09:44:55.297 D/nativeloader( 2976): Load /data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/lib/arm64/libxamarin-app.so using class loader ns clns-9 (caller=/data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/base.apk): ok
+09-29 09:44:55.298 D/nativeloader( 2976): Load /data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/lib/arm64/libmonodroid.so using class loader ns clns-9 (caller=/data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/base.apk): ok
+09-29 09:44:55.320 D/nativeloader( 2976): Load /data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/lib/arm64/libSystem.Security.Cryptography.Native.Android.so using class loader ns clns-9 (caller=/data/app/~~hHucWnqo6VoUxU5NwCj8KA==/org.rideaudit.app-o2b37jrEPSGZuKbxWGWVGw==/base.apk): ok
+09-29 09:44:55.320 D/DOTNET  ( 2976): AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+09-29 09:44:55.320 D/DOTNET  ( 2976): GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+09-29 09:44:55.384 I/BluetoothAdapter( 2976): BluetoothAdapter() : org.rideaudit.app
+09-29 09:44:55.389 I/CameraManagerGlobal( 2976): Connecting to camera service
+09-29 09:44:55.392 D/VendorTagDescriptor( 2976): addVendorDescriptor: vendor tag id 14172875900359437128 added
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 0 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 1 facing CAMERA_FACING_FRONT state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 2 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 20 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 21 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 23 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 3 facing CAMERA_FACING_FRONT state now CAMERA_STATE_CLOSED for client com.samsung.android.smartface API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 4 facing CAMERA_FACING_FRONT state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 52 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 56 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 58 facing CAMERA_FACING_BACK state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 71 facing CAMERA_FACING_FRONT state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 73 facing CAMERA_FACING_FRONT state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.394 I/CameraManagerGlobal( 2976): Camera 90 facing CAMERA_FACING_FRONT state now CAMERA_STATE_CLOSED for client android.system API Level 2 User Id 0Device Id 0
+09-29 09:44:55.593 W/monodroid-assembly( 2976): Shared library 'android' not loaded, p/invoke 'AChoreographer_getInstance' may fail
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): QUALCOMM build                   : 0c393b63cf, I94e2bd5684
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Build Date                       : 05/02/25
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): OpenGL ES Shader Compiler Version: EV031.36.08.33
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Local Branch                     : 
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Remote Branch                    : refs/tags/AU_LINUX_ANDROID_LA.VENDOR.1.0.R1.11.00.00.816.269
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Remote Branch                    : NONE
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Reconstruct Branch               : NOTHING
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Build Config                     : S P 12.1.1 AArch64
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
+09-29 09:44:55.599 I/AdrenoGLES-0( 2976): Driver Version                   : 0615.98
+09-29 09:44:55.603 I/AdrenoGLES-0( 2976): PFP: 0x01730181, ME: 0x00000000
+09-29 09:44:55.615 W/Adreno-AppProfiles( 2976): Could not find QSPM HAL service. Skipping adreno profile processing.
+09-29 09:44:55.629 W/monodroid-assembly( 2976): Shared library 'android' not loaded, p/invoke 'AChoreographer_postFrameCallback64' may fail
+09-29 09:44:55.644 E/ashmem  ( 2976): Pinning is deprecated since Android Q. Please use trim or other methods.
+09-29 09:44:55.783 I/Choreographer( 2976): Skipped 51 frames!  The application may be doing too much work on its main thread.
+--------- beginning of system
+09-29 09:44:55.784 D/ActivityThread( 2976): org.rideaudit.app will use render engine as VK
+09-29 09:44:55.784 D/HWUI    ( 2976): HWUI - treat SMPTE_170M as sRGB
+09-29 09:44:55.785 I/DisplayManager( 2976): Choreographer implicitly registered for the refresh rate.
+09-29 09:44:55.786 D/HWUI    ( 2976): CacheManager constructor. deviceInfo=(1080, 1920)
+09-29 09:44:55.806 D/AppCompatDelegate( 2976): Checking for metadata for AppLocalesMetadataHolderService : Service not found
+09-29 09:44:55.812 E/g.rideaudit.app( 2976): Invalid resource ID 0x00000000.
+09-29 09:44:55.825 D/CompatChangeReporter( 2976): Compat change id reported: 377864165; UID 10321; state: ENABLED
+09-29 09:44:55.826 D/DesktopModeFlags( 2976): Toggle override initialized to: OVERRIDE_UNSET
+09-29 09:44:55.828 I/DecorView( 2976): setWindowBackground: isPopOver=false color=ff010102 d=null
+09-29 09:44:55.852 I/DecorView( 2976): setWindowBackground: isPopOver=false color=ffffffff d=android.graphics.drawable.ColorDrawable@4f4af2e
+09-29 09:44:55.950 D/ViewRootImpl( 2976): desktopMode is false
+09-29 09:44:55.952 I/ViewRootImpl( 2976): dVRR is disabled
+09-29 09:44:55.953 D/HardwareRenderer( 2976): onDisplayChanged. displayId=0 current wxh=904x2316 mLargest wxh=0x0
+09-29 09:44:55.953 D/HardwareRenderer( 2976): Set largestWidth and largestHeight as logical resolution. (904x2316)
+09-29 09:44:55.953 D/HWUI    ( 2976): setMaxSurfaceArea requested wxh=(904,2316) requestedSurfaceArea(2093664) mMaxSurfaceArea(2073600)
+09-29 09:44:55.954 D/NativeCustomFrequencyManager( 2976): [NativeCFMS] BpCustomFrequencyManager::BpCustomFrequencyManager()
+09-29 09:44:55.958 D/InputTransport( 2976): Input channel constructed: '35e10db', fd=120
+09-29 09:44:55.959 I/InsetsController( 2976): onStateChanged: host=org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity, from=android.view.ViewRootImpl.onInsetsStateChanged:3026, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 904, 2316), mDisplayCutout=DisplayCutout{insets=Rect(0, 87 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(418, 0 - 486, 87), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=904 displayHeight=2316 physicalDisplayWidth=904 physicalDisplayHeight=2316 density={2.625} cutoutSpec={M 0,0 H -12.95238095238095 V 33.14285714285714 H 12.95238095238095 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}} sideOverrides={}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=68, center=Point(68, 68)}, RoundedCorner{position=TopRight, radius=68, center=Point(836, 68)}, RoundedCorner{position=BottomRight, radius=68, center=Point(836, 2248)}, RoundedCorner{position=BottomLeft, radius=68, center=Point(68, 2248)}]}  mRoundedCornerFrame=Rect(0, 0 - 904, 2316), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(788, 0 - 904, 87) rotation=0}, mDisplayShape=DisplayShape{ spec=-311912193 displayWidth=904 displayHeight=2316 physicalPixelDisplaySizeRatio=1.0 rotation=0 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {e8930001 mType=navigationBars mFrame=[0,2190][904,2316] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {e8930004 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {e8930005 mType=mandatorySystemGestures mFrame=[0,2190][904,2316] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {e8930006 mType=tappableElement mFrame=[0,2190][904,2316] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {e8930024 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {3 mType=ime mFrame=[0,0][0,0] mVisible=false mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {27 mType=displayCutout mFrame=[0,0][904,87] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {44a70000 mType=statusBars mFrame=[0,0][904,87] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {44a70005 mType=mandatorySystemGestures mFrame=[0,0][904,119] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {44a70006 mType=tappableElement mFrame=[0,0][904,87] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null} }
+09-29 09:44:55.959 I/VRI[MainActivity]@66adbb4( 2976): synced displayState. AttachInfo displayState=2
+09-29 09:44:55.959 I/VRI[MainActivity]@66adbb4( 2976): setView = com.android.internal.policy.DecorView@8f7dd30 IsHRR=false mFlingFrameRateChange=0 TM=true
+09-29 09:44:55.959 I/IDS_TAG ( 2976): Starting IDS observe window
+09-29 09:44:55.959 I/IDS_TAG ( 2976): Getting Shared Preference for crc64ab21e1e23ed2ea51.Application@55d6822 uid = 10321
+09-29 09:44:55.960 I/IDS_TAG ( 2976): App crc64ab21e1e23ed2ea51.Application@55d6822 has not finished training
+09-29 09:44:55.989 D/HWUI    ( 2976): HWUI - treat SMPTE_170M as sRGB
+09-29 09:44:55.989 I/IDS_TAG ( 2976): Closing IDS observe window
+09-29 09:44:55.989 I/IDS_TAG ( 2976): Getting Shared Preference for crc64ab21e1e23ed2ea51.Application@55d6822 uid = 10321
+09-29 09:44:55.989 I/IDS_TAG ( 2976): IDS count updated to 1 for crc64ab21e1e23ed2ea51.Application@55d6822
+09-29 09:44:55.993 I/SV[190605955 MainActivity]( 2976): onWindowVisibilityChanged(0) true crc64bd239b21961e24ab.TopLevelImpl_SurfaceViewImpl{b5c6a83 V.E...... ......I. 0,0-0,0} of VRI[MainActivity]@66adbb4
+09-29 09:44:55.993 D/SurfaceView( 2976): 190605955 updateSurface: has no frame
+09-29 09:44:56.003 E/BufferQueueProducer( 2976): Unable to open libpenguin.so: dlopen failed: library "libpenguin.so" not found.
+09-29 09:44:56.003 E/g.rideaudit.app( 2976): Unable to open libpenguin.so: dlopen failed: library "libpenguin.so" not found.
+09-29 09:44:56.004 W/libc    ( 2976): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+09-29 09:44:56.004 I/BufferQueueProducer( 2976): [](id:ba000000000,api:0,p:899704336,c:2976) setDequeueTimeout:2077252342
+09-29 09:44:56.004 I/BLASTBufferQueue_Java( 2976): new BLASTBufferQueue, mName= VRI[MainActivity]@66adbb4 mNativeObject= 0xb400007ac5a215a0 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3585 android.view.ViewRootImpl.relayoutWindow:11685 android.view.ViewRootImpl.performTraversals:4804 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 android.view.Choreographer$CallbackRecord.run:1910 android.view.Choreographer.doCallbacks:1367 android.view.Choreographer.doFrame:1292 android.view.Choreographer$FrameDisplayEventReceiver.run:1870 
+09-29 09:44:56.004 I/BLASTBufferQueue_Java( 2976): update, w= 904 h= 2316 mName = VRI[MainActivity]@66adbb4 mNativeObject= 0xb400007ac5a215a0 sc.mNativeObject= 0xb400007a259d8e50 format= -3 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3590 android.view.ViewRootImpl.relayoutWindow:11685 android.view.ViewRootImpl.performTraversals:4804 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 
+09-29 09:44:56.004 W/libc    ( 2976): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+09-29 09:44:56.004 I/VRI[MainActivity]@66adbb4( 2976): Relayout returned: old=(0,0,904,2316) new=(0,0,904,2316) relayoutAsync=false req=(904,2316)0 dur=5 res=0x3 s={true 0xb400007ab5a3d190} ch=true seqId=0
+09-29 09:44:56.005 I/VRI[MainActivity]@66adbb4( 2976): performConfigurationChange setNightDimText nightDimLevel=0
+09-29 09:44:56.005 D/VRI[MainActivity]@66adbb4( 2976): mThreadedRenderer.initialize() mSurface={isValid=true 0xb400007ab5a3d190} hwInitialized=true
+09-29 09:44:56.005 D/SurfaceView( 2976): 190605955 updateSurface: has no frame
+09-29 09:44:56.005 I/SV[190605955 MainActivity]( 2976): windowStopped(false) true crc64bd239b21961e24ab.TopLevelImpl_SurfaceViewImpl{b5c6a83 V.E...... ......ID 0,0-904,2316} of VRI[MainActivity]@66adbb4
+09-29 09:44:56.005 D/SurfaceView( 2976): 190605955 updateSurface: has no frame
+09-29 09:44:56.006 D/VRI[MainActivity]@66adbb4( 2976): reportNextDraw android.view.ViewRootImpl.performTraversals:5443 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 android.view.Choreographer$CallbackRecord.run:1910 
+09-29 09:44:56.006 I/SurfaceView( 2976): 190605955 Changes: creating=true format=true size=true visible=true alpha=false hint=false left=true top=true z=false attached=true lifecycleStrategy=false
+09-29 09:44:56.007 W/libc    ( 2976): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+09-29 09:44:56.007 I/BufferQueueProducer( 2976): [](id:ba000000001,api:0,p:0,c:2976) setDequeueTimeout:2077252342
+09-29 09:44:56.008 I/BLASTBufferQueue_Java( 2976): new BLASTBufferQueue, mName= b5c6a83 SurfaceView[org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity]@0 mNativeObject= 0xb400007ac5a225b0 caller= android.view.SurfaceView.createBlastSurfaceControls:1781 android.view.SurfaceView.updateSurface:1450 android.view.SurfaceView.lambda$new$0:280 android.view.SurfaceView.$r8$lambda$NfZyM_TG8F8lqzaOVZ7noREFjzU:0 android.view.SurfaceView$$ExternalSyntheticLambda1.onPreDraw:0 android.view.ViewTreeObserver.dispatchOnPreDraw:1229 android.view.ViewRootImpl.performTraversals:5448 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 
+09-29 09:44:56.008 I/BLASTBufferQueue_Java( 2976): update, w= 904 h= 2316 mName = b5c6a83 SurfaceView[org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity]@0 mNativeObject= 0xb400007ac5a225b0 sc.mNativeObject= 0xb400007a259dad10 format= -2 caller= android.view.SurfaceView.createBlastSurfaceControls:1782 android.view.SurfaceView.updateSurface:1450 android.view.SurfaceView.lambda$new$0:280 android.view.SurfaceView.$r8$lambda$NfZyM_TG8F8lqzaOVZ7noREFjzU:0 android.view.SurfaceView$$ExternalSyntheticLambda1.onPreDraw:0 android.view.ViewTreeObserver.dispatchOnPreDraw:1229 
+09-29 09:44:56.009 I/SurfaceView( 2976): 190605955 Cur surface: Surface(name=null mNativeObject=0)/@0x966613
+09-29 09:44:56.009 D/SurfaceComposerClient( 2976): setCornerRadius ## b5c6a83 SurfaceView[org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity]@0#252 cornerRadius=0.000000
+09-29 09:44:56.009 I/SV[190605955 MainActivity]( 2976): pST: sr = Rect(0, 0 - 904, 2316) sw = 904 sh = 2316
+09-29 09:44:56.009 D/SurfaceView( 2976): 190605955 performSurfaceTransaction RenderWorker position = [0, 0, 904, 2316] surfaceSize = 904x2316
+09-29 09:44:56.009 W/libc    ( 2976): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+09-29 09:44:56.009 I/SV[190605955 MainActivity]( 2976): updateSurface: mVisible = true mSurface.isValid() = true
+09-29 09:44:56.009 I/SV[190605955 MainActivity]( 2976): updateSurface: mSurfaceCreated = false surfaceChanged = true visibleChanged = true
+09-29 09:44:56.009 I/SurfaceView( 2976): 190605955 visibleChanged -- surfaceCreated
+09-29 09:44:56.009 I/SV[190605955 MainActivity]( 2976): surfaceCreated 1 #8 crc64bd239b21961e24ab.TopLevelImpl_SurfaceViewImpl{b5c6a83 V.E...... ......ID 0,0-904,2316}
+09-29 09:44:56.010 W/monodroid-assembly( 2976): Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+09-29 09:44:56.011 I/SurfaceView( 2976): 190605955 surfaceChanged -- format=-2 w=904 h=2316
+09-29 09:44:56.011 I/SV[190605955 MainActivity]( 2976): surfaceChanged (904,2316) 1 #8 crc64bd239b21961e24ab.TopLevelImpl_SurfaceViewImpl{b5c6a83 V.E...... ......ID 0,0-904,2316}
+09-29 09:44:56.012 W/monodroid-assembly( 2976): Shared library 'android' not loaded, p/invoke 'ANativeWindow_release' may fail
+09-29 09:44:56.035 I/SurfaceView( 2976): 190605955 surfaceRedrawNeeded
+09-29 09:44:56.036 V/SurfaceView( 2976): Layout: x=0 y=0 w=904 h=2316, frame=Rect(0, 0 - 904, 2316)
+09-29 09:44:56.036 D/VRI[MainActivity]@66adbb4( 2976): Setup new sync=wmsSync-VRI[MainActivity]@66adbb4#1
+09-29 09:44:56.036 I/VRI[MainActivity]@66adbb4( 2976): Creating new active sync group VRI[MainActivity]@66adbb4#2
+09-29 09:44:56.036 D/VRI[MainActivity]@66adbb4( 2976): registerCallbacksForSync syncBuffer=false
+09-29 09:44:56.038 D/SurfaceView( 2976): 190605955 updateSurfacePosition RenderWorker, frameNr = 1, position = [0, 0, 904, 2316] surfaceSize = 904x2316
+09-29 09:44:56.038 I/SV[190605955 MainActivity]( 2976): uSP: rtp = Rect(0, 0 - 904, 2316) rtsw = 904 rtsh = 2316
+09-29 09:44:56.038 I/SV[190605955 MainActivity]( 2976): onSSPAndSRT: pl = 0 pt = 0 sx = 1.0 sy = 1.0
+09-29 09:44:56.038 I/SV[190605955 MainActivity]( 2976): aOrMT: VRI[MainActivity]@66adbb4 t = android.view.SurfaceControl$Transaction@8b4fa03 fN = 1 android.view.SurfaceView.-$$Nest$mapplyOrMergeTransaction:0 android.view.SurfaceView$SurfaceViewPositionUpdateListener.positionChanged:1932 android.graphics.RenderNode$CompositePositionUpdateListener.positionChanged:401 
+09-29 09:44:56.038 I/VRI[MainActivity]@66adbb4( 2976): mWNT: t=0xb400007bc59f4310 mBlastBufferQueue=0xb400007ac5a215a0 fn= 1 HdrRenderState mRenderHdrSdrRatio=1.0 caller= android.view.SurfaceView.applyOrMergeTransaction:1863 android.view.SurfaceView.-$$Nest$mapplyOrMergeTransaction:0 android.view.SurfaceView$SurfaceViewPositionUpdateListener.positionChanged:1932 
+09-29 09:44:56.038 D/VRI[MainActivity]@66adbb4( 2976): Received frameDrawingCallback syncResult=0 frameNum=1.
+09-29 09:44:56.038 I/VRI[MainActivity]@66adbb4( 2976): mWNT: t=0xb400007bc59f6d10 mBlastBufferQueue=0xb400007ac5a215a0 fn= 1 HdrRenderState mRenderHdrSdrRatio=1.0 caller= android.view.ViewRootImpl$12.onFrameDraw:15441 android.view.ThreadedRenderer$1.onFrameDraw:718 <bottom of call stack> 
+09-29 09:44:56.038 I/VRI[MainActivity]@66adbb4( 2976): Setting up sync and frameCommitCallback
+09-29 09:44:56.040 I/BLASTBufferQueue( 2976): [VRI[MainActivity]@66adbb4#0](f:0,a:0,s:0) onFrameAvailable the first frame is available
+09-29 09:44:56.040 I/SurfaceComposerClient( 2976): apply transaction with the first frame. layerId: 248, bufferData(ID: 12781822672896, frameNumber: 1)
+09-29 09:44:56.040 I/VRI[MainActivity]@66adbb4( 2976): Received frameCommittedCallback lastAttemptedDrawFrameNum=1 didProduceBuffer=true
+09-29 09:44:56.040 D/HWUI    ( 2976): CFMS:: SetUp Pid : 2976    Tid : 3145
+09-29 09:44:56.056 D/VRI[MainActivity]@66adbb4( 2976): reportDrawFinished seqId=0
+09-29 09:44:56.056 I/SurfaceView( 2976): 190605955 finishedDrawing
+09-29 09:44:56.060 I/InsetsSourceConsumer( 2976): applyRequestedVisibilityToControl: visible=true, type=statusBars, host=org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity
+09-29 09:44:56.060 I/InsetsSourceConsumer( 2976): applyRequestedVisibilityToControl: visible=true, type=navigationBars, host=org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity
+09-29 09:44:56.076 D/VRI[MainActivity]@66adbb4( 2976): mThreadedRenderer.initializeIfNeeded()#2 mSurface={isValid=true 0xb400007ab5a3d190}
+09-29 09:44:56.077 D/InputMethodManagerUtils( 2976): startInputInner - Id : 0
+09-29 09:44:56.077 I/InputMethodManager( 2976): startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+09-29 09:44:56.083 I/InputMethodManager( 2976): handleMessage: setImeVisibility visible=false
+09-29 09:44:56.083 D/InsetsController( 2976): hide(ime(), fromIme=false)
+09-29 09:44:56.084 I/ImeTracker( 2976): org.rideaudit.app:5d2799ea: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-29 09:44:56.093 D/InputTransport( 2976): Input channel constructed: 'ClientS', fd=135
+09-29 09:44:56.154 I/BLASTBufferQueue( 2976): [b5c6a83 SurfaceView[org.rideaudit.app/crc64ab21e1e23ed2ea51.MainActivity]@0#1](f:0,a:0,s:0) onFrameAvailable the first frame is available
+09-29 09:44:56.154 I/SurfaceComposerClient( 2976): apply transaction with the first frame. layerId: 253, bufferData(ID: 12781822672898, frameNumber: 1)
+09-29 09:45:01.567 D/ProfileInstaller( 2976): Installing profile for org.rideaudit.app

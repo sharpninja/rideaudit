@@ -4,10 +4,152 @@ AC-RIDE-GPL-003-001	Deferred BDPv4: Google Play listing is not claimed. A source
 AC-RIDE-GPL-003-002	Deferred BDPv4: reproducible signing metadata needs a publicly trusted RideAudit code-signing certificate. The lab self-signed win-x64 certificate is not that identity. Unrelated private-key certs on this machine were not used as a release signature.
 AC-RIDE-031-001	Deferred BDPv4: Google Play availability is not claimed. A public source repository is not a Play listing.
 AC-RIDE-031-002	Deferred BDPv4: reproducible signing metadata needs a publicly trusted RideAudit code-signing certificate. The lab self-signed win-x64 certificate is not that identity. A lab signature is not this AC.
-AC-UC-025-001	Deferred BDPv4: Avalonia Android primary screens running requires a device or emulator session. A project reference is not that runtime proof.
-AC-RIDE-004-002	Deferred BDPv4: Concierge polling limited to organizational rides is a live partnership path. The in-tree gate does not perform that poll.
+AC-UC-025-001	Deferred BDPv4: Two phones ran the Avalonia capture shell on PAYTON-LEGION2 (SM-F936U cover as driver, motorola edge 2024 as passenger). Discover set a radio status string and did not confirm a peer. Driver start fail-closed on camera and Play attestation. This is not a dual-phone session and not semantic closure. Receipt: docs/receipts/android/20260929T145412Z-dual-phone-fold4-edge.md
 AC-RIDE-205-001	Deferred BDPv4: UI pagination or downsampling of large GPS tracks is not proven. An index window is not that UI.
 AC-RIDE-205-002	Deferred BDPv4: a multi-year index query does not prove the UI loads without freezing.
-AC-UC-003-001	Deferred BDPv4: UC-RIDE-003 happy path is an admin-enabled Concierge poll. Refusing the call is not that happy path.
-AC-UC-003-002	Deferred BDPv4: Concierge poll caveats are not shown because the live poll is not enabled.
-AC-RIDE-206-001	Deferred BDPv4: labeling Concierge lat/lng polls as derived metrics needs those polls. Rejecting a concierge provenance score on export is not that label.
+
+# Operator-capture / post-capture ACs not yet named in tests/**/*.cs (2026-10-07 ledger recount). Name-or-defer gate only; not semantic closure.
+AC-RIDE-018-004	Deferred BDPv4: public OTS confirmation / live Bitcoin path; fixture anchors stay labeled.
+AC-RIDE-018-005	Deferred BDPv4: public OTS confirmation / live Bitcoin path; fixture anchors stay labeled.
+AC-RIDE-020-004	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-RIDE-041-003	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-041-004	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-041-005	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-041-006	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-056-003	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-RIDE-065-001	Deferred BDPv4: Caddy edge TLS / EDGE-002 live path is not an Omarchy loopback receipt.
+AC-RIDE-065-002	Deferred BDPv4: Caddy edge TLS / EDGE-002 live path is not an Omarchy loopback receipt.
+AC-RIDE-065-003	Deferred BDPv4: Caddy edge TLS / EDGE-002 live path is not an Omarchy loopback receipt.
+AC-RIDE-066-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-066-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-067-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-067-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-069-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-069-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-069-003	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-069-004	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-070-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-070-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-070-003	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-070-004	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-071-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-071-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-071-003	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-071-004	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-072-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-072-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-072-003	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-072-004	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-072-005	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-073-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-003	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-004	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-005	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-006	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-007	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-008	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-009	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-073-010	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-222-003	Deferred BDPv4: Public Trust / Play / signed multi-OS release not claimed.
+AC-RIDE-222-004	Deferred BDPv4: Public Trust / Play / signed multi-OS release not claimed.
+AC-RIDE-222-005	Deferred BDPv4: Public Trust / Play / signed multi-OS release not claimed.
+AC-RIDE-CHAIN-002-003	Deferred BDPv4: public OTS confirmation / live Bitcoin path; fixture anchors stay labeled.
+AC-RIDE-CHAIN-002-004	Deferred BDPv4: public OTS confirmation / live Bitcoin path; fixture anchors stay labeled.
+AC-RIDE-EDGE-002-001	Deferred BDPv4: Caddy edge TLS / EDGE-002 live path is not an Omarchy loopback receipt.
+AC-RIDE-EDGE-002-002	Deferred BDPv4: Caddy edge TLS / EDGE-002 live path is not an Omarchy loopback receipt.
+AC-RIDE-GPL-002-003	Deferred BDPv4: Public Trust / Play / signed multi-OS release not claimed.
+AC-RIDE-HW-001-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-HW-001-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-LAB-001-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-001-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-001-003	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-002-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-002-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-003-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-003-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-004-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-LAB-004-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-RIDE-VIDEO-013-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-013-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-014-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-014-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-015-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-015-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-016-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-016-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-003	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-004	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-005	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-006	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-007	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-008	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-009	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIDEO-017-010	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIEW-006-001	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIEW-006-002	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIEW-006-003	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-RIDE-VIEW-006-004	Deferred BDPv4: dual-phone / wireframe / RemoteControl / cradle lab or physical media path not closed as named tests yet.
+AC-TEST-016-003	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-041-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-041-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-042-001	Deferred BDPv4: public OTS confirmation / live Bitcoin path; fixture anchors stay labeled.
+AC-TEST-042-002	Deferred BDPv4: public OTS confirmation / live Bitcoin path; fixture anchors stay labeled.
+AC-TEST-043-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-043-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-044-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-044-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-045-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-045-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-046-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-046-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-047-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-047-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-048-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-048-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-TEST-049-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-049-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-049-003	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-050-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-050-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-051-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-051-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-052-001	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-052-002	Deferred BDPv4: lab toolchain / RemoteControl worker validation ACs not yet named in executable tests.
+AC-TEST-053-001	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-053-002	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-053-003	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-053-004	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-053-005	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-053-006	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-054-001	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-054-002	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-054-003	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-TEST-054-004	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-010-003	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-017-003	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-025-002	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-034-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-035-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-036-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-037-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-038-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-039-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-040-001	Deferred BDPv4: AGREEd or Draft requirement AC not yet named in executable test source after 2026-09-29 capture / 2026-10-07 accuracy pass. Ledger name-or-defer only; not semantic closure.
+AC-UC-042-001	Deferred: not named. This AC says lab work is go-by-default on LAB-OMARCHY and PAYTON-LEGION2, but TR-RIDE-LAB-004, the FR-RIDE-072 wiki, and TestRide052LabConductTests name PAYTON-DESKTOP and PAYTON-LEGION2, and no test asserts the approval rule. The host set needs Payton's decision before a test can assert it.
+AC-UC-043-001	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-002	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-003	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-004	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-005	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-006	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-007	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-008	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-043-009	Deferred BDPv4: visual regression / storyboard baseline harness not yet named in executable tests.
+AC-UC-044-001	Deferred BDPv4: UC-RIDE-044 remains Draft; About FR/TR/TEST covered by TestRide055AboutTests.
+AC-UC-044-002	Deferred BDPv4: UC-RIDE-044 remains Draft; About FR/TR/TEST covered by TestRide055AboutTests.
+
+# FR-RIDE-038 multi-driver bundle retired (Payton 2026-10-07). These ACs were named only on the removed bundle test. Name-or-defer gate only; not semantic closure.
+AC-RIDE-SERVER-006-002	Deferred BDPv4: no aggregate index exists after the FR-RIDE-038 bundle was retired, so there is no aggregate query to authorize. Per-record cross-driver rejection is covered under AC-RIDE-SERVER-006-001.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# RideAudit headrest phone mount — export isometric PNG previews.
+# RideAudit headrest phone mount - export isometric PNG previews.
 # Copyright (C) 2026 RideAudit contributors
 # SPDX-License-Identifier: GPL-2.0
 # Regenerates verification/previews/*.png from headrest-phone-mount.scad.

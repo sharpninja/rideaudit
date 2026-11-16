@@ -3,10 +3,10 @@
 **Author:** Sharp Ninja
 **Artifact ID:** ART-RIDE-API-001
 **Kind:** grpc-api
-**Version:** 0.2.0
+**Version:** 0.4.0
 **License:** GPL-2.0-only
 
-> **Authoritative contract:** `src/RideAudit.Protos/` (proto3, contract version 0.2.0).  
+> **Authoritative contract:** `src/RideAudit.Protos/` (proto3, contract version 0.4.0).  
 > **OpenAPI role:** non-authoritative companion (`openapi.yaml`). FR-RIDE-062. When this companion and the protos disagree, conformance binds to grpc-protobuf.
 
 > **Target stack:** gRPC on .NET 10 containers. The checked-in `openapi.yaml` is an interim human-readable companion and is not the wire contract.
